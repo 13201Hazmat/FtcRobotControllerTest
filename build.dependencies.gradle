@@ -6,7 +6,11 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven {
+        url = 'https://maven.brott.dev/'
+    }
 }
+
 
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:6.2.1'
@@ -23,6 +27,6 @@ dependencies {
     //Copied from https://www.learnroadrunner.com/installing.html#method-2-installing-rr-on-your-project
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.acmerobotics.roadrunner:core:0.5.2'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.3.10'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.2'
 }
 

@@ -195,7 +195,7 @@ public class HzVision {
         if (activeWebcam == ACTIVE_WEBCAM.LEFT){
             webcamName = hardwareMap.get(WebcamName.class, "Webcam_l");
         } else {
-            webcamName = hardwareMap.get(WebcamName.class, "Webcam_r");
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam_l"); // Should be Webcam_r for second webcam, setting to single camera.
         }
 
         /*
