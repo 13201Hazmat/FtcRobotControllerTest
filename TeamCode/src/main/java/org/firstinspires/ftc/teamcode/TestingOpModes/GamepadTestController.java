@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.Examples.HzGameFieldUltimateGoal;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Examples.HzVuforiaStatic;
+import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
 /**
  * Defenition of the HzGamepad Class <BR>
@@ -58,10 +58,6 @@ public class GamepadTestController {
     // RR Drive Train
     public void runDriveControl_byRRDriveModes() {
 
-        if (HzVuforiaStatic.vuforiaState == HzVuforiaStatic.VUFORIA_STATE.NAVIGATION_RUNNING &&
-                HzVuforiaStatic.targetVisible){
-            driveTrain.setPoseEstimate(HzVuforiaStatic.poseVuforia);
-        }
         driveTrain.poseEstimate = driveTrain.getPoseEstimate();
 
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
@@ -75,14 +71,14 @@ public class GamepadTestController {
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
 
-            if (HzGameFieldUltimateGoal.playingAlliance == HzGameFieldUltimateGoal.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
+            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
                 driveTrain.gamepadInput = new Vector2d(
                         turboMode(getLeftStickX()),
                         -turboMode(getLeftStickY())
                 ).rotated(-driveTrain.poseEstimate.getHeading());
             };
 
-            if (HzGameFieldUltimateGoal.playingAlliance == HzGameFieldUltimateGoal.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
+            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
                 driveTrain.gamepadInput = new Vector2d(
                         -turboMode(getLeftStickX()),
                         turboMode(getLeftStickY())
