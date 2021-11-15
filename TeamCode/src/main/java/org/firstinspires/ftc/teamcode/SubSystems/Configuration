@@ -1,0 +1,22 @@
+
+Hardware configuration declarations :
+
+Example :
+        Intake intake_motor expansion hub motor port 3
+
+        Major Arm major_arm_motor expansion hub motor port 2
+        Major Claw major_claw_servo expansion hub servo port 0
+
+        Minor Arm major_arm_servo expansion hub motor port 2
+        Major Claw major_claw_servo expansion hub servo port 0
+
+        Elevator elevator_motor control hub motor port 2
+        Magazine magazine_servo control hub servo port 0
+
+        Spinner spinner_motor control hub motor port 3
+
+        Drive motors:
+        Front Right Motor frmotor expansion hub motor port 0
+        Back Right Motor brmotor expansion hub motor port 1
+        Back Left Motor blmotor control hub motor port 0
+        Front Left Motor flmotor control hub motor port 1
