@@ -35,9 +35,9 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
     //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(11, 0, 0.01, 14.7);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 10, 14.71880);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -65,8 +65,8 @@ public class DriveConstants {
      * empirically tuned.
      */
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kA = 0.002;
+    public static double kStatic = 0.01;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -77,8 +77,8 @@ public class DriveConstants {
      */
     public static double MAX_VEL = 50;//30;
     public static double MAX_ACCEL = 50;//30;
-    public static double MAX_ANG_VEL = Math.toRadians(130);
-    public static double MAX_ANG_ACCEL = Math.toRadians(130);
+    public static double MAX_ANG_VEL = Math.toRadians(360);//130
+    public static double MAX_ANG_ACCEL = Math.toRadians(360);//130
 
     /*
      * Note from LearnRoadRunner.com:
