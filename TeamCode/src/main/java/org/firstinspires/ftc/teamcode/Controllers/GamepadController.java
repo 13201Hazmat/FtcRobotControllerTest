@@ -418,7 +418,7 @@ public class GamepadController {
      * @return Cube of the stick input reduced to 25% speed
      */
     public double limitStick(double stickInput) {
-        return (stickInput * stickInput * stickInput * 0.33);
+        return (stickInput * stickInput * stickInput * 0.33); //0.25
     }
 
     /**
