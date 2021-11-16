@@ -112,10 +112,15 @@ public class GamepadController {
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
-            driveTrain.gamepadInput = new Vector2d(
-                    -gp1TurboMode(gp1GetLeftStickY()) ,
-                    -gp1TurboMode(gp1GetLeftStickX())
-            );
+            if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
+                driveTrain.gamepadInput = new Vector2d(
+                        -gp1TurboMode(gp1GetLeftStickY()),
+                        -gp1TurboMode(gp1GetLeftStickX()));
+            } else {
+                driveTrain.gamepadInput = new Vector2d(
+                        -limitStick(gp2GetLeftStickY()),
+                        -limitStick(gp2GetLeftStickX()));
+            }
         };
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
@@ -134,9 +139,13 @@ public class GamepadController {
                 ).rotated(-driveTrain.poseEstimate.getHeading());
             };
         }
-        driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
+        if (Math.abs(gp1GetRightStickX())>0.1) {
+            driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
+        } else {
+            driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
+        }
 
-        /*TODO: Code to implement slight left / right turn. Uncomment to use
+        /*TCode to implement slight left / right turn. Uncomment to use
         if (gp1GetButtonXPress()) {
             hzDrive.augmentedControl = HzDrive.AugmentedControl.TURN_DELTA_LEFT;
         }
@@ -346,19 +355,28 @@ public class GamepadController {
             majorArm.moveArmParkingPosition();
         }
 
+        if (majorArm.runArmToLevelState) {
+            majorArm.runArmToLevel(majorArm.ARM_MOTOR_POWER);
+        }
+
         if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyDown();
+                if (majorArm.runArmToLevelState) {
+                    majorArm.runArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                }
+
             }
         } else {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyUp();
+                if (majorArm.runArmToLevelState) {
+                    majorArm.runArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                }
             }
         }
 
-        if (majorArm.runArmToLevelState) {
-            majorArm.runArmToLevel(majorArm.ARM_MOTOR_POWER);
-        }
+
 
         if(gp2GetRightBumperPress()){
             majorArm.changeClawState();

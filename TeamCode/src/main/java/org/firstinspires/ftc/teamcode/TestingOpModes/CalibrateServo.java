@@ -31,7 +31,7 @@ public class CalibrateServo extends LinearOpMode {
         driveTrain = new DriveTrain(hardwareMap);
 
         //servoToCalibrate = hardwareMap.servo.get("servo_name"); //Change name of motor to calibrate per hardwaremap
-        servoToCalibrate = hardwareMap.servo.get("magazine_servo");
+        servoToCalibrate = hardwareMap.servo.get("major_claw_servo");
         /* Create Controllers */
         gamepadTestController = new GamepadTestController(gamepad1, driveTrain);
 

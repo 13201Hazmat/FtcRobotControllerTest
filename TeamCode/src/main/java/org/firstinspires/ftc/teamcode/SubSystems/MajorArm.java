@@ -48,8 +48,8 @@ public class MajorArm {
     }
 
     public static int baselineEncoderCount = 0;
-    public static final double CLAW_OPEN = 0.0;
-    public static final double CLAW_CLOSED = 1.0;
+    public static final double CLAW_OPEN = 0.55;
+    public static final double CLAW_CLOSED = 0.85;
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
     public static int PICKUP_POSITION_COUNT = -750;
     public static int LEVEL1_POSITION_COUNT = -675;
@@ -57,12 +57,13 @@ public class MajorArm {
     public static int LEVEL3_POSITION_COUNT = -550;
     public static int CAPSTONE_POSITION_COUNT = -450;
     public static int PARKED_POSITION_COUNT = 0;
-    public static int MAJORARM_DELTA_COUNT = 50;
+    public static int MAJORARM_DELTA_COUNT = 25;
     public int currentArmPositionCount = PARKED_POSITION_COUNT;
     public ARM_STATE currentArmState = ARM_STATE.PARKED;
     public ARM_STATE previousArmState = ARM_STATE.PARKED;
 
-    public static double ARM_MOTOR_POWER = 0.8;
+    public static double ARM_MOTOR_POWER = 0.2;
+    public static double ARM_MOTOR_DELTA_POWER = 0.1;
 
     public boolean runArmToLevelState = false;
 
