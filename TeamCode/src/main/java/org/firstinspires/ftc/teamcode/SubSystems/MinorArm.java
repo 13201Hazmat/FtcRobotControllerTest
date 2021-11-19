@@ -86,13 +86,13 @@ public class MinorArm {
     //change the level of the arm to Level One
     public void moveMinorArmLevel1Position() {
         minorArmServo.setPosition(LEVEL1_POSITION_COUNT);
-        minorServoState = MINOR_SERVO_STATE.PICKUP;
+        minorServoState = MINOR_SERVO_STATE.LEVEL_1;
     }
 
     //change the level of the arm to the parking
     public void moveMinorArmParkingPosition() {
         minorArmServo.setPosition(PARKED_POSITION_COUNT);
-        minorServoState = MINOR_SERVO_STATE.PICKUP;
+        minorServoState = MINOR_SERVO_STATE.PARKED;
     }
 
     //change the level of the Arm to Level 1
@@ -117,7 +117,7 @@ public class MinorArm {
             return;
         }
 
-        if ((minorServoState == MINOR_SERVO_STATE.PARKED)) {
+        if ((minorServoState == MINOR_SERVO_STATE.LEVEL_1)) {
             previousMinorServoState = minorServoState;
             moveMinorArmPickupPosition();
             return;
