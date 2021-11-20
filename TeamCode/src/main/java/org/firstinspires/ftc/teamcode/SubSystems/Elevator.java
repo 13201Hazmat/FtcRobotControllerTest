@@ -8,18 +8,24 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Definition of Subsystem Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
  *
  * The states are as followed: <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing </emsp> <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL2 for another state  = example if the intake is on or off </emsp> <BR>
+ *     <emsp>ELEVATOR_STATE.LEVEL0 for ground level state - Elevator will stay at ground level, where
+ *     freight is stored inside the robot </emsp> <BR>
+ *     <emsp>ELEVATOR_STATE.LEVEL1 for first level state - The first scoring position of the
+ *     alliance shipping hub  </emsp> <BR>
+ *     <emsp>ELEVATOR_STATE.LEVEL2 for second level state - The second scoring position of the
+ *     alliance shipping hub </emsp> <BR>
+ *     <emsp>ELEVATOR_STATE.LEVEL3 for third level state - The third scoring position of the
+ *     alliance shipping hub </emsp> <BR>
  *
- * The functions are as followed: Example assumes a motor like an intake <BR>
- *     <emsp>runSubsystem1Motor checks if the motor is not running and runs the intake </emsp> <BR>
- *     <emsp>stopSubsystem1Motor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets subsystem1MotorState to SUBSYSTEM1_SERVO_LEVEL1.STOPPED </emsp> <BR>
- *     <emsp> startReverseSubsystem1Motor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING</emsp> <BR>
+ * The functions are as followed: <BR>
+ *     <emsp>initElevator sets the original/starting position(LEVEL0), direction (forward),
+ *     mode(using encoder), and sets the brake mode to off </emsp> <BR>
+ *     <emsp>resetElevator stops and resets the drive encoders, and sets mode to runMode </emsp> <BR>
+ *     <emsp>turnElevatorBrakeModeOn: this function sets the brake mode to ON</emsp> <BR>
+ *     <emsp>turnElevatorBrakeModeOff: </emsp>
  */
 public class Elevator {
 
@@ -51,7 +57,7 @@ public class Elevator {
     public int elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT;
 
     public static double POWER_GOING_UP = 0.7;
-    public static double POWER_COMING_DOWN = 0.3;
+    public static double POWER_COMING_DOWN = 0.5;
 
     public enum ELEVATOR_BUTTON_STATE {
         ON,
@@ -79,9 +85,9 @@ public class Elevator {
      * Reset Elevator Encoder
      */
     public void resetElevator(){
-        DcMotor.RunMode runMode = elevatorMotor.getMode();
+        //DcMotor.RunMode runMode = elevatorMotor.getMode();
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorMotor.setMode(runMode);
+        //elevatorMotor.setMode(runMode);
     }
 
     /**

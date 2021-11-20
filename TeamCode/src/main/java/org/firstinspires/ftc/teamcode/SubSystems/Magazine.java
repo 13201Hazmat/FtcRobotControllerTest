@@ -26,7 +26,7 @@ public class Magazine {
     public Servo magazineServo = null;
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
-    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION = 0.58;
+    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION = 0.50;
     public static final double MAGAZINE_SERVO_FLIPPED_POSITION = 0.25;
 
     public enum MAGAZINE_SERVO_STATE {

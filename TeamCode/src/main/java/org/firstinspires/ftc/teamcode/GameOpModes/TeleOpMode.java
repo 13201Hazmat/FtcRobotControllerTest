@@ -117,6 +117,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
 
         telemetry.addData("Elevator State : ", elevator.getElevatorState());
+        telemetry.addData("Elevator encoder count : ", elevator.elevatorMotor.getCurrentPosition());
         telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
 
         telemetry.addData("Magazine State : ", magazine.getMagazineServoState());

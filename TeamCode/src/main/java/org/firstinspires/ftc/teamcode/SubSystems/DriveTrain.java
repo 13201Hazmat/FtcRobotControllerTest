@@ -88,7 +88,7 @@ public class DriveTrain extends SampleMecanumDrive {
     public double gamepadInputTurn = 0;
 
     /**
-     * Field Centric drive logix
+     * Field Centric drive logic
      */
     public void driveTrainFieldCentric(){
 
