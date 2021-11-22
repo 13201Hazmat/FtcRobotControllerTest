@@ -26,8 +26,8 @@ public class Magazine {
     public Servo magazineServo = null;
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
-    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION = 0.50;
-    public static final double MAGAZINE_SERVO_FLIPPED_POSITION = 0.25;
+    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION = 0.55;
+    public static final double MAGAZINE_SERVO_DROP_POSITION = 0.2;
 
     public enum MAGAZINE_SERVO_STATE {
         COLLECT,
@@ -74,8 +74,8 @@ public class Magazine {
      * sets magazineServo to flipped position
      */
     public void moveMagazineToDrop(){
-        if (magazineServoState != MAGAZINE_SERVO_STATE.COLLECT) {
-            magazineServo.setPosition(MAGAZINE_SERVO_FLIPPED_POSITION);
+        if (magazineServoState != MAGAZINE_SERVO_STATE.DROP) {
+            magazineServo.setPosition(MAGAZINE_SERVO_DROP_POSITION);
             magazineServoState = MAGAZINE_SERVO_STATE.DROP;
         }
     }

@@ -51,7 +51,7 @@ public class Intake {
     }
 
 
-    public void startForwardIntakeMotor() {
+    public void startIntakeMotorInward() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING) {
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower2);
             intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
@@ -62,7 +62,7 @@ public class Intake {
      * reverseIntakeMotor checks if the intake is not reversing, and sets the intake motor to FORWARD, then also
      * sets intake motor state to REVERSING
      */
-    public void startReverseIntakeMotor() {
+    public void startIntakeMotorOutward() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower1);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;

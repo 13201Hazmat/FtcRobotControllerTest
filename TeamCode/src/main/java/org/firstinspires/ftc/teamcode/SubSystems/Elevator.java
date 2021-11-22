@@ -47,7 +47,7 @@ public class Elevator {
 
     public static int baselineEncoderCount = 0;
     public static int ELEVATOR_LEVEL0_POSITION_COUNT = 0;
-    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -100;
+    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -200;
     public static int ELEVATOR_LEVEL2_POSITION_COUNT = -600;
     public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1500;
     public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1550;
@@ -226,6 +226,4 @@ public class Elevator {
             motorPowerToRun = POWER_COMING_DOWN;
         }
     }
-
-
 }

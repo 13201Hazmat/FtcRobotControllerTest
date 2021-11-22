@@ -159,7 +159,6 @@ public class GamepadController {
 
     }
 
-
     //TODO: Add controller code for more subsystems as above
     /**
      * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
@@ -175,7 +174,7 @@ public class GamepadController {
                 if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.COLLECT) {
                     magazine.moveMagazineToCollect();
                 }
-                intake.startForwardIntakeMotor();
+                intake.startIntakeMotorInward();
             } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
                 intake.stopIntakeMotor();
             }
@@ -184,7 +183,7 @@ public class GamepadController {
         //Reverse Intake motors and run - in case of stuck state)
         if (gp1GetDpad_upPress()) {
             if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.REVERSING) {
-                intake.startReverseIntakeMotor();
+                intake.startIntakeMotorOutward();
             } else if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
                 intake.stopIntakeMotor();
             }
@@ -263,7 +262,6 @@ public class GamepadController {
             elevator.runElevatorToLevel(elevator.motorPowerToRun);
         }
     }
-
 
     /**
      * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite

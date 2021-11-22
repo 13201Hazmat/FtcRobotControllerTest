@@ -88,3 +88,6 @@ lint/tmp/
 
 android/*.hprof
 *.hprof
+
+android/*.hprof
+*.hprof

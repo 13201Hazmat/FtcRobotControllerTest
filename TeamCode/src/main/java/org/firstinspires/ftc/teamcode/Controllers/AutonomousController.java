@@ -102,7 +102,7 @@ public class AutonomousController {
             if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.COLLECT) {
                 magazine.moveMagazineToCollect();
             }
-            intake.startForwardIntakeMotor();
+            intake.startIntakeMotorInward();
         } else { //(autoIntakeState == AUTO_INTAKE_STATE.STOPPED)
             intake.stopIntakeMotor();
         }
