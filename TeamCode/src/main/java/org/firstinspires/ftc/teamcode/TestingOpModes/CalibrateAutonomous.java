@@ -404,9 +404,15 @@ public class CalibrateAutonomous extends LinearOpMode {
     }
 
     public void rotateCarousal() {
-        autonomousController.runAutoSpinner();
+        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+            autonomousController.autoSpinnerState = AutonomousController.AUTO_SPINNER_STATE.ANTICLOCKWISE;
+        } else {
+            autonomousController.autoSpinnerState = AutonomousController.AUTO_SPINNER_STATE.CLOCKWISE;
+        }
+        autonomousController.runAutoControl();
         safeWait(1000);
-        autonomousController.stopAutoSpinner();
+        autonomousController.autoSpinnerState = AutonomousController.AUTO_SPINNER_STATE.STOPPED;
+        autonomousController.runAutoControl();
     }
 
     //Drops pre-loaded box at the correct level determined by capstone position
@@ -420,20 +426,20 @@ public class CalibrateAutonomous extends LinearOpMode {
             case LEVEL2:
                 //If Capstone on Level 1, Drops Pre-Loaded Box on Level 2
                 autonomousController.moveAutoElevatorLevel2();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToDrop();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToCollect();
-                safeWait(100);
+                safeWait(1000);
                 break;
             case LEVEL3:
                 //If Capstone on Level 1, Drops Pre-Loaded Box on Level 3
                 autonomousController.moveAutoElevatorLevel3();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToDrop();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToCollect();
-                safeWait(100);
+                safeWait(1000);
                 break;
         }
 
@@ -442,11 +448,11 @@ public class CalibrateAutonomous extends LinearOpMode {
     //TODO: Update code to use autoController instead of accessing the subsystems directly
     public void dropFreightLevel1(){
         autonomousController.moveAutoElevatorLevel1();
-        safeWait(100);
+        safeWait(1000);
         autonomousController.moveAutoMagazineToDrop();
-        safeWait(100);
+        safeWait(1000);
         autonomousController.moveAutoMagazineToCollect();
-        safeWait(100);
+        safeWait(1000);
     }
 
     //Runs the Intake and moves the Elevator to Level1

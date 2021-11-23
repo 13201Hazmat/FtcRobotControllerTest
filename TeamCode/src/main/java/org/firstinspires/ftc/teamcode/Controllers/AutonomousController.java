@@ -269,32 +269,19 @@ public class AutonomousController {
         STOPPED,
     }
 
-    AUTO_SPINNER_STATE autoSpinnerState = AUTO_SPINNER_STATE.STOPPED;
-
-    public void startAutoSpinnerCW() {
-    autoSpinnerState = AUTO_SPINNER_STATE.CLOCKWISE;
-    runAutoControl();
-    }
-
-    public void startAutoSpinnerCCW() {
-        autoSpinnerState = AUTO_SPINNER_STATE.ANTICLOCKWISE;
-        runAutoControl();
-    }
-
-    public void stopAutoSpinner(){
-        autoSpinnerState = AUTO_SPINNER_STATE.STOPPED;
-        runAutoControl();
-    }
+    public AUTO_SPINNER_STATE autoSpinnerState = AUTO_SPINNER_STATE.STOPPED;
 
     public void runAutoSpinner() {
-        if(autoSpinnerState == AUTO_SPINNER_STATE.CLOCKWISE){
-            spinner.runSpinnerMotorClockwise();
-        }
-        else if(autoSpinnerState == AUTO_SPINNER_STATE.ANTICLOCKWISE){
-            spinner.runSpinnerMotorAnticlockwise();
-        }
-        else{
-            spinner.stopSpinnerMotor();
+        switch (autoSpinnerState) {
+            case ANTICLOCKWISE:
+                spinner.runSpinnerMotorAnticlockwise();
+                break;
+            case CLOCKWISE:
+                spinner.runSpinnerMotorClockwise();
+                break;
+            case STOPPED:
+                spinner.stopSpinnerMotor();
+                break;
         }
     }
 }
