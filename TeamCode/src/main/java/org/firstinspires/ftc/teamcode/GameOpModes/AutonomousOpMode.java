@@ -5,7 +5,6 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -101,6 +100,7 @@ public class AutonomousOpMode extends LinearOpMode {
         //On Init, Elevator moves to Level 1, Elevator moves to transport
         autonomousController.moveAutoElevatorLevel1();
         autonomousController.moveAutoMagazineToTransport();
+        autonomousController.runAutoControl();
 
         telemetry.addData("Waiting for start to be pressed.","Robot is ready!");
         telemetry.update();
@@ -229,11 +229,11 @@ public class AutonomousOpMode extends LinearOpMode {
         //Move To Shipping Unit
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-6, -30 , Math.toRadians(-135)))
+                    .lineToLinearHeading(new Pose2d(-43, -30 , Math.toRadians(-135)))
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(6, -30, Math.toRadians(-45)))
+                    .lineToLinearHeading(new Pose2d(43, -30, Math.toRadians(-45)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -241,14 +241,17 @@ public class AutonomousOpMode extends LinearOpMode {
         //Drop pre-loaded box in correct level
         dropBoxToLevel();
 
+        safeWait(1000);
+        moveElevatorToLevel1();
+
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-36,-60, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(-36,-65, Math.toRadians(90)))
                         .build();
             } else {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(36, -60, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(36, -65, Math.toRadians(90)))
                         .build();
             }
             driveTrain.followTrajectory(traj);
@@ -270,7 +273,9 @@ public class AutonomousOpMode extends LinearOpMode {
                         .build();
             }
             driveTrain.followTrajectory(traj);
-            runIntakeToCollectAndMoveElevatorToLevel1();
+            runIntakeToCollect();
+            safeWait(2000);
+            moveElevatorToLevel1();
         }
     }
 
@@ -283,6 +288,8 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
+
+        safeWait(2000);
 
         //Move forward to Capstone Pickup Position
         switch (targetZone) {
@@ -358,7 +365,9 @@ public class AutonomousOpMode extends LinearOpMode {
                         .build();
             }
             //Pick Up Freight
-            runIntakeToCollectAndMoveElevatorToLevel1();
+            runIntakeToCollect();
+            safeWait(2000);
+            moveElevatorToLevel1();
 
             //Move To Shipping Unit from Warehouse
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
@@ -390,7 +399,9 @@ public class AutonomousOpMode extends LinearOpMode {
         driveTrain.followTrajectory(traj);
 
         // Run Intake and Move Elevator to Level 1
-        runIntakeToCollectAndMoveElevatorToLevel1();
+        runIntakeToCollect();
+        safeWait(2000);
+        moveElevatorToLevel1();
 
     }
 
@@ -417,20 +428,20 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL2:
                 //If Capstone on Level 1, Drops Pre-Loaded Box on Level 2
                 autonomousController.moveAutoElevatorLevel2();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToDrop();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToCollect();
-                safeWait(100);
+                safeWait(1000);
                 break;
             case LEVEL3:
                 //If Capstone on Level 1, Drops Pre-Loaded Box on Level 3
                 autonomousController.moveAutoElevatorLevel3();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToDrop();
-                safeWait(100);
+                safeWait(1000);
                 autonomousController.moveAutoMagazineToCollect();
-                safeWait(100);
+                safeWait(1000);
                 break;
         }
 
@@ -448,12 +459,15 @@ public class AutonomousOpMode extends LinearOpMode {
 
     //Runs the Intake and moves the Elevator to Level1
     //TODO: Update code to use autoController instead of accessing the subsystems directly
-    public void runIntakeToCollectAndMoveElevatorToLevel1(){
+    public void runIntakeToCollect(){
         autonomousController.moveAutoElevatorLevel0();
         autonomousController.startAutoIntake();
-        safeWait(500); //changeable
+    }
+
+    public void moveElevatorToLevel1(){
         autonomousController.moveAutoElevatorLevel1();
     }
+
 
     /**
      * Hybrid Commands For Autonomous OpMode
@@ -513,7 +527,11 @@ public class AutonomousOpMode extends LinearOpMode {
         safeWait(200);
 
         //***** Select Start Pose ******
-        telemetry.addData("Enter Start Pose :", "(WAREHOUSE: (A) ,    STORAGE PARK STORAGE: (Y)),    STORAGE PARK WAREHOUSE: (A)");
+        telemetry.addData("Enter Start Pose :","");
+        telemetry.addData("  WAREHOUSE: (A)","");
+        telemetry.addData("  STORAGE PARK STORAGE: (Y)","");
+        telemetry.addData("  STORAGE PARK WAREHOUSE: (A)","");
+
         while (!isStopRequested()) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
                 if (gamepadController.gp1GetButtonAPress()) {
@@ -596,7 +614,7 @@ public class AutonomousOpMode extends LinearOpMode {
         telemetry.addData("Vision detectedLabel", vision.detectedLabel);
         telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
 
-        telemetry.addData("Major Arm Position : ",majorArm.getArmPosition());
+        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
 

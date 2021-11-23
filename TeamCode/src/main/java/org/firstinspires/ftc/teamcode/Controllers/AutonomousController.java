@@ -145,14 +145,14 @@ public class AutonomousController {
     }
 
     public void runAutoElevator() {
-        if (elevator.elevatorState == Elevator.ELEVATOR_STATE.LEVEL_0){
+        if (autoElevatorState == AUTO_ELEVATOR_STATE.LEVEL_0){
             elevator.moveElevatorLevel0Position();
             autoMagazineState = AUTO_MAGAZINE_STATE.COLLECT;
 
         } else {
             autoIntakeState = AUTO_INTAKE_STATE.STOPPED;
-            autoMagazineState = AUTO_MAGAZINE_STATE.TRANSPORT;
-            switch (elevator.elevatorState){
+            //autoMagazineState = AUTO_MAGAZINE_STATE.TRANSPORT;
+            switch (autoElevatorState){
                 case LEVEL_1:
                     elevator.moveElevatorLevel1Position();
                     break;
@@ -164,6 +164,11 @@ public class AutonomousController {
                     break;
             }
         }
+
+        if (elevator.runElevatorToLevelState){
+            elevator.runElevatorToLevel(elevator.motorPowerToRun);
+        }
+
     }
 
     /**
@@ -245,18 +250,21 @@ public class AutonomousController {
 
     public void runAutoMajorArm() {
         if(autoMajorArmState == AUTO_MAJOR_ARM_STATE.PARKED){
-            majorArm.moveArmParkingPosition();
+            majorArm.moveMajorArmParkingPosition();
+        } else {
+            majorArm.moveMajorArmPickupPosition();
         }
-        else{
-            majorArm.moveArmPickupPosition();
+
+        if (majorArm.runArmToLevelState) {
+            majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
         }
 
         if(autoMajorClawState == AUTO_MAJOR_CLAW_STATE.OPEN){
-            majorArm.openClaw();
+            majorArm.openMajorClaw();
+        } else{
+            majorArm.closeMajorClaw();
         }
-        else{
-            majorArm.closeClaw();
-        }
+
     }
 
     /**

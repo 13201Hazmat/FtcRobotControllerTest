@@ -58,19 +58,19 @@ public class Test_MajorArm extends LinearOpMode {
 
                 //TODO: Add Test Code here
                 if (gamepadTestController.getButtonXPress()){
-                    majorArm.moveArmDownOne();
+                    majorArm.moveMajorArmDownOne();
                 }
                 if (gamepadTestController.getButtonBPress()) {
-                    majorArm.moveArmUpOne();
+                    majorArm.moveMajorArmUpOne();
                 }
                 if(gamepadTestController.getButtonAPress()){
-                    majorArm.moveArmPickupPosition();
+                    majorArm.moveMajorArmPickupPosition();
                 }
                 if(gamepadTestController.getButtonYPress()){
-                    majorArm.moveArmCapstonePosition();
+                    majorArm.moveMajorArmCapstonePosition();
                 }
                 if(gamepadTestController.getRightTriggerPress()){
-                    majorArm.moveArmParkingPosition();
+                    majorArm.moveMajorArmParkingPosition();
                 }
 
                 if (!gamepadTestController.getStartPersistent()) {
@@ -84,11 +84,11 @@ public class Test_MajorArm extends LinearOpMode {
                 }
 
                 if (majorArm.runArmToLevelState) {
-                    majorArm.runArmToLevel(majorArm.ARM_MOTOR_POWER);
+                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
                 }
 
                 if(gamepadTestController.getRightBumperPress()){
-                    majorArm.changeClawState();
+                    majorArm.changeMajorClawState();
                 }
 
                 if(DEBUG_FLAG) {
@@ -120,7 +120,7 @@ public class Test_MajorArm extends LinearOpMode {
         telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
         telemetry.addData("Battery Power : ", driveTrain.getBatteryVoltage(hardwareMap));
 
-        telemetry.addData("Major Arm Position : ",majorArm.getArmPosition());
+        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
 
         //Add logic for debug print Logic

@@ -338,30 +338,30 @@ public class GamepadController {
      */
     public void runMajorArm(){ //this function should be at LaunchController's place after order change
         if (gp2GetButtonXPress()){
-            majorArm.moveArmDownOne();
+            majorArm.moveMajorArmDownOne();
         }
         if (gp2GetButtonBPress()) {
-            majorArm.moveArmUpOne();
+            majorArm.moveMajorArmUpOne();
         }
         if(gp2GetButtonAPress()){
-            majorArm.moveArmPickupPosition();
+            majorArm.moveMajorArmPickupPosition();
         }
         if(gp2GetButtonYPress()){
-            majorArm.moveArmCapstonePosition();
+            majorArm.moveMajorArmCapstonePosition();
         }
         if(gp2GetRightTriggerPress()){
-            majorArm.moveArmParkingPosition();
+            majorArm.moveMajorArmParkingPosition();
         }
 
         if (majorArm.runArmToLevelState) {
-            majorArm.runArmToLevel(majorArm.ARM_MOTOR_POWER);
+            majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
         }
 
         if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyDown();
                 if (majorArm.runArmToLevelState) {
-                    majorArm.runArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
                 }
 
             }
@@ -369,7 +369,7 @@ public class GamepadController {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyUp();
                 if (majorArm.runArmToLevelState) {
-                    majorArm.runArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
                 }
             }
         }
@@ -377,7 +377,7 @@ public class GamepadController {
 
 
         if(gp2GetRightBumperPress()){
-            majorArm.changeClawState();
+            majorArm.changeMajorClawState();
         }
     }
 

@@ -604,7 +604,7 @@ public class CalibrateAutonomous extends LinearOpMode {
         telemetry.addData("Vision detectedLabel", vision.detectedLabel);
         telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
 
-        telemetry.addData("Major Arm Position : ",majorArm.getArmPosition());
+        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
 

@@ -109,7 +109,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
         telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
 
-        telemetry.addData("Major Arm Position : ",majorArm.getArmPosition());
+        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
 
