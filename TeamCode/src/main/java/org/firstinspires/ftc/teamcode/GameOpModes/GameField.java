@@ -41,7 +41,8 @@ public class GameField {
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
         WAREHOUSE,
-        STORAGE
+        STORAGE,
+        ORIGIN
         //TODO: Update names for Startpos
     }
     public static START_POSITION startPosition = START_POSITION.WAREHOUSE;
