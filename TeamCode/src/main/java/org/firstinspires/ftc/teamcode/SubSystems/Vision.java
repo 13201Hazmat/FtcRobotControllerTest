@@ -195,9 +195,9 @@ public class Vision {
     public float detectedLabelLeft, detectedLabelRight, detectedLabelTop, detectedLabelBottom;
     public static float[] targetPosition = {
             //TODO : Update values based on marker location identifier
-            10,
-            20,
-            30
+            600,
+            1000,
+            2000
     };
 
     private TFObjectDetector tfod;
@@ -284,7 +284,7 @@ public class Vision {
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
             //tfod.setZoom(1.75, 16.0/9.0);
-            tfod.setZoom(2.0, 16.0/9.0);
+            tfod.setZoom(1.75, 16.0/9.0);
             recognitions = tfod.getUpdatedRecognitions();
         }
     }

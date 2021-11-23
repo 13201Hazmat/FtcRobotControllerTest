@@ -157,33 +157,38 @@ public class AutonomousOpMode extends LinearOpMode {
      * Path and actions for autonomous mode starting from Inner start position
      */
     public void runAutoStorage(){
+
+        //public static final Pose2d BLUE_STORAGE_STARTPOS =  new Pose2d(-61,-31,Math.toRadians(180));
+        //public static final Pose2d RED_STORAGE_STARTPOS =  new Pose2d(61,-40,Math.toRadians(0));
+
         //Logic for waiting
         safeWait(100);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
+        safeWait(2000);
 
         //Move forward to Capstone Pickup Position
         switch (targetZone) {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5, -21.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49, -33, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5,-21.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(49,-39, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5, -30.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49, -41, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5,-30.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(49,-31, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
@@ -191,12 +196,12 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL3:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5, -39.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49, -49, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                     break;
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5, -39.3, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(45.5, -23, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
@@ -209,11 +214,11 @@ public class AutonomousOpMode extends LinearOpMode {
         //Move To Carousal
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .splineToSplineHeading(new Pose2d(54, -54, Math.toRadians(-135)), Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(-58, -54, Math.toRadians(-150)), Math.toRadians(0))
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .splineToSplineHeading(new Pose2d(54, -54, Math.toRadians(-45)), Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(54, -58, Math.toRadians(-60)), Math.toRadians(0))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -272,6 +277,9 @@ public class AutonomousOpMode extends LinearOpMode {
 
 
     public void runAutoWarehouse(){
+        //public static final Pose2d BLUE_WAREHOUSE_STARTPOS =  new Pose2d(-61,14,Math.toRadians(180));
+        //public static final Pose2d RED_WAREHOUSE_STARTPOS =  new Pose2d(61,7,Math.toRadians(0));
+
         safeWait(100);
 
         //Move arm to Pickup Capstone level and open Grip
@@ -282,33 +290,33 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5, 8.7, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49, 14, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5, 8.7, Math.toRadians(45)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(49, 9, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5, 17.7, Math.toRadians(-135) ), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49, 6, Math.toRadians(0) ), Math.toRadians(0)) //TODO: Check position
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5, 17.7, Math.toRadians(45)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(48, 11, Math.toRadians(-30)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
             case LEVEL3:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(-45.5,26.7, Math.toRadians(-135)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(-49,-2, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .splineToSplineHeading(new Pose2d(45.5, 26.7, Math.toRadians(45)), Math.toRadians(0)) //TODO: Check position
+                            .splineToSplineHeading(new Pose2d(47, 13, Math.toRadians(-60)), Math.toRadians(0)) //TODO: Check position
                             .build();
                 }
                 break;
@@ -577,6 +585,10 @@ public class AutonomousOpMode extends LinearOpMode {
         telemetry.addData("Drive Mode : ", driveTrain.driveMode);
         telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
         telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
+
+        telemetry.addData("Vision targetLevelDetected : ", vision.targetLevelDetected);
+        telemetry.addData("Vision detectedLabel", vision.detectedLabel);
+        telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
 
         telemetry.addData("Major Arm Position : ",majorArm.getArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
