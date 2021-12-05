@@ -121,6 +121,8 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
 
         telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
+        telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
+        telemetry.addData("Magazine Color Sensor Distance :","%.2f",magazine.getMagazineColorSensorDistance());
 
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());

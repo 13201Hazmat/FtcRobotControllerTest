@@ -263,6 +263,12 @@ public class GamepadController {
         }
     }
 
+    public enum AUTO_MAGAZINE {
+        ON,
+        OFF
+    }
+    public AUTO_MAGAZINE autoMagazine = AUTO_MAGAZINE.ON;
+
     /**
      * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck ring to be out of intake. <BR>
@@ -280,6 +286,25 @@ public class GamepadController {
                     magazine.moveMagazineToCollect();
                 } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
                     magazine.moveMagazineToTransport();
+                }
+            }
+        }
+
+        if (gp1GetStart() && gp1GetRightTriggerPress()) {
+            if (autoMagazine == AUTO_MAGAZINE.ON) {
+                autoMagazine = AUTO_MAGAZINE.OFF;
+            } else {
+                autoMagazine = AUTO_MAGAZINE.ON;
+            }
+        }
+
+        if (autoMagazine == AUTO_MAGAZINE.ON) {
+            if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
+                if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
+                    if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
+                        magazine.moveMagazineToTransport();
+                        intake.stopIntakeMotor();
+                    }
                 }
             }
         }
