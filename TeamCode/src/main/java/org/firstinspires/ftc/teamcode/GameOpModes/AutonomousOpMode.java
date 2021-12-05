@@ -214,7 +214,7 @@ public class AutonomousOpMode extends LinearOpMode {
         //Move To Carousal
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-62, -58, Math.toRadians(-150)))
+                    .lineToLinearHeading(new Pose2d(-65, -61, Math.toRadians(-155)))
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
