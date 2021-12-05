@@ -84,7 +84,8 @@ public class AutonomousOpMode extends LinearOpMode {
                 elevator,
                 magazine,
                 spinner,
-                majorArm);
+                majorArm,
+                minorArm);
 
         //Key Pay inputs to select Game Plan;
         selectGamePlan();

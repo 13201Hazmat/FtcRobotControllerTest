@@ -45,6 +45,7 @@ public class MajorArm {
     public MajorArm(HardwareMap hardwareMap) {
         majorArmMotor = hardwareMap.get(DcMotorEx.class, "major_arm_motor");
         majorClawServo = hardwareMap.servo.get("major_claw_servo");
+        initMajorArm();
     }
 
     public static int baselineEncoderCount = 0;

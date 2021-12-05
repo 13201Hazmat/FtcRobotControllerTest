@@ -66,7 +66,8 @@ public class Elevator {
     public ELEVATOR_BUTTON_STATE elevatorButtonState;
 
     public Elevator(HardwareMap hardwareMap) {
-        elevatorMotor =  hardwareMap.get(DcMotorEx.class, "elevator_motor");;
+        elevatorMotor =  hardwareMap.get(DcMotorEx.class, "elevator_motor");
+        initElevator();
     }
 
     /**

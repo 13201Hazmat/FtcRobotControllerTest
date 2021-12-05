@@ -37,6 +37,7 @@ public class Spinner {
 
     public Spinner (HardwareMap hardwareMap) {
         spinnerMotor = hardwareMap.dcMotor.get("spinner_motor");
+        initSpinner();
     }
 
     public void initSpinner(){

@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.MajorArm;
+import org.firstinspires.ftc.teamcode.SubSystems.MinorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 
 /**
@@ -27,6 +28,7 @@ public class AutonomousController {
     public Magazine magazine;
     public Spinner spinner;
     public MajorArm majorArm;
+    public MinorArm minorArm;
 
     public Pose2d startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
 
@@ -50,13 +52,15 @@ public class AutonomousController {
                                 Elevator elevator,
                                 Magazine magazine,
                                 Spinner spinner,
-                                MajorArm majorArm) {
+                                MajorArm majorArm,
+                                MinorArm minorArm) {
         this.driveTrain = driveTrain;
         this.intake = intake;
         this.elevator = elevator;
         this.magazine = magazine;
         this.spinner = spinner;
         this.majorArm = majorArm;
+        this.minorArm = minorArm;
     }
 
     /**

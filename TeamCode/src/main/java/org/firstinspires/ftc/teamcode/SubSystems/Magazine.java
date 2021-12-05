@@ -44,6 +44,7 @@ public class Magazine {
 
     public Magazine(HardwareMap hardwareMap) {
         magazineServo = hardwareMap.servo.get("magazine_servo");
+        initMagazine();
     }
 
     public void initMagazine(){

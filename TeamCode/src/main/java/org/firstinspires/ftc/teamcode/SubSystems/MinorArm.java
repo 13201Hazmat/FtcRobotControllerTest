@@ -39,6 +39,7 @@ public class MinorArm {
     public MinorArm(HardwareMap hardwareMap) {
         minorArmServo = hardwareMap.servo.get("minor_arm_servo");
         minorClawServo = hardwareMap.servo.get("minor_claw_servo");
+        initMinorArm();
     }
 
     public static final double CLAW_OPEN = 0.8;
