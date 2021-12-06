@@ -91,7 +91,6 @@ public class GamepadController {
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
-        //TODO: Add run functions for more Subsystems added
         runIntake();
         runElevator();
         runMagazine();
@@ -285,6 +284,7 @@ public class GamepadController {
                 if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.TRANSPORT ) {
                     magazine.moveMagazineToCollect();
                 } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
+                    intake.stopIntakeMotor();
                     magazine.moveMagazineToTransport();
                 }
             }
