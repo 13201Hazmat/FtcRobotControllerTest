@@ -123,6 +123,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
         telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
         telemetry.addData("Magazine Color Sensor Distance :","%.2f",magazine.getMagazineColorSensorDistance());
+        telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
 
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
