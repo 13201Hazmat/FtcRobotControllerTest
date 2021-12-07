@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -62,6 +63,9 @@ public class Magazine {
     }
 
     public void initMagazine(){
+        if (magazineColorSensor instanceof SwitchableLight) {
+            ((SwitchableLight)magazineColorSensor).enableLight(true);
+        }
         moveMagazineToCollect();
     }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -204,6 +205,14 @@ public class AutonomousController {
     }
 
     public void runAutoMagazine() {
+        if (magazine.magazineColorSensor instanceof SwitchableLight) {
+            if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
+                    magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
+                ((SwitchableLight) magazine.magazineColorSensor).enableLight(true);
+            } else {
+                ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
+            }
+        }
         switch (autoMagazineState){
             case TRANSPORT:
                 magazine.moveMagazineToTransport();

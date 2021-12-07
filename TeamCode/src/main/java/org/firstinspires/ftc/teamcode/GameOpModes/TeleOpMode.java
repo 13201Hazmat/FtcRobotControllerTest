@@ -131,7 +131,6 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Minor Arm Position : ",minorArm.getMinorServoState());
         telemetry.addData("Minor Claw State : ",minorArm.getMinorClawState());
 
-
         telemetry.update();
 
     }

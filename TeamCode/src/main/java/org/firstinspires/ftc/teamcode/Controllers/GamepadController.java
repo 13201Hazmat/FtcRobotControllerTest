@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -112,9 +113,16 @@ public class GamepadController {
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
             if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
-                driveTrain.gamepadInput = new Vector2d(
-                        -gp1TurboMode(gp1GetLeftStickY()),
-                        -gp1TurboMode(gp1GetLeftStickX()));
+                if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
+                    driveTrain.gamepadInput = new Vector2d(
+                            -gp1TurboMode(gp1GetLeftStickY()),
+                            -gp1TurboMode(gp1GetLeftStickX()));
+                } else {
+                    // Avoid using Turbo when elevator is at Level 0
+                    driveTrain.gamepadInput = new Vector2d(
+                            -limitStick(gp1GetLeftStickY()),
+                            -limitStick(gp1GetLeftStickX()));
+                }
             } else {
                 driveTrain.gamepadInput = new Vector2d(
                         -limitStick(gp2GetLeftStickY()),
@@ -298,11 +306,22 @@ public class GamepadController {
             }
         }
 
+        if (magazine.magazineColorSensor instanceof SwitchableLight) {
+            if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
+                    magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
+                ((SwitchableLight) magazine.magazineColorSensor).enableLight(true);
+            } else {
+                ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
+            }
+        }
+
+
         if (autoMagazine == AUTO_MAGAZINE.ON) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
                 if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
                     if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                         magazine.moveMagazineToTransport();
+                        elevator.moveElevatorLevel1Position();
                         intake.stopIntakeMotor();
                     }
                 }
