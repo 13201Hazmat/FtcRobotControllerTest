@@ -397,23 +397,23 @@ public class GamepadController {
             majorArm.moveMajorArmParkingPosition();
         }
 
-        if (majorArm.runArmToLevelState) {
-            majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
+        if (majorArm.runMajorArmToLevelState) {
+            majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
         }
 
         if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyDown();
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
 
             }
         } else {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyUp();
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
             }
         }

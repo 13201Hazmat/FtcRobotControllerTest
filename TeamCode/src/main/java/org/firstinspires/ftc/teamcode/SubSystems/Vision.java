@@ -307,11 +307,23 @@ public class Vision {
                         detectedLabelBottom = recognition.getBottom();
                         if (recognition.getLabel().equals(targetLabel)) {
                             if (recognition.getLeft() < targetPosition[0]) {
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
+                                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
+                                } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL2;
+                                }
                             } else if (recognition.getLeft() < targetPosition[1]) {
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL2;
+                                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL2;
+                                } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
+                                }
                             } else {//if (recognition.getLeft() < targetPosition[2])
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
+                                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
+                                } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
+                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
+                                }
                             }
                         }
                     }

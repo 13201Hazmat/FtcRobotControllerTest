@@ -83,8 +83,8 @@ public class Test_MajorArm extends LinearOpMode {
                     }
                 }
 
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
                 }
 
                 if(gamepadTestController.getRightBumperPress()){

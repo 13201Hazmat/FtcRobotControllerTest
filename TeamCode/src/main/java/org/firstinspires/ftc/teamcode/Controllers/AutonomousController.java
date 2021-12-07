@@ -268,8 +268,8 @@ public class AutonomousController {
             majorArm.moveMajorArmPickupPosition();
         }
 
-        if (majorArm.runArmToLevelState) {
-            majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
+        if (majorArm.runMajorArmToLevelState) {
+            majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
         }
 
         if(autoMajorClawState == AUTO_MAJOR_CLAW_STATE.OPEN){

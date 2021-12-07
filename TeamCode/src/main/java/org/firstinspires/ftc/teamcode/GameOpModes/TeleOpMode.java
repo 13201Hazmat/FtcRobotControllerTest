@@ -112,6 +112,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
+        telemetry.addData("Major Wrist Position : ", "%0.2f",majorArm.majorWristServo.getPosition());
 
         telemetry.addData("Intake State : ", intake.getIntakeMotorState());
         telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());

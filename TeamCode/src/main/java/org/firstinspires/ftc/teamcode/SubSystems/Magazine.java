@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -30,6 +31,8 @@ public class Magazine {
 
     public Servo magazineServo = null;
     public NormalizedColorSensor magazineColorSensor;
+    public DigitalChannel magazineRedLEDEmpty;
+    public DigitalChannel magazineGreenLEDLoaded;
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
     public static final double MAGAZINE_SERVO_TRANSPORT_POSITION =  0.55;
@@ -59,6 +62,8 @@ public class Magazine {
     public Magazine(HardwareMap hardwareMap) {
         magazineServo = hardwareMap.servo.get("magazine_servo");
         magazineColorSensor = hardwareMap.get(NormalizedColorSensor.class, "magazine_sensor");
+        magazineRedLEDEmpty = hardwareMap.get(DigitalChannel.class, "magazine_LED_red");
+        magazineGreenLEDLoaded = hardwareMap.get(DigitalChannel.class, "magazine_LED_green");
         initMagazine();
     }
 
@@ -67,6 +72,8 @@ public class Magazine {
             ((SwitchableLight)magazineColorSensor).enableLight(true);
         }
         moveMagazineToCollect();
+        magazineRedLEDEmpty.setState(true);
+        magazineGreenLEDLoaded.setState(false);
     }
 
     /**
@@ -116,8 +123,12 @@ public class Magazine {
 
         if (magazineColorSensorDistance < 3.0) {
             magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.LOADED;
+            magazineRedLEDEmpty.setState(false);
+            magazineGreenLEDLoaded.setState(true);
         } else {
             magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.EMPTY;
+            magazineRedLEDEmpty.setState(true);
+            magazineGreenLEDLoaded.setState(false);
         }
         return magazineColorSensorState;
     }
