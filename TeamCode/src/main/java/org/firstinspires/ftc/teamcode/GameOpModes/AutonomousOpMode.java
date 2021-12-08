@@ -381,7 +381,8 @@ public class AutonomousOpMode extends LinearOpMode {
             } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
                         .splineTo(new Vector2d(60, 12), Math.toRadians(90))
-                        .splineTo(new Vector2d(42, 42), Math.toRadians(90))                          .build();
+                        .splineTo(new Vector2d(42, 42), Math.toRadians(90))
+                        .build();
             }
             driveTrain.followTrajectory(traj);
 
@@ -619,7 +620,7 @@ public class AutonomousOpMode extends LinearOpMode {
         telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
-        telemetry.addData("Major Wrist Position : ", "%0.2f",majorArm.majorWristServo.getPosition());
+        telemetry.addData("Major Wrist Position : ", majorArm.majorWristServo.getPosition());
 
         telemetry.addData("Intake State : ", intake.getIntakeMotorState());
         telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
@@ -629,14 +630,13 @@ public class AutonomousOpMode extends LinearOpMode {
 
         telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
         telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
-        telemetry.addData("Magazine Color Sensor Distance :","%.2f",magazine.getMagazineColorSensorDistance());
+        telemetry.addData("Magazine Color Sensor Distance :",magazine.getMagazineColorSensorDistance());
 
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
 
         telemetry.addData("Minor Arm Position : ",minorArm.getMinorServoState());
         telemetry.addData("Minor Claw State : ",minorArm.getMinorClawState());
-
 
         telemetry.update();
 

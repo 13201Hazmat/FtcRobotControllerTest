@@ -47,7 +47,7 @@ public class MinorArm {
     public MINOR_CLAW_STATE minorClawState = MINOR_CLAW_STATE.OPEN;
     public static final double PICKUP_POSITION_COUNT = 0.85;
     public static final double LEVEL1_POSITION_COUNT = 0.75;
-    public static final double PARKED_POSITION_COUNT = 0.45;
+    public static final double PARKED_POSITION_COUNT = 0.55;
     public MINOR_SERVO_STATE minorServoState = MINOR_SERVO_STATE.PARKED;
     public MINOR_SERVO_STATE previousMinorServoState = MINOR_SERVO_STATE.PARKED;
 
