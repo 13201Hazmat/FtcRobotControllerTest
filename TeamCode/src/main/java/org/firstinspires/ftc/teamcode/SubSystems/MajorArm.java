@@ -55,10 +55,10 @@ public class MajorArm {
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
-    public static int MAJORARM_MOTOR_PICKUP_POSITION_COUNT = -700;
-    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -650;
-    public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -600;
-    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -550;
+    public static int MAJORARM_MOTOR_PICKUP_POSITION_COUNT = -800;
+    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -600;
+    public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -560;
+    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -525;
     public static int MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT = -450;
     public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
     public static int MAJORARM_DELTA_COUNT = 25;
@@ -67,11 +67,11 @@ public class MajorArm {
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
     public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.0;
-    public static final double  MAJORARM_WRIST_LEVEL1_POSITION = 0.1;
-    public static final double  MAJORARM_WRIST_LEVEL2_POSITION = 0.3;
-    public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.5;
-    public static final double  MAJORARM_WRIST_CAPSTONE_POSITION = 0.7;
-    public static final double  MAJORARM_WRIST_PARKED_POSITION = 1.0;
+    public static final double  MAJORARM_WRIST_LEVEL1_POSITION = 0.15;
+    public static final double  MAJORARM_WRIST_LEVEL2_POSITION = 0.25;
+    public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.4;
+    public static final double  MAJORARM_WRIST_CAPSTONE_POSITION = 0.6;
+    public static final double  MAJORARM_WRIST_PARKED_POSITION = 0.4;
 
     public static double MAJORARM_MOTOR_POWER = 0.2;
     public static double MAJORARM_MOTOR_DELTA_POWER = 0.1;

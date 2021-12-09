@@ -252,7 +252,6 @@ public class GamepadController {
             if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_3) {
                 elevator.moveElevatorLevel3Position();
             }
-
         }
 
         if (!gp1GetStart()) {

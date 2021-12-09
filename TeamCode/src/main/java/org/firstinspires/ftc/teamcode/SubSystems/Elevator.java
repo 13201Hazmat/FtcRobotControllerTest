@@ -47,8 +47,8 @@ public class Elevator {
 
     public static int baselineEncoderCount = 0;
     public static int ELEVATOR_LEVEL0_POSITION_COUNT = 0;
-    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -200;
-    public static int ELEVATOR_LEVEL2_POSITION_COUNT = -600;
+    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -300;
+    public static int ELEVATOR_LEVEL2_POSITION_COUNT = -700;
     public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1500;
     public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1550;
     public static int ELEVATOR_DELTA_SLIGHTLY_DOWN_DELTA_COUNT = -100;
