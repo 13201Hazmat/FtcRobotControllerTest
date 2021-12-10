@@ -403,6 +403,7 @@ public class GamepadController {
         if (majorArm.runMajorArmToLevelState) {
             majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
         }
+        majorArm.moveMajorArmWristToPosition();
 
         if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
@@ -420,8 +421,6 @@ public class GamepadController {
                 }
             }
         }
-
-
 
         if(gp2GetRightBumperPress()){
             majorArm.changeMajorClawState();
