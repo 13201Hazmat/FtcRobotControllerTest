@@ -42,11 +42,18 @@ public class Intake {
     }*/
     //public INTAKE_BUTTON_STATE intakeButtonState;
 
+    /**
+     *
+     * @param hardwareMap
+     */
     public Intake(HardwareMap hardwareMap) {
         intakeMotor = hardwareMap.dcMotor.get("intake_motor");
         initIntake();
     }
 
+    /**
+     *
+     */
     public void initIntake(){
 
     }
