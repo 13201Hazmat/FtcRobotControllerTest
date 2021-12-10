@@ -113,7 +113,7 @@ public class GamepadController {
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
             if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
-                if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
+                /*if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
                     driveTrain.gamepadInput = new Vector2d(
                             -gp1TurboMode(gp1GetLeftStickY()),
                             -gp1TurboMode(gp1GetLeftStickX()));
@@ -122,7 +122,11 @@ public class GamepadController {
                     driveTrain.gamepadInput = new Vector2d(
                             -limitStick(gp1GetLeftStickY()),
                             -limitStick(gp1GetLeftStickX()));
-                }
+                }*/
+                driveTrain.gamepadInput = new Vector2d(
+                        -gp1TurboMode(gp1GetLeftStickY()),
+                        -gp1TurboMode(gp1GetLeftStickX()));
+
             } else {
                 driveTrain.gamepadInput = new Vector2d(
                         -limitStick(gp2GetLeftStickY()),

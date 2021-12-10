@@ -72,6 +72,7 @@ public class MajorArm {
     public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.4;
     public static final double  MAJORARM_WRIST_CAPSTONE_POSITION = 0.6;
     public static final double  MAJORARM_WRIST_PARKED_POSITION = 0.4;
+    public static final double  MAJORARM_WRIST_INIT_POSITION = 0.0;
 
     public static double MAJORARM_MOTOR_POWER = 0.2;
     public static double MAJORARM_MOTOR_DELTA_POWER = 0.1;
@@ -86,7 +87,7 @@ public class MajorArm {
         majorClawState = MAJOR_CLAW_STATE.OPEN;
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT);
         majorArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        majorWristServo.setPosition(MAJORARM_WRIST_PARKED_POSITION);
+        majorWristServo.setPosition(MAJORARM_WRIST_INIT_POSITION);
         currentMajorArmState = MAJOR_ARM_STATE.PARKED;
         previousMajorArmState = MAJOR_ARM_STATE.PARKED;
     }

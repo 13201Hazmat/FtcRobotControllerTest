@@ -278,7 +278,7 @@ public class AutonomousOpMode extends LinearOpMode {
             driveTrain.followTrajectory(traj);
             runIntakeToCollect();
             safeWait(2000);
-            moveElevatorToLevel1();
+            moveElevatorToCollect();
         }
     }
 
@@ -469,6 +469,10 @@ public class AutonomousOpMode extends LinearOpMode {
 
     public void moveElevatorToLevel1(){
         autonomousController.moveAutoElevatorLevel1();
+    }
+
+    public void moveElevatorToCollect(){
+        autonomousController.moveAutoElevatorLevel0();
     }
 
 

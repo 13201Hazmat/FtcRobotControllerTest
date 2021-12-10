@@ -32,7 +32,7 @@ public class Spinner {
     }
     public SPINNER_MOTOR_STATE spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
 
-    public double spinnerMotorPower = 0.5;
+    public double spinnerMotorPower = 0.7;
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
 
     public Spinner (HardwareMap hardwareMap) {
