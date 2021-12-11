@@ -102,6 +102,7 @@ public class AutonomousOpMode extends LinearOpMode {
         //On Init, Elevator moves to Level 1, Magazine moves to transport
         autonomousController.moveAutoElevatorLevel1();
         autonomousController.moveAutoMagazineToTransport();
+        majorArm.moveMajorArmWristToInitPosition();
         autonomousController.runAutoControl();
 
         telemetry.addData("Waiting for start to be pressed.","Robot is ready!");
@@ -165,6 +166,16 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //Logic for waiting
         safeWait(100);
+
+        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(-55,-31,Math.toRadians(180)))
+                    .build();
+        } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(55,-40,Math.toRadians(0)))
+                    .build();
+        }
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
@@ -289,6 +300,16 @@ public class AutonomousOpMode extends LinearOpMode {
 
         safeWait(100);
 
+        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(-55,-14,Math.toRadians(180)))
+                    .build();
+        } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(55,7,Math.toRadians(0)))
+                    .build();
+        }
+
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
 
@@ -404,7 +425,7 @@ public class AutonomousOpMode extends LinearOpMode {
         // Run Intake and Move Elevator to Level 1
         runIntakeToCollect();
         safeWait(2000);
-        moveElevatorToLevel1();
+        moveElevatorToLevel0();
 
     }
 
@@ -471,6 +492,10 @@ public class AutonomousOpMode extends LinearOpMode {
         autonomousController.moveAutoElevatorLevel1();
     }
 
+    public void moveElevatorToLevel0(){
+        autonomousController.moveAutoElevatorLevel0();
+    }
+
     public void moveElevatorToCollect(){
         autonomousController.moveAutoElevatorLevel0();
     }
@@ -484,6 +509,7 @@ public class AutonomousOpMode extends LinearOpMode {
         autonomousController.closeAutoMajorClaw();
         safeWait(1000);
         autonomousController.moveAutoMajorArmPark();
+        majorArm.moveMajorArmWristToPosition();
         safeWait(1000);
     }
 

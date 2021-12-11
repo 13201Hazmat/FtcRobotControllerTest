@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *  *  This code defines the TeleOp mode is done by Hazmat Robot for Ultimate Goal.<BR>
  *
  */
-@TeleOp(name = "Calibrate Servo Position", group = "Calibration")
-public class CalibrateServo extends LinearOpMode {
+@TeleOp(name = "Calibrate Wrist Servo Position", group = "Calibration")
+public class CalibrateWristServo extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 

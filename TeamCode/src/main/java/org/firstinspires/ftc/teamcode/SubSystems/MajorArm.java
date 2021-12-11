@@ -92,7 +92,6 @@ public class MajorArm {
         majorClawState = MAJOR_CLAW_STATE.CLOSED;
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT);
         majorArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        majorWristServo.setPosition(MAJORARM_WRIST_INIT_POSITION);
         currentMajorArmState = MAJOR_ARM_STATE.PARKED;
         previousMajorArmState = MAJOR_ARM_STATE.PARKED;
     }
@@ -133,6 +132,10 @@ public class MajorArm {
         } else  {
             return true;
         }
+    }
+
+    public void moveMajorArmWristToInitPosition(){
+        majorWristServo.setPosition(MAJORARM_WRIST_INIT_POSITION);
     }
 
     public void moveMajorArmWristToPosition() {

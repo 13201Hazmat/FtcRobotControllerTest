@@ -60,8 +60,8 @@ public class TeleOpMode extends LinearOpMode {
         }
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
-        //TODO: Add code for any initial state
-        //Subsystem1.setIntakeReleaseOpen();
+        majorArm.moveMajorArmParkingPosition();
+        elevator.moveElevatorLevel1Position();
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
@@ -111,7 +111,7 @@ public class TeleOpMode extends LinearOpMode {
 
         telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
-        telemetry.addData("Major Arm Position Count : ","%.3f", majorArm.getMajorArmPositionCount());
+        telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
         telemetry.addData("Major Wrist Position : ",majorArm.majorWristServo.getPosition());
 
         telemetry.addData("Intake State : ", intake.getIntakeMotorState());

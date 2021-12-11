@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -16,31 +15,28 @@ import org.firstinspires.ftc.teamcode.SubSystems.Intake;
  *  *  This code defines the TeleOp mode is done by Hazmat Robot for Ultimate Goal.<BR>
  *
  */
-@Config
-@TeleOp(name = "Test Intake", group = "Test")
-@Disabled
-public class TestIntake extends LinearOpMode {
+@TeleOp(name = "Calibrate Grip Servo Position", group = "Calibration")
+public class CalibrateMajorClawServo extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
     public GamepadTestController gamepadTestController;
     public DriveTrain driveTrain;
-    public Intake intake;
-
-    //public Vuforia Vuforia1;
-    public Pose2d startPose = GameField.ORIGINPOSE;
+    public Servo servoToCalibrate;
+    public double servoPosition = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         /* Create Subsystem Objects*/
         driveTrain = new DriveTrain(hardwareMap);
-        intake = new Intake(hardwareMap);   /*Subsystem to be tested*/
+
+        //servoToCalibrate = hardwareMap.servo.get("servo_name"); //Change name of motor to calibrate per hardwaremap
+        servoToCalibrate = hardwareMap.servo.get("major_claw_servo");
         /* Create Controllers */
         gamepadTestController = new GamepadTestController(gamepad1, driveTrain);
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
-        intake.initIntake();
+        servoToCalibrate.setPosition(0.0);
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
@@ -59,24 +55,14 @@ public class TestIntake extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadTestController.runByGamepadControl();
 
-
-                if (gamepadTestController.getDpad_downPress()) {
-                    if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
-                        intake.startIntakeMotorInward();
-                    }
-                    else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                        intake.stopIntakeMotor();
-                    }
+                if (gamepadTestController.getDpad_downPress()){
+                   if (servoPosition >-1.0) servoPosition -=0.05;
                 }
-
-                //Reverse Intake motors and run - in case of stuck state)
                 if (gamepadTestController.getDpad_upPress()) {
-                    if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.REVERSING) {
-                        intake.startIntakeMotorOutward();
-                    } else if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                        intake.stopIntakeMotor();
-                    }
+                    if (servoPosition <1.0) servoPosition +=0.05;
                 }
+
+                servoToCalibrate.setPosition(servoPosition);
 
                 if(DEBUG_FLAG) {
                     printDebugMessages();
@@ -86,7 +72,18 @@ public class TestIntake extends LinearOpMode {
             }
 
         }
-        GameField.poseSetInAutonomous = false;
+    }
+
+    /**
+     * Safe method to wait so that stop button is also not missed
+     * @param time time in ms to wait
+     */
+    public void safeWait(double time){
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!isStopRequested() && timer.time() < time){
+            //Wait
+        }
     }
 
     /**
@@ -97,18 +94,11 @@ public class TestIntake extends LinearOpMode {
         telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_FLAG is : ", DEBUG_FLAG);
 
-        telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-        telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-        telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-        telemetry.addData("startPose : ", startPose);
-
         //****** Drive debug ******
-        telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-        telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
         telemetry.addData("Battery Power : ", driveTrain.getBatteryVoltage(hardwareMap));
 
-        telemetry.addData("Intake State : ", intake.getIntakeMotorState());
-
+        telemetry.addData("Servo Position set : ", servoPosition);
+        telemetry.addData("Servo Position read : ", servoToCalibrate.getPosition());
         //Add logic for debug print Logic
 
         telemetry.update();
