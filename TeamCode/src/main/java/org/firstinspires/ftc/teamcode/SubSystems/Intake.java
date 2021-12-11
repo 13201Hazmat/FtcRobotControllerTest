@@ -58,7 +58,9 @@ public class Intake {
 
     }
 
-
+    /**
+     * Starts the intake to running if it is not running before
+     */
     public void startIntakeMotorInward() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING) {
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower2);

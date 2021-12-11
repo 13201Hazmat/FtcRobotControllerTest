@@ -55,13 +55,19 @@ public class Magazine {
     }
     public MAGAZINE_COLOR_SENSOR_STATE magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.EMPTY;
 
-
+    /**
+     * Allows the servo and color sensor values to be shown on the Control Hub
+     * @param hardwareMap
+     */
     public Magazine(HardwareMap hardwareMap) {
         magazineServo = hardwareMap.servo.get("magazine_servo");
         magazineColorSensor = hardwareMap.get(NormalizedColorSensor.class, "magazine_sensor");
         initMagazine();
     }
 
+    /**
+     * Moves magazine to collect only if the color sensor senses a freight
+     */
     public void initMagazine(){
         if (magazineColorSensor instanceof SwitchableLight) {
             ((SwitchableLight)magazineColorSensor).enableLight(true);
@@ -109,6 +115,11 @@ public class Magazine {
 
     public double magazineColorSensorDistance;
 
+    /**
+     * Returns the color sensor state back, and sets specific values to check if the sensor
+     * is detecting anything
+     * @return
+     */
     public MAGAZINE_COLOR_SENSOR_STATE getMagazineColorSensorState(){
         if (magazineColorSensor instanceof DistanceSensor) {
             magazineColorSensorDistance =  ((DistanceSensor) magazineColorSensor).getDistance(DistanceUnit.CM);
