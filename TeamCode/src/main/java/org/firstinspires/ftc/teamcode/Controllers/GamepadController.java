@@ -285,6 +285,16 @@ public class GamepadController {
      */
     public void runMagazine(){ //this function should be at LaunchController's place after order change
         if (gp1GetRightBumperPress()) {
+
+            //To toggle automation to off or on if needed
+            if (gp2GetStart()) {
+                if (autoMagazine == AUTO_MAGAZINE.ON) {
+                    autoMagazine = AUTO_MAGAZINE.OFF;
+                } else {
+                    autoMagazine = AUTO_MAGAZINE.ON;
+                }
+            }
+
             if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
                 if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToDrop();
@@ -298,14 +308,6 @@ public class GamepadController {
                     intake.stopIntakeMotor();
                     magazine.moveMagazineToTransport();
                 }
-            }
-        }
-
-        if (gp1GetStart() && gp1GetRightBumperPress()) {
-            if (autoMagazine == AUTO_MAGAZINE.ON) {
-                autoMagazine = AUTO_MAGAZINE.OFF;
-            } else {
-                autoMagazine = AUTO_MAGAZINE.ON;
             }
         }
 
