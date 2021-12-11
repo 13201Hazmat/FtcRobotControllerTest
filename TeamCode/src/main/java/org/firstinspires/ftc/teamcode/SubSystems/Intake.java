@@ -43,7 +43,7 @@ public class Intake {
     //public INTAKE_BUTTON_STATE intakeButtonState;
 
     /**
-     *
+     *Shows the intakeMotor power on the Control Hub
      * @param hardwareMap
      */
     public Intake(HardwareMap hardwareMap) {
@@ -51,9 +51,6 @@ public class Intake {
         initIntake();
     }
 
-    /**
-     *
-     */
     public void initIntake(){
 
     }

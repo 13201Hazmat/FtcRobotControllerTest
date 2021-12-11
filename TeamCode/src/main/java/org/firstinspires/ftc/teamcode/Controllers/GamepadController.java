@@ -581,7 +581,7 @@ public class GamepadController {
     /**
      * Methods to get the value of gamepad Left Trigger
      *
-     * @return gpGamepad1.right_trigger
+     * @return gpGamepad1.left_trigger
      */
     public double gp1GetLeftTrigger() {
         return hzGamepad1.left_trigger;

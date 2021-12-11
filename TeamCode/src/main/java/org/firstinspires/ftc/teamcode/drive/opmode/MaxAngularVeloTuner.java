@@ -32,6 +32,9 @@ public class MaxAngularVeloTuner extends LinearOpMode {
     private double maxAngVelocity = 0.0;
 
     @Override
+    /**
+     * Shows the Angular Velocity on the control hub and adds directions for the drivers
+     */
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

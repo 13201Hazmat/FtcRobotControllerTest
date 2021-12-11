@@ -66,6 +66,9 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
     }
 
     @Override
+    /**
+     * Runs the opMode depending on the drivers choice
+     */
     public void runOpMode() {
         if (!RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +

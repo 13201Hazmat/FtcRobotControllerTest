@@ -35,15 +35,28 @@ public class Spinner {
     public double spinnerMotorPower = 0.5;
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
 
+    /**
+     * Shows the spinner motor value on the Control Hub
+     * @param hardwareMap
+     */
     public Spinner (HardwareMap hardwareMap) {
         spinnerMotor = hardwareMap.dcMotor.get("spinner_motor");
         initSpinner();
     }
 
+    /**
+     * Starts the Spinner Motor
+     */
     public void initSpinner(){
         spinnerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
+
+    /**
+     * Intializes the Parameter of power and direction of the motor
+     * @param direction
+     * @param power
+     */
     private void runSpinnerMotor(DcMotor.Direction direction, double power){
         spinnerMotor.setDirection(direction);
         spinnerMotor.setPower(power);
@@ -71,7 +84,7 @@ public class Spinner {
 
     /**
      * reverseIntakeMotor checks if the intake is not reversing, and sets the intake motor to FORWARD, then also
-     * ets intake motor state to REVERSING
+     * sets intake motor state to REVERSING
      */
     public void stopSpinnerMotor() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.STOPPED) {

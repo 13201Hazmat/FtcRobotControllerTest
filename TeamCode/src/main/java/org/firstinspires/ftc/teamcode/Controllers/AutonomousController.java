@@ -91,16 +91,25 @@ public class AutonomousController {
     }
     AUTO_INTAKE_STATE autoIntakeState = AUTO_INTAKE_STATE.STOPPED;
 
+    /**
+     * Starts the autonomous intake
+     */
     public void startAutoIntake(){
         autoIntakeState = AUTO_INTAKE_STATE.RUNNING;
         runAutoControl();
     }
 
+    /**
+     * Stops Autonomous intake
+     */
     public void stopAutoIntake(){
         autoIntakeState = AUTO_INTAKE_STATE.STOPPED;
         runAutoControl();
     }
 
+    /**
+     * Runs the Intake with protection on the elevator level state and magazine state
+     */
     public void runAutoIntake() {
         if (autoIntakeState == AUTO_INTAKE_STATE.RUNNING &&
                 elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
@@ -129,26 +138,41 @@ public class AutonomousController {
     }
     AUTO_ELEVATOR_STATE autoElevatorState = AUTO_ELEVATOR_STATE.LEVEL_0;
 
+    /**
+     * Moves elevator level to zero
+     */
     public void moveAutoElevatorLevel0(){
         autoElevatorState = AUTO_ELEVATOR_STATE.LEVEL_0;
         runAutoControl();
     }
 
+    /**
+     * Moves elevator to level one
+     */
     public void moveAutoElevatorLevel1(){
         autoElevatorState = AUTO_ELEVATOR_STATE.LEVEL_1;
         runAutoControl();
     }
 
+    /**
+     * Moves elevator to level two
+     */
     public void moveAutoElevatorLevel2(){
         autoElevatorState = AUTO_ELEVATOR_STATE.LEVEL_2;
         runAutoControl();
     }
 
+    /**
+     * Moves elevator to level three
+     */
     public void moveAutoElevatorLevel3(){
         autoElevatorState = AUTO_ELEVATOR_STATE.LEVEL_3;
         runAutoControl();
     }
 
+    /**
+     * Runs the elevator to a specific level based on the state of the magazine
+     */
     public void runAutoElevator() {
         if (autoElevatorState == AUTO_ELEVATOR_STATE.LEVEL_0){
             elevator.moveElevatorLevel0Position();
@@ -189,21 +213,33 @@ public class AutonomousController {
     }
     AUTO_MAGAZINE_STATE autoMagazineState = AUTO_MAGAZINE_STATE.COLLECT;
 
+    /**
+     * moves magazine to Collect mode
+     */
     public void moveAutoMagazineToCollect(){
         autoMagazineState = AUTO_MAGAZINE_STATE.COLLECT;
         runAutoControl();
     }
 
+    /**
+     * Moves magazine to Transport Mode
+     */
     public void moveAutoMagazineToTransport(){
         autoMagazineState = AUTO_MAGAZINE_STATE.TRANSPORT;
         runAutoControl();
     }
 
+    /**
+     * Moves magazine to Drop mode
+     */
     public void moveAutoMagazineToDrop(){
         autoMagazineState = AUTO_MAGAZINE_STATE.DROP;
         runAutoControl();
     }
 
+    /**
+     * Changes magazine state depending if the color sensor is sensing a freight
+     */
     public void runAutoMagazine() {
         if (magazine.magazineColorSensor instanceof SwitchableLight) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
@@ -228,6 +264,11 @@ public class AutonomousController {
 
     /**
      * Major Arm Commands :
+     *      moveAutoMajorArmPickup
+     *      moveAutoMajorArmPark
+     *      openAutoMajorClaw
+     *      closeAutoMajorClaw
+     *      runAutoMajorArm
      */
 
     enum AUTO_MAJOR_ARM_STATE{
@@ -236,11 +277,17 @@ public class AutonomousController {
     }
     AUTO_MAJOR_ARM_STATE autoMajorArmState = AUTO_MAJOR_ARM_STATE.PARKED;
 
+    /**
+     * moves major arm to pickup position
+     */
     public void moveAutoMajorArmPickup(){
         autoMajorArmState = AUTO_MAJOR_ARM_STATE.PICKUP;
         runAutoControl();
     }
 
+    /**
+     * moves major arm to park position
+     */
     public void moveAutoMajorArmPark(){
         autoMajorArmState = AUTO_MAJOR_ARM_STATE.PARKED;
         runAutoControl();
@@ -251,16 +298,25 @@ public class AutonomousController {
     }
     AUTO_MAJOR_CLAW_STATE autoMajorClawState = AUTO_MAJOR_CLAW_STATE.CLOSED;
 
+    /**
+     * Opens the major claw
+     */
     public void openAutoMajorClaw(){
         autoMajorClawState = AUTO_MAJOR_CLAW_STATE.OPEN;
         runAutoControl();
     }
 
+    /**
+     * Closes major claw
+     */
     public void closeAutoMajorClaw(){
         autoMajorClawState = AUTO_MAJOR_CLAW_STATE.CLOSED;
         runAutoControl();
     }
 
+    /**
+     * Sets the major arm to level state and claw state
+     */
     public void runAutoMajorArm() {
         if(autoMajorArmState == AUTO_MAJOR_ARM_STATE.PARKED){
             majorArm.moveMajorArmParkingPosition();
@@ -282,6 +338,7 @@ public class AutonomousController {
 
     /**
      * Spinner Commands :
+     *      runAutoSpinner
      */
 
     public enum AUTO_SPINNER_STATE{
@@ -292,6 +349,9 @@ public class AutonomousController {
 
     public AUTO_SPINNER_STATE autoSpinnerState = AUTO_SPINNER_STATE.STOPPED;
 
+    /**
+     * Runs the spinner in a specific direction
+     */
     public void runAutoSpinner() {
         switch (autoSpinnerState) {
             case ANTICLOCKWISE:

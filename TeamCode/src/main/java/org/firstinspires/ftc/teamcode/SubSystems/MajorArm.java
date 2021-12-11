@@ -42,6 +42,10 @@ public class MajorArm {
         PARKED,
     }
 
+    /**
+     * Shows the ArmMotor and ClawServo encoder values on the Control Hub
+     * @param hardwareMap
+     */
     public MajorArm(HardwareMap hardwareMap) {
         majorArmMotor = hardwareMap.get(DcMotorEx.class, "major_arm_motor");
         majorClawServo = hardwareMap.servo.get("major_claw_servo");
@@ -68,6 +72,9 @@ public class MajorArm {
 
     public boolean runArmToLevelState = false;
 
+    /**
+     * When init is pressed, the arm will reset and set the claw and armMotor values to default
+     */
     public void initMajorArm(){
         resetArm();
         turnArmBrakeModeOff();
@@ -80,6 +87,10 @@ public class MajorArm {
         previousMajorArmState = MAJOR_ARM_STATE.PARKED;
     }
 
+    /**
+     * sets MajorArm to a specific position and power depending on the level wanted
+     * @param power
+     */
     public void runMajorArmToLevel(double power){
         majorArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (runArmToLevelState == true) {//|| majorArmMotor.isBusy() == true){
@@ -89,20 +100,33 @@ public class MajorArm {
             majorArmMotor.setPower(0.0);
         }
     }
+
+    /**
+     * Stops and resets the encoder values of majorArm
+     */
     public void resetArm(){
         DcMotor.RunMode runMode = majorArmMotor.getMode();
         majorArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         majorArmMotor.setMode(runMode);
     }
 
+    /**
+     * Turns the armBrakeMode On
+     */
     public void turnArmBrakeModeOn(){
         majorArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    /**
+     * Turns the armBrakeMode Off
+     */
     public void turnArmBrakeModeOff(){
         majorArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
+    /**
+     *Changes the claw state to Open if it is initally closed and vice versa
+     */
     public void changeMajorClawState() {
         if ((majorClawState == MAJOR_CLAW_STATE.OPEN)) {
             closeMajorClaw();
@@ -111,17 +135,25 @@ public class MajorArm {
         }
     }
 
+    /**
+     * Closes the claw servo and sets state to CLOSED
+     */
     public void closeMajorClaw(){
         majorClawServo.setPosition(CLAW_CLOSED);
         majorClawState = MAJOR_CLAW_STATE.CLOSED;
     }
 
+    /**
+     * Opens the claw servo and sets state to OPEN
+     */
     public void openMajorClaw(){
         majorClawServo.setPosition(CLAW_OPEN);
         majorClawState = MAJOR_CLAW_STATE.OPEN;
     }
 
-    //change the level of the Arm to Capstone
+    /**
+     * Changes the level of the Arm to Capstone
+     */
     public void moveMajorArmCapstonePosition() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(CAPSTONE_POSITION_COUNT + baselineEncoderCount);
@@ -129,7 +161,9 @@ public class MajorArm {
         currentMajorArmState = MAJOR_ARM_STATE.CAPSTONE;
     }
 
-    //change the level of the Arm to Pickup
+    /**
+     * Changes the level of the Arm to Pickup
+     */
     public void moveMajorArmPickupPosition() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(PICKUP_POSITION_COUNT + baselineEncoderCount);
@@ -137,7 +171,9 @@ public class MajorArm {
         currentMajorArmState = MAJOR_ARM_STATE.PICKUP;
     }
 
-    //change the level of the arm to Level One
+    /**
+     * Changes the level of the Arm to Level One
+     */
     public void moveMajorArmLevel1Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(LEVEL1_POSITION_COUNT + baselineEncoderCount);
@@ -145,7 +181,9 @@ public class MajorArm {
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_1;
     }
 
-    //change the level of the arm to Level Two
+    /**
+     * Changes the level of the Arm to Level 2
+     */
     public void moveMajorArmLevel2Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(LEVEL2_POSITION_COUNT + baselineEncoderCount);
@@ -153,7 +191,9 @@ public class MajorArm {
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_2;
     }
 
-    //change the level of the arm to level three
+    /**
+     * Changes the level of the Arm to Level three
+     */
     public void moveMajorArmLevel3Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(LEVEL3_POSITION_COUNT + baselineEncoderCount);
@@ -161,7 +201,9 @@ public class MajorArm {
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_3;
     }
 
-    //change the level of the arm to the parking
+    /**
+     * Changes the level of the Arm to Parking
+     */
     public void moveMajorArmParkingPosition() {
         turnArmBrakeModeOff();
         majorArmMotor.setTargetPosition(PARKED_POSITION_COUNT + baselineEncoderCount);
@@ -196,7 +238,9 @@ public class MajorArm {
     }
 
 
-    //change the level of the Arm to Level 1
+    /**
+     * Changes the level of the Arm up One
+     */
     public void moveMajorArmUpOne() {
         if ((currentMajorArmState == MAJOR_ARM_STATE.PICKUP)) {
             previousMajorArmState = currentMajorArmState;
@@ -225,7 +269,9 @@ public class MajorArm {
         }
     }
 
-    //change the level of the Arm by one Down
+    /**
+     * Changes the level of the Arm down One
+     */
     public void moveMajorArmDownOne() {
         if ((currentMajorArmState == MAJOR_ARM_STATE.PARKED)) {
             previousMajorArmState = currentMajorArmState;

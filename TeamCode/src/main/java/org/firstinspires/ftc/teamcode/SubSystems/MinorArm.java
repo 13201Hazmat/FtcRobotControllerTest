@@ -36,6 +36,10 @@ public class MinorArm {
         PARKED,
     }
 
+    /**
+     * Shows the minorArmServo and Claw Servo values on the Control Hub
+     * @param hardwareMap
+     */
     public MinorArm(HardwareMap hardwareMap) {
         minorArmServo = hardwareMap.servo.get("minor_arm_servo");
         minorClawServo = hardwareMap.servo.get("minor_claw_servo");
@@ -51,7 +55,9 @@ public class MinorArm {
     public MINOR_SERVO_STATE minorServoState = MINOR_SERVO_STATE.PARKED;
     public MINOR_SERVO_STATE previousMinorServoState = MINOR_SERVO_STATE.PARKED;
 
-
+    /**
+     *Sets the servo values to default positions when init is pressed
+     */
     public void initMinorArm(){
         minorClawServo.setPosition(CLAW_CLOSED);
         minorClawState = MINOR_CLAW_STATE.CLOSED;
@@ -60,14 +66,25 @@ public class MinorArm {
         previousMinorServoState = MINOR_SERVO_STATE.PARKED;
     }
 
+    /**
+     * Returns the claw state
+     * @return
+     */
     public MINOR_CLAW_STATE getMinorClawState() {
         return minorClawState;
     }
 
+    /**
+     * Returns the servo state
+     * @return
+     */
     public MINOR_SERVO_STATE getMinorServoState() {
         return minorServoState;
     }
 
+    /**
+     * Changes MinorClaw State to Open or Closed depending on what is the inital position
+     */
     public void changeMinorClawState() {
         if ((minorClawState == MINOR_CLAW_STATE.OPEN)) {
             minorClawServo.setPosition(CLAW_CLOSED);
@@ -78,25 +95,33 @@ public class MinorArm {
         }
     }
 
-    //change the level of the Arm to Pickup
+    /**
+     * Changes the level of the arm to Pickup
+     */
     public void moveMinorArmPickupPosition() {
         minorArmServo.setPosition(PICKUP_POSITION_COUNT);
         minorServoState = MINOR_SERVO_STATE.PICKUP;
     }
 
-    //change the level of the arm to Level One
+    /**
+     * Change the level of the arm to Level One
+     */
     public void moveMinorArmLevel1Position() {
         minorArmServo.setPosition(LEVEL1_POSITION_COUNT);
         minorServoState = MINOR_SERVO_STATE.LEVEL_1;
     }
 
-    //change the level of the arm to the parking
+    /**
+     * Changes the level of the Arm to Parking
+     */
     public void moveMinorArmParkingPosition() {
         minorArmServo.setPosition(PARKED_POSITION_COUNT);
         minorServoState = MINOR_SERVO_STATE.PARKED;
     }
 
-    //change the level of the Arm to Level 1
+    /**
+     * Changes the level of Arm by Up One
+     */
     public void moveMinorArmUpOne() {
         if ((minorServoState == MINOR_SERVO_STATE.PICKUP)) {
             previousMinorServoState = minorServoState;
@@ -110,7 +135,9 @@ public class MinorArm {
         }
     }
 
-    //change the level of the Arm by one Down
+    /**
+     * Changes the level of the Arm by Down one
+     */
     public void moveMinorArmDownOne() {
         if ((minorServoState == MINOR_SERVO_STATE.PARKED)) {
             previousMinorServoState = minorServoState;
