@@ -89,7 +89,7 @@ public class MajorArm {
         turnArmBrakeModeOff();
         majorArmMotor.setPositionPIDFCoefficients(5.0);
         majorClawServo.setPosition(CLAW_CLOSED);
-        majorClawState = MAJOR_CLAW_STATE.OPEN;
+        majorClawState = MAJOR_CLAW_STATE.CLOSED;
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT);
         majorArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         majorWristServo.setPosition(MAJORARM_WRIST_INIT_POSITION);

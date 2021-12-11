@@ -286,7 +286,7 @@ public class GamepadController {
     public void runMagazine(){ //this function should be at LaunchController's place after order change
         if (gp1GetRightBumperPress()) {
             if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
+                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToDrop();
                 } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToTransport();
@@ -301,7 +301,7 @@ public class GamepadController {
             }
         }
 
-        if (gp1GetStart() && gp1GetRightTriggerPress()) {
+        if (gp1GetStart() && gp1GetRightBumperPress()) {
             if (autoMagazine == AUTO_MAGAZINE.ON) {
                 autoMagazine = AUTO_MAGAZINE.OFF;
             } else {
