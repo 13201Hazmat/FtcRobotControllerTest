@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -63,6 +64,7 @@ public class GamepadController {
     public Spinner spinner;
     public MajorArm majorArm;
     public MinorArm minorArm;
+    public BlinkinDisplay blinkinDisplay;
 
     /**
      * Constructor for HzGamepad1 class that extends gamepad.
@@ -76,7 +78,8 @@ public class GamepadController {
                              Magazine magazine,
                              Spinner spinner,
                              MajorArm majorArm,
-                             MinorArm minorArm) {
+                             MinorArm minorArm,
+                             BlinkinDisplay blinkinDisplay) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
@@ -86,6 +89,7 @@ public class GamepadController {
         this.spinner = spinner;
         this.majorArm = majorArm;
         this.minorArm = minorArm;
+        this.blinkinDisplay = blinkinDisplay;
     }
 
     /**
@@ -320,7 +324,6 @@ public class GamepadController {
             }
         }
 
-
         if (autoMagazine == AUTO_MAGAZINE.ON) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
                 if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
@@ -330,6 +333,11 @@ public class GamepadController {
                         intake.stopIntakeMotor();
                     }
                 }
+            }
+            if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED){
+                blinkinDisplay.setPatternElementLoaded();
+            } else {
+                blinkinDisplay.setPatternBlack();
             }
         }
     }

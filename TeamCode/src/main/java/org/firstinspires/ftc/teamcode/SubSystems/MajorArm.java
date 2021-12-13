@@ -12,18 +12,35 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Definition of Subsystem Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake.
+ * Major Arm consists of a Motor and a Servo. The motor allows the arm to raise in height, and the servo adds a "grip" functionality.
  *
  * The states are as followed: <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing </emsp> <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL2 for another state  = example if the intake is on or off </emsp> <BR>
+ *     <emsp>MAJOR_CLAW_STATE = if the Major Claw is Open or Closed </emsp> <BR>
+ *     <emsp>ARM_STATE = if the Major Arm is at Pickup, Level 1, Level 2, Level 3, Capstone, or Parking Level </emsp> <BR>
  *
  * The functions are as followed: Example assumes a motor like an intake <BR>
- *     <emsp>runSubsystem1Motor checks if the motor is not running and runs the intake </emsp> <BR>
- *     <emsp>stopSubsystem1Motor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets subsystem1MotorState to SUBSYSTEM1_SERVO_LEVEL1.STOPPED </emsp> <BR>
- *     <emsp> startReverseSubsystem1Motor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING</emsp> <BR>
+ *     <emsp>initMajorArm initializes the Major Arm, and gets it ready to be utilized </emsp> <BR>
+ *     <emsp>runArmToLevel moves the Major Arm to one of the values indicated by ARM_STATE </emsp> <BR>
+ *     <emsp>turnArmBrakeModeOn turns Brake Mode On for the Major Arm</emsp> <BR>
+ *     <emsp>turnArmBrakeModeOff turns Brake MOde Off for the Major Arm</emsp> <BR>
+ *     <emsp>changeClawState changes the MAJOR_CLAW_STATE the Major Arm from open to closed, or vice versa</emsp> <BR>
+ *     <emsp>closeClaw closes the claw of the Major Arm </emsp> <BR>
+ *     <emsp>openClaw opens the claw of the Major Arm</emsp> <BR>
+ *     <emsp>moveMajorArmCapstonePosition moves the Major Arm to the value indicated by ARM_STATE for CAPSTONE</emsp> <BR>
+ *     <emsp>moveMajorArmParkingPosition moves the Major Arm to the value indicated by ARM_STATE for PARKED</emsp> <BR>
+ *     <emsp>moveMajorArmPickupPosition moves the Major Arm to the value indicated by ARM_STATE for PICKUP</emsp> <BR>
+ *     <emsp>moveMajorArmLevel1Position moves the Major Arm to the value indicated by ARM_STATE for LEVEL_1</emsp> <BR>
+ *     <emsp>moveMajorArmLevel2Position moves the Major Arm to the value indicated by ARM_STATE for LEVEL_2</emsp> <BR>
+ *     <emsp>moveMajorArmLevel3Position moves the Major Arm to the value indicated by ARM_STATE for LEVEL_3</emsp> <BR>
+ *     <emsp>moveMajorArmSlightlyDown moves the Major Arm slightly down from its current position </emsp> <BR>
+ *     <emsp>moveMajorArmSlightlyUp moves the Major Arm slightly up from its current position </emsp> <BR>
+ *     <emsp>moveArmUpOne moves the Major Arm up by one position based on ARM_STATE</emsp> <BR>
+ *     <emsp>moveArmDownOne moves the Major Arm down by one position based on ARM_STATE </emsp> <BR>
+ *     <emsp>moveArmDownOne </emsp> <BR>
+ *     <emsp>getArmPosition returns the ARM_STATE that the Major Arm is currently at</emsp> <BR>
+ *     <emsp>getMajorArmPositionCount returns the precise numeric value of the Major Arm current position</emsp> <BR>
+ *     <emsp>getMajorClawState returns the MAJOR_CLAW_STATE; if the claw of the Major Arm is opened or closed</emsp> <BR>
  */
 public class MajorArm {
 
@@ -84,6 +101,9 @@ public class MajorArm {
     public boolean runMajorArmToLevelState = false;
     public boolean moveWrist = false;
 
+    /**
+     * initializes the Major Arm, and gets it ready to be utilized
+     */
     public void initMajorArm(){
         resetArm();
         turnArmBrakeModeOff();
@@ -96,6 +116,9 @@ public class MajorArm {
         previousMajorArmState = MAJOR_ARM_STATE.PARKED;
     }
 
+    /**
+     * moves the Major Arm to one of the values indicated by ARM_STATE
+     */
     public void runMajorArmToLevel(double power){
         majorArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (runMajorArmToLevelState == true) {//|| majorArmMotor.isBusy() == true){
@@ -105,16 +128,26 @@ public class MajorArm {
             majorArmMotor.setPower(0.0);
         }
     }
+
+    /**
+     * resets the Major Arm
+     */
     public void resetArm(){
         DcMotor.RunMode runMode = majorArmMotor.getMode();
         majorArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         majorArmMotor.setMode(runMode);
     }
 
+    /**
+     * turns Brake Mode On for the Major Arm
+     */
     public void turnArmBrakeModeOn(){
         majorArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    /**
+     * turns Brake MOde Off for the Major Arm
+     */
     public void turnArmBrakeModeOff(){
         majorArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
@@ -174,6 +207,9 @@ public class MajorArm {
         return;
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void changeMajorClawState() {
         if ((majorClawState == MAJOR_CLAW_STATE.OPEN)) {
             closeMajorClaw();
@@ -182,11 +218,17 @@ public class MajorArm {
         }
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void closeMajorClaw(){
         majorClawServo.setPosition(CLAW_CLOSED);
         majorClawState = MAJOR_CLAW_STATE.CLOSED;
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void openMajorClaw(){
         if (currentMajorArmState != MAJOR_ARM_STATE.PARKED && currentMajorArmState != MAJOR_ARM_STATE.INIT) {
             majorClawServo.setPosition(CLAW_OPEN);
@@ -194,7 +236,9 @@ public class MajorArm {
         }
     }
 
-    //change the level of the Arm to Capstone
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmCapstonePosition() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -204,7 +248,9 @@ public class MajorArm {
         //majorWristServo.setPosition(MAJORARM_WRIST_CAPSTONE_POSITION);
     }
 
-    //change the level of the Arm to Pickup
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmPickupPosition() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PICKUP_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -214,7 +260,9 @@ public class MajorArm {
         //majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
     }
 
-    //change the level of the arm to Level One
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmLevel1Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL1_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -224,7 +272,9 @@ public class MajorArm {
         //majorWristServo.setPosition(MAJORARM_WRIST_LEVEL1_POSITION);
     }
 
-    //change the level of the arm to Level Two
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmLevel2Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL2_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -234,7 +284,9 @@ public class MajorArm {
         //majorWristServo.setPosition(MAJORARM_WRIST_LEVEL2_POSITION);
     }
 
-    //change the level of the arm to level three
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmLevel3Position() {
         turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL3_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -243,7 +295,9 @@ public class MajorArm {
         moveWristWithTimer();
     }
 
-    //change the level of the arm to the parking
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmParkingPosition() {
         turnArmBrakeModeOff();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
@@ -280,7 +334,9 @@ public class MajorArm {
     }
 
 
-    //change the level of the Arm to Level 1
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmUpOne() {
         if ((currentMajorArmState == MAJOR_ARM_STATE.PICKUP)) {
             previousMajorArmState = currentMajorArmState;
@@ -309,7 +365,9 @@ public class MajorArm {
         }
     }
 
-    //change the level of the Arm by one Down
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public void moveMajorArmDownOne() {
         if ((currentMajorArmState == MAJOR_ARM_STATE.PARKED)) {
             previousMajorArmState = currentMajorArmState;
@@ -338,14 +396,23 @@ public class MajorArm {
         }
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public int getMajorArmPositionCount(){
         return majorArmMotor.getCurrentPosition();
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public MAJOR_CLAW_STATE getMajorClawState() {
         return majorClawState;
     }
 
+    /**
+     * Method that takes keypad inputs to select the Autonomous options
+     */
     public MAJOR_ARM_STATE getMajorArmPosition() {
         return currentMajorArmState;
     }

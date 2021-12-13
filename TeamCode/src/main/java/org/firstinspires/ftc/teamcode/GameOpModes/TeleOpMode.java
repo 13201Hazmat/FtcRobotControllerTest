@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -32,9 +36,12 @@ public class TeleOpMode extends LinearOpMode {
     public Spinner spinner;
     public MajorArm majorArm;
     public MinorArm minorArm;
+    public BlinkinDisplay blinkinDisplay;
 
     //public Vuforia Vuforia1;
     public Pose2d startPose = GameField.ORIGINPOSE;
+
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -47,9 +54,11 @@ public class TeleOpMode extends LinearOpMode {
         spinner = new Spinner(hardwareMap);
         majorArm = new MajorArm(hardwareMap);
         minorArm = new MinorArm(hardwareMap);
+        blinkinDisplay = new BlinkinDisplay(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator, magazine, spinner, majorArm, minorArm);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator,
+                magazine, spinner, majorArm, minorArm, blinkinDisplay);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
@@ -65,6 +74,7 @@ public class TeleOpMode extends LinearOpMode {
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
+                gameTimer.reset();
 
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
@@ -79,6 +89,10 @@ public class TeleOpMode extends LinearOpMode {
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
+
+                if (gameTimer.time() > 110 && gameTimer.time() < 113) {
+                    blinkinDisplay.setPatternEndGame();
+                }
 
                 if(DEBUG_FLAG) {
                     printDebugMessages();

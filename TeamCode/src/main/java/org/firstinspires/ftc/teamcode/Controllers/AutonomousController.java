@@ -33,20 +33,10 @@ public class AutonomousController {
 
     public Pose2d startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
 
-    // TODO: Declare autonomous option logic based on key pad selection
-    /* Example
-    public boolean launchHighGoalOrPowerShot = false;
-    public boolean dropFirstWobbleGoal = false;
-    public boolean pickRingFromTargetMarker = false;
-    public boolean launchRingsPickedFromTargetMarkerToHighGoal = false;
-    public boolean pickAndDropSecondWobbleGoal = false;
-         */
-
     /**
      * Constructor for HzGamepad1 class that extends gamepad.
      * Assign the gamepad1 given in OpMode to the gamepad used here.
      *
-     * TODO: Add more subsystems in declaration
      */
     public AutonomousController(DriveTrain driveTrain,
                                 Intake intake,
