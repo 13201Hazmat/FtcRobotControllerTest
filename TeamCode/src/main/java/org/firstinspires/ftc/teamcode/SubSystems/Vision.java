@@ -64,8 +64,6 @@ import java.util.List;
  * This 2021-2022 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine the position of the Freight Frenzy game elements.
  *
- * This 2020-2021 OpMode illustrates the basics of using the Vuforia localizer to determine
- * positioning and orientation of robot on the ULTIMATE GOAL FTC field.
  * The code is structured as a LinearOpMode
  *
  * When images are located, Vuforia is able to determine the position and orientation of the
@@ -75,10 +73,9 @@ import java.util.List;
  * From the Audience perspective, the Red Alliance station is on the right and the
  * Blue Alliance Station is on the left.
 
- * There are a total of five image targets for the ULTIMATE GOAL game.
+ * There are a total of five image targets for the FREIGHT FRENZY GOAL game.
  * Three of the targets are placed in the center of the Red Alliance, Audience (Front),
  * and Blue Alliance perimeter walls.
- * Two additional targets are placed on the perimeter wall, one in front of each Tower Goal.
  * Refer to the Field Setup manual for more specific location details
  *
  * A final calculation then uses the location of the camera on the robot to determine the

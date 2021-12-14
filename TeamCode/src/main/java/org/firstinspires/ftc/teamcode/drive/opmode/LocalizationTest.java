@@ -19,10 +19,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Disabled
 public class LocalizationTest extends LinearOpMode {
     @Override
-    /**
-     * Waits for the driver update to start opMode and shows the position estimate on the control
-     * Hub
-     */
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

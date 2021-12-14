@@ -56,7 +56,7 @@ public class Magazine {
     public MAGAZINE_COLOR_SENSOR_STATE magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.EMPTY;
 
     /**
-     * Allows the servo and color sensor values to be shown on the Control Hub
+     * Parameter that register all hardware devices for Magazine Subsystem
      * @param hardwareMap
      */
     public Magazine(HardwareMap hardwareMap) {

@@ -19,27 +19,26 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
  * HzGamepad consists of system provided gamepad(s) and adds functionality to the selection 
  * made on gamepads <BR>
  * 
- * For Hazmat Skystone, only one Gamepad is used (gamepad1) <BR>
+ * For Hazmat Freight Frenzy, two Gamepads are used (gamepad1 and gamepad2) <BR>
  *
  * The controls are as follows: (replace with gamepad2 for 2nd gamepad) <BR>
- *      <emsp>Left Stick for pan motion (gamepad1.left_stick_x and gamepad1.left_stick_y) <BR>
- *      <emsp>Right Stick for turn motion (only uses the x direction : gamepad1.right_stick_y) <BR>
- *      <emsp>Right Bumper for Launching Ring (gamepad1.right_bumper) <BR>
- *      <emsp>Left Bumper for Grip Arm Servos (gamepad1.left_bumper) <BR>
- *      <emsp>Right Trigger for Accelerating robot (gamepad1.right_trigger) <BR>
- *      <emsp>Button A to Powershot selection (gamepad1.a) <BR>
- *      <emsp>Button Y to High Goal selection (gamepad1.y) <BR>
- *      <emsp>Button X to Turn delta left (gamepad1.x) <BR>
- *      <emsp>Button B to Turn delta right (gamepad1.b) <BR>
- *      <emsp>Button Dpad_up to Reverse Intake on (gamepad1.dpad_up) <BR>
- *      <emsp>Button Dpad_down to Intake On (gamepad1.dpad_down) <BR>
+ *      <emsp>Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
+ *      <emsp>Right Stick for turn motion (gamepad2.right_stick_x: gamepad1.right_stick_y) <BR>
+ *      <emsp>Right Bumper magazine flip and majorClaw state(gp2) (gamepad1.right_bumper, gamepad2.right_bumper) <BR>
+ *      <emsp>Left Bumper for spinner state and minorArm state(gp2) (gamepad1.left_bumper, gamepad2.left_bumper) <BR>
+ *      <emsp>Right Trigger for turbo, and majorArm Parking position(gp2) (gamepad1.right_trigger, gamepad2.right_trigger) <BR>
+ *      <emsp>Button A for elevator intake level and major arm pickup position(gp2) (gamepad1.a, gamepad2.a) <BR>
+ *      <emsp>Button Y for elevator level 2 and major arm capstone position(gp2) (gamepad1.y, gamepad2.y) <BR>
+ *      <emsp>Button X for elevator level 1 and majorArm down one level(gp2) (gamepad1.x, gamepad2.x) <BR>
+ *      <emsp>Button B for elevator level 3 and majorArm level up one(gp2) (gamepad1.b, gamepad2.b) <BR>
+ *      <emsp>Button Dpad_up for intake out & stop, also for minorArm level up one (gamepad1.dpad_up, gamepad2.dpad_up) <BR>
+ *      <emsp>Button Dpad_down for intake in & stop, also for minorArm level down one (gamepad1.dpad_down, gamepad2.dpad_down) <BR>
  *
  * To access the gamepad functions, use the gp1Get* or gp2Get* functions at the end of this class <BR>
  *     <emsp>gp1GetLeftStickX(), gp2GetLeftStickX()</emsp>
  *     <emsp>gp1GetLeftStickY(), gp2GetLeftStickY()</emsp>
  *     <emsp>gp1GetRightStickX(), gp2GetRightStickX()</emsp>
- *     <emsp>gp1GetRightStickY(), gp2p;'l
- *     =GetRightStickY()</emsp>
+ *     <emsp>gp1GetRightStickY(), gp2GetRightStickY()</emsp>
  *     <emsp>gp1GetLeftTrigger(), gp2GetRightTrigger()</emsp>
  *     <emsp>gp1GetLeftTriggerPress(), gp2GetRightTriggerPress for toggle value()</emsp>
  *     <emsp>gp1GetLeftBumper(), gp2GetRightBumper()</emsp>
@@ -65,8 +64,8 @@ public class GamepadController {
     public MinorArm minorArm;
 
     /**
-     * Constructor for HzGamepad1 class that extends gamepad.
-     * Assign the gamepad1 given in OpMode to the gamepad used here.
+     * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
+     * Assign the gamepad1 and gamepad2 given in OpMode to the gamepad used here.
      */
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
@@ -168,8 +167,8 @@ public class GamepadController {
 
     //TODO: Add controller code for more subsystems as above
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runIntake sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runIntake(){ //this function should be at LaunchController's place after order change
         if (gp1GetDpad_downPress()) {
@@ -198,8 +197,8 @@ public class GamepadController {
     }
 
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runElevator sets the different elevator controls, if the elevator should be in a specific level
+     * and has protection for drivers for the magazine and the intial level state position.<BR>
        */
     public void runElevator(){ //this function should be at LaunchController's place after order change
         //TODO: Protect turning on grip only when elevator motor is not moving
@@ -277,8 +276,8 @@ public class GamepadController {
     public AUTO_MAGAZINE autoMagazine = AUTO_MAGAZINE.ON;
 
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runMagazine sets the different magazine controls, if the magazine should be in transport or
+     * drop position depending on the current elevator position and other states. <BR>
      */
     public void runMagazine(){ //this function should be at LaunchController's place after order change
         if (gp1GetRightBumperPress()) {
@@ -330,8 +329,9 @@ public class GamepadController {
     }
 
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runSpinner sets the differnt spinner controls, if the spinner should be spinning clockwise or
+     * anticlockwise or not spinning at all, this functions reads the current state and depending on
+     * the state, the function will execute the motion the spinner moves in. <BR>
       */
     public void runSpinner(){ //this function should be at LaunchController's place after order change
         if (!gp1GetStart()) { //Normal condition, start not pressed
@@ -377,8 +377,8 @@ public class GamepadController {
 
 
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runMajorArm sets the different majorArm controls, if the majorArm should be down or up one
+     * level or change the arm specifically to a another level by one button press. <BR>
      */
     public void runMajorArm(){ //this function should be at LaunchController's place after order change
         if (gp2GetButtonXPress()){
@@ -426,8 +426,8 @@ public class GamepadController {
     }
 
     /**
-     * runIntakeControl sets the differnt intake controls, if intake should take in rings(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck ring to be out of intake. <BR>
+     * runMinorArm sets the different minorArm controls, whether the arm should be up or down
+     * one level, or the current claw state. <BR>
      */
     public void runMinorArm() { //this function should be at LaunchController's place after order change
         if (gp2GetDpad_downPress()){
@@ -472,7 +472,7 @@ public class GamepadController {
     boolean gp2RightTriggerLast = false;
 
     /**
-     * Method to convert linear map from gamepad1 stick input to a cubic map
+     * Method to convert linear map from gamepad1 and gamepad2 stick input to a cubic map
      *
      * @param stickInput input value of button stick vector
      * @return Cube of the stick input reduced to 25% speed
@@ -505,7 +505,7 @@ public class GamepadController {
     /**
      * Methods to get the value of gamepad Left stick X for Pan motion X direction.
      * This is the method to apply any directional modifiers to match to the X plane of robot.
-     * No modifier needed for Hazmat Skystone Robot.
+     * No modifier needed for Hazmat Freight Frenzy Robot.
      *
      * @return gpGamepad1.left_stick_x
      */
@@ -519,7 +519,7 @@ public class GamepadController {
     /**
      * Methods to get the value of gamepad Left stick Y for Pan motion Y direction.
      * This is the method to apply any directional modifiers to match to the Y plane of robot.
-     * For Hazmat Skystone Robot, Y direction needs to be inverted.
+     * For Hazmat Freight Frenzy Robot, Y direction needs to be inverted.
      *
      * @return gpGamepad1.left_stick_y
      */
@@ -529,7 +529,7 @@ public class GamepadController {
     /**
      * Methods to get the value of gamepad Right stick X to keep turning.
      * This is the method to apply any directional modifiers to match to the turn direction robot.
-     * No modifier needed for Hazmat Skystone Robot.
+     * No modifier needed for Hazmat Freight Frenzy Robot.
      *
      * @return gpGamepad1.right_stick_x
      */
@@ -549,9 +549,10 @@ public class GamepadController {
     /**
      * Methods to get the value of gamepad Right Trigger for turbo mode (max speed).
      * This is the method to apply any modifiers to match to action of turbo mode for each driver preference.
-     * For Hazmat Skystone Right Trigger pressed means turbo mode on.
+     * For Hazmat Freight Frenzy Right Trigger pressed means turbo mode on.
      *
      * @return gpGamepad1.right_trigger
+     * @return gpGamepad2.right_trigger
      */
     public double gp1GetRightTrigger() {
         return hzGamepad1.right_trigger;
@@ -560,6 +561,10 @@ public class GamepadController {
         return hzGamepad2.right_trigger;
     }
 
+    /**
+     * gp1 right trigger press cubic value when pressed
+     * @return
+     */
     public boolean gp1GetRightTriggerPress() {
         boolean isPressedRightTrigger = false;
         if (!gp1RightTriggerLast && (gp1GetRightTrigger()>0.7)) {
@@ -569,6 +574,10 @@ public class GamepadController {
         return isPressedRightTrigger;
     }
 
+    /**
+     * gp2 right trigger press cubic value when pressed
+     * @return
+     */
     public boolean gp2GetRightTriggerPress() {
         boolean isPressedRightTrigger = false;
         if (!gp2RightTriggerLast && (gp2GetRightTrigger()>0.7)) {
@@ -582,6 +591,7 @@ public class GamepadController {
      * Methods to get the value of gamepad Left Trigger
      *
      * @return gpGamepad1.left_trigger
+     * @return gpGamepad2.left_trigger
      */
     public double gp1GetLeftTrigger() {
         return hzGamepad1.left_trigger;
@@ -590,6 +600,10 @@ public class GamepadController {
         return hzGamepad2.left_trigger;
     }
 
+    /**
+     * The range of the gp1 left trigger cubic press
+     * @return
+     */
     public boolean gp1GetLeftTriggerPress() {
         boolean isPressedLeftTrigger = false;
         if (!gp1LeftTriggerLast && (gp1GetLeftTrigger()>0.7)) {
@@ -599,6 +613,10 @@ public class GamepadController {
         return isPressedLeftTrigger;
     }
 
+    /**
+     * The range of the gp2 left trigger cubic press values
+     * @return
+     */
     public boolean gp2GetLeftTriggerPress() {
         boolean isPressedLeftTrigger = false;
         if (!gp2LeftTriggerLast && (gp2GetLeftTrigger()>0.7)) {
@@ -612,6 +630,7 @@ public class GamepadController {
      * Methods to get the value of gamepad Left Bumper
      *
      * @return gpGamepad1.left_bumper
+     * @return gpGamepad2.left_bumper
      */
     public boolean gp1GetLeftBumper() {
         return hzGamepad1.left_bumper;
@@ -652,6 +671,7 @@ public class GamepadController {
      * Methods to get the value of gamepad Right Bumper
      *
      * @return gpGamepad1.right_bumper
+     * @return gpGamepad2.right_bumper
      */
     public boolean gp1GetRightBumper() {
         return hzGamepad1.right_bumper;

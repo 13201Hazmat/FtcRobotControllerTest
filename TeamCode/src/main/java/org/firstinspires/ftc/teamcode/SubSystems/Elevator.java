@@ -65,6 +65,10 @@ public class Elevator {
     }
     public ELEVATOR_BUTTON_STATE elevatorButtonState;
 
+    /**
+     * Parameter that register all hardware devices for Elevator Subsystem
+     * @param hardwareMap
+     */
     public Elevator(HardwareMap hardwareMap) {
         elevatorMotor =  hardwareMap.get(DcMotorEx.class, "elevator_motor");
         initElevator();

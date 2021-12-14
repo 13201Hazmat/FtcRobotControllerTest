@@ -64,9 +64,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     }
 
     @Override
-    /**
-     *runs OpMode depending on mode it is in right now
-     */
     public void runOpMode() {
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +

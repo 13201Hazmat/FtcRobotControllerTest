@@ -37,6 +37,10 @@ public class TeleOpMode extends LinearOpMode {
     public Pose2d startPose = GameField.ORIGINPOSE;
 
     @Override
+    /**
+     * Constructor for passing all the subsystems in order to make the subsystem be able to use
+     * and work/be active
+     */
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/

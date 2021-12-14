@@ -43,7 +43,7 @@ public class MajorArm {
     }
 
     /**
-     * Shows the ArmMotor and ClawServo encoder values on the Control Hub
+     * Parameter that register all hardware devices for MajorArm Subsystem
      * @param hardwareMap
      */
     public MajorArm(HardwareMap hardwareMap) {

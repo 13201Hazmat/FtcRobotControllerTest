@@ -21,9 +21,6 @@ public class StrafeTest extends LinearOpMode {
     public static double DISTANCE = 60; // in
 
     @Override
-    /**
-     * Tests
-     */
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 

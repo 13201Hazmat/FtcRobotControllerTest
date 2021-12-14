@@ -6,18 +6,25 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Definition of Subsystem Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Example : Spinner consists of system provided spinner controls and adds functionality to the selection made on spinner. <BR>
  *
  * The states are as followed: <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing </emsp> <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL2 for another state  = example if the intake is on or off </emsp> <BR>
+ *     <emsp>SPINNER_MOTOR_STATE_CLOCKWISE for one state - This is when spinner is rotating
+ *     Clockwise for a specific alliance side</emsp> <BR>
+ *     <emsp>SPINNER_MOTOR_STATE_ANTICLOCKWISE for another state - This is when spinner is
+ *     rotating Anticlockwise for a specific alliance side</emsp> <BR>
+ *     <emsp>SPINNER_MOTOR_STATE_STOPPED for another state - This is when spinner is not rotating
+ *     at all </emsp> <BR>
  *
- * The functions are as followed: Example assumes a motor like an intake <BR>
- *     <emsp>runSubsystem1Motor checks if the motor is not running and runs the intake </emsp> <BR>
- *     <emsp>stopSubsystem1Motor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets subsystem1MotorState to SUBSYSTEM1_SERVO_LEVEL1.STOPPED </emsp> <BR>
- *     <emsp> startReverseSubsystem1Motor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING</emsp> <BR>
+ * The functions are as followed: Example assumes a motor like an spinner <BR>
+ *     <emsp>initSpinner checks if the spinner is ready to start </emsp> <BR>
+ *     <emsp>runSpinnerMotor initializes the power and direction of the motor</emsp> <BR>
+ *     <emsp>runSpinnerMotorClockwise checks if the spinner is already not clockwise
+ *     and spins the motor clockwise</emsp> <BR>
+ *     <emsp>runSpinnerMotorAnticlockwise checks if the spinner is already not anticlockwise and
+ *     spins the motor anticlockwise</emsp> <BR>
+ *     <emsp>stopSpinnerMotor checks if spinner is not stopped, then stops the spinner
+ *     motor</emsp> <BR>
  */
 public class Spinner {
 
@@ -36,7 +43,7 @@ public class Spinner {
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
 
     /**
-     * Shows the spinner motor value on the Control Hub
+     * Parameter that register all hardware devices for Spinner Subsystem
      * @param hardwareMap
      */
     public Spinner (HardwareMap hardwareMap) {
@@ -53,7 +60,7 @@ public class Spinner {
     }
 
     /**
-     * Intializes the Parameter of power and direction of the motor
+     * Initializes the Parameter of power and direction of the motor
      * @param direction
      * @param power
      */
@@ -62,7 +69,8 @@ public class Spinner {
         spinnerMotor.setPower(power);
     }
     /**
-     * runIntakeMotor checks if the intake is not running and runs the intake
+     * runSpinnerMotorClockwise checks if the spinner is not clockwise and
+     * runs the spinner clockwise
      */
     public void runSpinnerMotorClockwise() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.CLOCKWISE) {
@@ -72,8 +80,8 @@ public class Spinner {
     }
 
     /**
-     * stopIntakeMotor checks if the intake has stopped and if its not, it sets the intake power to 0
-     * and sets intakeMotorState to INTAKE_MOTOR_STATE.STOPPED
+     * runSpinnerMotorAnticlockwise checks if the spinner has not spun Anticlockwise, it sets
+     * the spinner power to and sets spinnerMotorState to SPINNER_MOTOR_STATE.ANTICLOCKWISE
      */
     public void runSpinnerMotorAnticlockwise() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
@@ -83,8 +91,8 @@ public class Spinner {
     }
 
     /**
-     * reverseIntakeMotor checks if the intake is not reversing, and sets the intake motor to FORWARD, then also
-     * sets intake motor state to REVERSING
+     * stopSpinnerMotor checks if the spinner is not stopped, and sets the spinner
+     * motor to STOPPED
      */
     public void stopSpinnerMotor() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.STOPPED) {

@@ -155,7 +155,7 @@ public class AutonomousOpMode extends LinearOpMode {
     }
 
     /**
-     * Path and actions for autonomous mode starting from Inner start position
+     * Path and actions for autonomous mode starting from near carousal start position
      */
     public void runAutoStorage(){
 
@@ -280,7 +280,9 @@ public class AutonomousOpMode extends LinearOpMode {
         }
     }
 
-
+    /**
+     * Path and actions for autonomous mode starting from near warehouse position
+     */
     public void runAutoWarehouse(){
         //public static final Pose2d BLUE_WAREHOUSE_STARTPOS =  new Pose2d(-61,14,Math.toRadians(180));
         //public static final Pose2d RED_WAREHOUSE_STARTPOS =  new Pose2d(61,7,Math.toRadians(0));
@@ -406,6 +408,9 @@ public class AutonomousOpMode extends LinearOpMode {
 
     }
 
+    /**
+     * Rotating the carousal in a specific direction depending on the alliance side
+     */
     public void rotateCarousal() {
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             autonomousController.autoSpinnerState = AutonomousController.AUTO_SPINNER_STATE.CLOCKWISE;
@@ -419,7 +424,10 @@ public class AutonomousOpMode extends LinearOpMode {
     }
 
     //Drops pre-loaded box at the correct level determined by capstone position
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
+
+    /**
+     * Susbsytem functions during dropping the freight into the shipping hub
+     */
     public void dropBoxToLevel(){
         switch(targetZone) {
             case LEVEL1:
@@ -448,7 +456,9 @@ public class AutonomousOpMode extends LinearOpMode {
 
     }
 
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
+    /**
+     * Subsystem functions to drop freight at level 1 of the shipping hub
+     */
     public void dropFreightLevel1(){
         autonomousController.moveAutoElevatorLevel1();
         safeWait(1000);
@@ -459,12 +469,18 @@ public class AutonomousOpMode extends LinearOpMode {
     }
 
     //Runs the Intake and moves the Elevator to Level1
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
+
+    /**
+     * Intake function (plus automation) for moving to collect mode during auto
+     */
     public void runIntakeToCollect(){
         autonomousController.moveAutoElevatorLevel0();
         autonomousController.startAutoIntake();
     }
 
+    /**
+     * Elevator function in auto
+     */
     public void moveElevatorToLevel1(){
         autonomousController.moveAutoElevatorLevel1();
     }

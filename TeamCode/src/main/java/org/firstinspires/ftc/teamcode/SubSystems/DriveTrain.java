@@ -79,6 +79,10 @@ public class DriveTrain extends SampleMecanumDrive {
     //For Position
     public Pose2d poseEstimate = new Pose2d(0,0,0);
 
+    /**
+     * A parameter to register all the hardware devices for DriveTrain
+     * @param hardwareMap
+     */
     public DriveTrain(HardwareMap hardwareMap) {
         super(hardwareMap);
 

@@ -36,9 +36,6 @@ public class MaxVelocityTuner extends LinearOpMode {
     private VoltageSensor batteryVoltageSensor;
 
     @Override
-    /**
-     * Gives directions to drivers on Control Hub to start OpMode
-     */
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

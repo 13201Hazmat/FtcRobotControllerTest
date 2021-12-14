@@ -43,7 +43,7 @@ public class Intake {
     //public INTAKE_BUTTON_STATE intakeButtonState;
 
     /**
-     *Shows the intakeMotor power on the Control Hub
+     *Parameter that register all hardware devices for Intake Subsystem
      * @param hardwareMap
      */
     public Intake(HardwareMap hardwareMap) {

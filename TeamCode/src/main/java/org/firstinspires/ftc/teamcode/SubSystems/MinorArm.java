@@ -37,7 +37,7 @@ public class MinorArm {
     }
 
     /**
-     * Shows the minorArmServo and Claw Servo values on the Control Hub
+     * Parameter that register all hardware devices for MinorArm Subsystem
      * @param hardwareMap
      */
     public MinorArm(HardwareMap hardwareMap) {
