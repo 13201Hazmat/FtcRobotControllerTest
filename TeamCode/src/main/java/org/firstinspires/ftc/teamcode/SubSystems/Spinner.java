@@ -9,22 +9,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Example : Spinner consists of system provided spinner controls and adds functionality to the selection made on spinner. <BR>
  *
  * The states are as followed: <BR>
- *     <emsp>SPINNER_MOTOR_STATE_CLOCKWISE for one state - This is when spinner is rotating
- *     Clockwise for a specific alliance side</emsp> <BR>
- *     <emsp>SPINNER_MOTOR_STATE_ANTICLOCKWISE for another state - This is when spinner is
- *     rotating Anticlockwise for a specific alliance side</emsp> <BR>
- *     <emsp>SPINNER_MOTOR_STATE_STOPPED for another state - This is when spinner is not rotating
- *     at all </emsp> <BR>
+ *     SPINNER_MOTOR_STATE_CLOCKWISE for one state - This is when spinner is rotating
+ *     Clockwise for a specific alliance side <BR>
+ *     SPINNER_MOTOR_STATE_ANTICLOCKWISE for another state - This is when spinner is
+ *     rotating Anticlockwise for a specific alliance side <BR>
+ *     SPINNER_MOTOR_STATE_STOPPED for another state - This is when spinner is not rotating
+ *     at all  <BR>
  *
  * The functions are as followed: Example assumes a motor like an spinner <BR>
- *     <emsp>initSpinner checks if the spinner is ready to start </emsp> <BR>
- *     <emsp>runSpinnerMotor initializes the power and direction of the motor</emsp> <BR>
- *     <emsp>runSpinnerMotorClockwise checks if the spinner is already not clockwise
- *     and spins the motor clockwise</emsp> <BR>
- *     <emsp>runSpinnerMotorAnticlockwise checks if the spinner is already not anticlockwise and
- *     spins the motor anticlockwise</emsp> <BR>
- *     <emsp>stopSpinnerMotor checks if spinner is not stopped, then stops the spinner
- *     motor</emsp> <BR>
+ *     initSpinner checks if the spinner is ready to start  <BR>
+ *     runSpinnerMotor initializes the power and direction of the motor <BR>
+ *     runSpinnerMotorClockwise checks if the spinner is already not clockwise
+ *     and spins the motor clockwise <BR>
+ *     runSpinnerMotorAnticlockwise checks if the spinner is already not anticlockwise and
+ *     spins the motor anticlockwise <BR>
+ *     stopSpinnerMotor checks if spinner is not stopped, then stops the spinner
+ *     motor <BR>
  */
 public class Spinner {
 

@@ -22,32 +22,32 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
  * For Hazmat Freight Frenzy, two Gamepads are used (gamepad1 and gamepad2) <BR>
  *
  * The controls are as follows: (replace with gamepad2 for 2nd gamepad) <BR>
- *  *      <emsp>Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
- *  *      <emsp>Right Stick for turn motion (gamepad2.right_stick_x: gamepad1.right_stick_y) <BR>
- *  *      <emsp>Right Bumper magazine flip and majorClaw state(gp2) (gamepad1.right_bumper, gamepad2.right_bumper) <BR>
- *  *      <emsp>Left Bumper for spinner state and minorArm state(gp2) (gamepad1.left_bumper, gamepad2.left_bumper) <BR>
- *  *      <emsp>Right Trigger for turbo, and majorArm Parking position(gp2) (gamepad1.right_trigger, gamepad2.right_trigger) <BR>
- *  *      <emsp>Button A for elevator intake level and major arm pickup position(gp2) (gamepad1.a, gamepad2.a) <BR>
- *  *      <emsp>Button Y for elevator level 2 and major arm capstone position(gp2) (gamepad1.y, gamepad2.y) <BR>
- *  *      <emsp>Button X for elevator level 1 and majorArm down one level(gp2) (gamepad1.x, gamepad2.x) <BR>
- *  *      <emsp>Button B for elevator level 3 and majorArm level up one(gp2) (gamepad1.b, gamepad2.b) <BR>
- *  *      <emsp>Button Dpad_up for intake out & stop, also for minorArm level up one (gamepad1.dpad_up, gamepad2.dpad_up) <BR>
- *  *      <emsp>Button Dpad_down for intake in & stop, also for minorArm level down one (gamepad1.dpad_down, gamepad2.dpad_down) <BR>
+ *  *      Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
+ *  *      Right Stick for turn motion (gamepad2.right_stick_x: gamepad1.right_stick_y) <BR>
+ *  *      Right Bumper magazine flip and majorClaw state(gp2) (gamepad1.right_bumper, gamepad2.right_bumper) <BR>
+ *  *      Left Bumper for spinner state and minorArm state(gp2) (gamepad1.left_bumper, gamepad2.left_bumper) <BR>
+ *  *      Right Trigger for turbo, and majorArm Parking position(gp2) (gamepad1.right_trigger, gamepad2.right_trigger) <BR>
+ *  *      Button A for elevator intake level and major arm pickup position(gp2) (gamepad1.a, gamepad2.a) <BR>
+ *  *      Button Y for elevator level 2 and major arm capstone position(gp2) (gamepad1.y, gamepad2.y) <BR>
+ *  *      Button X for elevator level 1 and majorArm down one level(gp2) (gamepad1.x, gamepad2.x) <BR>
+ *  *      Button B for elevator level 3 and majorArm level up one(gp2) (gamepad1.b, gamepad2.b) <BR>
+ *  *      Button Dpad_up for intake out & stop, also for minorArm level up one (gamepad1.dpad_up, gamepad2.dpad_up) <BR>
+ *  *      Button Dpad_down for intake in & stop, also for minorArm level down one (gamepad1.dpad_down, gamepad2.dpad_down) <BR>
  *
  * To access the gamepad functions, use the gp1Get* or gp2Get* functions at the end of this class <BR>
- *     <emsp>gp1GetLeftStickX(), gp2GetLeftStickX()</emsp>
- *     <emsp>gp1GetLeftStickY(), gp2GetLeftStickY()</emsp>
- *     <emsp>gp1GetRightStickX(), gp2GetRightStickX()</emsp>
- *     <emsp>gp1GetRightStickY(), gp2GetRightStickY()</emsp>
- *     <emsp>gp1GetLeftTrigger(), gp2GetRightTrigger()</emsp>
- *     <emsp>gp1GetLeftTriggerPress(), gp2GetRightTriggerPress for toggle value()</emsp>
- *     <emsp>gp1GetLeftBumper(), gp2GetRightBumper()</emsp>
- *     <emsp>gp1GetLeftBumperPress(), gp2GetRightBumperPress for toggle value()</emsp>
- *     <emsp>gp1GetX(), gp2GetY(), gp1GetA(), gp2GetB()</emsp>
- *     <emsp>gp1GetXPress(), gp2GetYPress(), gp1GetAPress(), gp2GetBPress() for toggle value()</emsp>
- *     <emsp>gp1GetDpad_up(), gp2GetDpad_down(). gp1GetDpad_left(), gp2GetDpad_right() </emsp>
- *     <emsp>gp1GetDpad_upPress(), gp2GetDpad_downPress(). gp1GetDpad_leftPress(), gp2GetDpad_rightPress()  for toggle value()</emsp>
- *     <emsp>gp1GetStart(), gp2GetStart()</emsp>
+ *     gp1GetLeftStickX(), gp2GetLeftStickX()
+ *     gp1GetLeftStickY(), gp2GetLeftStickY()
+ *     gp1GetRightStickX(), gp2GetRightStickX()
+ *     gp1GetRightStickY(), gp2GetRightStickY()
+ *     gp1GetLeftTrigger(), gp2GetRightTrigger()
+ *     gp1GetLeftTriggerPress(), gp2GetRightTriggerPress for toggle value()
+ *     gp1GetLeftBumper(), gp2GetRightBumper()
+ *     gp1GetLeftBumperPress(), gp2GetRightBumperPress for toggle value()
+ *     gp1GetX(), gp2GetY(), gp1GetA(), gp2GetB()
+ *     gp1GetXPress(), gp2GetYPress(), gp1GetAPress(), gp2GetBPress() for toggle value()
+ *     gp1GetDpad_up(), gp2GetDpad_down(). gp1GetDpad_left(), gp2GetDpad_right() 
+ *     gp1GetDpad_upPress(), gp2GetDpad_downPress(). gp1GetDpad_leftPress(), gp2GetDpad_rightPress()  for toggle value()
+ *     gp1GetStart(), gp2GetStart()
  *
  */
 

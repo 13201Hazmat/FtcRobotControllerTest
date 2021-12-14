@@ -12,15 +12,15 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
  *
  * The states are as followed: <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing </emsp> <BR>
- *     <emsp>SUBSYSTEM1_SERVO_LEVEL2 for another state  = example if the intake is on or off </emsp> <BR>
+ *     SUBSYSTEM1_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing  <BR>
+ *     SUBSYSTEM1_SERVO_LEVEL2 for another state  = example if the intake is on or off  <BR>
  *
  * The functions are as followed: Example assumes a motor like an intake <BR>
- *     <emsp>runSubsystem1Motor checks if the motor is not running and runs the intake </emsp> <BR>
- *     <emsp>stopSubsystem1Motor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets subsystem1MotorState to SUBSYSTEM1_SERVO_LEVEL1.STOPPED </emsp> <BR>
- *     <emsp> startReverseSubsystem1Motor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING</emsp> <BR>
+ *     runSubsystem1Motor checks if the motor is not running and runs the intake  <BR>
+ *     stopSubsystem1Motor checks if the intake has stopped and if its not, it sets the intake power to 0
+ *     and sets subsystem1MotorState to SUBSYSTEM1_SERVO_LEVEL1.STOPPED  <BR>
+ *      startReverseSubsystem1Motor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
+ *     sets intake motor state to REVERSING <BR>
  */
 public class MajorArm {
 

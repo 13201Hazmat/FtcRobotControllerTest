@@ -11,21 +11,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
  *
  * The states are as followed: <BR>
- *     <emsp>ELEVATOR_STATE.LEVEL0 for ground level state - Elevator will stay at ground level, where
- *     freight is stored inside the robot </emsp> <BR>
- *     <emsp>ELEVATOR_STATE.LEVEL1 for first level state - The first scoring position of the
- *     alliance shipping hub  </emsp> <BR>
- *     <emsp>ELEVATOR_STATE.LEVEL2 for second level state - The second scoring position of the
- *     alliance shipping hub </emsp> <BR>
- *     <emsp>ELEVATOR_STATE.LEVEL3 for third level state - The third scoring position of the
- *     alliance shipping hub </emsp> <BR>
+ *     ELEVATOR_STATE.LEVEL0 for ground level state - Elevator will stay at ground level, where
+ *     freight is stored inside the robot  <BR>
+ *     ELEVATOR_STATE.LEVEL1 for first level state - The first scoring position of the
+ *     alliance shipping hub   <BR>
+ *     ELEVATOR_STATE.LEVEL2 for second level state - The second scoring position of the
+ *     alliance shipping hub  <BR>
+ *     ELEVATOR_STATE.LEVEL3 for third level state - The third scoring position of the
+ *     alliance shipping hub  <BR>
  *
  * The functions are as followed: <BR>
- *     <emsp>initElevator sets the original/starting position(LEVEL0), direction (forward),
- *     mode(using encoder), and sets the brake mode to off </emsp> <BR>
- *     <emsp>resetElevator stops and resets the drive encoders, and sets mode to runMode </emsp> <BR>
- *     <emsp>turnElevatorBrakeModeOn: this function sets the brake mode to ON</emsp> <BR>
- *     <emsp>turnElevatorBrakeModeOff: </emsp>
+ *     initElevator sets the original/starting position(LEVEL0), direction (forward),
+ *     mode(using encoder), and sets the brake mode to off  <BR>
+ *     resetElevator stops and resets the drive encoders, and sets mode to runMode  <BR>
+ *     turnElevatorBrakeModeOn: this function sets the brake mode to ON <BR>
+ *     turnElevatorBrakeModeOff: 
  */
 public class Elevator {
 
