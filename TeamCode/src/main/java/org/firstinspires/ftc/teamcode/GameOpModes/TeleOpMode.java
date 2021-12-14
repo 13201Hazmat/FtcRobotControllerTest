@@ -90,7 +90,7 @@ public class TeleOpMode extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
-                if (gameTimer.time() > 110 && gameTimer.time() < 113) {
+                if (gameTimer.time() > 80000 && gameTimer.time() < 85000) {
                     blinkinDisplay.setPatternEndGame();
                 }
 
@@ -139,6 +139,9 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
         telemetry.addData("Magazine Color Sensor Distance :", "%.3f",magazine.getMagazineColorSensorDistance());
         telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
+
+        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
+        telemetry.addData("Game Timer : ", gameTimer.time());
 
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());

@@ -26,32 +26,35 @@ import org.firstinspires.ftc.teamcode.TestingOpModes.SampleRevBlinkinLedDriver;
 public class BlinkinDisplay {
 
     public RevBlinkinLedDriver blinkinLedDriver;
+    public RevBlinkinLedDriver.BlinkinPattern currentPattern;
     public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
     public RevBlinkinLedDriver.BlinkinPattern patternElementLoaded = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-    public RevBlinkinLedDriver.BlinkinPattern patternEndGame = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER;
-    public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+    public RevBlinkinLedDriver.BlinkinPattern patternEndGame = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
+    public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.LIME;
 
     public BlinkinDisplay(HardwareMap hardwareMap){
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
         blinkinLedDriver.setPattern(patternDemo);
+        currentPattern = patternDemo;
     }
 
     public void setPatternDemo(){
         blinkinLedDriver.setPattern(patternDemo);
+        currentPattern = patternDemo;
     }
 
     public void setPatternElementLoaded(){
         blinkinLedDriver.setPattern(patternElementLoaded);
+        currentPattern = patternElementLoaded;
     }
 
     public void setPatternEndGame(){
         blinkinLedDriver.setPattern(patternEndGame);
+        currentPattern = patternEndGame;
     }
 
     public void setPatternBlack(){
         blinkinLedDriver.setPattern(patternBlack);
+        currentPattern = patternBlack;
     }
-
-
-
 }
