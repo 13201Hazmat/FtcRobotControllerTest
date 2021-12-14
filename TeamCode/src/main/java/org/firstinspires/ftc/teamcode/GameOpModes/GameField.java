@@ -45,6 +45,11 @@ public class GameField {
         STORAGE
     }
 
+    public enum AUTONOMOUS_ROUTE {
+        INNER,
+        OUTER
+    }
+
     //Define targets for Vision to determine Autonomous mode action based on camera detection
     public enum VISION_IDENTIFIED_TARGET {
         LEVEL1,

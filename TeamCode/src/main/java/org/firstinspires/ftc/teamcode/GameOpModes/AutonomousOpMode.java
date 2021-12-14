@@ -58,6 +58,7 @@ public class AutonomousOpMode extends LinearOpMode {
     public Vision vision;
     public Pose2d startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
     public GameField.PARKING_LOCATION parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
+    public GameField.AUTONOMOUS_ROUTE autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
 
     boolean parked = false ;
     boolean autonomousStarted = false;
@@ -275,21 +276,37 @@ public class AutonomousOpMode extends LinearOpMode {
             }
             driveTrain.followTrajectory(traj);
         } else {
-            //Move through Central Area and Park in Warehouse
-            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .splineToSplineHeading(new Pose2d(-6, -20, Math.toRadians(90)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(-12, 12, Math.toRadians(135)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(-40, 40, Math.toRadians(135)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(-40, 64, Math.toRadians(180)), Math.toRadians(0)) //TODO: Check position
-                        .build();
-            } else {
-                traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .splineToSplineHeading(new Pose2d(6, -20, Math.toRadians(90)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(12, 12, Math.toRadians(45)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(40, 40, Math.toRadians(45)), Math.toRadians(0)) //TODO: Check position
-                        .splineToSplineHeading(new Pose2d(40, 64, Math.toRadians(0)), Math.toRadians(0)) //TODO: Check position
-                        .build();
+            if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.OUTER) {
+                //Move through Central Area and Park in Warehouse
+                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                            .splineTo(new Vector2d(-6, -20), Math.toRadians(90)) //TODO: Check position
+                            .splineTo(new Vector2d(-12, 12), Math.toRadians(135)) //TODO: Check position
+                            .splineTo(new Vector2d(-40, 40), Math.toRadians(135)) //TODO: Check position
+                            .splineTo(new Vector2d(-40, 64), Math.toRadians(180)) //TODO: Check position
+                            .build();
+                } else {
+                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                            .splineTo(new Vector2d(6, -20), Math.toRadians(90)) //TODO: Check position
+                            .splineTo(new Vector2d(12, 12), Math.toRadians(135)) //TODO: Check position
+                            .splineTo(new Vector2d(40, 40), Math.toRadians(135)) //TODO: Check position
+                            .splineTo(new Vector2d(40, 64), Math.toRadians(0)) //TODO: Check position
+                            .build();
+                }
+            } else {//(autonomousRoute == GameField.AUTONOMOUS_ROUTE.INNER)
+                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-48, -30, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-40, 64, Math.toRadians(180)))
+                            .build();
+                } else {
+                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(48, -30, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(48, 40, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(40, 64, Math.toRadians(0)))
+                            .build();
+                }
             }
             driveTrain.followTrajectory(traj);
             runIntakeToCollect();
@@ -566,60 +583,102 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //***** Select Start Pose ******
         telemetry.addData("Enter Start Pose :","");
-        telemetry.addData("  WAREHOUSE: (A)","");
+        telemetry.addData("  WAREHOUSE: (X)","");
         telemetry.addData("  STORAGE PARK STORAGE: (Y)","");
-        telemetry.addData("  STORAGE PARK WAREHOUSE: (A)","");
+        telemetry.addData("  STORAGE PARK WAREHOUSE INNER: (A)","");
+        telemetry.addData("  STORAGE PARK WAREHOUSE OUTER: (B)","");
 
         while (!isStopRequested()) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
-                if (gamepadController.gp1GetButtonAPress()) {
+                if (gamepadController.gp1GetButtonXPress()) {
                     GameField.startPosition = GameField.START_POSITION.WAREHOUSE;
                     startPose = GameField.RED_WAREHOUSE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "RED_WAREHOUSE");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
                 if (gamepadController.gp1GetButtonYPress()) {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.RED_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.STORAGE;
                     telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_STORAGE");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
                 if(gamepadController.gp1GetButtonAPress()){
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.RED_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
-                    telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_WAREHOUSE");
+                    telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_WAREHOUSE_INNER");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
+
+                    break;
+                }
+                if(gamepadController.gp1GetButtonBPress()){
+                    GameField.startPosition = GameField.START_POSITION.STORAGE;
+                    startPose = GameField.RED_STORAGE_STARTPOS;
+                    activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.OUTER;
+                    parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
+                    telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_WAREHOUSE_OUTER");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
             }
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                if (gamepadController.gp1GetButtonAPress()) {
+                if (gamepadController.gp1GetButtonXPress()) {
                     GameField.startPosition = GameField.START_POSITION.WAREHOUSE;
                     startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "BLUE_WAREHOUSE");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
                 if (gamepadController.gp1GetButtonYPress()) {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.BLUE_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.STORAGE;
                     telemetry.addData("Start Pose : ", "BLUE_STORAGES_PARK_STORAGE");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
                 if(gamepadController.gp1GetButtonAPress()){
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.BLUE_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
-                    telemetry.addData("Start Pose : ", "BLUE_STORAGE_PARK_WAREHOUSE");
+                    telemetry.addData("Start Pose : ", "BLUE_STORAGE_PARK_WAREHOUSE_INNER");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
+                    break;
+                }
+                if(gamepadController.gp1GetButtonBPress()){
+                    GameField.startPosition = GameField.START_POSITION.STORAGE;
+                    startPose = GameField.BLUE_STORAGE_STARTPOS;
+                    activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.OUTER;
+                    parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
+                    telemetry.addData("Start Pose : ", "BLUE_STORAGE_PARK_WAREHOUSE_OUTER");
+                    telemetry.addData("Autonomous route : ", autonomousRoute);
+                    telemetry.addData("Parking Location : ", parkingLocation);
                     break;
                 }
             }
@@ -642,6 +701,8 @@ public class AutonomousOpMode extends LinearOpMode {
         telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
         telemetry.addData("GameField.currentPose : ", GameField.currentPose);
         telemetry.addData("startPose : ", startPose);
+        telemetry.addData("autonomousRoute: ", autonomousRoute);
+        telemetry.addData("parking: ", parkingLocation);
 
         //****** Drive debug ******
         telemetry.addData("Drive Mode : ", driveTrain.driveMode);
