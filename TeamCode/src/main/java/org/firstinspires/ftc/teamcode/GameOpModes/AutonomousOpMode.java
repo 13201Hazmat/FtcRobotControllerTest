@@ -276,6 +276,7 @@ public class AutonomousOpMode extends LinearOpMode {
             }
             driveTrain.followTrajectory(traj);
         } else {
+            safeWait(5000); //Wait till end
             if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.OUTER) {
                 //Move through Central Area and Park in Warehouse
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
