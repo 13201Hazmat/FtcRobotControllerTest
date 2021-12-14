@@ -261,7 +261,7 @@ public class AutonomousOpMode extends LinearOpMode {
         dropBoxToLevel();
 
         safeWait(1000);
-        moveElevatorToLevel1();
+        moveElevatorToLevel0();
 
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
