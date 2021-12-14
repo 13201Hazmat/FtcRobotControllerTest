@@ -22,17 +22,17 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
  * For Hazmat Freight Frenzy, two Gamepads are used (gamepad1 and gamepad2) <BR>
  *
  * The controls are as follows: (replace with gamepad2 for 2nd gamepad) <BR>
- *      <emsp>Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
- *      <emsp>Right Stick for turn motion (gamepad2.right_stick_x: gamepad1.right_stick_y) <BR>
- *      <emsp>Right Bumper magazine flip and majorClaw state(gp2) (gamepad1.right_bumper, gamepad2.right_bumper) <BR>
- *      <emsp>Left Bumper for spinner state and minorArm state(gp2) (gamepad1.left_bumper, gamepad2.left_bumper) <BR>
- *      <emsp>Right Trigger for turbo, and majorArm Parking position(gp2) (gamepad1.right_trigger, gamepad2.right_trigger) <BR>
- *      <emsp>Button A for elevator intake level and major arm pickup position(gp2) (gamepad1.a, gamepad2.a) <BR>
- *      <emsp>Button Y for elevator level 2 and major arm capstone position(gp2) (gamepad1.y, gamepad2.y) <BR>
- *      <emsp>Button X for elevator level 1 and majorArm down one level(gp2) (gamepad1.x, gamepad2.x) <BR>
- *      <emsp>Button B for elevator level 3 and majorArm level up one(gp2) (gamepad1.b, gamepad2.b) <BR>
- *      <emsp>Button Dpad_up for intake out & stop, also for minorArm level up one (gamepad1.dpad_up, gamepad2.dpad_up) <BR>
- *      <emsp>Button Dpad_down for intake in & stop, also for minorArm level down one (gamepad1.dpad_down, gamepad2.dpad_down) <BR>
+ *  *      <emsp>Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
+ *  *      <emsp>Right Stick for turn motion (gamepad2.right_stick_x: gamepad1.right_stick_y) <BR>
+ *  *      <emsp>Right Bumper magazine flip and majorClaw state(gp2) (gamepad1.right_bumper, gamepad2.right_bumper) <BR>
+ *  *      <emsp>Left Bumper for spinner state and minorArm state(gp2) (gamepad1.left_bumper, gamepad2.left_bumper) <BR>
+ *  *      <emsp>Right Trigger for turbo, and majorArm Parking position(gp2) (gamepad1.right_trigger, gamepad2.right_trigger) <BR>
+ *  *      <emsp>Button A for elevator intake level and major arm pickup position(gp2) (gamepad1.a, gamepad2.a) <BR>
+ *  *      <emsp>Button Y for elevator level 2 and major arm capstone position(gp2) (gamepad1.y, gamepad2.y) <BR>
+ *  *      <emsp>Button X for elevator level 1 and majorArm down one level(gp2) (gamepad1.x, gamepad2.x) <BR>
+ *  *      <emsp>Button B for elevator level 3 and majorArm level up one(gp2) (gamepad1.b, gamepad2.b) <BR>
+ *  *      <emsp>Button Dpad_up for intake out & stop, also for minorArm level up one (gamepad1.dpad_up, gamepad2.dpad_up) <BR>
+ *  *      <emsp>Button Dpad_down for intake in & stop, also for minorArm level down one (gamepad1.dpad_down, gamepad2.dpad_down) <BR>
  *
  * To access the gamepad functions, use the gp1Get* or gp2Get* functions at the end of this class <BR>
  *     <emsp>gp1GetLeftStickX(), gp2GetLeftStickX()</emsp>
@@ -329,7 +329,7 @@ public class GamepadController {
     }
 
     /**
-     * runSpinner sets the differnt spinner controls, if the spinner should be spinning clockwise or
+     * runSpinner sets the different spinner controls, if the spinner should be spinning clockwise or
      * anticlockwise or not spinning at all, this functions reads the current state and depending on
      * the state, the function will execute the motion the spinner moves in. <BR>
       */

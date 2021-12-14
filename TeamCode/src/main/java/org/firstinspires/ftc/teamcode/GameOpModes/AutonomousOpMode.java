@@ -26,15 +26,23 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
  * This code describes how Autonomous mode is done by Hazmat Robot for Ultimate Goal.<BR>
  * The following options are coded here, and selectable through Gamepad inputs to set up <BR>
  *     <emsp>Playing Alliance : Red or Blue</emsp>
- *     <emsp>Start Line : Inner or Outer</emsp>
+ *     <emsp>Start Line : Storage or Warehouse</emsp>
  *     <emsp>Game options :</emsp>
- *     <emsp>     Launch rings to High Goal or Power Shot and park</emsp>
- *     <emsp>     Launch rings to High Goal or Power Shot, drop Wobble Goal and park</emsp>
- *     <emsp>     Launch rings to High Goal or Power Shot, drop Wobble Goal, Pick rings from target marker, launch and park</emsp>
- *     <emsp>     Launch rings to High Goal or Power Shot, drop Wobble Goal, Pick rings from target marker, launch, move Wobble Goal2 and park</emsp>
+ *     <emsp>     Scan, Pick up Capstone, place freight in the Shipping Hub, move to Warehouse,
+ *     pick up freight, move and place on Shipping Hub, then go and park in Warehouse
+ *     --Both for Red and Blue Warehouse </emsp>
+ *     <emsp>     Scan, pick up Capstone, move to Carousel, execute task for Carousel, move to
+ *     Shipping Hub and place element, move to Storage space and Park --Both for
+ *     Blue and Red Storage </emsp>
+ *     <emsp>     Scan, Pick up Capstone, move and execute task at Carousel, move and place freight
+ *     at Shipping Hub, move to central area then to warehouse and Park, align to wall then
+ *     pick up freight then move elevator to level 1--Blue and Red Warehouse from the outside lane</emsp>
+ *     <emsp>     Scan, pick up Capstone, move and execute task at carousel, move and place element
+ *     at Shipping Hub, move to designated area between Hub and Wall, move and park
+ *     efficiently in warehouse--For Blue and Red Warehouse Park from Inside</emsp>
  *
- * The code for Red and Blue are written as reflection of each other.<BR>
- * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
+ * The code for Red and Blue are written as reflection of each other<BR>
+ * Camera on either side is used using Vuforia to determine target for Barcode Duck Position<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
 @Autonomous(name = "Autonomous", group = "00-Autonomous" , preselectTeleOp = "TeleOp")

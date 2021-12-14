@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 /**
  * Ultimate Goal TeleOp mode <BR>
  *
- *  *  This code defines the TeleOp mode is done by Hazmat Robot for Ultimate Goal.<BR>
+ *  *  This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy.<BR>
  *
  */
 @TeleOp(name = "TeleOp", group = "00-Teleop")
