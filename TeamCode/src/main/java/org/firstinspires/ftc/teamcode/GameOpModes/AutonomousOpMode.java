@@ -192,7 +192,7 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-49, -33, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-41, -36, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -203,7 +203,7 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-49, -41, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-36, -36, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -216,7 +216,7 @@ public class AutonomousOpMode extends LinearOpMode {
             case UNKNOWN:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-49, -49, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-39, -39, Math.toRadians(180)))
                             .build();
                     break;
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
@@ -234,7 +234,7 @@ public class AutonomousOpMode extends LinearOpMode {
         //Move To Carousal
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-65, -61, Math.toRadians(-155)))
+                    .lineToLinearHeading(new Pose2d(-66, -60, Math.toRadians(-155)))
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -267,7 +267,7 @@ public class AutonomousOpMode extends LinearOpMode {
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-36,-65, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(-39,-65, Math.toRadians(90)))
                         .build();
             } else {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
