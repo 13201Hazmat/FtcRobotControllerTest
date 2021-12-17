@@ -78,6 +78,7 @@ import java.util.List;
  * There are a total of five image targets for the ULTIMATE GOAL game.
  * Three of the targets are placed in the center of the Red Alliance, Audience (Front),
  * and Blue Alliance perimeter walls.
+ *
  * Two additional targets are placed on the perimeter wall, one in front of each Tower Goal.
  * Refer to the Field Setup manual for more specific location details
  *
