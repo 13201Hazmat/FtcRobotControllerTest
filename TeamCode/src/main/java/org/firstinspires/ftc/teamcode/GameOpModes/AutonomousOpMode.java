@@ -194,11 +194,11 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, -36, Math.toRadians(-170)))
+                            .lineToLinearHeading(new Pose2d(-49, -36, Math.toRadians(-170)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50,-38, Math.toRadians(-5)))
+                            .lineToLinearHeading(new Pose2d(48,-38, Math.toRadians(-5)))
                             .build();
                 }
                 break;
@@ -244,7 +244,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(53, -66, Math.toRadians(-60)))
+                    .lineToLinearHeading(new Pose2d(53, -65, Math.toRadians(-60)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -259,7 +259,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(37, -21, Math.toRadians(-47)))
+                    .lineToLinearHeading(new Pose2d(37, -21, Math.toRadians(-45)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -277,7 +277,7 @@ public class AutonomousOpMode extends LinearOpMode {
                         .build();
             } else {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(36, -67, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(36, -69, Math.toRadians(90)))
                         .build();
             }
             driveTrain.followTrajectory(traj);
