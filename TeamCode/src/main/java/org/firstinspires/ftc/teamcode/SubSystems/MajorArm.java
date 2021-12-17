@@ -71,8 +71,8 @@ public class MajorArm {
         initMajorArm();
     }
 
-    public static final double CLAW_OPEN = 0.45;
-    public static final double CLAW_CLOSED = 0.80;
+    public static final double CLAW_OPEN = 0.8;
+    public static final double CLAW_CLOSED = 0.53;
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
@@ -81,19 +81,19 @@ public class MajorArm {
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -500;
     public static int MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT = -425;
-    public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
+    public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 25;
     public static int MAJORARM_DELTA_COUNT = 25;
     public int majorarmCurrentArmPositionCount = MAJORARM_MOTOR_PARKED_POSITION_COUNT;
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.3;
+    public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.25;
     public static final double  MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
     public static final double  MAJORARM_WRIST_LEVEL2_POSITION = 0.60;
     public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.75;
     public static final double  MAJORARM_WRIST_CAPSTONE_POSITION = 0.90;
-    public static final double  MAJORARM_WRIST_PARKED_POSITION = 1.0;
-    public static final double  MAJORARM_WRIST_INIT_POSITION = 0.1;
+    public static final double  MAJORARM_WRIST_PARKED_POSITION = 0.98;
+    public static final double  MAJORARM_WRIST_INIT_POSITION = 0.22;
 
     public static double MAJORARM_MOTOR_POWER = 0.2;
     public static double MAJORARM_MOTOR_DELTA_POWER = 0.1;
@@ -299,7 +299,7 @@ public class MajorArm {
      * Method that takes keypad inputs to select the Autonomous options
      */
     public void moveMajorArmParkingPosition() {
-        turnArmBrakeModeOff();
+        turnArmBrakeModeOn();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.PARKED;

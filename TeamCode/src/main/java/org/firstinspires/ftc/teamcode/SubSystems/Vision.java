@@ -167,7 +167,8 @@ public class Vision {
             "Duck",
             "Marker"
     };
-    public String targetLabel = LABELS[2]; // Default "Duck"
+    public String targetLabel1 = LABELS[2]; // Default "Duck"
+    public String targetLabel2 = LABELS[1]; // "Marker" //TODO Adjust to correct one
     public String detectedLabel = LABELS[2];
     public float detectedLabelLeft, detectedLabelRight, detectedLabelTop, detectedLabelBottom;
     public static float[] targetPosition = {
@@ -230,11 +231,11 @@ public class Vision {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
-        if (GameField.visionIdentifier == GameField.VISION_IDENTIFIER.MARKER){
-            targetLabel = LABELS[3]; //"Marker"
+        /*if (GameField.visionIdentifier == GameField.VISION_IDENTIFIER.MARKER){
+            targetLabel2 = LABELS[3]; //"Marker"
         } else {//if (GameField.visionIdentifier == GameField.VISION_IDENTIFIER.DUCK)
-            targetLabel = LABELS[2];
-        }
+            targetLabel2 = LABELS[2];
+        }*/
         visionState = VISION_STATE.TFOD_INIT;
 
     }
@@ -261,7 +262,7 @@ public class Vision {
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
             //tfod.setZoom(1.75, 16.0/9.0);
-            tfod.setZoom(1.1, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
             recognitions = tfod.getUpdatedRecognitions();
         }
     }
@@ -300,12 +301,18 @@ public class Vision {
 
                     for (Recognition recognition : recognitions) {
                         // check label to see which target zone to go after.
-                        detectedLabel = recognition.getLabel();
+                        /*detectedLabel = recognition.getLabel();
                         detectedLabelLeft = recognition.getLeft();
                         detectedLabelRight = recognition.getRight();
                         detectedLabelTop = recognition.getTop();
-                        detectedLabelBottom = recognition.getBottom();
-                        if (recognition.getLabel().equals(targetLabel)) {
+                        detectedLabelBottom = recognition.getBottom();*/
+                        if (recognition.getLabel().equals(targetLabel1) || recognition.getLabel().equals(targetLabel2) ) {
+                            detectedLabel = recognition.getLabel();
+                            detectedLabelLeft = recognition.getLeft();
+                            detectedLabelRight = recognition.getRight();
+                            detectedLabelTop = recognition.getTop();
+                            detectedLabelBottom = recognition.getBottom();
+
                             if (recognition.getLeft() < targetPosition[0]) {
                                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
                                     targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
