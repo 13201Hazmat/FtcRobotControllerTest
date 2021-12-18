@@ -287,11 +287,11 @@ public class AutonomousOpMode1 extends LinearOpMode {
             if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-65, -23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-69, -23, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-65, 55, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-69, 55, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
