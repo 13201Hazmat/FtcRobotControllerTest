@@ -295,6 +295,7 @@ public class AutonomousController {
     public AUTO_SPINNER_STATE autoSpinnerState = AUTO_SPINNER_STATE.STOPPED;
 
     public void runAutoSpinner() {
+        spinner.autonomous = true;
         switch (autoSpinnerState) {
             case ANTICLOCKWISE:
                 spinner.runSpinnerMotorAnticlockwise();

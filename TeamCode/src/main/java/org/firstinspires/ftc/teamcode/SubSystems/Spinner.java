@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -33,7 +34,10 @@ public class Spinner {
     public SPINNER_MOTOR_STATE spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
 
     public double spinnerMotorPower = 0.7;
+    public double spinnerMotorPowerAuto = 0.6;
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
+
+    public boolean autonomous = false;
 
     public Spinner (HardwareMap hardwareMap) {
         spinnerMotor = hardwareMap.dcMotor.get("spinner_motor");
@@ -53,7 +57,11 @@ public class Spinner {
      */
     public void runSpinnerMotorClockwise() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.CLOCKWISE) {
-            runSpinnerMotor(DcMotor.Direction.FORWARD, spinnerMotorPower);
+            if (autonomous == false) {
+                runSpinnerMotor(DcMotor.Direction.FORWARD, spinnerMotorPower);
+            } else {
+                runSpinnerMotor(DcMotor.Direction.FORWARD, spinnerMotorPowerAuto);
+            }
             spinnerMotorState = SPINNER_MOTOR_STATE.CLOCKWISE;
         }
     }
@@ -64,8 +72,11 @@ public class Spinner {
      */
     public void runSpinnerMotorAnticlockwise() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
-            runSpinnerMotor(DcMotor.Direction.REVERSE, spinnerMotorPower);
-            spinnerMotorState = SPINNER_MOTOR_STATE.ANTICLOCKWISE;
+            if (autonomous == false) {
+                runSpinnerMotor(DcMotor.Direction.REVERSE, spinnerMotorPower);
+            } else {
+                runSpinnerMotor(DcMotor.Direction.REVERSE, spinnerMotorPowerAuto);
+            }spinnerMotorState = SPINNER_MOTOR_STATE.ANTICLOCKWISE;
        }
     }
 
