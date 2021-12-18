@@ -58,7 +58,7 @@ public class AutonomousOpMode extends LinearOpMode {
     public Vision vision;
     public Pose2d startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
     public GameField.PARKING_LOCATION parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
-    public GameField.AUTONOMOUS_ROUTE autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+    public GameField.AUTONOMOUS_ROUTE autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
 
     boolean parked = false ;
     boolean autonomousStarted = false;
@@ -194,22 +194,22 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-49, -36, Math.toRadians(-170)))
+                            .lineToLinearHeading(new Pose2d(-50, -36, Math.toRadians(-170)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(48,-38, Math.toRadians(-5)))
+                            .lineToLinearHeading(new Pose2d(50,-38, Math.toRadians(-5)))
                             .build();
                 }
                 break;
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-51, -40, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-50, -40, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(51,-37, Math.toRadians(-30)))
+                            .lineToLinearHeading(new Pose2d(50,-37, Math.toRadians(-30)))
                             .build();
                 }
                 break;
@@ -236,6 +236,7 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //Collect Capstone and move arm to parking position
         moveMajorArmToParkingAfterClosingClaw();
+        safeWait(1000);
 
         //Move To Carousal
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
@@ -244,7 +245,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(53, -65, Math.toRadians(-60)))
+                    .lineToLinearHeading(new Pose2d(51, -65, Math.toRadians(-60)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -255,11 +256,11 @@ public class AutonomousOpMode extends LinearOpMode {
         //Move To Shipping Unit
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-37, -21 , Math.toRadians(-137)))
+                    .lineToLinearHeading(new Pose2d(-34, -24 , Math.toRadians(-137)))
                     .build();
         } else {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(37, -21, Math.toRadians(-45)))
+                    .lineToLinearHeading(new Pose2d(34.5, -24.5, Math.toRadians(-45)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -268,7 +269,7 @@ public class AutonomousOpMode extends LinearOpMode {
         dropBoxToLevel();
 
         safeWait(1000);
-        moveElevatorToLevel0();
+        moveElevatorToLevel1();
 
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
@@ -277,13 +278,13 @@ public class AutonomousOpMode extends LinearOpMode {
                         .build();
             } else {
                 traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(36, -69, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(36, -67, Math.toRadians(90)))
                         .build();
             }
             driveTrain.followTrajectory(traj);
         } else {
             safeWait(500); //Wait till end
-            if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.OUTER) {
+            if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
                 //Move through Central Area and Park in Warehouse
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -304,36 +305,36 @@ public class AutonomousOpMode extends LinearOpMode {
             } else {//(autonomousRoute == GameField.AUTONOMOUS_ROUTE.INNER)
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, -34, Math.toRadians(-137)))
+                            .lineToLinearHeading(new Pose2d(-42, -40, Math.toRadians(60)))
                             .build();
                     driveTrain.followTrajectory(traj);
-                    driveTrain.turn(Math.toRadians(137));
+                    //driveTrain.turn(Math.toRadians(137));
                     /*traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(-42, 50, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);*/
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-42, 64, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-42, 60, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);
                 } else {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50, -34, Math.toRadians(-47)))
+                            .lineToLinearHeading(new Pose2d(42, -40, Math.toRadians(120)))
                             .build();
                     driveTrain.followTrajectory(traj);
-                    driveTrain.turn(Math.toRadians(137));
+                    //driveTrain.turn(Math.toRadians(137));
                     /*traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(42, 50, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);*/
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(42, 64, Math.toRadians(0)))
+                            .lineToLinearHeading(new Pose2d(42, 60, Math.toRadians(90)))
                             .build();
                     driveTrain.followTrajectory(traj);
                 }
             }
 
-            runIntakeToCollect();
+            //runIntakeToCollect();
             safeWait(1000);
             moveElevatorToCollect();
         }
@@ -346,17 +347,18 @@ public class AutonomousOpMode extends LinearOpMode {
 
         safeWait(100);
 
-        /*
+
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-55,-14,Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(-56,7,Math.toRadians(180)))
                     .build();
         } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(55,7,Math.toRadians(0)))
+                    .lineToLinearHeading(new Pose2d(56,7,Math.toRadians(0)))
                     .build();
         }
-         */
+        driveTrain.followTrajectory(traj);
+        safeWait(1000);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
@@ -379,11 +381,11 @@ public class AutonomousOpMode extends LinearOpMode {
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-51, 7, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-50, 7, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(51, 10, Math.toRadians(-30)))
+                            .lineToLinearHeading(new Pose2d(50, 10, Math.toRadians(-30)))
                             .build();
                 }
                 break;
@@ -391,7 +393,7 @@ public class AutonomousOpMode extends LinearOpMode {
             case UNKNOWN:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, 3, Math.toRadians(170)))
+                            .lineToLinearHeading(new Pose2d(-54, 8, Math.toRadians(120)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -404,15 +406,16 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //Collect Capstone and move arm to parking position
         moveMajorArmToParkingAfterClosingClaw();
+        safeWait(1000);
 
         //Move to shipping unit and place the pre-loaded freight
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-37, 3 , Math.toRadians(137)))
+                    .lineToLinearHeading(new Pose2d(-34.5, 0.5 , Math.toRadians(135)))
                     .build();
         } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(37, 3, Math.toRadians(47)))
+                    .lineToLinearHeading(new Pose2d(32, -3, Math.toRadians(45)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -420,7 +423,7 @@ public class AutonomousOpMode extends LinearOpMode {
         dropBoxToLevel();
         safeWait(100);
 
-        for (int looper = 0; looper < 3; looper++){
+        /*for (int looper = 0; looper < 1; looper++){
             //Move Intake to collect mode
             autonomousController.moveAutoMagazineToTransport();
             autonomousController.moveAutoElevatorLevel0();
@@ -457,22 +460,41 @@ public class AutonomousOpMode extends LinearOpMode {
             driveTrain.followTrajectory(traj);
 
             dropFreightLevel1();
-        }
+        }*/
+
+        autonomousController.moveAutoMagazineToTransport();
+        autonomousController.moveAutoElevatorLevel1();
+
 
         //Move and park completely in Warehouse
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .splineTo(new Vector2d(-42, 42), Math.toRadians(0))
+                    .lineToLinearHeading(new Pose2d(-65, 8, Math.toRadians(90)))
                     .build();
+            driveTrain.followTrajectory(traj);
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(-65, 55, Math.toRadians(90)))
+                    .build();
+            driveTrain.followTrajectory(traj);
         } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .splineTo(new Vector2d(36, 60), Math.toRadians(0))
+                    .lineToLinearHeading(new Pose2d(65, 8, Math.toRadians(90)))
                     .build();
+            driveTrain.followTrajectory(traj);
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(65, 50, Math.toRadians(90)))
+                    .build();
+            driveTrain.followTrajectory(traj);
+            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(55, 50, Math.toRadians(150)))
+                    .build();
+            driveTrain.followTrajectory(traj);
+
         }
-        driveTrain.followTrajectory(traj);
+
 
         // Run Intake and Move Elevator to Level 1
-        runIntakeToCollect();
+        //runIntakeToCollect();
         safeWait(2000);
         moveElevatorToLevel0();
 
@@ -558,12 +580,15 @@ public class AutonomousOpMode extends LinearOpMode {
         autonomousController.closeAutoMajorClaw();
         safeWait(1000);
         autonomousController.moveAutoMajorArmPark();
-        majorArm.moveMajorArmWristToPosition();
+        safeWait(1000);
+        majorArm.moveMajorArmWristToParkedPosition();
         safeWait(1000);
     }
 
 
     public void moveMajorArmToPickupAndOpenClaw(){
+        majorArm.moveMajorArmWristToPickupPosition();
+        safeWait(1000);
         autonomousController.moveAutoMajorArmPickup();
         safeWait(1000);
         autonomousController.openAutoMajorClaw();
@@ -621,7 +646,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.WAREHOUSE;
                     startPose = GameField.RED_WAREHOUSE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "RED_WAREHOUSE");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -632,7 +657,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.RED_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.STORAGE;
                     telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_STORAGE");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -643,7 +668,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.RED_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_WAREHOUSE_INNER");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -655,7 +680,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.RED_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.OUTER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.ALONG_WALL;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "RED_STORAGE_PARK_WAREHOUSE_OUTER");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -668,7 +693,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.WAREHOUSE;
                     startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "BLUE_WAREHOUSE");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -679,7 +704,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.BLUE_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.STORAGE;
                     telemetry.addData("Start Pose : ", "BLUE_STORAGES_PARK_STORAGE");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -690,7 +715,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.BLUE_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.INNER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "BLUE_STORAGE_PARK_WAREHOUSE_INNER");
                     telemetry.addData("Autonomous route : ", autonomousRoute);
@@ -701,7 +726,7 @@ public class AutonomousOpMode extends LinearOpMode {
                     GameField.startPosition = GameField.START_POSITION.STORAGE;
                     startPose = GameField.BLUE_STORAGE_STARTPOS;
                     activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
-                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.OUTER;
+                    autonomousRoute = GameField.AUTONOMOUS_ROUTE.ALONG_WALL;
                     parkingLocation = GameField.PARKING_LOCATION.WAREHOUSE;
                     telemetry.addData("Start Pose : ", "BLUE_STORAGE_PARK_WAREHOUSE_OUTER");
                     telemetry.addData("Autonomous route : ", autonomousRoute);

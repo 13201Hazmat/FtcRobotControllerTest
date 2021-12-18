@@ -32,6 +32,7 @@ public class Elevator {
     public DcMotorEx elevatorMotor = null;
 
     public enum ELEVATOR_STATE {
+        LEVEL_PUSHDOWN,
         LEVEL_0,
         LEVEL_1,
         LEVEL_2,
@@ -46,6 +47,7 @@ public class Elevator {
     //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
 
     public static int baselineEncoderCount = 0;
+    public static int ELEVATOR_LEVEL_POSITION_COUNT = 0;
     public static int ELEVATOR_LEVEL0_POSITION_COUNT = 0;
     public static int ELEVATOR_LEVEL1_POSITION_COUNT = -300;
     public static int ELEVATOR_LEVEL2_POSITION_COUNT = -700;
@@ -91,6 +93,13 @@ public class Elevator {
         //elevatorMotor.setMode(runMode);
     }
 
+    public void pushElevatorLowestAndReset(){
+        elevatorMotor.setTargetPosition(+200);
+        runElevatorToLevel(0.7);
+        //resetElevator();
+    }
+
+
     /**
      * Method to set Elevator brake mode to ON when Zero (0.0) power is applied. <BR>
      * To be used when arm is above groundlevel
@@ -124,6 +133,20 @@ public class Elevator {
         } else {
             elevatorMotor.setPower(0.0);
         }
+    }
+
+
+    /**
+     * Move Elevator to Level PushDown
+     */
+    public void moveElevatorLevelPushDownPosition() {
+        turnElevatorBrakeModeOff();
+        elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT + baselineEncoderCount;
+        elevatorMotor.setTargetPosition(elevatorPositionCount);
+        //motorPowerToRun = POWER_GOING_UP;
+        setElevatorMotorPowerToRun();
+        runElevatorToLevelState = true;
+        elevatorState = ELEVATOR_STATE.LEVEL_0;
     }
 
     /**

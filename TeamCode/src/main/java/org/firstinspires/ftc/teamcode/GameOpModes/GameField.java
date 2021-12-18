@@ -46,8 +46,9 @@ public class GameField {
     }
 
     public enum AUTONOMOUS_ROUTE {
-        INNER,
-        OUTER
+        THROUGH_BARRIER,
+        ALONG_WALL,
+        NOT_APPLICABLE
     }
 
     //Define targets for Vision to determine Autonomous mode action based on camera detection
