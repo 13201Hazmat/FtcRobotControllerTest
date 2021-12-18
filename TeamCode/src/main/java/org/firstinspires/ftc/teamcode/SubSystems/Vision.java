@@ -161,19 +161,22 @@ public class Vision {
      *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
      */
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    //private static final String TFOD_MODEL_ASSET = "Hazmat1.tflite";
     public static final String[] LABELS = {
             "Ball",
             "Cube",
             "Duck",
-            "Marker"
+            "Marker",
+            "Hazmat1"
     };
+
     public String targetLabel1 = LABELS[2]; // Default "Duck"
-    public String targetLabel2 = LABELS[1]; // "Marker" //TODO Adjust to correct one
-    public String detectedLabel = LABELS[2];
+    public String targetLabel2 = LABELS[3]; // "Marker" //TODO Adjust to correct one
+    public String detectedLabel = "None";
     public float detectedLabelLeft, detectedLabelRight, detectedLabelTop, detectedLabelBottom;
     public static float[] targetPosition = {
             //TODO : Update values based on marker location identifier
-            340,
+            250,
             600,
             1000
     };
@@ -284,7 +287,11 @@ public class Vision {
                 if (recognitions.size() == 0 ) {
                     // empty list.  no objects recognized.
                     detectedLabel = "None";
-                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
+                    if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                        targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
+                    } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
+                        targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
+                    }
                 } else {
                     // list is not empty.
                     // step through the list of recognitions and display boundary info.
@@ -306,7 +313,9 @@ public class Vision {
                         detectedLabelRight = recognition.getRight();
                         detectedLabelTop = recognition.getTop();
                         detectedLabelBottom = recognition.getBottom();*/
-                        if (recognition.getLabel().equals(targetLabel1) || recognition.getLabel().equals(targetLabel2) ) {
+                        if (recognition.getLabel().equals(LABELS[0]) || recognition.getLabel().equals(LABELS[1]) ||
+                                recognition.getLabel().equals(LABELS[2]) || recognition.getLabel().equals(LABELS[3]) ||
+                                recognition.getLabel().equals(LABELS[4])) {
                             detectedLabel = recognition.getLabel();
                             detectedLabelLeft = recognition.getLeft();
                             detectedLabelRight = recognition.getRight();
@@ -324,12 +333,6 @@ public class Vision {
                                     targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL2;
                                 } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
                                     targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
-                                }
-                            } else {//if (recognition.getLeft() < targetPosition[2])
-                                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
-                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL3;
-                                } else { //GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE
-                                    targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
                                 }
                             }
                         }

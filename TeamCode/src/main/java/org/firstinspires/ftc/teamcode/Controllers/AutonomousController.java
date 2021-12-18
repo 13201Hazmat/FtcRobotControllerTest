@@ -222,12 +222,18 @@ public class AutonomousController {
 
     enum AUTO_MAJOR_ARM_STATE{
         PICKUP,
+        CAPSTONE,
         PARKED,
     }
     AUTO_MAJOR_ARM_STATE autoMajorArmState = AUTO_MAJOR_ARM_STATE.PARKED;
 
     public void moveAutoMajorArmPickup(){
         autoMajorArmState = AUTO_MAJOR_ARM_STATE.PICKUP;
+        runAutoControl();
+    }
+
+    public void moveAutoMajorArmCapstone(){
+        autoMajorArmState = AUTO_MAJOR_ARM_STATE.CAPSTONE;
         runAutoControl();
     }
 
@@ -252,10 +258,16 @@ public class AutonomousController {
     }
 
     public void runAutoMajorArm() {
-        if(autoMajorArmState == AUTO_MAJOR_ARM_STATE.PARKED){
-            majorArm.moveMajorArmParkingPosition();
-        } else {
-            majorArm.moveMajorArmPickupPosition();
+        switch (autoMajorArmState) {
+            case PARKED:
+                majorArm.moveMajorArmParkingPosition();
+                break;
+            case CAPSTONE:
+                majorArm.moveMajorArmCapstonePosition();
+                break;
+            case PICKUP:
+                majorArm.moveMajorArmPickupPosition();
+                break;
         }
 
         if (majorArm.runMajorArmToLevelState) {

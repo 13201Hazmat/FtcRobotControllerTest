@@ -81,7 +81,7 @@ public class MajorArm {
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -500;
     public static int MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT = -425;
-    public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 25;
+    public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
     public static int MAJORARM_DELTA_COUNT = 25;
     public int majorarmCurrentArmPositionCount = MAJORARM_MOTOR_PARKED_POSITION_COUNT;
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
@@ -169,6 +169,14 @@ public class MajorArm {
 
     public void moveMajorArmWristToInitPosition(){
         majorWristServo.setPosition(MAJORARM_WRIST_INIT_POSITION);
+    }
+
+    public void moveMajorArmWristToParkedPosition(){
+        majorWristServo.setPosition(MAJORARM_WRIST_PARKED_POSITION);
+    }
+
+    public void moveMajorArmWristToPickupPosition(){
+        majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
     }
 
     public void moveMajorArmWristToPosition() {
@@ -299,7 +307,7 @@ public class MajorArm {
      * Method that takes keypad inputs to select the Autonomous options
      */
     public void moveMajorArmParkingPosition() {
-        turnArmBrakeModeOn();
+        turnArmBrakeModeOff();
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.PARKED;

@@ -69,12 +69,15 @@ public class TeleOpMode extends LinearOpMode {
         }
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
+        elevator.pushElevatorLowestAndReset();
+
         majorArm.moveMajorArmParkingPosition();
-        elevator.moveElevatorLevel1Position();
+        elevator.moveElevatorLevel0Position();
+
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
-                gameTimer.reset();
+        gameTimer.reset();
 
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
