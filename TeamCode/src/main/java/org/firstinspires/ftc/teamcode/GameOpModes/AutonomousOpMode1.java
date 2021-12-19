@@ -380,7 +380,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50, 10, Math.toRadians(-30)))
+                            .lineToLinearHeading(new Pose2d(48, 8, Math.toRadians(-30)))
                             .build();
                 }
                 break;
@@ -388,11 +388,11 @@ public class AutonomousOpMode1 extends LinearOpMode {
             case UNKNOWN:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-47, 2, Math.toRadians(165)))
+                            .lineToLinearHeading(new Pose2d(-47, -1, Math.toRadians(165)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(51, 16, Math.toRadians(-45)))
+                            .lineToLinearHeading(new Pose2d(50, 15, Math.toRadians(-45)))
                             .build();
                 }
                 break;
