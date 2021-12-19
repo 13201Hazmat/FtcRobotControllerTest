@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *
  */
 @TeleOp(name = "Calibrate Motor Position", group = "Calibration")
+@Disabled
 public class CalibrateMotorPosition extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;

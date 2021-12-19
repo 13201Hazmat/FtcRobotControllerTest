@@ -158,6 +158,9 @@ public class AutonomousOpMode1 extends LinearOpMode {
         }
 
         //Write last position to static class to be used as initial position in TeleOp
+
+        autonomousController.moveAutoElevatorLevel0();
+        safeWait(100);
         GameField.currentPose = driveTrain.getPoseEstimate();
         GameField.poseSetInAutonomous = true;
     }
@@ -175,11 +178,11 @@ public class AutonomousOpMode1 extends LinearOpMode {
 
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-57,-40,Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(-55,-40,Math.toRadians(180)))
                     .build();
         } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
             traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(57,-40,Math.toRadians(0)))
+                    .lineToLinearHeading(new Pose2d(55,-40,Math.toRadians(0)))
                     .build();
         }
         driveTrain.followTrajectory(traj);
@@ -205,11 +208,11 @@ public class AutonomousOpMode1 extends LinearOpMode {
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, -40, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-48, -40, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50,-37, Math.toRadians(-30)))
+                            .lineToLinearHeading(new Pose2d(48,-37, Math.toRadians(-30)))
                             .build();
                 }
                 break;
@@ -222,12 +225,8 @@ public class AutonomousOpMode1 extends LinearOpMode {
                             .build();
                     break;
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                    /*traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(54, -35, Math.toRadians(-45)))
-                            .build();
-                    driveTrain.followTrajectory(traj);*/
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(51, -31, Math.toRadians(-45)))
+                            .lineToLinearHeading(new Pose2d(47.5, -30, Math.toRadians(-45)))
                             .build();
                 }
                 break;
@@ -270,6 +269,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
 
         safeWait(500);
         moveElevatorToLevel1();
+        //moveElevatorToLevel0();
 
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
@@ -330,13 +330,9 @@ public class AutonomousOpMode1 extends LinearOpMode {
                     driveTrain.followTrajectory(traj);
                 }
             }
-
-            //runIntakeToCollect();
-            safeWait(500);
-            moveElevatorToLevel0();
-            elevator.pushElevatorLowestAndReset();
-            safeWait(500);
         }
+        moveElevatorToLevel0();
+        safeWait(1000);
     }
 
 
@@ -369,7 +365,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
             case LEVEL1:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, 11, Math.toRadians(-170)))
+                            .lineToLinearHeading(new Pose2d(-46, 17, Math.toRadians(-170)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -380,7 +376,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
             case LEVEL2:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-50, 7, Math.toRadians(180)))
+                            .lineToLinearHeading(new Pose2d(-48, 9, Math.toRadians(180)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -392,7 +388,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
             case UNKNOWN:
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-54, 8, Math.toRadians(120)))
+                            .lineToLinearHeading(new Pose2d(-47, 2, Math.toRadians(165)))
                             .build();
                 } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
                     traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
@@ -475,10 +471,8 @@ public class AutonomousOpMode1 extends LinearOpMode {
 
         // Run Intake and Move Elevator to Level 1
         //runIntakeToCollect();
-        safeWait(1000);
-        moveElevatorToLevel0();
-        elevator.moveElevatorLevelPushDownPosition();
-        //elevator.pushElevatorLowestAndReset();
+        safeWait(200);
+        autonomousController.moveAutoElevatorLevel0();
         safeWait(1000);
 
     }

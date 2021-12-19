@@ -80,7 +80,7 @@ public class MajorArm {
     public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -660;
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -500;
-    public static int MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT = -425;
+    public static int MAJORARM_MOTOR_CAPSTONE_POSITION_COUNT = -365;
     public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
     public static int MAJORARM_DELTA_COUNT = 25;
     public int majorarmCurrentArmPositionCount = MAJORARM_MOTOR_PARKED_POSITION_COUNT;

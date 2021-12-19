@@ -59,7 +59,7 @@ public class Elevator {
     public int elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT;
 
     public static double POWER_GOING_UP = 0.7;
-    public static double POWER_COMING_DOWN = 0.5;
+    public static double POWER_COMING_DOWN = 0.7;
 
     public enum ELEVATOR_BUTTON_STATE {
         ON,
@@ -92,13 +92,6 @@ public class Elevator {
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //elevatorMotor.setMode(runMode);
     }
-
-    public void pushElevatorLowestAndReset(){
-        elevatorMotor.setTargetPosition(+200);
-        runElevatorToLevel(0.7);
-        //resetElevator();
-    }
-
 
     /**
      * Method to set Elevator brake mode to ON when Zero (0.0) power is applied. <BR>
@@ -133,20 +126,6 @@ public class Elevator {
         } else {
             elevatorMotor.setPower(0.0);
         }
-    }
-
-
-    /**
-     * Move Elevator to Level PushDown
-     */
-    public void moveElevatorLevelPushDownPosition() {
-        turnElevatorBrakeModeOff();
-        elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT + baselineEncoderCount;
-        elevatorMotor.setTargetPosition(elevatorPositionCount);
-        //motorPowerToRun = POWER_GOING_UP;
-        setElevatorMotorPowerToRun();
-        runElevatorToLevelState = true;
-        elevatorState = ELEVATOR_STATE.LEVEL_0;
     }
 
     /**
@@ -240,7 +219,7 @@ public class Elevator {
      * Returns Intake motor state
      */
     public int getElevatorPositionCount() {
-        return elevatorPositionCount;
+        return elevatorMotor.getCurrentPosition();
     }
 
     public void setElevatorMotorPowerToRun(){
