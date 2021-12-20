@@ -106,8 +106,8 @@ public class AutonomousOpMode1 extends LinearOpMode {
 
         //Robot starts with Elevator in Collect State, with preloaded box
         //On Init, Elevator moves to Level 1, Magazine moves to transport
-        autonomousController.moveAutoElevatorLevel1();
-        autonomousController.moveAutoMagazineToTransport();
+        //autonomousController.moveAutoElevatorLevel1();
+        //autonomousController.moveAutoMagazineToTransport();
         majorArm.moveMajorArmWristToInitPosition();
         autonomousController.runAutoControl();
 
@@ -133,6 +133,9 @@ public class AutonomousOpMode1 extends LinearOpMode {
             while (opModeIsActive() && !isStopRequested() && !parked) {
 
                 vision.deactivateVuforiaTensorFlow();
+
+                autonomousController.moveAutoElevatorLevel1();
+                autonomousController.moveAutoMagazineToTransport();
 
                 // Logic to determine and run defined Autonomous mode
                 if (GameField.startPosition == GameField.START_POSITION.WAREHOUSE) {
@@ -469,7 +472,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
         }
 
 
-        // Run Intake and Move Elevator to Level 1
+        // Run Intake and Move Elevator to Level
         //runIntakeToCollect();
         safeWait(200);
         autonomousController.moveAutoElevatorLevel0();
