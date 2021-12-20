@@ -6,12 +6,14 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.AutonomousController;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -20,6 +22,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.MajorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.MinorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+
+import java.util.AbstractList;
 
 
 /**
@@ -40,6 +44,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
  */
 //TODO: Copy and Rename Autonomous Mode
 @Autonomous(name = "Calibrate Autonomous", group = "Test")
+@Disabled
 public class CalibrateAutonomous extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
@@ -53,6 +58,7 @@ public class CalibrateAutonomous extends LinearOpMode {
     public Spinner spinner;
     public MajorArm majorArm;
     public MinorArm minorArm;
+    public BlinkinDisplay blinkinDisplay;
 
     public Vision vision;
     public Pose2d startPose = GameField.BLUE_WAREHOUSE_STARTPOS;
@@ -78,9 +84,11 @@ public class CalibrateAutonomous extends LinearOpMode {
         spinner = new Spinner(hardwareMap);
         majorArm = new MajorArm(hardwareMap);
         minorArm = new MinorArm(hardwareMap);
+        blinkinDisplay = new BlinkinDisplay(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator, magazine, spinner, majorArm, minorArm);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator,
+                magazine, spinner, majorArm, minorArm, blinkinDisplay);
         autonomousController = new AutonomousController(driveTrain,
                 intake,
                 elevator,

@@ -18,8 +18,8 @@ public class GameField {
 
     // Declare and assign starting pose of robot
     //TODO: Update start position correctly.
-    public static final Pose2d BLUE_WAREHOUSE_STARTPOS =  new Pose2d(-61,14,Math.toRadians(180));
-    public static final Pose2d BLUE_STORAGE_STARTPOS =  new Pose2d(-61,-31,Math.toRadians(180));
+    public static final Pose2d BLUE_WAREHOUSE_STARTPOS =  new Pose2d(-61,7,Math.toRadians(180));
+    public static final Pose2d BLUE_STORAGE_STARTPOS =  new Pose2d(-61,-40,Math.toRadians(180));
     public static final Pose2d RED_WAREHOUSE_STARTPOS =  new Pose2d(61,7,Math.toRadians(0));
     public static final Pose2d RED_STORAGE_STARTPOS =  new Pose2d(61,-40,Math.toRadians(0));
 
@@ -37,13 +37,18 @@ public class GameField {
         WAREHOUSE,
         STORAGE,
         ORIGIN
-        //TODO: Update names for Startpos
     }
     public static START_POSITION startPosition = START_POSITION.WAREHOUSE;
 
     public enum PARKING_LOCATION{
         WAREHOUSE,
         STORAGE
+    }
+
+    public enum AUTONOMOUS_ROUTE {
+        THROUGH_BARRIER,
+        ALONG_WALL,
+        NOT_APPLICABLE
     }
 
     //Define targets for Vision to determine Autonomous mode action based on camera detection

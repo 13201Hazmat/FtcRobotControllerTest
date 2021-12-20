@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -32,9 +36,12 @@ public class TeleOpMode extends LinearOpMode {
     public Spinner spinner;
     public MajorArm majorArm;
     public MinorArm minorArm;
+    public BlinkinDisplay blinkinDisplay;
 
     //public Vuforia Vuforia1;
     public Pose2d startPose = GameField.ORIGINPOSE;
+
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);;
 
     @Override
     /**
@@ -51,9 +58,11 @@ public class TeleOpMode extends LinearOpMode {
         spinner = new Spinner(hardwareMap);
         majorArm = new MajorArm(hardwareMap);
         minorArm = new MinorArm(hardwareMap);
+        blinkinDisplay = new BlinkinDisplay(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator, magazine, spinner, majorArm, minorArm);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator,
+                magazine, spinner, majorArm, minorArm, blinkinDisplay);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
@@ -64,11 +73,13 @@ public class TeleOpMode extends LinearOpMode {
         }
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
-        //TODO: Add code for any initial state
-        //Subsystem1.setIntakeReleaseOpen();
+
+        majorArm.moveMajorArmParkingPosition();
+        elevator.moveElevatorLevel0Position();
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
+        gameTimer.reset();
 
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
@@ -83,6 +94,10 @@ public class TeleOpMode extends LinearOpMode {
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
+
+                if (gameTimer.time() > 80000 && gameTimer.time() < 85000) {
+                    blinkinDisplay.setPatternEndGame();
+                }
 
                 if(DEBUG_FLAG) {
                     printDebugMessages();
@@ -116,6 +131,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
         telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
+        telemetry.addData("Major Wrist Position : ",majorArm.majorWristServo.getPosition());
 
         telemetry.addData("Intake State : ", intake.getIntakeMotorState());
         telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
@@ -126,8 +142,11 @@ public class TeleOpMode extends LinearOpMode {
 
         telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
         telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
-        telemetry.addData("Magazine Color Sensor Distance :","%.2f",magazine.getMagazineColorSensorDistance());
+        telemetry.addData("Magazine Color Sensor Distance :", "%.3f",magazine.getMagazineColorSensorDistance());
         telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
+
+        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
+        telemetry.addData("Game Timer : ", gameTimer.time());
 
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());

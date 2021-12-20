@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -32,7 +33,7 @@ public class Magazine {
     public NormalizedColorSensor magazineColorSensor;
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
-    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION =  0.55;
+    public static final double MAGAZINE_SERVO_TRANSPORT_POSITION =  0.52;
     public static final double MAGAZINE_SERVO_DROP_POSITION =  0.2;
 
     public enum MAGAZINE_SERVO_STATE {

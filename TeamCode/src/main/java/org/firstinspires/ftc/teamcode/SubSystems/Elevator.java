@@ -32,6 +32,7 @@ public class Elevator {
     public DcMotorEx elevatorMotor = null;
 
     public enum ELEVATOR_STATE {
+        LEVEL_PUSHDOWN,
         LEVEL_0,
         LEVEL_1,
         LEVEL_2,
@@ -46,9 +47,10 @@ public class Elevator {
     //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
 
     public static int baselineEncoderCount = 0;
+    public static int ELEVATOR_LEVEL_POSITION_COUNT = 0;
     public static int ELEVATOR_LEVEL0_POSITION_COUNT = 0;
-    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -200;
-    public static int ELEVATOR_LEVEL2_POSITION_COUNT = -600;
+    public static int ELEVATOR_LEVEL1_POSITION_COUNT = -300;
+    public static int ELEVATOR_LEVEL2_POSITION_COUNT = -700;
     public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1500;
     public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1550;
     public static int ELEVATOR_DELTA_SLIGHTLY_DOWN_DELTA_COUNT = -100;
@@ -57,7 +59,7 @@ public class Elevator {
     public int elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT;
 
     public static double POWER_GOING_UP = 0.7;
-    public static double POWER_COMING_DOWN = 0.5;
+    public static double POWER_COMING_DOWN = 0.7;
 
     public enum ELEVATOR_BUTTON_STATE {
         ON,
@@ -221,7 +223,7 @@ public class Elevator {
      * Returns Intake motor state
      */
     public int getElevatorPositionCount() {
-        return elevatorPositionCount;
+        return elevatorMotor.getCurrentPosition();
     }
 
     public void setElevatorMotorPowerToRun(){

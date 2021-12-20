@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -62,6 +63,7 @@ public class GamepadController {
     public Spinner spinner;
     public MajorArm majorArm;
     public MinorArm minorArm;
+    public BlinkinDisplay blinkinDisplay;
 
     /**
      * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
@@ -75,7 +77,8 @@ public class GamepadController {
                              Magazine magazine,
                              Spinner spinner,
                              MajorArm majorArm,
-                             MinorArm minorArm) {
+                             MinorArm minorArm,
+                             BlinkinDisplay blinkinDisplay) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
@@ -85,6 +88,7 @@ public class GamepadController {
         this.spinner = spinner;
         this.majorArm = majorArm;
         this.minorArm = minorArm;
+        this.blinkinDisplay = blinkinDisplay;
     }
 
     /**
@@ -112,7 +116,7 @@ public class GamepadController {
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
             if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
-                if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
+                /*if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
                     driveTrain.gamepadInput = new Vector2d(
                             -gp1TurboMode(gp1GetLeftStickY()),
                             -gp1TurboMode(gp1GetLeftStickX()));
@@ -121,7 +125,11 @@ public class GamepadController {
                     driveTrain.gamepadInput = new Vector2d(
                             -limitStick(gp1GetLeftStickY()),
                             -limitStick(gp1GetLeftStickX()));
-                }
+                }*/
+                driveTrain.gamepadInput = new Vector2d(
+                        -gp1TurboMode(gp1GetLeftStickY()),
+                        -gp1TurboMode(gp1GetLeftStickX()));
+
             } else {
                 driveTrain.gamepadInput = new Vector2d(
                         -limitStick(gp2GetLeftStickY()),
@@ -251,7 +259,6 @@ public class GamepadController {
             if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_3) {
                 elevator.moveElevatorLevel3Position();
             }
-
         }
 
         if (!gp1GetStart()) {
@@ -281,8 +288,18 @@ public class GamepadController {
      */
     public void runMagazine(){ //this function should be at LaunchController's place after order change
         if (gp1GetRightBumperPress()) {
+
+            //To toggle automation to off or on if needed
+            if (gp2GetStart()) {
+                if (autoMagazine == AUTO_MAGAZINE.ON) {
+                    autoMagazine = AUTO_MAGAZINE.OFF;
+                } else {
+                    autoMagazine = AUTO_MAGAZINE.ON;
+                }
+            }
+
             if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
+                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToDrop();
                 } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToTransport();
@@ -297,14 +314,6 @@ public class GamepadController {
             }
         }
 
-        if (gp1GetStart() && gp1GetRightTriggerPress()) {
-            if (autoMagazine == AUTO_MAGAZINE.ON) {
-                autoMagazine = AUTO_MAGAZINE.OFF;
-            } else {
-                autoMagazine = AUTO_MAGAZINE.ON;
-            }
-        }
-
         if (magazine.magazineColorSensor instanceof SwitchableLight) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
                     magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
@@ -313,7 +322,6 @@ public class GamepadController {
                 ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
             }
         }
-
 
         if (autoMagazine == AUTO_MAGAZINE.ON) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
@@ -324,6 +332,11 @@ public class GamepadController {
                         intake.stopIntakeMotor();
                     }
                 }
+            }
+            if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED){
+                blinkinDisplay.setPatternElementLoaded();
+            } else {
+                blinkinDisplay.setPatternBlack();
             }
         }
     }
@@ -397,28 +410,27 @@ public class GamepadController {
             majorArm.moveMajorArmParkingPosition();
         }
 
-        if (majorArm.runArmToLevelState) {
-            majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
+        if (majorArm.runMajorArmToLevelState) {
+            majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
         }
+        majorArm.moveMajorArmWristToPosition();
 
         if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyDown();
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
 
             }
         } else {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyUp();
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_DELTA_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
             }
         }
-
-
 
         if(gp2GetRightBumperPress()){
             majorArm.changeMajorClawState();

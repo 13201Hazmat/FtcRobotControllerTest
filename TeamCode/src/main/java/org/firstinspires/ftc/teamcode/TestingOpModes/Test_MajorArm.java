@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.MajorArm;
  *
  */
 @TeleOp(name = "Test_MajorArm", group = "Test")
+@Disabled
 public class Test_MajorArm extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
@@ -83,8 +85,8 @@ public class Test_MajorArm extends LinearOpMode {
                     }
                 }
 
-                if (majorArm.runArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.ARM_MOTOR_POWER);
+                if (majorArm.runMajorArmToLevelState) {
+                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
                 }
 
                 if(gamepadTestController.getRightBumperPress()){
