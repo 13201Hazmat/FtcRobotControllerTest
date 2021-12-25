@@ -33,7 +33,7 @@ public class Spinner {
     }
     public SPINNER_MOTOR_STATE spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
 
-    public double spinnerMotorPower = 0.7;
+    public double spinnerMotorPower = 0.6;//0.7;
     public double spinnerMotorPowerAuto = 0.6;
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
 

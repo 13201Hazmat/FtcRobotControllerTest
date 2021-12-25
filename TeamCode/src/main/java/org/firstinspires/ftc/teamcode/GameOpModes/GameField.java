@@ -51,6 +51,8 @@ public class GameField {
         NOT_APPLICABLE
     }
 
+    public static boolean END_PARKING_FACING_SHARED_SHIPPING_HUB = false;
+
     //Define targets for Vision to determine Autonomous mode action based on camera detection
     public enum VISION_IDENTIFIED_TARGET {
         LEVEL1,

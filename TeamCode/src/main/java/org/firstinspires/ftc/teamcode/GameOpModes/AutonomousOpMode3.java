@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,6 +19,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.MajorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.MinorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 /**
@@ -40,8 +40,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 1", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class AutonomousOpMode1 extends LinearOpMode {
+@Autonomous(name = "Autonomous 3", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+public class AutonomousOpMode3 extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -66,10 +66,12 @@ public class AutonomousOpMode1 extends LinearOpMode {
 
     public Vision.ACTIVE_WEBCAM activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
     public GameField.VISION_IDENTIFIED_TARGET targetZone = GameField.VISION_IDENTIFIED_TARGET.LEVEL1;
+    int targetZoneLevel = 0;
 
     double af = GameField.ALLIANCE_FACTOR;
 
     Trajectory traj;
+    TrajectorySequence trajSeq;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -120,6 +122,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
         while (!isStopRequested()) {
             //Run Vuforia Tensor Flow
             targetZone = vision.runVuforiaTensorFlow();
+            targetZoneLevel = targetZone.ordinal()+1;
 
             if (!parked){
                 autonomousController.runAutoControl();
@@ -169,27 +172,135 @@ public class AutonomousOpMode1 extends LinearOpMode {
         GameField.poseSetInAutonomous = true;
     }
 
+    TrajectorySequence trajInitToOffWall;
+    TrajectorySequence trajOffWallToBarCode[] = new TrajectorySequence[0];
+    TrajectorySequence trajASBarCodeToCarousal[] = new TrajectorySequence[0];
+    TrajectorySequence trajASCarousalToAllianceShippingHub[] = new TrajectorySequence[0];
+    TrajectorySequence trajASAllianceShippingHubToParking;
+
+
+
+    public void buildAutoStorage(){
+        Pose2d  initPose,
+                offWallPose,
+                barcodePose[] = new Pose2d[0],
+                carousalPose,
+                allianceShippingHubPose,
+                storageParkingPose,
+                warehouseMidAlongWallParkingPose1,
+                warehouseMidAlongWallParkingPose2,
+                warehouseAlongWallParkingPose,
+                warehouseMidThroughBarrierParkingPose,
+                warehouseThroughBarrierParkingPose,
+                warehouseSharedShippingHubParkingPose;
+
+        //Move from init to offWallPosition
+        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+            //BLUE_STORAGE_STARTPOS =  Pose2d(-61,-40,Math.toRadians(180));
+            initPose = GameField.BLUE_STORAGE_STARTPOS;
+            offWallPose = new Pose2d(-55,-40,Math.toRadians(180));
+            barcodePose[1] = new Pose2d(-46, -32, Math.toRadians(-170));
+            barcodePose[2] = new Pose2d(-48, -40, Math.toRadians(180));
+            barcodePose[3] = new Pose2d(-47, -47, Math.toRadians(165));
+            carousalPose = new Pose2d(-60, -66, Math.toRadians(-155));
+            allianceShippingHubPose = new Pose2d(-60, -66, Math.toRadians(-155));
+            storageParkingPose = new Pose2d(-39,-69, Math.toRadians(90));
+            warehouseMidAlongWallParkingPose1 = new Pose2d(-69, -23, Math.toRadians(90));
+            warehouseMidAlongWallParkingPose2 = new Pose2d(-69, 55, Math.toRadians(90));
+            warehouseAlongWallParkingPose = new Pose2d(-69, 55, Math.toRadians(90));
+            warehouseMidThroughBarrierParkingPose = new Pose2d(-52, -40, Math.toRadians(60));
+            warehouseThroughBarrierParkingPose = new Pose2d(-46, 60, Math.toRadians(90));
+            warehouseSharedShippingHubParkingPose = new Pose2d(-46, 68, Math.toRadians(0));
+        } else {
+            //RED_STORAGE_STARTPOS =  Pose2d(61,-40,Math.toRadians(0));
+            initPose = GameField.RED_STORAGE_STARTPOS;
+            offWallPose = new Pose2d(55,-40,Math.toRadians(0));
+            barcodePose[1] = new Pose2d(50,-38, Math.toRadians(-5));
+            barcodePose[2] = new Pose2d(48,-37, Math.toRadians(-30));
+            barcodePose[3] = new Pose2d(47.5, -30, Math.toRadians(-45));
+            carousalPose = new Pose2d(51, -65, Math.toRadians(-60));
+            allianceShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
+            storageParkingPose = new Pose2d(36, -69, Math.toRadians(90));
+            warehouseMidAlongWallParkingPose1 = new Pose2d(65, -23, Math.toRadians(90));
+            warehouseMidAlongWallParkingPose2 = new Pose2d(65, 50, Math.toRadians(90));
+            warehouseAlongWallParkingPose = new Pose2d(55, 50, Math.toRadians(150));
+            warehouseMidThroughBarrierParkingPose = new Pose2d(52, -40, Math.toRadians(120));
+            warehouseThroughBarrierParkingPose = new Pose2d(46, 60, Math.toRadians(90));
+            warehouseSharedShippingHubParkingPose = new Pose2d(46, 68, Math.toRadians(180));;
+        }
+
+        trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
+                    .lineToLinearHeading(offWallPose)
+                    .build();
+
+        for (int i=1; i<=3; i++) {
+            trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(offWallPose)
+                    .setVelConstraint(driveTrain.getVelocityConstraint(20, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                    //.lineToLinearHeading(offWallPosition)
+                    .lineToLinearHeading(barcodePose[i])
+                    .resetVelConstraint()
+                    .build();
+            trajASBarCodeToCarousal[i] = driveTrain.trajectorySequenceBuilder(barcodePose[i])
+                    .setVelConstraint(driveTrain.getVelocityConstraint(20, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                    .lineToLinearHeading(carousalPose)
+                    .resetVelConstraint()
+                    .build();
+            int finalI = i;
+            trajASCarousalToAllianceShippingHub[i] = driveTrain.trajectorySequenceBuilder(carousalPose)
+                    .addTemporalMarker(1, ()->{moveElevatorToLevel(finalI);})
+                    .lineToLinearHeading(allianceShippingHubPose)
+                    .build();
+        }
+
+        if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
+            trajASAllianceShippingHubToParking = driveTrain.trajectorySequenceBuilder(allianceShippingHubPose)
+                    .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                    .lineToLinearHeading(storageParkingPose)
+                    .build();
+        } else { //parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE
+            if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
+                if (GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
+                    trajASAllianceShippingHubToParking = driveTrain.trajectorySequenceBuilder(allianceShippingHubPose)
+                            .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                            .splineTo(warehouseMidAlongWallParkingPose1.vec(),warehouseMidAlongWallParkingPose1.getHeading())
+                            .splineTo(warehouseMidAlongWallParkingPose2.vec(),warehouseMidAlongWallParkingPose2.getHeading())
+                            .splineTo(warehouseSharedShippingHubParkingPose.vec(),warehouseSharedShippingHubParkingPose.getHeading())
+                            .build();
+                } else { // ! GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB
+                    trajASAllianceShippingHubToParking = driveTrain.trajectorySequenceBuilder(allianceShippingHubPose)
+                            .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                            .splineTo(warehouseMidAlongWallParkingPose1.vec(),warehouseMidAlongWallParkingPose1.getHeading())
+                            .splineTo(warehouseMidAlongWallParkingPose2.vec(),warehouseMidAlongWallParkingPose2.getHeading())
+                            .splineTo(warehouseAlongWallParkingPose.vec(),warehouseAlongWallParkingPose.getHeading())
+                            .build();
+                }
+            } else { //(autonomousRoute == GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER)
+                if (GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
+                    trajASAllianceShippingHubToParking = driveTrain.trajectorySequenceBuilder(allianceShippingHubPose)
+                            .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                            .splineTo(warehouseMidThroughBarrierParkingPose.vec(),warehouseMidThroughBarrierParkingPose.getHeading())
+                            .splineTo(warehouseThroughBarrierParkingPose.vec(),warehouseThroughBarrierParkingPose.getHeading())
+                            .splineTo(warehouseSharedShippingHubParkingPose.vec(),warehouseSharedShippingHubParkingPose.getHeading())
+                            .build();
+                } else { // ! GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB
+                    trajASAllianceShippingHubToParking = driveTrain.trajectorySequenceBuilder(allianceShippingHubPose)
+                            .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                            .splineTo(warehouseMidThroughBarrierParkingPose.vec(),warehouseMidThroughBarrierParkingPose.getHeading())
+                            .splineTo(warehouseThroughBarrierParkingPose.vec(),warehouseThroughBarrierParkingPose.getHeading())
+                            .build();
+                }
+            }
+
+        }
+    }
+
     /**
      * Path and actions for autonomous mode starting from Inner start position
      */
     public void runAutoStorage(){
-
-        //public static final Pose2d BLUE_STORAGE_STARTPOS =  new Pose2d(-61,-40,Math.toRadians(180));
-        //public static final Pose2d RED_STORAGE_STARTPOS =  new Pose2d(61,-40,Math.toRadians(0));
-
         //Logic for waiting
         safeWait(100);
-
-        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-55,-40,Math.toRadians(180)))
-                    .build();
-        } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(55,-40,Math.toRadians(0)))
-                    .build();
-        }
-        driveTrain.followTrajectory(traj);
+        driveTrain.followTrajectorySequence(trajInitToOffWall);
         safeWait(1000);
 
         //Move arm to Pickup Capstone level and open Grip
@@ -197,146 +308,31 @@ public class AutonomousOpMode1 extends LinearOpMode {
         safeWait(2000);
 
         //Move forward to Capstone Pickup Position
-        switch (targetZone) {
-            case LEVEL1:
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-46, -32, Math.toRadians(-170)))
-                            .build();
-                } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(50,-38, Math.toRadians(-5)))
-                            .build();
-                }
-                break;
-            case LEVEL2:
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-48, -40, Math.toRadians(180)))
-                            .build();
-                } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(48,-37, Math.toRadians(-30)))
-                            .build();
-                }
-                break;
-
-            case LEVEL3:
-            case UNKNOWN:
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-47, -47, Math.toRadians(165)))
-                            .build();
-                    break;
-                } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(47.5, -30, Math.toRadians(-45)))
-                            .build();
-                }
-                break;
-        }
-        driveTrain.followTrajectory(traj);
+        driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
         moveMajorArmToParkingAfterClosingClaw();
         safeWait(1000);
 
-        //Move To Carousal
-        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-60, -66, Math.toRadians(-155)))
-                    .build();
-        } else {
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(51, -65, Math.toRadians(-60)))
-                    .build();
-        }
-        driveTrain.followTrajectory(traj);
+        //Move forward to Capstone Pickup Position
+        driveTrain.followTrajectorySequence(trajASBarCodeToCarousal[targetZoneLevel]);
 
         //Rotate Carousal
         rotateCarousal();
 
         //Move To Shipping Unit
-        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(-38, -21 , Math.toRadians(-150)))
-                    .build();
-        } else {
-            traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(33.5, -23.5, Math.toRadians(-45)))
-                    .build();
-        }
-        driveTrain.followTrajectory(traj);
+        driveTrain.followTrajectorySequence(trajASCarousalToAllianceShippingHub[targetZoneLevel]);
 
         //Drop pre-loaded box in correct level
         dropBoxToLevel();
-
         safeWait(500);
-        moveElevatorToLevel1();
-        //moveElevatorToLevel0();
 
-        if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
-            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-39,-69, Math.toRadians(90)))
-                        .build();
-            } else {
-                traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(36, -69, Math.toRadians(90)))
-                        .build();
-            }
-            driveTrain.followTrajectory(traj);
-        } else { // (parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE)
-            safeWait(500); //Wait till end
-            if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE){
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-69, -23, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-69, 55, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                } else { //(GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(65, -23, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(65, 50, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(55, 50, Math.toRadians(150)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
+        //Move and park completely in Warehouse
+        driveTrain.followTrajectorySequence(trajASAllianceShippingHubToParking);
 
-                }
-            } else { //(autonomousRoute == GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER)
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-52, -40, Math.toRadians(60)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-46, 60, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                } else {
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(52, -40, Math.toRadians(120)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                    traj = driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(46, 60, Math.toRadians(90)))
-                            .build();
-                    driveTrain.followTrajectory(traj);
-                }
-            }
-        }
-        moveElevatorToLevel0();
+        moveElevatorToLevel(0);
         safeWait(1000);
+        return;
     }
 
 
@@ -496,7 +492,12 @@ public class AutonomousOpMode1 extends LinearOpMode {
     //Drops pre-loaded box at the correct level determined by capstone position
     //TODO: Update code to use autoController instead of accessing the subsystems directly
     public void dropBoxToLevel(){
-        switch(targetZone) {
+        autonomousController.moveAutoMagazineToDrop();
+        safeWait(1000);
+        autonomousController.moveAutoMagazineToCollect();
+        safeWait(1000);
+
+        /*switch(targetZone) {
             case LEVEL1:
                 //If Capstone on Level 1, Drops Pre-Loaded Box on Level 1
                 dropFreightLevel1();
@@ -519,14 +520,14 @@ public class AutonomousOpMode1 extends LinearOpMode {
                 autonomousController.moveAutoMagazineToCollect();
                 safeWait(1000);
                 break;
-        }
+        }*/
 
     }
 
     //TODO: Update code to use autoController instead of accessing the subsystems directly
     public void dropFreightLevel1(){
-        autonomousController.moveAutoElevatorLevel1();
-        safeWait(1000);
+        //autonomousController.moveAutoElevatorLevel1();
+        //safeWait(1000);
         autonomousController.moveAutoMagazineToDrop();
         safeWait(1000);
         autonomousController.moveAutoMagazineToCollect();
@@ -540,12 +541,13 @@ public class AutonomousOpMode1 extends LinearOpMode {
         autonomousController.startAutoIntake();
     }
 
-    public void moveElevatorToLevel1(){
-        autonomousController.moveAutoElevatorLevel1();
-    }
-
-    public void moveElevatorToLevel0(){
-        autonomousController.moveAutoElevatorLevel0();
+    public void moveElevatorToLevel(int level){
+        switch (level) {
+            case 0 : autonomousController.moveAutoElevatorLevel0(); break;
+            case 1 : autonomousController.moveAutoElevatorLevel1(); break;
+            case 2 : autonomousController.moveAutoElevatorLevel2(); break;
+            case 3 : autonomousController.moveAutoElevatorLevel3(); break;
+        }
     }
 
 
@@ -584,6 +586,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
         timer.reset();
         while (!isStopRequested() && timer.time() < time){
             autonomousController.runAutoControl();
+            driveTrain.update();
         }
     }
 
@@ -681,12 +684,13 @@ public class AutonomousOpMode1 extends LinearOpMode {
                 telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
                 telemetry.addData("StartPosition : ", GameField.startPosition);
                 telemetry.addData("Enter Autonomous Route & Parking :","");
-                telemetry.addData("  PARK STORAGE (A)","");
-                telemetry.addData("  ALONG WALL - PARK WAREHOUSE (X)","");
-                telemetry.addData("  THROUGH BARRIER - PARK WAREHOUSE (B)","");
+                telemetry.addData("  STORAGE PARK (A)","");
+                telemetry.addData("  WAREHOUSE PARK ALONG WALL (X)","");
+                telemetry.addData("  WAREHOUSE PARK THROUGH BARRIER (B)","");
                 if (gamepadController.gp1GetButtonAPress()) {
                     autonomousRoute = GameField.AUTONOMOUS_ROUTE.NOT_APPLICABLE;
                     parkingLocation = GameField.PARKING_LOCATION.STORAGE;
+                    GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB = false;
                     telemetry.addData("Autonomous Route : ", autonomousRoute);
                     telemetry.addData("Parking Location: ",parkingLocation);
                     break;
@@ -708,11 +712,36 @@ public class AutonomousOpMode1 extends LinearOpMode {
                 telemetry.update();
             }
         }
+
+        if (parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE) {
+            while (!isStopRequested()) {
+                telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
+                telemetry.addData("StartPosition : ", GameField.startPosition);
+                telemetry.addData("Autonomous Route : ", autonomousRoute);
+                telemetry.addData("Parking Location: ", parkingLocation);
+                telemetry.addData("Enter End Parking facing Shared Shipping Hub :", "");
+                telemetry.addData("  YES (Y)", "");
+                telemetry.addData("  NO (A)", "");
+                if (gamepadController.gp1GetButtonYPress()) {
+                    GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB = true;
+                    telemetry.addData("End Parking facing Shared Shipping Hub :", GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB);
+                    break;
+                }
+                if (gamepadController.gp1GetButtonAPress()) {
+                    GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB = false;
+                    telemetry.addData("End Parking facing Shared Shipping Hub :", GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB);
+                    break;
+                }
+                telemetry.update();
+            }
+        }
+
         telemetry.clearAll();
         telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
         telemetry.addData("Start Position : ", GameField.startPosition);
         telemetry.addData("Autonomous route : ", autonomousRoute);
         telemetry.addData("Parking Location : ", parkingLocation);
+        telemetry.addData("End Parking facing Shared Shipping Hub :", GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB);
         telemetry.update();
         safeWait(200);
     }
@@ -743,6 +772,8 @@ public class AutonomousOpMode1 extends LinearOpMode {
         telemetry.addData("Vision targetLevelDetected : ", vision.targetLevelDetected);
         telemetry.addData("Vision detectedLabel", vision.detectedLabel);
         telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
+        telemetry.addData("Vision targetZone :", targetZone);
+        telemetry.addData("Vision targetZoneLevel :", targetZoneLevel);
 
         telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
         telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
