@@ -76,7 +76,7 @@ public class MajorArm {
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
-    public static int MAJORARM_MOTOR_PICKUP_POSITION_COUNT = -750;
+    public static int MAJORARM_MOTOR_PICKUP_POSITION_COUNT = -775;//-750;
     public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -660;
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -500;
