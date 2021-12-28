@@ -262,18 +262,23 @@ public class GamepadController {
         }
 
         if (!gp1GetStart()) {
-            if (gp1GetLeftTriggerPress()) {
-                elevator.moveElevatorSlightlyDown();
+            if (gp1GetLeftTriggerPersistent()) {
+                elevator.moveElevatorSlightlyUp();
             }
         } else {
-            if (gp1GetLeftTriggerPress()) {
-                elevator.moveElevatorSlightlyUp();
+            if (gp1GetLeftTriggerPersistent()) {
+                elevator.moveElevatorSlightlyDown();
             }
         }
 
         if (elevator.runElevatorToLevelState){
             elevator.runElevatorToLevel(elevator.motorPowerToRun);
         }
+
+        if (gp1GetStart() && gp1GetLeftTriggerPersistent() && gp1GetDpad_left()){
+            elevator.pushDownResetElevator();
+        }
+
     }
 
     public enum AUTO_MAGAZINE {
@@ -624,6 +629,15 @@ public class GamepadController {
         gp1LeftTriggerLast = (gp1GetLeftTrigger()>0.7);
         return isPressedLeftTrigger;
     }
+
+    public boolean gp1GetLeftTriggerPersistent() {
+        boolean isPressedLeftTrigger = false;
+        if ((gp1GetLeftTrigger()>0.7)) {
+            isPressedLeftTrigger = true;
+        }
+        return isPressedLeftTrigger;
+    }
+
 
     /**
      * The range of the gp2 left trigger cubic press values

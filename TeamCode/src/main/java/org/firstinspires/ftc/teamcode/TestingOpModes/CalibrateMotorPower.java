@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *
  */
 @TeleOp(name = "Calibrate Motor Power", group = "Calibration")
-@Disabled
+
 public class CalibrateMotorPower extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
@@ -34,7 +34,8 @@ public class CalibrateMotorPower extends LinearOpMode {
         driveTrain = new DriveTrain(hardwareMap);
 
         //motorToCalibrate = hardwareMap.dcMotor.get("motor_name"); //Change name of motor to calibrate per hardwaremap
-        motorToCalibrate = hardwareMap.dcMotor.get("elevator_motor");
+        //motorToCalibrate = hardwareMap.dcMotor.get("elevator_motor");
+        motorToCalibrate = hardwareMap.dcMotor.get("spinner_motor");
 
         /* Create Controllers */
         gamepadTestController = new GamepadTestController(gamepad1, driveTrain);

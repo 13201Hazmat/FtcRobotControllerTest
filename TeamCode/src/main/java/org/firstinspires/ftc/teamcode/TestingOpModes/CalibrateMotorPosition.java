@@ -37,8 +37,8 @@ public class CalibrateMotorPosition extends LinearOpMode {
         driveTrain = new DriveTrain(hardwareMap);
 
         //motorToCalibrate =  hardwareMap.get(DcMotorEx.class, "motorToCalibrate");;
-        //motorToCalibrate =  hardwareMap.get(DcMotorEx.class, "elevator_motor");
-        motorToCalibrate =  hardwareMap.get(DcMotorEx.class, "major_arm_motor");
+        motorToCalibrate =  hardwareMap.get(DcMotorEx.class, "elevator_motor");
+        //motorToCalibrate =  hardwareMap.get(DcMotorEx.class, "major_arm_motor");
 
         /* Create Controllers */
         gamepadTestController = new GamepadTestController(gamepad1, driveTrain);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,6 +26,7 @@ public class Spinner {
     //TODO: Update code as needed for Subsystem1
 
     public DcMotor spinnerMotor;
+    //public CRServo spinnerServo;
 
     public enum SPINNER_MOTOR_STATE {
         CLOCKWISE,
@@ -33,8 +35,8 @@ public class Spinner {
     }
     public SPINNER_MOTOR_STATE spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
 
-    public double spinnerMotorPower = 0.6;//0.7;
-    public double spinnerMotorPowerAuto = 0.6;
+    public double spinnerMotorPower = 0.9;//0.6;//0.7;
+    public double spinnerMotorPowerAuto = 0.9;//0.6;
     //public SUBSYSTEM1_BUTTON_STATE subsystem1ButtonState;
 
     public boolean autonomous = false;
@@ -42,6 +44,7 @@ public class Spinner {
     public Spinner (HardwareMap hardwareMap) {
         spinnerMotor = hardwareMap.dcMotor.get("spinner_motor");
         initSpinner();
+        //spinnerServo = hardwareMap.crservo.get("spinner_servo");
     }
 
     public void initSpinner(){
@@ -63,6 +66,7 @@ public class Spinner {
                 runSpinnerMotor(DcMotor.Direction.FORWARD, spinnerMotorPowerAuto);
             }
             spinnerMotorState = SPINNER_MOTOR_STATE.CLOCKWISE;
+            //spinnerServo.setPower(1.0);
         }
     }
 
@@ -76,8 +80,10 @@ public class Spinner {
                 runSpinnerMotor(DcMotor.Direction.REVERSE, spinnerMotorPower);
             } else {
                 runSpinnerMotor(DcMotor.Direction.REVERSE, spinnerMotorPowerAuto);
-            }spinnerMotorState = SPINNER_MOTOR_STATE.ANTICLOCKWISE;
-       }
+            }
+            spinnerMotorState = SPINNER_MOTOR_STATE.ANTICLOCKWISE;
+            //spinnerServo.setPower(-1.0);
+        }
     }
 
     /**
@@ -86,9 +92,11 @@ public class Spinner {
      */
     public void stopSpinnerMotor() {
         if(spinnerMotorState != SPINNER_MOTOR_STATE.STOPPED) {
-                runSpinnerMotor(DcMotor.Direction.FORWARD, 0.0);
-                spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
+            runSpinnerMotor(DcMotor.Direction.FORWARD, 0.0);
+            spinnerMotorState = SPINNER_MOTOR_STATE.STOPPED;
+            //spinnerServo.setPower(0);
         }
+
     }
     /**
      * Returns Intake motor state
@@ -98,6 +106,7 @@ public class Spinner {
     }
 
     public double getSpinnerMotorPower(){
+        //return spinnerServo.getPower();
         return spinnerMotor.getPower();
     }
 }

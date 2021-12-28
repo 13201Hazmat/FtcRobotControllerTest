@@ -52,9 +52,8 @@ public class Elevator {
     public static int ELEVATOR_LEVEL1_POSITION_COUNT = -300;
     public static int ELEVATOR_LEVEL2_POSITION_COUNT = -700;
     public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1500;
-    public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1550;
-    public static int ELEVATOR_DELTA_SLIGHTLY_DOWN_DELTA_COUNT = -100;
-    public static int ELEVATOR_DELTA_SLIGHTLY_UP_DELTA_COUNT = -100;
+    public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1600;
+    public static int ELEVATOR_DELTA_COUNT = -25;
 
     public int elevatorPositionCount = ELEVATOR_LEVEL0_POSITION_COUNT;
 
@@ -188,10 +187,10 @@ public class Elevator {
      * Move Elevator Slightly Down
      */
     public void moveElevatorSlightlyDown(){
-        if ((elevatorPositionCount <=ELEVATOR_LEVEL3_POSITION_COUNT) &&
-                elevatorPositionCount >= ELEVATOR_LEVEL1_POSITION_COUNT + ELEVATOR_DELTA_SLIGHTLY_DOWN_DELTA_COUNT){
+        if ((elevatorPositionCount >=ELEVATOR_LEVEL3_POSITION_COUNT) &&
+                elevatorPositionCount <= ELEVATOR_LEVEL0_POSITION_COUNT + ELEVATOR_DELTA_COUNT){
             turnElevatorBrakeModeOn();
-            elevatorPositionCount = elevatorPositionCount - ELEVATOR_DELTA_SLIGHTLY_DOWN_DELTA_COUNT;
+            elevatorPositionCount = elevatorPositionCount - ELEVATOR_DELTA_COUNT;
             elevatorMotor.setTargetPosition(elevatorPositionCount);
             motorPowerToRun = POWER_COMING_DOWN;
             runElevatorToLevelState = true;
@@ -202,13 +201,25 @@ public class Elevator {
      * Move Elevator Slightly Up
      */
     public void moveElevatorSlightlyUp(){
-        if ((elevatorPositionCount > ELEVATOR_LEVEL0_POSITION_COUNT) &&
-                elevatorPositionCount <= ELEVATOR_LEVELMAX_POSITION_COUNT - ELEVATOR_DELTA_SLIGHTLY_UP_DELTA_COUNT){
+        if ((elevatorPositionCount <= ELEVATOR_LEVEL0_POSITION_COUNT) &&
+                elevatorPositionCount >= ELEVATOR_LEVELMAX_POSITION_COUNT - ELEVATOR_DELTA_COUNT){
             turnElevatorBrakeModeOn();
-            elevatorPositionCount = elevatorPositionCount + ELEVATOR_DELTA_SLIGHTLY_UP_DELTA_COUNT;
+            elevatorPositionCount = elevatorPositionCount + ELEVATOR_DELTA_COUNT;
             elevatorMotor.setTargetPosition(elevatorPositionCount);
             motorPowerToRun = POWER_GOING_UP;
             runElevatorToLevelState = true;
+        }
+    }
+    
+    public void pushDownResetElevator(){
+        if ((elevatorPositionCount > ELEVATOR_LEVEL0_POSITION_COUNT + ELEVATOR_DELTA_COUNT)){
+            turnElevatorBrakeModeOn();
+            elevatorPositionCount = elevatorPositionCount - ELEVATOR_DELTA_COUNT;
+            elevatorMotor.setTargetPosition(elevatorPositionCount);
+            motorPowerToRun = POWER_COMING_DOWN;
+            //runElevatorToLevelState = true;
+            runElevatorToLevel(motorPowerToRun);
+            resetElevator();
         }
     }
 
