@@ -402,18 +402,16 @@ public class AutonomousOpMode3 extends LinearOpMode {
     public void buildAutoWarehouse(){
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             //BLUE_STORAGE_STARTPOS =  Pose2d(-61,-40,Math.toRadians(180));
-            initPose = GameField.BLUE_STORAGE_STARTPOS;
-            offWallPose = new Pose2d(-55,-40,Math.toRadians(180));
-            barcodePose[1-1] = new Pose2d(-46, -32, Math.toRadians(-170));
-            barcodePose[2-1] = new Pose2d(-48, -40, Math.toRadians(180));
-            barcodePose[3-1] = new Pose2d(-47, -47, Math.toRadians(165));
-            carousalPose = new Pose2d(-59, -65, Math.toRadians(-155));
-            alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
-            storageParkingPose = new Pose2d(-39,-68, Math.toRadians(90));
+            initPose = GameField.BLUE_WAREHOUSE_STARTPOS;
+            offWallPose = new Pose2d(-56,7,Math.toRadians(180));
+            barcodePose[1-1] = new Pose2d(-46, 17, Math.toRadians(-170));
+            barcodePose[2-1] = new Pose2d(-48, 9, Math.toRadians(180));
+            barcodePose[3-1] = new Pose2d(-47, -1, Math.toRadians(165));
+            alShippingHubPose = new Pose2d(-33, 0 , Math.toRadians(135));
 
-            whAlongWallParkingPose[0] = new Pose2d(-68, -35, Math.toRadians(90)); //x -69
-            whAlongWallParkingPose[1] = new Pose2d(-68, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(-68, 45, Math.toRadians(90)); //x55
+            whAlongWallParkingPose[0] = new Pose2d(-70, 17, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[1] = new Pose2d(-70, 9, Math.toRadians(90)); //x 54
+            whAlongWallParkingPose[2] = new Pose2d(-70, -1, Math.toRadians(90)); //x55
 
             warehousePickElementPose = new Pose2d(-68, 50, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(-68, 8, Math.toRadians(90));
@@ -422,24 +420,22 @@ public class AutonomousOpMode3 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(-52, -40, Math.toRadians(60));
-            whThroughBarrierParkingPose[1] = new Pose2d(-46, 60, Math.toRadians(90));
+            whThroughBarrierParkingPose[0] = new Pose2d(-48, -10, Math.toRadians(60));
+            whThroughBarrierParkingPose[1] = new Pose2d(-42, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(-40, 68, Math.toRadians(0));
 
         } else {
             //RED_STORAGE_STARTPOS =  Pose2d(61,-40,Math.toRadians(0));
-            initPose = GameField.RED_STORAGE_STARTPOS;
-            offWallPose = new Pose2d(55,-40,Math.toRadians(0));
-            barcodePose[1-1] = new Pose2d(50,-38, Math.toRadians(-5));
-            barcodePose[2-1] = new Pose2d(48,-37, Math.toRadians(-30));
-            barcodePose[3-1] = new Pose2d(47.5, -30, Math.toRadians(-45));
-            carousalPose = new Pose2d(51, -65, Math.toRadians(-60));
-            alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            storageParkingPose = new Pose2d(36, -69, Math.toRadians(90));
+            initPose = GameField.RED_WAREHOUSE_STARTPOS;
+            offWallPose = new Pose2d(56,7,Math.toRadians(0));
+            barcodePose[1-1] = new Pose2d(50,9, Math.toRadians(-5));
+            barcodePose[2-1] = new Pose2d(48,8, Math.toRadians(-30));
+            barcodePose[3-1] = new Pose2d(50, 15, Math.toRadians(-45));
+            alShippingHubPose = new Pose2d(32, -3, Math.toRadians(45));
 
-            whAlongWallParkingPose[0] = new Pose2d(65, -35, Math.toRadians(90)); //x -69
-            whAlongWallParkingPose[1] = new Pose2d(65, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(62, 45, Math.toRadians(150)); //x55
+            whAlongWallParkingPose[0] = new Pose2d(68, 9, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[1] = new Pose2d(68, 8, Math.toRadians(90)); //x 54
+            whAlongWallParkingPose[2] = new Pose2d(55, 15, Math.toRadians(150)); //x55
 
             warehousePickElementPose = new Pose2d(68, 50, Math.toRadians(90));;
             warehouseAllianceShippingPathPose[0] = new Pose2d(68, 8, Math.toRadians(90));
@@ -448,8 +444,8 @@ public class AutonomousOpMode3 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(40, 36, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(40, 68, Math.toRadians(180));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(52, -40, Math.toRadians(120));
-            whThroughBarrierParkingPose[1] = new Pose2d(46, 60, Math.toRadians(90));
+            whThroughBarrierParkingPose[0] = new Pose2d(48, -10, Math.toRadians(120));
+            whThroughBarrierParkingPose[1] = new Pose2d(42, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(40, 68, Math.toRadians(180));
         }
 
