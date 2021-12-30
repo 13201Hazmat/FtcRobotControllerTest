@@ -583,20 +583,22 @@ public class AutonomousOpMode3 extends LinearOpMode {
 
 
         trajWarehouseAllianceShippingLoop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
-                .setVelConstraint(getVelocityConstraint(30, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                //.setVelConstraint(getVelocityConstraint(30, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 //.lineToLinearHeading(warehousePickElementPose)
-                .addTemporalMarker(()-> {
+                /*.addTemporalMarker(()-> {
                     moveElevatorToLevel(0);
                     autonomousController.moveAutoMagazineToCollect();
                     runIntakeToCollect();
                 })
-                .waitSeconds(2)
+                 */
+                //.waitSeconds(1)
                 .addTemporalMarker( ()-> {
                     autonomousController.stopAutoIntake();
                     autonomousController.moveAutoMagazineToTransport();
                     moveElevatorToLevel(3);
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                //.splineTo(warehouseAllianceShippingPathPose[0].vec(),warehouseAllianceShippingPathPose[0].getHeading())
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(()->{
                     autonomousController.moveAutoMagazineToDrop();
@@ -613,7 +615,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
                     runIntakeToCollect();
                 })
                 .lineToLinearHeading(warehousePickElementPose)
-                .resetVelConstraint()
+                //.resetVelConstraint()
                 .build();
     }
 
