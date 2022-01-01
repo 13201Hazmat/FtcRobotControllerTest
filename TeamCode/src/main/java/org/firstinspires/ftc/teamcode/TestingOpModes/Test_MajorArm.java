@@ -66,10 +66,10 @@ public class Test_MajorArm extends LinearOpMode {
                     majorArm.moveMajorArmUpOne();
                 }
                 if(gamepadTestController.getButtonAPress()){
-                    majorArm.moveMajorArmPickupPosition();
+                    majorArm.moveMajorArmBlockPickupPosition();
                 }
                 if(gamepadTestController.getButtonYPress()){
-                    majorArm.moveMajorArmCapstonePosition();
+                    majorArm.moveMajorArmCapstoneDropPosition();
                 }
                 if(gamepadTestController.getRightTriggerPress()){
                     majorArm.moveMajorArmParkingPosition();

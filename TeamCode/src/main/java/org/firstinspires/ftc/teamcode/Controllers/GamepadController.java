@@ -406,10 +406,10 @@ public class GamepadController {
             majorArm.moveMajorArmUpOne();
         }
         if(gp2GetButtonAPress()){
-            majorArm.moveMajorArmPickupPosition();
+            majorArm.moveMajorArmBlockPickupPosition();
         }
         if(gp2GetButtonYPress()){
-            majorArm.moveMajorArmCapstonePosition();
+            majorArm.moveMajorArmCapstoneDropPosition();
         }
         if(gp2GetRightTriggerPress()){
             majorArm.moveMajorArmParkingPosition();

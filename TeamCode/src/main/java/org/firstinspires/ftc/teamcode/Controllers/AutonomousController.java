@@ -195,14 +195,14 @@ public class AutonomousController {
     }
 
     public void runAutoMagazine() {
-        if (magazine.magazineColorSensor instanceof SwitchableLight) {
+        /*if (magazine.magazineColorSensor instanceof SwitchableLight) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
                     magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
                 ((SwitchableLight) magazine.magazineColorSensor).enableLight(true);
             } else {
                 ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
             }
-        }
+        }*/
         switch (autoMagazineState){
             case TRANSPORT:
                 magazine.moveMagazineToTransport();
@@ -221,19 +221,19 @@ public class AutonomousController {
      */
 
     enum AUTO_MAJOR_ARM_STATE{
-        PICKUP,
-        CAPSTONE,
+        CAPSTONE_PICKUP,
+        CAPSTONE_DROP,
         PARKED,
     }
     AUTO_MAJOR_ARM_STATE autoMajorArmState = AUTO_MAJOR_ARM_STATE.PARKED;
 
-    public void moveAutoMajorArmPickup(){
-        autoMajorArmState = AUTO_MAJOR_ARM_STATE.PICKUP;
+    public void moveAutoMajorArmCapstonePickup(){
+        autoMajorArmState = AUTO_MAJOR_ARM_STATE.CAPSTONE_PICKUP;
         runAutoControl();
     }
 
-    public void moveAutoMajorArmCapstone(){
-        autoMajorArmState = AUTO_MAJOR_ARM_STATE.CAPSTONE;
+    public void moveAutoMajorArmCapstoneDrop(){
+        autoMajorArmState = AUTO_MAJOR_ARM_STATE.CAPSTONE_DROP;
         runAutoControl();
     }
 
@@ -262,11 +262,11 @@ public class AutonomousController {
             case PARKED:
                 majorArm.moveMajorArmParkingPosition();
                 break;
-            case CAPSTONE:
-                majorArm.moveMajorArmCapstonePosition();
+            case CAPSTONE_DROP:
+                majorArm.moveMajorArmCapstoneDropPosition();
                 break;
-            case PICKUP:
-                majorArm.moveMajorArmPickupPosition();
+            case CAPSTONE_PICKUP:
+                majorArm.moveMajorArmCapstonePickupPosition();
                 break;
         }
 

@@ -614,7 +614,7 @@ public class AutonomousOpMode extends LinearOpMode {
     public void moveMajorArmToPickupAndOpenClaw(){
         majorArm.moveMajorArmWristToPickupPosition();
         safeWait(1000);
-        autonomousController.moveAutoMajorArmPickup();
+        autonomousController.moveAutoMajorArmCapstonePickup();
         safeWait(1000);
         autonomousController.openAutoMajorClaw();
     }

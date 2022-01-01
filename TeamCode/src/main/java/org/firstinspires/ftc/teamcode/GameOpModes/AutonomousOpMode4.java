@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-
 import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocityConstraint;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -42,8 +41,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 3", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class AutonomousOpMode3 extends LinearOpMode {
+@Autonomous(name = "Autonomous 4", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+public class AutonomousOpMode4 extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -288,7 +287,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
         } else { //parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE
             if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
                 trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                        .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                        .addTemporalMarker(()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(whAlongWallParkingPose[0])
                         .build();
                 if (!GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
@@ -322,7 +321,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
                 }
             } else { //(autonomousRoute == GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER)
                 trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                        .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                        .addTemporalMarker(()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(whThroughBarrierParkingPose[0])
                         .build();
                 if (GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
@@ -346,22 +345,19 @@ public class AutonomousOpMode3 extends LinearOpMode {
      */
     public void runAutoStorage(){
         //Logic for waiting
-        safeWait(100);
+        //safeWait(100);
 
         //Move from wall to offWall position
         driveTrain.followTrajectorySequence(trajInitToOffWall);
-        safeWait(1000);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
-        safeWait(1000);
 
         //Move forward to Capstone Pickup Position
         driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
         moveMajorArmToParkingAfterClosingClaw();
-        safeWait(1000);
 
         //Move to Carousal
         driveTrain.followTrajectorySequence(trajASBarCodeToCarousal[targetZoneLevel]);
@@ -374,7 +370,6 @@ public class AutonomousOpMode3 extends LinearOpMode {
 
         //Drop pre-loaded box in correct level
         dropBoxToLevel();
-        safeWait(1000);
 
         //Move to Parking
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
@@ -396,7 +391,6 @@ public class AutonomousOpMode3 extends LinearOpMode {
 
         moveElevatorToLevel(0);
         autonomousController.stopAutoIntake();
-        safeWait(1000);
         return;
     }
 
@@ -472,23 +466,24 @@ public class AutonomousOpMode3 extends LinearOpMode {
         //Move to Alliance Shipping Hub to Warehouse Parking
         if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
             trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                    .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                    .addTemporalMarker(()->{
+                        moveElevatorToLevel(0);
+                        //runIntakeToCollect();
+                    })
                     .lineToLinearHeading(whAlongWallParkingPose[0])
                     .build();
             if (!GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
                 if (loopsFromWarehouseToAlShippingHub == 0) {
                     trajAlShippingToWHParking[1] = driveTrain.trajectorySequenceBuilder(whAlongWallParkingPose[0])
                             .lineToLinearHeading(whAlongWallParkingPose[1])
-                            .addTemporalMarker(() -> {
+                            /*.addTemporalMarker(() -> {
                                 moveElevatorToLevel(0);
-                            })
+                            })*/
                             .lineToLinearHeading(whAlongWallParkingPose[2])
                             .build();
                 } else {
                     trajAlShippingToWHParking[1] = driveTrain.trajectorySequenceBuilder(whAlongWallParkingPose[0])
                             .addTemporalMarker(() -> {
-                                moveElevatorToLevel(0);
-                                autonomousController.moveAutoMagazineToCollect();
                                 runIntakeToCollect();
                             })
                             .lineToLinearHeading(warehousePickElementPose)
@@ -506,7 +501,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
             }
         } else { //(autonomousRoute == GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER)
             trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                    .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                    .addTemporalMarker(()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(whThroughBarrierParkingPose[0])
                         .build();
             if (GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
@@ -530,29 +525,25 @@ public class AutonomousOpMode3 extends LinearOpMode {
      */
     public void runAutoWarehouse(){
         //Logic for waiting
-        safeWait(100);
+        //safeWait(100);
 
         //Move from wall to offWall position
         driveTrain.followTrajectorySequence(trajInitToOffWall);
-        safeWait(1000);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
-        safeWait(1000);
 
         //Move forward to Capstone Pickup Position
         driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
         moveMajorArmToParkingAfterClosingClaw();
-        safeWait(1000);
 
         //Move to Alliance Shipping Hub
         driveTrain.followTrajectorySequence(trajAWBarCodeToAlShipping[targetZoneLevel]);
 
         //Drop pre-loaded box in correct level
         dropBoxToLevel();
-        safeWait(1000);
 
         //Move to Parking
         driveTrain.followTrajectorySequence(trajAlShippingToWHParking[0]);
@@ -569,10 +560,12 @@ public class AutonomousOpMode3 extends LinearOpMode {
         }
 
         moveElevatorToLevel(0);
+        autonomousController.moveAutoMagazineToCollect();
         autonomousController.stopAutoIntake();
-        safeWait(1000);
         return;
     }
+
+
 
     Pose2d warehousePickElementPose;
     Pose2d[] warehouseAllianceShippingPathPose = new Pose2d[2];
@@ -580,21 +573,11 @@ public class AutonomousOpMode3 extends LinearOpMode {
     TrajectorySequence trajWarehouseAllianceShippingLoop;
 
     public void buildWarehouseAllianceShippingLoop() {
-
-
         trajWarehouseAllianceShippingLoop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
-                //.setVelConstraint(getVelocityConstraint(30, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                //.lineToLinearHeading(warehousePickElementPose)
-                /*.addTemporalMarker(()-> {
-                    moveElevatorToLevel(0);
-                    autonomousController.moveAutoMagazineToCollect();
-                    runIntakeToCollect();
-                })
-                 */
-                //.waitSeconds(1)
                 .addTemporalMarker( ()-> {
                     autonomousController.stopAutoIntake();
-                    autonomousController.moveAutoMagazineToTransport();
+                    //autonomousController.moveAutoMagazineToTransport();
+                    magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
                     moveElevatorToLevel(3);
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
@@ -603,19 +586,18 @@ public class AutonomousOpMode3 extends LinearOpMode {
                 .addTemporalMarker(()->{
                     autonomousController.moveAutoMagazineToDrop();
                 })
-                .waitSeconds(1)
-                .addTemporalMarker(() -> {
+                .waitSeconds(0.75)
+                /*.addTemporalMarker(() -> {
                     autonomousController.moveAutoMagazineToTransport();
                     moveElevatorToLevel(1);
-                })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                })*/
                 .addTemporalMarker(() -> {
                     autonomousController.moveAutoMagazineToCollect();
                     moveElevatorToLevel(0);
                     runIntakeToCollect();
                 })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose)
-                //.resetVelConstraint()
                 .build();
     }
 
@@ -633,53 +615,17 @@ public class AutonomousOpMode3 extends LinearOpMode {
     }
 
     //Drops pre-loaded box at the correct level determined by capstone position
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
     public void dropBoxToLevel(){
         autonomousController.moveAutoMagazineToDrop();
-        safeWait(1000);
-        autonomousController.moveAutoMagazineToCollect();
+        safeWait(750);
+        autonomousController.moveAutoMagazineToTransport();
         safeWait(100);
-
-        /*switch(targetZone) {
-            case LEVEL1:
-                //If Capstone on Level 1, Drops Pre-Loaded Box on Level 1
-                dropFreightLevel1();
-                break;
-            case LEVEL2:
-                //If Capstone on Level 1, Drops Pre-Loaded Box on Level 2
-                autonomousController.moveAutoElevatorLevel2();
-                safeWait(1000);
-                autonomousController.moveAutoMagazineToDrop();
-                safeWait(1000);
-                autonomousController.moveAutoMagazineToCollect();
-                safeWait(1000);
-                break;
-            case LEVEL3:
-                //If Capstone on Level 1, Drops Pre-Loaded Box on Level 3
-                autonomousController.moveAutoElevatorLevel3();
-                safeWait(1000);
-                autonomousController.moveAutoMagazineToDrop();
-                safeWait(1000);
-                autonomousController.moveAutoMagazineToCollect();
-                safeWait(1000);
-                break;
-        }*/
-
     }
 
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
-    public void dropFreightLevel1(){
-        //autonomousController.moveAutoElevatorLevel1();
-        //safeWait(1000);
-        autonomousController.moveAutoMagazineToDrop();
-        safeWait(1000);
-        autonomousController.moveAutoMagazineToCollect();
-        safeWait(1000);
-    }
 
-    //Runs the Intake and moves the Elevator to Level1
-    //TODO: Update code to use autoController instead of accessing the subsystems directly
+    //Runs the Intake after moving the Elevator to Level0 and magazine to collect
     public void runIntakeToCollect(){
+        autonomousController.moveAutoMagazineToCollect();
         autonomousController.moveAutoElevatorLevel0();
         autonomousController.startAutoIntake();
     }
@@ -710,22 +656,22 @@ public class AutonomousOpMode3 extends LinearOpMode {
         //safeWait(1000);
         autonomousController.closeAutoMajorClaw();
         safeWait(300);
-        autonomousController.moveAutoMajorArmCapstoneDrop();
-        safeWait(300);
+        //autonomousController.moveAutoMajorArmCapstoneDrop();
+        //safeWait(300);
         majorArm.moveMajorArmWristToParkedPosition();
-        safeWait(300);
+        safeWait(100);
         autonomousController.moveAutoMajorArmPark();
-        safeWait(300);
-
+        safeWait(250);
     }
 
 
     public void moveMajorArmToPickupAndOpenClaw(){
         majorArm.moveMajorArmWristToPickupPosition();
-        safeWait(300);
+        //safeWait(100);
         autonomousController.moveAutoMajorArmCapstonePickup();
-        safeWait(300);
+        //safeWait(750);
         autonomousController.openAutoMajorClaw();
+        safeWait(1000);
     }
 
     /**

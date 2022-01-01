@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -557,7 +555,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
         safeWait(1000);
         autonomousController.closeAutoMajorClaw();
         safeWait(500);
-        autonomousController.moveAutoMajorArmCapstone();
+        autonomousController.moveAutoMajorArmCapstoneDrop();
         safeWait(500);
         majorArm.moveMajorArmWristToParkedPosition();
         safeWait(500);
@@ -570,7 +568,7 @@ public class AutonomousOpMode1 extends LinearOpMode {
     public void moveMajorArmToPickupAndOpenClaw(){
         majorArm.moveMajorArmWristToPickupPosition();
         safeWait(500);
-        autonomousController.moveAutoMajorArmPickup();
+        autonomousController.moveAutoMajorArmCapstonePickup();
         safeWait(500);
         autonomousController.openAutoMajorClaw();
     }

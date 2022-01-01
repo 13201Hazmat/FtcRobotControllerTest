@@ -23,8 +23,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.MinorArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
-import java.util.AbstractList;
-
 
 /**
  * Ultimate Goal Autonomous mode <BR>
@@ -486,7 +484,7 @@ public class CalibrateAutonomous extends LinearOpMode {
 
 
     public void moveMajorArmToPickupAndOpenClaw(){
-        autonomousController.moveAutoMajorArmPickup();
+        autonomousController.moveAutoMajorArmCapstonePickup();
         autonomousController.openAutoMajorClaw();
     }
 
