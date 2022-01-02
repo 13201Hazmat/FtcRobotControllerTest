@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -34,12 +33,14 @@ public class Magazine {
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
     public static final double MAGAZINE_SERVO_TRANSPORT_POSITION =  0.52;
-    public static final double MAGAZINE_SERVO_DROP_POSITION =  0.2;
+    public static final double MAGAZINE_SERVO_DROP_POSITION =  0.20;
+    public static final double MAGAZINE_SERVO_DROP_LEVEL23_POSITION =  0.25;
 
     public enum MAGAZINE_SERVO_STATE {
         COLLECT,
         TRANSPORT,
-        DROP
+        DROP,
+        DROP_LEVEL23
     }
 
     public enum MAGAZINE_BUTTON_STATE {
@@ -105,6 +106,14 @@ public class Magazine {
             magazineServoState = MAGAZINE_SERVO_STATE.DROP;
         }
     }
+
+    public void moveMagazineToDropLevel23(){
+        if (magazineServoState != MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
+            magazineServo.setPosition(MAGAZINE_SERVO_DROP_LEVEL23_POSITION);
+            magazineServoState = MAGAZINE_SERVO_STATE.DROP_LEVEL23;
+        }
+    }
+
 
     /**
      * Returns Magazine servo state

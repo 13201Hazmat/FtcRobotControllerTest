@@ -51,7 +51,7 @@ public class Elevator {
     public static int ELEVATOR_LEVEL0_POSITION_COUNT = 0;
     public static int ELEVATOR_LEVEL1_POSITION_COUNT = -300;
     public static int ELEVATOR_LEVEL2_POSITION_COUNT = -700;
-    public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1500;
+    public static int ELEVATOR_LEVEL3_POSITION_COUNT = -1600;//-1500;
     public static int ELEVATOR_LEVELMAX_POSITION_COUNT = -1600;
     public static int ELEVATOR_DELTA_COUNT = -25;
 

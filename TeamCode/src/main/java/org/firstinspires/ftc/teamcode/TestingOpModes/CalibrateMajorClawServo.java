@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *
  */
 @TeleOp(name = "Calibrate Grip Servo Position", group = "Calibration")
-@Disabled
 public class CalibrateMajorClawServo extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;

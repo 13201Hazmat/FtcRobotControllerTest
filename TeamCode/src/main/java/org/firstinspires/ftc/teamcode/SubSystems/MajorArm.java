@@ -72,31 +72,31 @@ public class MajorArm {
         initMajorArm();
     }
 
-    public static final double CLAW_OPEN = 0.8;
-    public static final double CLAW_CLOSED = 0.53;
+    public static final double CLAW_OPEN = 0.6;//0.8;
+    public static final double CLAW_CLOSED = 0.2;//0.53;
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
     public static int MAJORARM_MOTOR_BLOCK_PICKUP_POSITION_COUNT = -775;//-750;
-    public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -725;
-    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -660;
-    public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
-    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -500;
-    public static int MAJORARM_MOTOR_CAPSTONE_DROP_POSITION_COUNT = -365;
+    public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -680;
+    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -650;
+    public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -550;
+    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -450;
+    public static int MAJORARM_MOTOR_CAPSTONE_DROP_POSITION_COUNT = -350;
     public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
     public static int MAJORARM_DELTA_COUNT = 25;
     public int majorarmCurrentArmPositionCount = MAJORARM_MOTOR_PARKED_POSITION_COUNT;
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.25;
-    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.35;
-    public static final double  MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
-    public static final double  MAJORARM_WRIST_LEVEL2_POSITION = 0.60;
-    public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.75;
-    public static final double MAJORARM_WRIST_CAPSTONE_DROP_POSITION = 0.90;
-    public static final double  MAJORARM_WRIST_PARKED_POSITION = 0.98;
-    public static final double  MAJORARM_WRIST_INIT_POSITION = 0.22;
+    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.47;//0.25;
+    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.55;//0.35;
+    public static final double MAJORARM_WRIST_LEVEL1_POSITION = 0.60;//0.45;
+    public static final double MAJORARM_WRIST_LEVEL2_POSITION = 0.70;//0.60;
+    public static final double MAJORARM_WRIST_LEVEL3_POSITION = 0.80;//0.75;
+    public static final double MAJORARM_WRIST_CAPSTONE_DROP_POSITION = 0.85;
+    public static final double MAJORARM_WRIST_PARKED_POSITION = 0.95;//0.98;
+    public static final double MAJORARM_WRIST_INIT_POSITION = 0.45;//0.22;
 
     public static double MAJORARM_MOTOR_POWER = 0.25;
     public static double MAJORARM_MOTOR_DELTA_POWER = 0.1;
@@ -127,6 +127,7 @@ public class MajorArm {
         if (runMajorArmToLevelState == true) {//|| majorArmMotor.isBusy() == true){
             majorArmMotor.setPower(power);
             runMajorArmToLevelState = false;
+            moveWristWithTimer();
         } else {
             majorArmMotor.setPower(0.0);
         }
@@ -179,20 +180,21 @@ public class MajorArm {
     }
 
     public void moveMajorArmWristToPickupPosition(){
-        majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
+        majorWristServo.setPosition(MAJORARM_WRIST_BLOCK_PICKUP_POSITION);
     }
 
     public void moveMajorArmWristToPosition() {
         double delayTime;
-        if (currentMajorArmState == MAJOR_ARM_STATE.BLOCK_PICKUP) {
+        if (currentMajorArmState == MAJOR_ARM_STATE.BLOCK_PICKUP ||
+            currentMajorArmState == MAJOR_ARM_STATE.CAPSTONE_PICKUP) {
             delayTime = 0;
         } else {
-            delayTime = 500;
+            delayTime = 0;
         }
         if (delayWristTimerReached(delayTime) && moveWrist) {
             switch (currentMajorArmState) {
                 case BLOCK_PICKUP:
-                    majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
+                    majorWristServo.setPosition(MAJORARM_WRIST_BLOCK_PICKUP_POSITION);
                     break;
                 case CAPSTONE_PICKUP:
                     majorWristServo.setPosition(MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION);
@@ -258,7 +260,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_CAPSTONE_DROP_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.CAPSTONE_DROP;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         //majorWristServo.setPosition(MAJORARM_WRIST_CAPSTONE_POSITION);
     }
 
@@ -270,7 +272,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_BLOCK_PICKUP_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.BLOCK_PICKUP;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         //majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
     }
 
@@ -282,7 +284,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.CAPSTONE_PICKUP;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         //majorWristServo.setPosition(MAJORARM_WRIST_PICKUP_POSITION);
     }
 
@@ -294,7 +296,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL1_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_1;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         //majorWristServo.setPosition(MAJORARM_WRIST_LEVEL1_POSITION);
     }
 
@@ -306,7 +308,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL2_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_2;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         //majorWristServo.setPosition(MAJORARM_WRIST_LEVEL2_POSITION);
     }
 
@@ -318,7 +320,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_LEVEL3_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.LEVEL_3;
-        moveWristWithTimer();
+        //moveWristWithTimer();
     }
 
     /**
@@ -329,7 +331,7 @@ public class MajorArm {
         majorArmMotor.setTargetPosition(MAJORARM_MOTOR_PARKED_POSITION_COUNT + majorarmMotorBaselineEncoderCount);
         runMajorArmToLevelState = true;
         currentMajorArmState = MAJOR_ARM_STATE.PARKED;
-        moveWristWithTimer();
+        //moveWristWithTimer();
         closeMajorClaw();
     }
 

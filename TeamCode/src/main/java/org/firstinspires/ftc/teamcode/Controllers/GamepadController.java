@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
@@ -304,8 +303,13 @@ public class GamepadController {
             }
 
             if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP) {
-                    magazine.moveMagazineToDrop();
+                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP ||
+                        magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
+                    if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_1) {
+                        magazine.moveMagazineToDrop();
+                    } else { //elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_2 / LEVEL_3)
+                        magazine.moveMagazineToDropLevel23();
+                    }
                 } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP) {
                     magazine.moveMagazineToTransport();
                 }
@@ -319,14 +323,14 @@ public class GamepadController {
             }
         }
 
-        if (magazine.magazineColorSensor instanceof SwitchableLight) {
+        /*if (magazine.magazineColorSensor instanceof SwitchableLight) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
                     magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
                 ((SwitchableLight) magazine.magazineColorSensor).enableLight(true);
             } else {
                 ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
             }
-        }
+        }*/
 
         if (autoMagazine == AUTO_MAGAZINE.ON) {
             if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
