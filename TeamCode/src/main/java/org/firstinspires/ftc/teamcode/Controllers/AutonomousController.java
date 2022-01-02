@@ -271,7 +271,11 @@ public class AutonomousController {
         }
 
         if (majorArm.runMajorArmToLevelState) {
-            majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
+            if (majorArm.currentMajorArmState != MajorArm.MAJOR_ARM_STATE.PARKED) {
+                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
+            } else {
+                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_SLOW_POWER);
+            }
         }
 
         if(autoMajorClawState == AUTO_MAJOR_CLAW_STATE.OPEN){
