@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import org.firstinspires.ftc.teamcode.TestingOpModes.SampleRevBlinkinLedDriver;
 
 /**
  * Definition of Subsystem Class <BR>
@@ -30,7 +26,9 @@ public class BlinkinDisplay {
     public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
     public RevBlinkinLedDriver.BlinkinPattern patternElementLoaded = RevBlinkinLedDriver.BlinkinPattern.GREEN;
     public RevBlinkinLedDriver.BlinkinPattern patternEndGame = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
-    public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.LIME;
+    public RevBlinkinLedDriver.BlinkinPattern patternDefault = RevBlinkinLedDriver.BlinkinPattern.LIGHT_CHASE_BLUE;
+    public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+    public RevBlinkinLedDriver.BlinkinPattern patternWhite = RevBlinkinLedDriver.BlinkinPattern.WHITE;
 
     public BlinkinDisplay(HardwareMap hardwareMap){
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
@@ -53,8 +51,20 @@ public class BlinkinDisplay {
         currentPattern = patternEndGame;
     }
 
+    public void setPatternDefault(){
+        blinkinLedDriver.setPattern(patternDefault);
+        currentPattern = patternDefault;
+    }
+
     public void setPatternBlack(){
         blinkinLedDriver.setPattern(patternBlack);
         currentPattern = patternBlack;
     }
+
+    public void setPatternWhite(){
+        blinkinLedDriver.setPattern(patternWhite);
+        currentPattern = patternWhite;
+    }
+
+
 }

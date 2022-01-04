@@ -345,7 +345,7 @@ public class GamepadController {
             if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED){
                 blinkinDisplay.setPatternElementLoaded();
             } else {
-                blinkinDisplay.setPatternBlack();
+                blinkinDisplay.setPatternDefault();
             }
         }
     }

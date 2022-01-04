@@ -77,6 +77,7 @@ public class TeleOpMode extends LinearOpMode {
         majorArm.moveMajorArmParkingPosition();
         elevator.moveElevatorLevel0Position();
 
+        blinkinDisplay.setPatternBlack();
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
         gameTimer.reset();
@@ -95,7 +96,7 @@ public class TeleOpMode extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
-                if (gameTimer.time() > 80000 && gameTimer.time() < 85000) {
+                if (gameTimer.time() > 80000 && gameTimer.time() < 90000) {
                     blinkinDisplay.setPatternEndGame();
                 }
 
@@ -145,14 +146,14 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("Magazine Color Sensor Distance :", "%.3f",magazine.getMagazineColorSensorDistance());
         telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
 
-        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
-        telemetry.addData("Game Timer : ", gameTimer.time());
-
         telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
         telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
 
         telemetry.addData("Minor Arm Position : ",minorArm.getMinorServoState());
         telemetry.addData("Minor Claw State : ",minorArm.getMinorClawState());
+
+        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
+        telemetry.addData("Game Timer : ", gameTimer.time());
 
         telemetry.update();
 
