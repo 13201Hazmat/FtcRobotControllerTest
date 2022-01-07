@@ -214,11 +214,11 @@ public class AutonomousOpMode3 extends LinearOpMode {
             alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
             storageParkingPose = new Pose2d(-39,-68, Math.toRadians(90));
 
-            whAlongWallParkingPose[0] = new Pose2d(-68, -35, Math.toRadians(90)); //x -69
-            whAlongWallParkingPose[1] = new Pose2d(-68, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(-68, 45, Math.toRadians(90)); //x55
+            whAlongWallParkingPose[0] = new Pose2d(-69, -35, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[1] = new Pose2d(-69, 36, Math.toRadians(90)); //x 54
+            whAlongWallParkingPose[2] = new Pose2d(-69, 45, Math.toRadians(90)); //x55
 
-            warehousePickElementPose = new Pose2d(-68, 45, Math.toRadians(90));
+            warehousePickElementPose = new Pose2d(-69, 48, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(-68, 8, Math.toRadians(90));
             allianceShippingHubDropElementPose = new Pose2d(-33, 0 , Math.toRadians(135));
 
@@ -242,9 +242,9 @@ public class AutonomousOpMode3 extends LinearOpMode {
 
             whAlongWallParkingPose[0] = new Pose2d(65, -35, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(65, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(62, 45, Math.toRadians(150)); //x55
+            whAlongWallParkingPose[2] = new Pose2d(62, 48, Math.toRadians(150)); //x55
 
-            warehousePickElementPose = new Pose2d(68, 45, Math.toRadians(90));;
+            warehousePickElementPose = new Pose2d(69, 48, Math.toRadians(90));;
             warehouseAllianceShippingPathPose[0] = new Pose2d(68, 8, Math.toRadians(90));
             allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 
@@ -414,7 +414,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
             whAlongWallParkingPose[1] = new Pose2d(-70, 9, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(-70, -1, Math.toRadians(90)); //x55
 
-            warehousePickElementPose = new Pose2d(-68, 45, Math.toRadians(90));
+            warehousePickElementPose = new Pose2d(-70, 48, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(-68, 8, Math.toRadians(90));
             allianceShippingHubDropElementPose = new Pose2d(-33, 0 , Math.toRadians(135));
 
@@ -438,7 +438,7 @@ public class AutonomousOpMode3 extends LinearOpMode {
             whAlongWallParkingPose[1] = new Pose2d(68, 8, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(55, 15, Math.toRadians(150)); //x55
 
-            warehousePickElementPose = new Pose2d(68, 45, Math.toRadians(90));;
+            warehousePickElementPose = new Pose2d(70, 48, Math.toRadians(90));;
             warehouseAllianceShippingPathPose[0] = new Pose2d(68, 8, Math.toRadians(90));
             allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 

@@ -71,8 +71,8 @@ public class MajorArm {
         initMajorArm();
     }
 
-    public static final double CLAW_OPEN = 0.8;
-    public static final double CLAW_CLOSED = 0.53;
+    public static final double CLAW_OPEN = 0.35;
+    public static final double CLAW_CLOSED = 0.0;
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
@@ -87,7 +87,7 @@ public class MajorArm {
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.25;
+    public static final double MAJORARM_WRIST_PICKUP_POSITION = 0.55;
     public static final double  MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
     public static final double  MAJORARM_WRIST_LEVEL2_POSITION = 0.60;
     public static final double  MAJORARM_WRIST_LEVEL3_POSITION = 0.75;
