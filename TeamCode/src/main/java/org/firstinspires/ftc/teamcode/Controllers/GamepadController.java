@@ -303,14 +303,15 @@ public class GamepadController {
             }
 
             if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP ||
+                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP &&
                         magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
                     if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_1) {
                         magazine.moveMagazineToDrop();
                     } else { //elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_2 / LEVEL_3)
                         magazine.moveMagazineToDropLevel23();
                     }
-                } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP) {
+                } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP ||
+                        magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
                     magazine.moveMagazineToTransport();
                 }
             } else{

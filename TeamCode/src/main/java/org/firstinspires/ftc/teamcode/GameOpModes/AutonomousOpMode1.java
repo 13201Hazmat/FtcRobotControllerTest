@@ -5,6 +5,7 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -39,6 +40,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
  */
 //TODO: Copy and Rename Autonomous Mode
 @Autonomous(name = "Autonomous 1", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+@Disabled
 public class AutonomousOpMode1 extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
