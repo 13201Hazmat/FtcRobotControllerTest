@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *
  */
 @TeleOp(name = "Calibrate Motor Position", group = "Calibration")
+@Disabled
 public class CalibrateMotorPosition extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;

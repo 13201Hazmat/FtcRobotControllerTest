@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  *
  */
 @TeleOp(name = "Calibrate Wrist Servo Position", group = "Calibration")
+@Disabled
 public class CalibrateWristServo extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;

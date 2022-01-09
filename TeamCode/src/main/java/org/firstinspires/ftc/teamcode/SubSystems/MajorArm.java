@@ -75,7 +75,7 @@ public class MajorArm {
     }
 
     public static final double CLAW_OPEN = 0.9;//0.8;
-    public static final double CLAW_CLOSED = 0.45;//0.53;
+    public static final double CLAW_CLOSED = 0.49;//0.53;
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
