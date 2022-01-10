@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocit
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -41,8 +42,9 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 4", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class AutonomousOpMode4 extends LinearOpMode {
+@Autonomous(name = "Autonomous 5", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+@Disabled
+public class AutonomousOpMode5 extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -263,13 +265,13 @@ public class AutonomousOpMode4 extends LinearOpMode {
 
         //Move from init to offWallPosition
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-        /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
+        trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
                     .lineToLinearHeading(offWallPose)
-                    .build();*/
+                    .build();
 
         //Move forward to Capstone pickup position and then to Carousal
         for (int i=0; i<3; i++) {
-            trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(initPose/*offWallPose*/)
+            trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(offWallPose)
                     .setVelConstraint(getVelocityConstraint(20, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                     .lineToLinearHeading(barcodePose[i])
                     .resetVelConstraint()
@@ -356,7 +358,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
 
         //Move from wall to offWall position
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-        //driveTrain.followTrajectorySequence(trajInitToOffWall);
+        driveTrain.followTrajectorySequence(trajInitToOffWall);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();
@@ -457,13 +459,13 @@ public class AutonomousOpMode4 extends LinearOpMode {
 
         //Move from init to offWallPosition
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-        /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
+        trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
                 .lineToLinearHeading(offWallPose)
-                .build();*/
+                .build();
 
         //Move forward to Capstone pickup position and then to Carousal
         for (int i=0; i<3; i++) {
-            trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(initPose/*offWallPose*/)
+            trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(offWallPose)
                     .setVelConstraint(getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                     .lineToLinearHeading(barcodePose[i])
                     .resetVelConstraint()
@@ -541,7 +543,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
 
         //Move from wall to offWall position
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-        //driveTrain.followTrajectorySequence(trajInitToOffWall);
+        driveTrain.followTrajectorySequence(trajInitToOffWall);
 
         //Move arm to Pickup Capstone level and open Grip
         moveMajorArmToPickupAndOpenClaw();

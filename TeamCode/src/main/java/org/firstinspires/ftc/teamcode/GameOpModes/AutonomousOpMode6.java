@@ -41,8 +41,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 4", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class AutonomousOpMode4 extends LinearOpMode {
+@Autonomous(name = "Autonomous 6", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+public class AutonomousOpMode6 extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -274,7 +274,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
                     .lineToLinearHeading(barcodePose[i])
                     .resetVelConstraint()
                     .build();
-            trajASBarCodeToCarousal[i] = driveTrain.trajectorySequenceBuilder(barcodePose[i])
+            trajASBarCodeToCarousal[i] = driveTrain.trajectorySequenceBuilder(initPose/*barcodePose[i]*/)
                     .lineToLinearHeading(carousalPose)
                     .build();
         }
@@ -359,13 +359,13 @@ public class AutonomousOpMode4 extends LinearOpMode {
         //driveTrain.followTrajectorySequence(trajInitToOffWall);
 
         //Move arm to Pickup Capstone level and open Grip
-        moveMajorArmToPickupAndOpenClaw();
+        //moveMajorArmToPickupAndOpenClaw();
 
         //Move forward to Capstone Pickup Position
-        driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
+        //driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
-        moveMajorArmToParkingAfterClosingClaw();
+        //moveMajorArmToParkingAfterClosingClaw();
 
         //Move to Carousal
         driveTrain.followTrajectorySequence(trajASBarCodeToCarousal[targetZoneLevel]);
@@ -469,7 +469,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
                     .resetVelConstraint()
                     .build();
             //Move from Barcode to Alliance Shipping Hub
-            trajAWBarCodeToAlShipping[i] = driveTrain.trajectorySequenceBuilder(barcodePose[i])
+            trajAWBarCodeToAlShipping[i] = driveTrain.trajectorySequenceBuilder(initPose/*barcodePose[i]*/)
                     .addTemporalMarker(0,0, () -> {moveElevatorToTargetZoneLevel();})
                     .lineToLinearHeading(alShippingHubPose)
                     .build();
@@ -544,13 +544,13 @@ public class AutonomousOpMode4 extends LinearOpMode {
         //driveTrain.followTrajectorySequence(trajInitToOffWall);
 
         //Move arm to Pickup Capstone level and open Grip
-        moveMajorArmToPickupAndOpenClaw();
+        //moveMajorArmToPickupAndOpenClaw();
 
         //Move forward to Capstone Pickup Position
-        driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
+        //driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
-        moveMajorArmToParkingAfterClosingClaw();
+        //moveMajorArmToParkingAfterClosingClaw();
 
         //Move to Alliance Shipping Hub
         driveTrain.followTrajectorySequence(trajAWBarCodeToAlShipping[targetZoneLevel]);
@@ -876,7 +876,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
                     }
-                    /*if (gamepadController.gp1GetButtonYPress()) {
+                    if (gamepadController.gp1GetButtonYPress()) {
                         loopsFromWarehouseToAlShippingHub = 2;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
@@ -885,7 +885,7 @@ public class AutonomousOpMode4 extends LinearOpMode {
                         loopsFromWarehouseToAlShippingHub = 3;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
-                    }*/
+                    }
                     telemetry.update();
                 }
             }
