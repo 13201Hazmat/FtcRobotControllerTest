@@ -214,6 +214,8 @@ public class AutonomousController {
                 magazine.moveMagazineToCollect();
                 break;
         }
+
+
     }
 
     /**

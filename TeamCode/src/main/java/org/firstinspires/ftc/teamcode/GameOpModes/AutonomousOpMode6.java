@@ -384,13 +384,13 @@ public class AutonomousOpMode6 extends LinearOpMode {
             driveTrain.followTrajectorySequence(trajASAlShippingToStorageParking);
         } else {
             driveTrain.followTrajectorySequence(trajAlShippingToWHParking[0]);
-            driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
             if (loopsFromWarehouseToAlShippingHub == 0) {
                 while (gameTimer.time() < 26000) { //Wait till end of Autonomous mode
                     safeWait(100);
                 }
-
+                driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
             } else {
+                driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
                 for (int loop = 1; loop <= loopsFromWarehouseToAlShippingHub; loop++) {
                     driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoop);
                 }
