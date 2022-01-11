@@ -216,12 +216,14 @@ public class AutonomousOpMode7 extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(-52, -48, Math.toRadians(165));
 
             carousalPose = new Pose2d(-59, -65, Math.toRadians(-155));
+            carousalToAlliancePathPose = new Pose2d(-18, -60, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
+
             alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
             storageParkingPose = new Pose2d(-39,-68, Math.toRadians(90));
 
-            whAlongWallParkingPose[0] = new Pose2d(-69, -35, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[0] = new Pose2d(-69, -50, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-69, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(-69, 45, Math.toRadians(90)); //x55
 
@@ -232,7 +234,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(-52, -40, Math.toRadians(60));
+            whThroughBarrierParkingPose[0] = new Pose2d(-52, -60, Math.toRadians(60));
             whThroughBarrierParkingPose[1] = new Pose2d(-46, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(-40, 68, Math.toRadians(0));
 
@@ -245,13 +247,13 @@ public class AutonomousOpMode7 extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(51, -34, Math.toRadians(-50)); //fixed 1/8/22
 
             carousalPose = new Pose2d(51, -65, Math.toRadians(-60));
-            carousalToAlliancePathPose = new Pose2d(24, -69, Math.toRadians(-90));
+            carousalToAlliancePathPose = new Pose2d(18, -60, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(12, -36, Math.toRadians(-90));
+            alShippingHubPose = new Pose2d(18, -32, Math.toRadians(-90));
             storageParkingPose = new Pose2d(36, -69, Math.toRadians(90));
 
 
-            whAlongWallParkingPose[0] = new Pose2d(68, -35, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[0] = new Pose2d(68, -50, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(68, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(65, 48, Math.toRadians(150)); //x55
 
@@ -262,7 +264,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(40, 36, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(40, 68, Math.toRadians(180));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(52, -40, Math.toRadians(120));
+            whThroughBarrierParkingPose[0] = new Pose2d(52, -60, Math.toRadians(120));
             whThroughBarrierParkingPose[1] = new Pose2d(46, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(40, 68, Math.toRadians(180));
         }
@@ -648,7 +650,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
         trajWarehouseAllianceShippingLoopDrop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
                 .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                 .addTemporalMarker(0, ()-> {
-                    intake.startIntakeMotorOutward();
+                    //intake.startIntakeMotorOutward();
                     //autonomousController.stopAutoIntake();
                     //autonomousController.moveAutoMagazineToTransport();
                     magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
@@ -709,9 +711,12 @@ public class AutonomousOpMode7 extends LinearOpMode {
         if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
             if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
                 if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                    magazine.moveMagazineToTransport();
+                    //magazine.moveMagazineToTransport();
+                    magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
+                    magazine.magazineServoState = Magazine.MAGAZINE_SERVO_STATE.TRANSPORT;
                     //elevator.moveElevatorLevel1Position();
-                    intake.stopIntakeMotor();
+                    //intake.stopIntakeMotor();
+                    intake.startIntakeMotorOutward();
                     return true;
                 }
             }
