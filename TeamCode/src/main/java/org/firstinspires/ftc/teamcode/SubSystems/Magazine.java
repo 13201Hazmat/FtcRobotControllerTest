@@ -81,37 +81,37 @@ public class Magazine {
      * Sets magazineServo to collect position
      */
     public void moveMagazineToCollect(){
-        if (magazineServoState != MAGAZINE_SERVO_STATE.COLLECT) {
+        //if (magazineServoState != MAGAZINE_SERVO_STATE.COLLECT) {
             magazineServo.setPosition(MAGAZINE_SERVO_COLLECT_POSITION);
             magazineServoState = MAGAZINE_SERVO_STATE.COLLECT;
-        }
+        //}
     }
 
     /**
      * sets magazineServo to transport position
      */
     public void moveMagazineToTransport(){
-        if (magazineServoState != MAGAZINE_SERVO_STATE.TRANSPORT) {
+        //if (magazineServoState != MAGAZINE_SERVO_STATE.TRANSPORT) {
             magazineServo.setPosition(MAGAZINE_SERVO_TRANSPORT_POSITION);
             magazineServoState = MAGAZINE_SERVO_STATE.TRANSPORT;
-        }
+        //}
     }
 
     /**
      * sets magazineServo to flipped position
      */
     public void moveMagazineToDrop(){
-        if (magazineServoState != MAGAZINE_SERVO_STATE.DROP) {
+        //if (magazineServoState != MAGAZINE_SERVO_STATE.DROP) {
             magazineServo.setPosition(MAGAZINE_SERVO_DROP_POSITION);
             magazineServoState = MAGAZINE_SERVO_STATE.DROP;
-        }
+        //}
     }
 
     public void moveMagazineToDropLevel23(){
-        if (magazineServoState != MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
+        //if (magazineServoState != MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
             magazineServo.setPosition(MAGAZINE_SERVO_DROP_LEVEL23_POSITION);
             magazineServoState = MAGAZINE_SERVO_STATE.DROP_LEVEL23;
-        }
+        //}
     }
 
 

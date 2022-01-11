@@ -649,7 +649,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
     public void buildWarehouseAllianceShippingLoopNew() {
         trajWarehouseAllianceShippingLoopDrop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
                 .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .addTemporalMarker(0, ()-> {
+                .addTemporalMarker(()-> {
                     //intake.startIntakeMotorOutward();
                     //autonomousController.stopAutoIntake();
                     //autonomousController.moveAutoMagazineToTransport();
@@ -657,7 +657,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
                     moveElevatorToLevel(3);
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .addTemporalMarker(1,() -> {
+                .addTemporalMarker(() -> {
                     intake.stopIntakeMotor();
                 })
                 //.splineTo(warehouseAllianceShippingPathPose[0].vec(),warehouseAllianceShippingPathPose[0].getHeading())
@@ -708,18 +708,20 @@ public class AutonomousOpMode7 extends LinearOpMode {
     }
 
     public boolean senseIntakeCollectAndStop(){
-        if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
+        //if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
             if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
+                magazine.moveMagazineToTransport();
                 if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                     //magazine.moveMagazineToTransport();
-                    magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
-                    magazine.magazineServoState = Magazine.MAGAZINE_SERVO_STATE.TRANSPORT;
+                    //magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
+                    //magazine.magazineServoState = Magazine.MAGAZINE_SERVO_STATE.TRANSPORT;
                     //elevator.moveElevatorLevel1Position();
                     //intake.stopIntakeMotor();
-                    intake.startIntakeMotorOutward();
-                    return true;
+
                 }
-            }
+                intake.startIntakeMotorOutward();
+                return true;
+            //}
         }
         return false;
     }
@@ -880,7 +882,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
                     telemetry.addData("  0 (A)", "");
                     telemetry.addData("  1 (X)", "");
                     telemetry.addData("  2 (Y)", "");
-                    //telemetry.addData("  3 (B)", "");
+                    telemetry.addData("  3 (B)", "");
                     if (gamepadController.gp1GetButtonAPress()) {
                         loopsFromWarehouseToAlShippingHub = 0;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
@@ -896,11 +898,11 @@ public class AutonomousOpMode7 extends LinearOpMode {
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
                     }
-                    /*if (gamepadController.gp1GetButtonBPress()) {
+                    if (gamepadController.gp1GetButtonBPress()) {
                         loopsFromWarehouseToAlShippingHub = 3;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
-                    }*/
+                    }
                     telemetry.update();
                 }
             }
