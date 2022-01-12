@@ -216,14 +216,14 @@ public class AutonomousOpMode7 extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(-52, -48, Math.toRadians(165));
 
             carousalPose = new Pose2d(-59, -65, Math.toRadians(-155));
-            carousalToAlliancePathPose = new Pose2d(-18, -60, Math.toRadians(-90));
+            carousalToAlliancePathPose = new Pose2d(-18, -62, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
+            alShippingHubPose = new Pose2d(-20, -35, Math.toRadians(-90));
 
-            storageParkingPose = new Pose2d(-39,-68, Math.toRadians(90));
+            storageParkingPose = new Pose2d(-37,-68, Math.toRadians(90));
 
-            whAlongWallParkingPose[0] = new Pose2d(-69, -50, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[0] = new Pose2d(-69, -60, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-69, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(-69, 45, Math.toRadians(90)); //x55
 
@@ -234,7 +234,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(-50, -60, Math.toRadians(60));
+            whThroughBarrierParkingPose[0] = new Pose2d(-50, -60, Math.toRadians(95));
             whThroughBarrierParkingPose[1] = new Pose2d(-46, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(-40, 72, Math.toRadians(180));
 
@@ -249,11 +249,11 @@ public class AutonomousOpMode7 extends LinearOpMode {
             carousalPose = new Pose2d(53, -65, Math.toRadians(-60));
             carousalToAlliancePathPose = new Pose2d(16, -60, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(18, -30, Math.toRadians(-90));
+            alShippingHubPose = new Pose2d(20, -30, Math.toRadians(-90));
             storageParkingPose = new Pose2d(36, -69, Math.toRadians(90));
 
 
-            whAlongWallParkingPose[0] = new Pose2d(68, -50, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[0] = new Pose2d(68, -60, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(68, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(65, 48, Math.toRadians(150)); //x55
 
@@ -353,6 +353,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
                             .lineToLinearHeading(whThroughBarrierParkingPose[1])
                             .setVelConstraint(getVelocityConstraint(30, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                             .lineToLinearHeading(whThroughBarrierShShippingParkingPose)
+                            .resetVelConstraint()
                             .build();
                 }
             }
@@ -436,7 +437,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
             whAlongWallParkingPose[0] = new Pose2d(-70, 3, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-70, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(-70, 45, Math.toRadians(90)); //x55
+            whAlongWallParkingPose[2] = new Pose2d(-70, 45, Math.toRadians(90)); //x 55
 
             warehousePickElementPose = new Pose2d(-70, 48, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(-70, 8, Math.toRadians(90));
@@ -498,12 +499,12 @@ public class AutonomousOpMode7 extends LinearOpMode {
         //Move to Alliance Shipping Hub to Warehouse Parking
         if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
             trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                    .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                    //.setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                     .addTemporalMarker(()->{
                         moveElevatorToLevel(0);
                     })
                     .lineToLinearHeading(whAlongWallParkingPose[0])
-                    .resetVelConstraint()
+                    //.resetVelConstraint()
                     .build();
             if (!GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
                 if (loopsFromWarehouseToAlShippingHub == 0) {
