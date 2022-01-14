@@ -153,6 +153,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
                 autonomousController.moveAutoElevatorLevel1();
                 autonomousController.moveAutoMagazineToTransport();
+                intake.intakeMotorPower1 = 0.9; //setting to 90% to avoid picking 2
 
                 // Logic to determine and run defined Autonomous mode
                 if (GameField.startPosition == GameField.START_POSITION.WAREHOUSE) {
@@ -592,13 +593,13 @@ public class AutonomousOpMode7 extends LinearOpMode {
             for (int loop = 1; loop <= loopsFromWarehouseToAlShippingHub; loop++) {
                 //driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoop);
 
-                while (gameTimer.time() < 26000) {
+                while (gameTimer.time() < 24000) {
                     if (senseIntakeCollectAndStop() == true) {
-                        //safeWait(2000);
-                        magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
+                        autonomousController.moveAutoMagazineToTransport();
                         moveElevatorToLevel(3);
+                        intake.startIntakeMotorOutward();
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop);
-                        safeWait(750);
+                        safeWait(550);
                         autonomousController.moveAutoMagazineToCollect();
                         moveElevatorToLevel(0);
                         runIntakeToCollect();
@@ -626,18 +627,19 @@ public class AutonomousOpMode7 extends LinearOpMode {
         trajWarehouseAllianceShippingLoop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
                 .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                 .addTemporalMarker( ()-> {
-                    autonomousController.stopAutoIntake();
-                    //autonomousController.moveAutoMagazineToTransport();
-                    magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
+                    intake.startIntakeMotorOutward();
+                    autonomousController.moveAutoMagazineToTransport();
                     moveElevatorToLevel(3);
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                //.splineTo(warehouseAllianceShippingPathPose[0].vec(),warehouseAllianceShippingPathPose[0].getHeading())
+                .addTemporalMarker(()->{
+                    autonomousController.stopAutoIntake();
+                })
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(()->{
                     autonomousController.moveAutoMagazineToDrop();
                 })
-                .waitSeconds(0.75)
+                .waitSeconds(0.55)
                 .addTemporalMarker(() -> {
                     autonomousController.moveAutoMagazineToCollect();
                     moveElevatorToLevel(0);
@@ -656,29 +658,26 @@ public class AutonomousOpMode7 extends LinearOpMode {
     public void buildWarehouseAllianceShippingLoopNew() {
         trajWarehouseAllianceShippingLoopDrop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
                 .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                .addTemporalMarker(()-> {
-                    //intake.startIntakeMotorOutward();
-                    //autonomousController.stopAutoIntake();
-                    //autonomousController.moveAutoMagazineToTransport();
-                    magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
+                /*.addTemporalMarker(()-> {
+                    intake.startIntakeMotorOutward();
+                    autonomousController.moveAutoMagazineToTransport();
                     moveElevatorToLevel(3);
-                })
+                })*/
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .addTemporalMarker(() -> {
                     intake.stopIntakeMotor();
                 })
-                //.splineTo(warehouseAllianceShippingPathPose[0].vec(),warehouseAllianceShippingPathPose[0].getHeading())
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(()->{
                     autonomousController.moveAutoMagazineToDrop();
                 })
                 .build();
         trajWarehouseAllianceShippingLoopPick = driveTrain.trajectorySequenceBuilder(allianceShippingHubDropElementPose)
-                .addTemporalMarker(() -> {
+                /*.addTemporalMarker(() -> {
                     autonomousController.moveAutoMagazineToCollect();
                     moveElevatorToLevel(0);
                     runIntakeToCollect();
-                })
+                })*/
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose)
                 .resetVelConstraint()
@@ -701,7 +700,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
     //Drops pre-loaded box at the correct level determined by capstone position
     public void dropBoxToLevel(){
         autonomousController.moveAutoMagazineToDrop();
-        safeWait(750);
+        safeWait(550);
         autonomousController.moveAutoMagazineToTransport();
         safeWait(100);
     }
@@ -715,21 +714,8 @@ public class AutonomousOpMode7 extends LinearOpMode {
     }
 
     public boolean senseIntakeCollectAndStop(){
-        //if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
-            if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
-                telemetry.addData("DEBUG","debug_senseIntakeCollect");
-                intake.startIntakeMotorOutward();
-                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                    //magazine.moveMagazineToTransport();
-                    //magazine.magazineServo.setPosition(Magazine.MAGAZINE_SERVO_TRANSPORT_POSITION);
-                    //magazine.magazineServoState = Magazine.MAGAZINE_SERVO_STATE.TRANSPORT;
-                    //elevator.moveElevatorLevel1Position();
-                    //intake.stopIntakeMotor();
-                    magazine.moveMagazineToTransport();
-                }
-                //intake.startIntakeMotorOutward();
-                return true;
-            //}
+        if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
+            return true;
         }
         return false;
     }
@@ -890,7 +876,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
                     telemetry.addData("  0 (A)", "");
                     telemetry.addData("  1 (X)", "");
                     telemetry.addData("  2 (Y)", "");
-                    telemetry.addData("  3 (B)", "");
+                    //telemetry.addData("  3 (B)", "");
                     if (gamepadController.gp1GetButtonAPress()) {
                         loopsFromWarehouseToAlShippingHub = 0;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
@@ -906,11 +892,11 @@ public class AutonomousOpMode7 extends LinearOpMode {
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
                     }
-                    if (gamepadController.gp1GetButtonBPress()) {
+                    /*if (gamepadController.gp1GetButtonBPress()) {
                         loopsFromWarehouseToAlShippingHub = 3;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
-                    }
+                    }*/
                     telemetry.update();
                 }
             }

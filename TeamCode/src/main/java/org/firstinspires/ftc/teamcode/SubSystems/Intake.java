@@ -60,7 +60,7 @@ public class Intake {
      */
     public void startIntakeMotorInward() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING) {
-            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower2);
+            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower1);
             intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
         }
     }
@@ -71,7 +71,7 @@ public class Intake {
      */
     public void startIntakeMotorOutward() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower1);
+            runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower2);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
         }
     }

@@ -142,7 +142,7 @@ public class AutonomousController {
     public void runAutoElevator() {
         if (autoElevatorState == AUTO_ELEVATOR_STATE.LEVEL_0){
             elevator.moveElevatorLevel0Position();
-            autoMagazineState = AUTO_MAGAZINE_STATE.COLLECT;
+            //autoMagazineState = AUTO_MAGAZINE_STATE.COLLECT;
 
         } else {
             autoIntakeState = AUTO_INTAKE_STATE.STOPPED;
