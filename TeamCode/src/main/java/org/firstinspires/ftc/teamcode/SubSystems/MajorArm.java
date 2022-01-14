@@ -91,14 +91,14 @@ public class MajorArm {
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.55;//0.25;
-    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.58;//0.35;
-    public static final double MAJORARM_WRIST_LEVEL1_POSITION = 0.60;//0.45;
-    public static final double MAJORARM_WRIST_LEVEL2_POSITION = 0.72;//0.60;
-    public static final double MAJORARM_WRIST_LEVEL3_POSITION = 0.85;//0.75;
+    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.26;//0.55;
+    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.38;
+    public static final double MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
+    public static final double MAJORARM_WRIST_LEVEL2_POSITION = 0.55;
+    public static final double MAJORARM_WRIST_LEVEL3_POSITION = 0.80;
     public static final double MAJORARM_WRIST_CAPSTONE_DROP_POSITION = 0.90;
-    public static final double MAJORARM_WRIST_PARKED_POSITION = 0.96;//0.98;
-    public static final double MAJORARM_WRIST_INIT_POSITION = 0.50;//0.22;
+    public static final double MAJORARM_WRIST_PARKED_POSITION = 1.0;
+    public static final double MAJORARM_WRIST_INIT_POSITION = 0.30;
 
     public static double MAJORARM_MOTOR_POWER = 0.25;
     public static double MAJORARM_MOTOR_SLOW_POWER = 0.15;
