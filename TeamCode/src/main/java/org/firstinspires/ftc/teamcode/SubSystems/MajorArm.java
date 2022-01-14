@@ -91,7 +91,7 @@ public class MajorArm {
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.24;//0.55;
+    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.28;//0.55;
     public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.38;
     public static final double MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
     public static final double MAJORARM_WRIST_LEVEL2_POSITION = 0.55;
