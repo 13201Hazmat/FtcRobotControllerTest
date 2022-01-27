@@ -405,10 +405,12 @@ public class GamepadController {
      */
     public void runMajorArm(){ //this function should be at LaunchController's place after order change
         if (gp2GetButtonXPress()){
-            majorArm.moveMajorArmDownOne();
+            //majorArm.moveMajorArmDownOne();
+            majorArm.moveMajorArmLevel1Position();
         }
         if (gp2GetButtonBPress()) {
-            majorArm.moveMajorArmUpOne();
+            //majorArm.moveMajorArmUpOne();
+            majorArm.moveMajorArmLevel3Position();
         }
         if(gp2GetButtonAPress()){
             majorArm.moveMajorArmBlockPickupPosition();
@@ -435,7 +437,6 @@ public class GamepadController {
                 if (majorArm.runMajorArmToLevelState) {
                     majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
-
             }
         } else {
             if (gp2GetLeftTriggerPress()) {

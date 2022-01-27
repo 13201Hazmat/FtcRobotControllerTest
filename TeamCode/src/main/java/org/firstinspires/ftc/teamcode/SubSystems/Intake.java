@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 //import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -84,7 +85,7 @@ public class Intake {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
             runIntakeMotor(DcMotor.Direction.REVERSE, 0.0);
             intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
-       }
+        }
     }
 
     /**

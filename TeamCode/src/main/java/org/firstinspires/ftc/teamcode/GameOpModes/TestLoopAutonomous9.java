@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocit
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -41,10 +42,11 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 7", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class AutonomousOpMode7 extends LinearOpMode {
+@Autonomous(name = "Test loop Autonomous 9", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+@Disabled
+public class TestLoopAutonomous9 extends LinearOpMode {
 
-    public boolean DEBUG_FLAG = true;
+    public boolean DEBUG_FLAG = false;
 
     public GamepadController gamepadController;
     public AutonomousController autonomousController;
@@ -272,18 +274,18 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
         //Move from init to offWallPosition
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-      /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
-                  .lineToLinearHeading(offWallPose)
-                  .build();*/
+       /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
+                   .lineToLinearHeading(offWallPose)
+                   .build();*/
 
         //Move forward to Capstone pickup position and then to Carousal
         for (int i=0; i<3; i++) {
-          /*trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(initPose) //offWallPose
-                  .setVelConstraint(getVelocityConstraint(20, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                  .lineToLinearHeading(barcodePose[i])
-                  .resetVelConstraint()
-                  .build();*/
-            trajASBarCodeToCarousal[i] = driveTrain.trajectorySequenceBuilder(initPose/*barcodePose[i]*/)
+           trajOffWallToBarCode[i] = driveTrain.trajectorySequenceBuilder(initPose) //offWallPose
+                   .setVelConstraint(getVelocityConstraint(20, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                   .lineToLinearHeading(barcodePose[i])
+                   .resetVelConstraint()
+                   .build();
+            trajASBarCodeToCarousal[i] = driveTrain.trajectorySequenceBuilder(barcodePose[i])
                     .lineToLinearHeading(carousalPose)
                     .build();
         }
@@ -373,13 +375,13 @@ public class AutonomousOpMode7 extends LinearOpMode {
         //driveTrain.followTrajectorySequence(trajInitToOffWall);
 
         //Move arm to Pickup Capstone level and open Grip
-        //moveMajorArmToPickupAndOpenClaw();
+        moveMajorArmToPickupAndOpenClaw();
 
         //Move forward to Capstone Pickup Position
-        //driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
+        driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
         //Collect Capstone and move arm to parking position
-        //moveMajorArmToParkingAfterClosingClaw();
+        moveMajorArmToParkingAfterClosingClaw();
 
         //Move to Carousal
         driveTrain.followTrajectorySequence(trajASBarCodeToCarousal[targetZoneLevel]);
@@ -479,9 +481,9 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
         //Move from init to offWallPosition
         //TODO: TESTING WITH OPENING ARM RIGHT FROM THE WALL. IF ARM GETS STUCK THEN UNCOMMENT THIS SECTION
-      /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
-              .lineToLinearHeading(offWallPose)
-              .build();*/
+       /*trajInitToOffWall = driveTrain.trajectorySequenceBuilder(initPose)
+               .lineToLinearHeading(offWallPose)
+               .build();*/
 
         //Move forward to Capstone pickup position and then to Carousal
         for (int i=0; i<3; i++) {
@@ -585,9 +587,9 @@ public class AutonomousOpMode7 extends LinearOpMode {
         driveTrain.followTrajectorySequence(trajAlShippingToWHParking[0]);
         driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
         if (loopsFromWarehouseToAlShippingHub == 0) {
-          /*while (gameTimer.time() < 26000) { //Wait till end of Autonomous mode
-              safeWait(100);
-          }*/
+           /*while (gameTimer.time() < 26000) { //Wait till end of Autonomous mode
+               safeWait(100);
+           }*/
 
         } else {
             for (int loop = 1; loop <= loopsFromWarehouseToAlShippingHub; loop++) {
@@ -595,14 +597,14 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
                 while (gameTimer.time() < 24000) {
                     if (senseIntakeCollectAndStop() == true) {
-                        autonomousController.moveAutoMagazineToTransport();
-                        moveElevatorToLevel(3);
-                        intake.startIntakeMotorOutward();
+                        //autonomousController.moveAutoMagazineToTransport();
+                        //moveElevatorToLevel(3);
+                        //intake.startIntakeMotorOutward();
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop);
                         safeWait(550);
-                        autonomousController.moveAutoMagazineToCollect();
-                        moveElevatorToLevel(0);
-                        runIntakeToCollect();
+                        //autonomousController.moveAutoMagazineToCollect();
+                        //moveElevatorToLevel(0);
+                        //runIntakeToCollect();
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick);
                         break;
                     };
@@ -657,30 +659,30 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
     public void buildWarehouseAllianceShippingLoopNew() {
         trajWarehouseAllianceShippingLoopDrop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose)
-                .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
-                /*.addTemporalMarker(()-> {
-                    intake.startIntakeMotorOutward();
-                    autonomousController.moveAutoMagazineToTransport();
-                    moveElevatorToLevel(3);
-                })*/
+                //.setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .addTemporalMarker(() -> {
+                .addTemporalMarker(0.5, ()-> {
+                    autonomousController.moveAutoMagazineToTransport();
+                    intake.startIntakeMotorOutward();
+                    moveElevatorToLevel(3);
+                })
+                .addTemporalMarker(1,() -> {
                     intake.stopIntakeMotor();
                 })
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
-                .addTemporalMarker(()->{
+                .addTemporalMarker(1,()->{
                     autonomousController.moveAutoMagazineToDrop();
                 })
                 .build();
         trajWarehouseAllianceShippingLoopPick = driveTrain.trajectorySequenceBuilder(allianceShippingHubDropElementPose)
-                /*.addTemporalMarker(() -> {
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .addTemporalMarker(0.5,() -> {
                     autonomousController.moveAutoMagazineToCollect();
                     moveElevatorToLevel(0);
                     runIntakeToCollect();
-                })*/
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                })
                 .lineToLinearHeading(warehousePickElementPose)
-                .resetVelConstraint()
+                //.resetVelConstraint()
                 .build();
     }
 
@@ -876,7 +878,7 @@ public class AutonomousOpMode7 extends LinearOpMode {
                     telemetry.addData("  0 (A)", "");
                     telemetry.addData("  1 (X)", "");
                     telemetry.addData("  2 (Y)", "");
-                    //telemetry.addData("  3 (B)", "");
+                    telemetry.addData("  3 (B)", "");
                     if (gamepadController.gp1GetButtonAPress()) {
                         loopsFromWarehouseToAlShippingHub = 0;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
@@ -892,11 +894,11 @@ public class AutonomousOpMode7 extends LinearOpMode {
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
                     }
-                  /*if (gamepadController.gp1GetButtonBPress()) {
-                      loopsFromWarehouseToAlShippingHub = 3;
-                      telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
-                      break;
-                  }*/
+                   if (gamepadController.gp1GetButtonBPress()) {
+                       loopsFromWarehouseToAlShippingHub = 3;
+                       telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
+                       break;
+                   }
                     telemetry.update();
                 }
             }
@@ -1066,3 +1068,6 @@ public class AutonomousOpMode7 extends LinearOpMode {
 
     }
 }
+
+
+

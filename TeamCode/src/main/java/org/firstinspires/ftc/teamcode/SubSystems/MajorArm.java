@@ -77,8 +77,8 @@ public class MajorArm {
     public MAJOR_CLAW_STATE majorClawState = MAJOR_CLAW_STATE.OPEN;
 
     public static int majorarmMotorBaselineEncoderCount = 0;
-    public static int MAJORARM_MOTOR_BLOCK_PICKUP_POSITION_COUNT = -775;//-750;
-    public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -715;
+    public static int MAJORARM_MOTOR_BLOCK_PICKUP_POSITION_COUNT = -775;
+    public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -775;//-715; for 3dprinted one
     public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -675;
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -450;
@@ -89,8 +89,8 @@ public class MajorArm {
     public MAJOR_ARM_STATE currentMajorArmState = MAJOR_ARM_STATE.PARKED;
     public MAJOR_ARM_STATE previousMajorArmState = MAJOR_ARM_STATE.PARKED;
 
-    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.28;//0.55;
-    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.38;
+    public static final double MAJORARM_WRIST_BLOCK_PICKUP_POSITION = 0.28;
+    public static final double MAJORARM_WRIST_CAPSTONE_PICKUP_POSITION = 0.28;//0.38; for 3d pringted one
     public static final double MAJORARM_WRIST_LEVEL1_POSITION = 0.45;
     public static final double MAJORARM_WRIST_LEVEL2_POSITION = 0.55;
     public static final double MAJORARM_WRIST_LEVEL3_POSITION = 0.80;
@@ -378,6 +378,16 @@ public class MajorArm {
         }
     }
 
+    public void pullUpResetMajorArm(){
+        turnArmBrakeModeOn();
+        moveMajorArmWristToInitPosition();
+        majorarmCurrentArmPositionCount = majorarmCurrentArmPositionCount + MAJORARM_DELTA_COUNT;
+        majorArmMotor.setTargetPosition(majorarmCurrentArmPositionCount);
+        //runMajorArmToLevelState = true;
+        runMajorArmToLevel(MAJORARM_MOTOR_POWER);
+        resetArm();
+    }
+
 
     /**
      * Method that takes keypad inputs to select the Autonomous options
@@ -449,9 +459,9 @@ public class MajorArm {
             moveMajorArmBlockPickupPosition();
             return;
         }
-
-
     }
+
+
 
     /**
      * Method that takes keypad inputs to select the Autonomous options

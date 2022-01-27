@@ -212,7 +212,7 @@ public class Elevator {
     }
     
     public void pushDownResetElevator(){
-        if ((elevatorPositionCount > ELEVATOR_LEVEL0_POSITION_COUNT + ELEVATOR_DELTA_COUNT)){
+        //if ((elevatorPositionCount > ELEVATOR_LEVEL0_POSITION_COUNT + ELEVATOR_DELTA_COUNT)){
             turnElevatorBrakeModeOn();
             elevatorPositionCount = elevatorPositionCount - ELEVATOR_DELTA_COUNT;
             elevatorMotor.setTargetPosition(elevatorPositionCount);
@@ -220,7 +220,7 @@ public class Elevator {
             //runElevatorToLevelState = true;
             runElevatorToLevel(motorPowerToRun);
             resetElevator();
-        }
+        //}
     }
 
     /**
