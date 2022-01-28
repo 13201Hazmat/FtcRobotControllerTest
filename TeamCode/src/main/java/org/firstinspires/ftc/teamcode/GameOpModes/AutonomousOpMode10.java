@@ -531,7 +531,7 @@ public class AutonomousOpMode10 extends LinearOpMode {
                         .resetVelConstraint()
                         .build();
                 //Move from Barcode to Alliance Shipping Hub
-                trajAWBarCodeToAlShipping[i] = driveTrain.trajectorySequenceBuilder(initPose/*barcodePose[i]*/)
+                trajAWBarCodeToAlShipping[i] = driveTrain.trajectorySequenceBuilder(barcodePose[i])
                         .addTemporalMarker(0,() -> {
                             moveElevatorToTargetZoneLevel();
                         })
@@ -801,7 +801,7 @@ public class AutonomousOpMode10 extends LinearOpMode {
 
     public void selectGamePlan(){
         telemetry.setAutoClear(true);
-        telemetry.addData("Compile time : ", "4:47 :: 2/13");
+        telemetry.addData("Compile time : ", "22:00 :: 1/27/2022");
 
         //***** Select Alliance ******
         telemetry.addData("Enter PLaying Alliance :", "(Blue: (X),    Red: (B))");
@@ -827,8 +827,6 @@ public class AutonomousOpMode10 extends LinearOpMode {
         safeWait(200);
 
         //***** Select Start Pose ******
-
-
         while (!isStopRequested()) {
             telemetry.addData("Enter Start Pose :","");
             telemetry.addData("  STORAGE : (Y)","");
