@@ -381,10 +381,10 @@ public class MajorArm {
     public void pullUpResetMajorArm(){
         turnArmBrakeModeOn();
         moveMajorArmWristToInitPosition();
-        majorarmCurrentArmPositionCount = majorarmCurrentArmPositionCount + MAJORARM_DELTA_COUNT;
+        majorArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        majorarmCurrentArmPositionCount = majorarmCurrentArmPositionCount + 200;
         majorArmMotor.setTargetPosition(majorarmCurrentArmPositionCount);
-        //runMajorArmToLevelState = true;
-        runMajorArmToLevel(MAJORARM_MOTOR_POWER);
+        majorArmMotor.setPower(MAJORARM_MOTOR_POWER);
         resetArm();
     }
 

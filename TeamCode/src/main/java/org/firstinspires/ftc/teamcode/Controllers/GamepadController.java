@@ -443,8 +443,15 @@ public class GamepadController {
         if(gp2GetButtonAPress()){
             majorArm.moveMajorArmBlockPickupPosition();
         }
-        if(gp2GetButtonYPress()){
-            majorArm.moveMajorArmCapstoneDropPosition();
+
+        if (!gp2GetStart()) {
+            if (gp2GetButtonYPress()) {
+                majorArm.moveMajorArmCapstoneDropPosition();
+            }
+        } else {
+            if (gp2GetButtonYPress()) {
+                majorArm.pullUpResetMajorArm();
+            }
         }
         if(gp2GetRightTriggerPress()){
             majorArm.moveMajorArmParkingPosition();
@@ -478,6 +485,10 @@ public class GamepadController {
         if(gp2GetRightBumperPress()){
             majorArm.changeMajorClawState();
         }
+
+
+
+
     }
 
     /**
