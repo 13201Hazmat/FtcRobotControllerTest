@@ -193,8 +193,9 @@ public class GamepadController {
                 intake.startIntakeMotorInward();
                 intakeReverseStopFlag = false;
             } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                //intake.stopIntakeMotor();
-                startReverseAndStopIntake();
+                intakeReverseStopFlag = false;
+                intake.stopIntakeMotor();
+                //startReverseAndStopIntake();
             }
         }
 
@@ -448,7 +449,7 @@ public class GamepadController {
             if (gp2GetButtonYPress()) {
                 majorArm.moveMajorArmCapstoneDropPosition();
             }
-        } else {
+        } else { // reset functionality in case arm is down and robot resets
             if (gp2GetButtonYPress()) {
                 majorArm.pullUpResetMajorArm();
             }
@@ -485,10 +486,6 @@ public class GamepadController {
         if(gp2GetRightBumperPress()){
             majorArm.changeMajorClawState();
         }
-
-
-
-
     }
 
     /**
