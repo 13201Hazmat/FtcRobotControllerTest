@@ -257,7 +257,7 @@ public class AutonomousOpMode10 extends LinearOpMode {
             //RED_STORAGE_STARTPOS =  Pose2d(61,-40,Math.toRadians(0));
             initPose = GameField.RED_STORAGE_STARTPOS;
             offWallPose = new Pose2d(55,-40,Math.toRadians(0));
-            barcodePose[1-1] = new Pose2d(50,-39, Math.toRadians(-5)); //fixed 1/8/22
+            barcodePose[1-1] = new Pose2d(49,-39, Math.toRadians(-5)); //fixed 1/8/22
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
@@ -265,7 +265,7 @@ public class AutonomousOpMode10 extends LinearOpMode {
             carousalToAlliancePathPose = new Pose2d(14, -60, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
             alShippingHubPose = new Pose2d(19, -32, Math.toRadians(-90));
-            storageParkingPose = new Pose2d(26, -69, Math.toRadians(90));
+            storageParkingPose = new Pose2d(34, -69, Math.toRadians(90));
 
 
             whAlongWallParkingPose[0] = new Pose2d(69, -55, Math.toRadians(90)); //x -69
