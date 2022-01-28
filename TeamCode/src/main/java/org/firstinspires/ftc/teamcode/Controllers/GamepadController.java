@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
@@ -188,18 +191,39 @@ public class GamepadController {
                     magazine.moveMagazineToCollect();
                 }
                 intake.startIntakeMotorInward();
+                intakeReverseStopFlag = false;
             } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                intake.stopIntakeMotor();
+                //intake.stopIntakeMotor();
+                startReverseAndStopIntake();
             }
         }
+
+        finishReverseAndStopIntake();
 
         //Reverse Intake motors and run - in case of stuck state)
         if (gp1GetDpad_upPress()) {
             if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.REVERSING) {
                 intake.startIntakeMotorOutward();
             } else if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
+                intakeReverseStopFlag = false;
                 intake.stopIntakeMotor();
             }
+        }
+    }
+
+    public boolean intakeReverseStopFlag = false;
+    ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
+    public void startReverseAndStopIntake(){
+        intakeReverseTimer.reset();
+        intake.startIntakeMotorOutward();
+        intakeReverseStopFlag = true;
+    }
+
+    public void finishReverseAndStopIntake(){
+        if (intakeReverseTimer.time() > 500 && intakeReverseStopFlag &&
+                intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.REVERSING) {
+            intake.stopIntakeMotor();
+            intakeReverseStopFlag = false;
         }
     }
 
@@ -224,7 +248,8 @@ public class GamepadController {
 
         if (gp1GetButtonXPress()){
             if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                intake.stopIntakeMotor();
+                //intake.stopIntakeMotor();
+                startReverseAndStopIntake();
             }
             if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                 magazine.moveMagazineToTransport();
@@ -237,7 +262,8 @@ public class GamepadController {
 
         if (gp1GetButtonYPress()){
             if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                intake.stopIntakeMotor();
+                //intake.stopIntakeMotor();
+                startReverseAndStopIntake();
             }
             if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                 magazine.moveMagazineToTransport();
@@ -250,7 +276,8 @@ public class GamepadController {
 
         if (gp1GetButtonBPress()){
             if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                intake.stopIntakeMotor();
+                //intake.stopIntakeMotor();
+                startReverseAndStopIntake();
             }
             if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                 magazine.moveMagazineToTransport();
@@ -339,7 +366,8 @@ public class GamepadController {
                     if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
                         magazine.moveMagazineToTransport();
                         elevator.moveElevatorLevel1Position();
-                        intake.stopIntakeMotor();
+                        //intake.stopIntakeMotor();
+                        startReverseAndStopIntake();
                     }
                 }
             }
