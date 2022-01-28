@@ -198,7 +198,7 @@ public class GamepadController {
                 //startReverseAndStopIntake();
             }
         }
-
+        //Stop Intake after reverse and stop timer is done
         finishReverseAndStopIntake();
 
         //Reverse Intake motors and run - in case of stuck state)
@@ -211,6 +211,7 @@ public class GamepadController {
             }
         }
     }
+
 
     public boolean intakeReverseStopFlag = false;
     ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
