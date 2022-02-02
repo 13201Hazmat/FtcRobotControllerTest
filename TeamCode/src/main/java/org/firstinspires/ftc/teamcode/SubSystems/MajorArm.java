@@ -81,7 +81,7 @@ public class MajorArm {
     public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -775;//-715; for 3dprinted one
     public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -675;
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
-    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -450;
+    public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -420;
     public static int MAJORARM_MOTOR_CAPSTONE_DROP_POSITION_COUNT = -350;
     public static int MAJORARM_MOTOR_PARKED_POSITION_COUNT = 0;
     public static int MAJORARM_DELTA_COUNT = 25;
@@ -101,6 +101,7 @@ public class MajorArm {
     public static double MAJORARM_MOTOR_POWER = 0.25;
     public static double MAJORARM_MOTOR_SLOW_POWER = 0.15;
     public static double MAJORARM_MOTOR_DELTA_POWER = 0.1;
+    public static double MAJORARM_AUTONOMOUS_MOTOR_POWER = 0.4;
 
     public boolean runMajorArmToLevelState = false;
     public boolean moveWrist = false;

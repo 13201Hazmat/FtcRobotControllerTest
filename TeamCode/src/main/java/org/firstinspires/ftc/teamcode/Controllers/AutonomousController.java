@@ -273,9 +273,9 @@ public class AutonomousController {
 
         if (majorArm.runMajorArmToLevelState) {
             if (majorArm.currentMajorArmState != MajorArm.MAJOR_ARM_STATE.PARKED) {
-                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
+                majorArm.runMajorArmToLevel(majorArm.MAJORARM_AUTONOMOUS_MOTOR_POWER);
             } else {
-                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_SLOW_POWER);
+                majorArm.runMajorArmToLevel(majorArm.MAJORARM_AUTONOMOUS_MOTOR_POWER);
             }
         }
 
