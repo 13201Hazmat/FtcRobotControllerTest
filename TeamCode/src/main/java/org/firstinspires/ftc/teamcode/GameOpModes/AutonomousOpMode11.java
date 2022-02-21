@@ -220,16 +220,16 @@ public class AutonomousOpMode11 extends LinearOpMode {
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
             //BLUE_STORAGE_STARTPOS =  Pose2d(-61,-40,Math.toRadians(180));
             initPose = GameField.BLUE_STORAGE_STARTPOS;
-            offWallPose = new Pose2d(-55,-40,Math.toRadians(180));
+            offWallPose = new Pose2d(-56,-40,Math.toRadians(180));
             barcodePose[1-1] = new Pose2d(-48, -30, Math.toRadians(-170));
             barcodePose[2-1] = new Pose2d(-50, -38, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
             carousalPose = new Pose2d(-59, -65, Math.toRadians(-155));
-            carousalToAlliancePathPose = new Pose2d(-19, -62, Math.toRadians(-90));
+            carousalToAlliancePathPose = new Pose2d(-22, -62, Math.toRadians(-90)); //-19 for x
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-19, -32, Math.toRadians(-90));
+            alShippingHubPose = new Pose2d(-22, -35, Math.toRadians(-90)); //-19 for x
 
             storageParkingPose = new Pose2d(-34,-68, Math.toRadians(90));
 
@@ -256,16 +256,16 @@ public class AutonomousOpMode11 extends LinearOpMode {
         } else {
             //RED_STORAGE_STARTPOS =  Pose2d(61,-40,Math.toRadians(0));
             initPose = GameField.RED_STORAGE_STARTPOS;
-            offWallPose = new Pose2d(55,-40,Math.toRadians(0));
+            offWallPose = new Pose2d(56,-40,Math.toRadians(0));
             barcodePose[1-1] = new Pose2d(49,-39, Math.toRadians(-5)); //fixed 1/8/22
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
             carousalPose = new Pose2d(53, -65, Math.toRadians(-60));
-            carousalToAlliancePathPose = new Pose2d(12, -60, Math.toRadians(-90));
+            carousalToAlliancePathPose = new Pose2d(12, -58, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(19, -32, Math.toRadians(-90));
-            storageParkingPose = new Pose2d(34, -69, Math.toRadians(90));
+            alShippingHubPose = new Pose2d(12, -28, Math.toRadians(-90));
+            storageParkingPose = new Pose2d(34, -67, Math.toRadians(90));
 
 
             whAlongWallParkingPose[0] = new Pose2d(69, -55, Math.toRadians(90)); //x -69
@@ -309,6 +309,10 @@ public class AutonomousOpMode11 extends LinearOpMode {
             }
         } else {
             trajOffWalltoCarousal = driveTrain.trajectorySequenceBuilder(initPose)
+                    .lineToLinearHeading(offWallPose)
+                    .addTemporalMarker(0,() -> {
+                        majorArm.moveMajorArmWristToParkedPosition();
+                    })
                     .lineToLinearHeading(carousalPose)
                     .build();
         }
@@ -720,7 +724,7 @@ public class AutonomousOpMode11 extends LinearOpMode {
     //Drops pre-loaded box at the correct level determined by capstone position
     public void dropBoxToLevel(){
         autonomousController.moveAutoMagazineToDrop();
-        safeWait(550);
+        safeWait(800);
         autonomousController.moveAutoMagazineToTransport();
         safeWait(100);
     }

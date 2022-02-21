@@ -33,8 +33,8 @@ public class Magazine {
 
     public static final double MAGAZINE_SERVO_COLLECT_POSITION = 0.65;
     public static final double MAGAZINE_SERVO_TRANSPORT_POSITION =  0.52;
-    public static final double MAGAZINE_SERVO_DROP_POSITION =  0.20;
-    public static final double MAGAZINE_SERVO_DROP_LEVEL23_POSITION =  0.25;
+    public static final double MAGAZINE_SERVO_DROP_POSITION =  0.22; //0.20 from before
+    public static final double MAGAZINE_SERVO_DROP_LEVEL23_POSITION =  0.22; //0.25 was from before
 
     public enum MAGAZINE_SERVO_STATE {
         COLLECT,
