@@ -150,15 +150,18 @@ public class Vision {
      *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
      *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
      */
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-    //private static final String TFOD_MODEL_ASSET = "Hazmat1.tflite";
+    //private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    private static final String TFOD_MODEL_ASSET = "Hazmat1.tflite";
+    //private static final String TFOD_MODEL_ASSET = "Hazmat2.tflite";
     public static final String[] LABELS = {
             "Ball",
             "Cube",
             "Duck",
             "Marker",
-            "Hazmat1"
+            "Hazmat1",
+            "Yellow TSE Cup"
     };
+
 
     public String targetLabel1 = LABELS[2]; // Default "Duck"
     public String targetLabel2 = LABELS[3]; // "Marker" //TODO Adjust to correct one
@@ -220,7 +223,7 @@ public class Vision {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.8f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
+        tfodParameters.inputSize = 640; //320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
@@ -305,7 +308,7 @@ public class Vision {
                         detectedLabelBottom = recognition.getBottom();*/
                         if (recognition.getLabel().equals(LABELS[0]) || recognition.getLabel().equals(LABELS[1]) ||
                                 recognition.getLabel().equals(LABELS[2]) || recognition.getLabel().equals(LABELS[3]) ||
-                                recognition.getLabel().equals(LABELS[4])) {
+                                recognition.getLabel().equals(LABELS[4]) || recognition.getLabel().equals(LABELS[5])) {
                             detectedLabel = recognition.getLabel();
                             detectedLabelLeft = recognition.getLeft();
                             detectedLabelRight = recognition.getRight();
