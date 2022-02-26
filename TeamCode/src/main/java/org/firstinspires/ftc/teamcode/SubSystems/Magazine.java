@@ -135,7 +135,7 @@ public class Magazine {
             magazineColorSensorDistance =  ((DistanceSensor) magazineColorSensor).getDistance(DistanceUnit.CM);
         }
 
-        if (magazineColorSensorDistance < 3.0) {
+        if (magazineColorSensorDistance < 5.5) {
             magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.LOADED;
         } else {
             magazineColorSensorState = MAGAZINE_COLOR_SENSOR_STATE.EMPTY;

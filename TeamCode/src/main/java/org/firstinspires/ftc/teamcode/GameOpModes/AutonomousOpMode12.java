@@ -479,7 +479,7 @@ public class AutonomousOpMode12 extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(-72, 46, Math.toRadians(90));
             warehousePickElementPose[1] = new Pose2d(-73, 47, Math.toRadians(90));
-            warehousePickElementPose[2] = new Pose2d(-74, 48, Math.toRadians(90));
+            warehousePickElementPose[2] = new Pose2d(-74, 50, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 3, Math.toRadians(90));
@@ -509,7 +509,7 @@ public class AutonomousOpMode12 extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(70, 46, Math.toRadians(90));
             warehousePickElementPose[1] = new Pose2d(71, 47, Math.toRadians(90));
-            warehousePickElementPose[2] = new Pose2d(72, 48, Math.toRadians(90));
+            warehousePickElementPose[2] = new Pose2d(72, 50, Math.toRadians(90));
             warehouseAllianceShippingPathPose[0] = new Pose2d(70, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
