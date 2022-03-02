@@ -477,9 +477,9 @@ public class AutonomousOpMode12 extends LinearOpMode {
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(-72, 45, Math.toRadians(90)); //x 55
 
-            warehousePickElementPose[0] = new Pose2d(-72, 46, Math.toRadians(90));
-            warehousePickElementPose[1] = new Pose2d(-73, 47, Math.toRadians(90));
-            warehousePickElementPose[2] = new Pose2d(-74, 50, Math.toRadians(90));
+            warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
+            warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
+            warehousePickElementPose[2] = new Pose2d(-74, 52, Math.toRadians(90)); //y: 50;
             warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 3, Math.toRadians(90));
@@ -507,9 +507,9 @@ public class AutonomousOpMode12 extends LinearOpMode {
             whAlongWallParkingPose[1] = new Pose2d(70, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(70, 45, Math.toRadians(150)); //x55
 
-            warehousePickElementPose[0] = new Pose2d(70, 46, Math.toRadians(90));
-            warehousePickElementPose[1] = new Pose2d(71, 47, Math.toRadians(90));
-            warehousePickElementPose[2] = new Pose2d(72, 50, Math.toRadians(90));
+            warehousePickElementPose[0] = new Pose2d(70, 47, Math.toRadians(90)); //y: 46;
+            warehousePickElementPose[1] = new Pose2d(71, 48, Math.toRadians(90)); //y: 47;
+            warehousePickElementPose[2] = new Pose2d(72, 52, Math.toRadians(90)); //y: 50
             warehouseAllianceShippingPathPose[0] = new Pose2d(70, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
@@ -650,10 +650,10 @@ public class AutonomousOpMode12 extends LinearOpMode {
         } else {
             for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
 
-                while (gameTimer.time() < 24000) {
+                while (gameTimer.time() < 26000) {
                     if (senseIntakeCollectAndStop() == true) {
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop[loop]);
-                        safeWait(550);
+                        safeWait(800);
                         if(!(loop == loopsFromWarehouseToAlShippingHub - 1)){
                             driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick[loop]);
                         } else {
@@ -666,6 +666,9 @@ public class AutonomousOpMode12 extends LinearOpMode {
                         break;
                     };
                 };
+                if (whLoopParkThroughBarrier) {
+                    driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
+                }
             }
         }
 
@@ -685,24 +688,31 @@ public class AutonomousOpMode12 extends LinearOpMode {
                     //.setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
                     .lineToLinearHeading(warehouseAllianceShippingPathPose[loop])
                     .addTemporalMarker(0.5, () -> {
-                        autonomousController.moveAutoMagazineToTransport();
+                        //autonomousController.moveAutoMagazineToTransport();
+                        magazine.moveMagazineToTransport();
                         intake.startIntakeMotorOutward();
-                        moveElevatorToLevel(3);
+                        //moveElevatorToLevel(3);
+                        elevator.moveElevatorLevel3Position();
                     })
-                    .addTemporalMarker(1, () -> {
+                    /*.addTemporalMarker(1, () -> {
                         intake.stopIntakeMotor();
                     })
+                     */
                     .lineToLinearHeading(allianceShippingHubDropElementPose)
                     .addTemporalMarker(() -> {
-                        autonomousController.moveAutoMagazineToDrop();
+                        //autonomousController.moveAutoMagazineToDrop();
+                        magazine.moveMagazineToDrop();
                     })
                     .build();
             trajWarehouseAllianceShippingLoopPick[loop] = driveTrain.trajectorySequenceBuilder(allianceShippingHubDropElementPose)
                     .lineToLinearHeading(warehouseAllianceShippingPathPose[loop])
                     .addTemporalMarker(0.5, () -> {
-                        autonomousController.moveAutoMagazineToCollect();
-                        moveElevatorToLevel(0);
-                        runIntakeToCollect();
+                        //autonomousController.moveAutoMagazineToCollect();
+                        magazine.moveMagazineToCollect();
+                        //moveElevatorToLevel(0);
+                        elevator.moveElevatorLevel0Position();
+                        //runIntakeToCollect();
+                        intake.startIntakeMotorInward();
                     })
                     .lineToLinearHeading(warehousePickElementPose[loop])
                     //.resetVelConstraint()
