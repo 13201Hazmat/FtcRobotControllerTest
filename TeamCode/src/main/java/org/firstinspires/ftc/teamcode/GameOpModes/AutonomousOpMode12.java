@@ -229,17 +229,17 @@ public class AutonomousOpMode12 extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(-50, -38, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
-            carousalPose = new Pose2d(-59, -65, Math.toRadians(-155));
-            carousalToAlliancePathPose = new Pose2d(-22, -62, Math.toRadians(-90)); //-19 for x
+            carousalPose = new Pose2d(-59, -64, Math.toRadians(-155));
+            carousalToAlliancePathPose = new Pose2d(-21, -63, Math.toRadians(-90)); //-19 for x
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-22, -35, Math.toRadians(-90)); //-19 for x
+            alShippingHubPose = new Pose2d(-21, -34, Math.toRadians(-90)); //-19 for x
 
-            storageParkingPose = new Pose2d(-34,-68, Math.toRadians(90));
+            storageParkingPose = new Pose2d(-20,-68, Math.toRadians(90)); //x=-34
 
-            whAlongWallParkingPose[0] = new Pose2d(-69, -55, Math.toRadians(90)); //x -69
-            whAlongWallParkingPose[1] = new Pose2d(-70, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(-70, 45, Math.toRadians(90)); //x55
+            whAlongWallParkingPose[0] = new Pose2d(-63, -43, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x -70
+            whAlongWallParkingPose[2] = new Pose2d(-72, 45, Math.toRadians(90)); //x=-70
 
             warehousePickElementPose[0] = new Pose2d(-72, 46, Math.toRadians(90));
             warehousePickElementPose[1] = new Pose2d(-73, 47, Math.toRadians(90));
@@ -254,7 +254,7 @@ public class AutonomousOpMode12 extends LinearOpMode {
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
 
             whThroughBarrierParkingPose[0] = new Pose2d(-45, -60, Math.toRadians(95));
-            whThroughBarrierParkingPose[1] = new Pose2d(-46, 60, Math.toRadians(90));
+            whThroughBarrierParkingPose[1] = new Pose2d(-43, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(-40, 72, Math.toRadians(180));
 
         } else {
@@ -265,16 +265,16 @@ public class AutonomousOpMode12 extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(53, -65, Math.toRadians(-60));
-            carousalToAlliancePathPose = new Pose2d(12, -58, Math.toRadians(-90));
+            carousalPose = new Pose2d(53, -64, Math.toRadians(-60));
+            carousalToAlliancePathPose = new Pose2d(9, -59, Math.toRadians(-90)); // x=12
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(12, -28, Math.toRadians(-90));
-            storageParkingPose = new Pose2d(34, -67, Math.toRadians(90));
+            alShippingHubPose = new Pose2d(10, -27, Math.toRadians(-90));
+            storageParkingPose = new Pose2d(20, -67, Math.toRadians(90)); //x = 34;
 
 
-            whAlongWallParkingPose[0] = new Pose2d(69, -55, Math.toRadians(90)); //x -69
-            whAlongWallParkingPose[1] = new Pose2d(70, 36, Math.toRadians(90)); //x 54
-            whAlongWallParkingPose[2] = new Pose2d(70, 48, Math.toRadians(150)); //x55
+            whAlongWallParkingPose[0] = new Pose2d(63, -43, Math.toRadians(90)); //x -69
+            whAlongWallParkingPose[1] = new Pose2d(72, 36, Math.toRadians(90)); //x 70
+            whAlongWallParkingPose[2] = new Pose2d(72, 48, Math.toRadians(150)); //x70
 
             warehousePickElementPose[0] = new Pose2d(70, 46, Math.toRadians(90));
             warehousePickElementPose[1] = new Pose2d(71, 47, Math.toRadians(90));
@@ -288,8 +288,8 @@ public class AutonomousOpMode12 extends LinearOpMode {
             whAlongWallShShippingParkingPose[0] = new Pose2d(40, 36, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(40, 68, Math.toRadians(180));
 
-            whThroughBarrierParkingPose[0] = new Pose2d(50, -60, Math.toRadians(100));
-            whThroughBarrierParkingPose[1] = new Pose2d(46, 60, Math.toRadians(90));
+            whThroughBarrierParkingPose[0] = new Pose2d(45, -64, Math.toRadians(100)); //x=50
+            whThroughBarrierParkingPose[1] = new Pose2d(43, 60, Math.toRadians(90));
             whThroughBarrierShShippingParkingPose = new Pose2d(40, 80, Math.toRadians(0));
         }
 

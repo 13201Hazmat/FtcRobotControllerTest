@@ -223,7 +223,7 @@ public class Vision {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.8f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 640; //320;
+        tfodParameters.inputSize = 320; //320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
@@ -308,7 +308,7 @@ public class Vision {
                         detectedLabelBottom = recognition.getBottom();*/
                         if (recognition.getLabel().equals(LABELS[0]) || recognition.getLabel().equals(LABELS[1]) ||
                                 recognition.getLabel().equals(LABELS[2]) || recognition.getLabel().equals(LABELS[3]) ||
-                                recognition.getLabel().equals(LABELS[4]) || recognition.getLabel().equals(LABELS[5])) {
+                                recognition.getLabel().equals(LABELS[4])) {
                             detectedLabel = recognition.getLabel();
                             detectedLabelLeft = recognition.getLeft();
                             detectedLabelRight = recognition.getRight();
