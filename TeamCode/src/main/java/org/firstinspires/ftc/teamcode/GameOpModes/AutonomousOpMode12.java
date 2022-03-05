@@ -230,12 +230,12 @@ public class AutonomousOpMode12 extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
             carousalPose = new Pose2d(-59, -64, Math.toRadians(-155));
-            carousalToAlliancePathPose = new Pose2d(-21, -63, Math.toRadians(-90)); //-19 for x
+            carousalToAlliancePathPose = new Pose2d(-23, -63, Math.toRadians(-90)); //-19 for x
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-21, -34, Math.toRadians(-90)); //-19 for x
+            alShippingHubPose = new Pose2d(-23, -35, Math.toRadians(-90)); //-34 for x
 
-            storageParkingPose = new Pose2d(-20,-68, Math.toRadians(90)); //x=-34
+            storageParkingPose = new Pose2d(-36,-68, Math.toRadians(90)); //x=-34
 
             whAlongWallParkingPose[0] = new Pose2d(-63, -43, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x -70
@@ -265,11 +265,11 @@ public class AutonomousOpMode12 extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(53, -64, Math.toRadians(-60));
-            carousalToAlliancePathPose = new Pose2d(9, -59, Math.toRadians(-90)); // x=12
+            carousalPose = new Pose2d(49, -64, Math.toRadians(-60)); // x=53;
+            carousalToAlliancePathPose = new Pose2d(13, -59, Math.toRadians(-90)); // x=12
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(10, -27, Math.toRadians(-90));
-            storageParkingPose = new Pose2d(20, -67, Math.toRadians(90)); //x = 34;
+            alShippingHubPose = new Pose2d(13, -27, Math.toRadians(-90));
+            storageParkingPose = new Pose2d(26, -67, Math.toRadians(90)); //x = 24;
 
 
             whAlongWallParkingPose[0] = new Pose2d(63, -43, Math.toRadians(90)); //x -69
