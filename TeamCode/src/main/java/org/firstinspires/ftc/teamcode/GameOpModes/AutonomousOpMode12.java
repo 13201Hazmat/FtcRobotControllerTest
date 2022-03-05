@@ -653,7 +653,7 @@ public class AutonomousOpMode12 extends LinearOpMode {
                 while (gameTimer.time() < 26000) {
                     if (senseIntakeCollectAndStop() == true) {
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop[loop]);
-                        safeWait(800);
+                        loopWait(800);
                         if(!(loop == loopsFromWarehouseToAlShippingHub - 1)){
                             driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick[loop]);
                         } else {
@@ -821,6 +821,14 @@ public class AutonomousOpMode12 extends LinearOpMode {
         }
     }
 
+    public void loopWait(double time){
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!isStopRequested() && timer.time() < time){
+            //autonomousController.runAutoControl();
+            driveTrain.update();
+        }
+    }
 
     public void selectGamePlan(){
         telemetry.setAutoClear(true);
