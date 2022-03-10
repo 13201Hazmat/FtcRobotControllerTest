@@ -161,15 +161,26 @@ public class GamepadController {
             driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
         }
 
-        /*TCode to implement slight left / right turn. Uncomment to use
-        if (gp1GetButtonXPress()) {
-            hzDrive.augmentedControl = HzDrive.AugmentedControl.TURN_DELTA_LEFT;
+        //TCode to implement slight left / right turn. Uncomment to use
+        if (!gp1GetStart()) {
+            if (gp1GetLeftBumper()) {
+                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
+                } else {
+                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
+                }
+            }
+        } else {
+            if (gp1GetLeftBumper()) {
+                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
+                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
+                } else {
+                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
+                }
+            }
         }
 
-        if (gp1GetButtonBPress()) {
-            hzDrive.augmentedControl = HzDrive.AugmentedControl.TURN_DELTA_RIGHT;
-        }
-        */
+
 
         driveTrain.driveTrainPointFieldModes();
 
@@ -387,8 +398,8 @@ public class GamepadController {
      * the state, the function will execute the motion the spinner moves in. <BR>
       */
     public void runSpinner(){ //this function should be at LaunchController's place after order change
-        if (!gp1GetStart()) { //Normal condition, start not pressed
-            if (gp1GetLeftBumperPress()) {
+       /* if (!gp2GetStart()) { //Normal condition, start not pressed
+            if (gp2GetLeftBumperPress()) {
                 //Spinner is running
                 if (spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.CLOCKWISE ||
                         spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
@@ -407,7 +418,7 @@ public class GamepadController {
                 }
             }
         } else { //Alternate  condition, start pressed
-            if (gp1GetLeftBumperPress()) {
+            if (gp2GetLeftBumperPress()) {
                 //Spinner is running
                 if (spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.CLOCKWISE ||
                         spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
@@ -425,6 +436,14 @@ public class GamepadController {
                     }
                 }
             }
+        }
+        */
+        if(gp2GetDpad_left()){
+            spinner.runSpinnerMotorAnticlockwise();
+        } else if(gp2GetDpad_right()){
+            spinner.runSpinnerMotorClockwise();
+        } else {
+            spinner.stopSpinnerMotor();
         }
     }
 

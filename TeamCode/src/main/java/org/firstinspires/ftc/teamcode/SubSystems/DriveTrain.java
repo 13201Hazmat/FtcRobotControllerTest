@@ -158,11 +158,11 @@ public class DriveTrain extends SampleMecanumDrive {
                         augmentedControl = AugmentedControl.NONE;
                         break;
                     case TURN_DELTA_LEFT:
-                        turn(Math.toRadians(5));
+                        turn(Math.toRadians(30));
                         augmentedControl = AugmentedControl.NONE;
                         break;
                     case TURN_DELTA_RIGHT:
-                        turn(Math.toRadians(-5));
+                        turn(Math.toRadians(-30));
                         augmentedControl = AugmentedControl.NONE;
                         break;
                 }

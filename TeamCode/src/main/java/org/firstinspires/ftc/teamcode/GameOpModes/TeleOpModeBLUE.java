@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TeleOp", group = "00-Teleop")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "TeleOp BLUE", group = "00-Teleop")
+public class TeleOpModeBLUE extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -64,7 +64,7 @@ public class TeleOpMode extends LinearOpMode {
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, elevator,
                 magazine, spinner, majorArm, minorArm, blinkinDisplay);
 
-        GameField.playingAlliance= GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
+        GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous == true) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);

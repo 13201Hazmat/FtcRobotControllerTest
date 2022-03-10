@@ -265,7 +265,7 @@ public class AutonomousOpMode12 extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(49, -64, Math.toRadians(-60)); // x=53;
+            carousalPose = new Pose2d(50, -64, Math.toRadians(-60)); // x=53;
             carousalToAlliancePathPose = new Pose2d(13, -59, Math.toRadians(-90)); // x=12
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
             alShippingHubPose = new Pose2d(13, -27, Math.toRadians(-90));
