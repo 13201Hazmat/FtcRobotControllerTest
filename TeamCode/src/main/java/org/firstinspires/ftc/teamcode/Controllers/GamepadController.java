@@ -102,7 +102,6 @@ public class GamepadController {
         runMagazine();
         runSpinner();
         runMajorArm();
-        runMinorArm();
         runDriveControl_byRRDriveModes();
     }
 
@@ -162,7 +161,7 @@ public class GamepadController {
         }
 
         //TCode to implement slight left / right turn. Uncomment to use
-        if (!gp1GetStart()) {
+        /*if (!gp1GetStart()) {
             if (gp1GetLeftBumper()) {
                 if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
                     driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
@@ -178,9 +177,13 @@ public class GamepadController {
                     driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
                 }
             }
+        }*/
+
+        if (gp1GetDpad_leftPress()){
+            driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
+        } else if (gp1GetDpad_rightPress()){
+            driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
         }
-
-
 
         driveTrain.driveTrainPointFieldModes();
 
@@ -192,7 +195,7 @@ public class GamepadController {
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runIntake(){ //this function should be at LaunchController's place after order change
-        if (gp1GetDpad_downPress()) {
+        if (gp1GetLeftBumperPress()/*gp1GetDpad_downPress()*/) {
             if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
             //&& elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
                 if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
@@ -213,7 +216,7 @@ public class GamepadController {
         finishReverseAndStopIntake();
 
         //Reverse Intake motors and run - in case of stuck state)
-        if (gp1GetDpad_upPress()) {
+        if (gp1GetLeftTriggerPress()/*gp1GetDpad_upPress()*/) {
             if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.REVERSING) {
                 intake.startIntakeMotorOutward();
             } else if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
@@ -300,12 +303,23 @@ public class GamepadController {
             }
         }
 
-        if (!gp1GetStart()) {
+        /*if (!gp1GetStart()) {
             if (gp1GetLeftTriggerPersistent()) {
                 elevator.moveElevatorSlightlyUp();
             }
         } else {
             if (gp1GetLeftTriggerPersistent()) {
+                elevator.moveElevatorSlightlyDown();
+            }
+        }*/
+        if (!gp2GetStart()) {
+            //if (gp2GetLeftTriggerPersistent()) {
+            if (gp2GetLeftBumperPress()) {
+                elevator.moveElevatorSlightlyUp();
+            }
+        } else {
+            //if (gp2GetLeftTriggerPersistent()) {
+            if (gp2GetLeftBumperPress()) {
                 elevator.moveElevatorSlightlyDown();
             }
         }
@@ -314,8 +328,9 @@ public class GamepadController {
             elevator.runElevatorToLevel(elevator.motorPowerToRun);
         }
 
-        if (gp1GetStart() && gp1GetLeftTriggerPersistent() && gp1GetDpad_left()){
-            elevator.pushDownResetElevator();
+        //if (gp1GetStart() && gp1GetLeftTriggerPersistent() && gp1GetDpad_left()){
+        if (gp2GetStart() && gp2GetLeftBumper() && gp2GetDpad_left()){
+                elevator.pushDownResetElevator();
         }
 
     }
@@ -508,22 +523,6 @@ public class GamepadController {
         }
     }
 
-    /**
-     * runMinorArm sets the different minorArm controls, whether the arm should be up or down
-     * one level, or the current claw state. <BR>
-     */
-    public void runMinorArm() { //this function should be at LaunchController's place after order change
-        if (gp2GetDpad_downPress()){
-            minorArm.moveMinorArmDownOne();
-        }
-        if (gp2GetDpad_upPress()) {
-            minorArm.moveMinorArmUpOne();
-        }
-        if(gp2GetLeftBumperPress()){
-            minorArm.changeMinorClawState();
-        }
-    }
-
     //*********** KEY PAD MODIFIERS BELOW ***********
 
     //**** Gamepad buttons
@@ -704,6 +703,13 @@ public class GamepadController {
         return isPressedLeftTrigger;
     }
 
+    public boolean gp2GetLeftTriggerPersistent() {
+        boolean isPressedLeftTrigger = false;
+        if ((gp2GetLeftTrigger()>0.7)) {
+            isPressedLeftTrigger = true;
+        }
+        return isPressedLeftTrigger;
+    }
 
     /**
      * The range of the gp2 left trigger cubic press values

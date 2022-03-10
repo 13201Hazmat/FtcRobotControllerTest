@@ -79,7 +79,7 @@ public class MajorArm {
     public static int majorarmMotorBaselineEncoderCount = 0;
     public static int MAJORARM_MOTOR_BLOCK_PICKUP_POSITION_COUNT = -775;
     public static int MAJORARM_MOTOR_CAPSTONE_PICKUP_POSITION_COUNT = -775;//-715; for 3dprinted one
-    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -675;
+    public static int MAJORARM_MOTOR_LEVEL1_POSITION_COUNT = -640;//-675;
     public static int MAJORARM_MOTOR_LEVEL2_POSITION_COUNT = -575;
     public static int MAJORARM_MOTOR_LEVEL3_POSITION_COUNT = -420;
     public static int MAJORARM_MOTOR_CAPSTONE_DROP_POSITION_COUNT = -350;
