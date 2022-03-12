@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TeleOp BLUE", group = "00-Teleop")
-public class TeleOpModeBLUE extends LinearOpMode {
+@TeleOp(name = "TeleOp", group = "00-Teleop")
+public class TeleOpMode extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
