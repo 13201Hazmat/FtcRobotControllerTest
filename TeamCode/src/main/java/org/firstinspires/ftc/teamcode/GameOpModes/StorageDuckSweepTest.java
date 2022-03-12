@@ -195,6 +195,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
     TrajectorySequence[] trajOffWallToBarCode = new TrajectorySequence[3];
     TrajectorySequence[] trajASBarCodeToCarousal = new TrajectorySequence[3];
     TrajectorySequence[] trajAWBarCodeToAlShipping = new TrajectorySequence[3];
+    TrajectorySequence trajASAlShippingToCarousalPickDuckToAllianceShipping;
     TrajectorySequence trajASCarousalToAlShipping;
     TrajectorySequence trajASAlShippingToStorageParking;
     TrajectorySequence[] trajAlShippingToWHParking = new TrajectorySequence[2];
@@ -206,6 +207,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
     Pose2d offWallPose;
     Pose2d[] barcodePose = new Pose2d[3];
     Pose2d carousalPose;
+    Pose2d[] pickDuckPose = new Pose2d[2];
     Pose2d carousalToAlliancePathPose;
     Pose2d alShippingHubPose;
     Pose2d storageParkingPose;
@@ -230,6 +232,10 @@ public class StorageDuckSweepTest extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
             carousalPose = new Pose2d(-59, -64, Math.toRadians(-155));
+
+            pickDuckPose[0] = new Pose2d(-61, -62, Math.toRadians(190));
+            pickDuckPose[1] = new Pose2d(-62, -61, Math.toRadians(120));
+
             carousalToAlliancePathPose = new Pose2d(-23, -63, Math.toRadians(-90)); //-19 for x
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
@@ -266,6 +272,10 @@ public class StorageDuckSweepTest extends LinearOpMode {
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
             carousalPose = new Pose2d(50, -64, Math.toRadians(-60)); // x=53;
+
+            pickDuckPose[0] = new Pose2d(61, -62, Math.toRadians(190));
+            pickDuckPose[1] = new Pose2d(62, -61, Math.toRadians(120));
+
             carousalToAlliancePathPose = new Pose2d(13, -59, Math.toRadians(-90)); // x=12
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
             alShippingHubPose = new Pose2d(13, -27, Math.toRadians(-90));
@@ -328,7 +338,30 @@ public class StorageDuckSweepTest extends LinearOpMode {
                 .lineToLinearHeading(alShippingHubPose)
                 .build();
 
-        //Move to Alliance Shipping Hub to Parking
+        //Move from Alliance shipping o carousal
+        trajASAlShippingToCarousalPickDuckToAllianceShipping = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+                .addTemporalMarker(0, () -> {})
+                .lineToLinearHeading(carousalToAlliancePathPose)
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    intake.startIntakeMotorInward();
+                })
+                .lineToLinearHeading(carousalPose)
+                .lineToLinearHeading(pickDuckPose[0])
+                .setVelConstraint(getVelocityConstraint(5, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                .lineToLinearHeading(pickDuckPose[1])
+                .lineToLinearHeading(pickDuckPose[0])
+                .resetVelConstraint()
+                .addTemporalMarker(()->{
+                    magazine.moveMagazineToTransport();
+                    intake.stopIntakeMotor();
+                    elevator.moveElevatorLevel3Position();
+                })
+                .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                .lineToLinearHeading(alShippingHubPose)
+                .build();
+
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                     .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
@@ -428,6 +461,11 @@ public class StorageDuckSweepTest extends LinearOpMode {
         driveTrain.followTrajectorySequence(trajASCarousalToAlShipping);
 
         //Drop pre-loaded box in correct level
+        dropBoxToLevel();
+
+        //Carousal to Shipping pose TO carousal pose
+        driveTrain.followTrajectorySequence(trajASAlShippingToCarousalPickDuckToAllianceShipping);
+
         dropBoxToLevel();
 
         //Move to Parking
