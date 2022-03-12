@@ -200,6 +200,7 @@ public class WarehouseLoopTest extends LinearOpMode {
     TrajectorySequence[] trajAlShippingToWHParking = new TrajectorySequence[2];
     TrajectorySequence[] trajWarehouseAllianceShippingLoopPick = new TrajectorySequence[4];;
     TrajectorySequence[] trajWarehouseAllianceShippingLoopDrop = new TrajectorySequence[4];;
+    TrajectorySequence trajWarehouseThreeLoop;
     TrajectorySequence trajWarehouseAllianceShippingToParkBarrier;
 
     Pose2d  initPose;
@@ -581,7 +582,9 @@ public class WarehouseLoopTest extends LinearOpMode {
                             .resetVelConstraint()
                             .build();
                     //buildWarehouseAllianceShippingLoop();
-                    buildWarehouseAllianceShippingLoopNew();
+                    //WORLD Tryout
+                    //buildWarehouseAllianceShippingLoopNew();
+                    buildWarehouseAllianceShippingThreeLoopSingleSeq();
                 }
             } else { // GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB
                 trajAlShippingToWHParking[1] = driveTrain.trajectorySequenceBuilder(whAlongWallParkingPose[0])
@@ -648,10 +651,12 @@ public class WarehouseLoopTest extends LinearOpMode {
         if (loopsFromWarehouseToAlShippingHub == 0) {
 
         } else {
-            for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
+            //WORLD Trying Loops without Sensing
+            /*for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
 
-                while (gameTimer.time() < 26000) {
-                    if (senseIntakeCollectAndStop() == true) {
+
+                //while (gameTimer.time() < 26000) {
+                    //if (senseIntakeCollectAndStop() == true) {
                         driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop[loop]);
                         loopWait(800);
                         if(!(loop == loopsFromWarehouseToAlShippingHub - 1)){
@@ -663,12 +668,18 @@ public class WarehouseLoopTest extends LinearOpMode {
                                 driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
                             }
                         }
-                        break;
-                    };
-                };
+                        //break;
+                    //};
+                //};
+
                 if (whLoopParkThroughBarrier) {
                     driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
                 }
+            }*/
+            //WORLD Try single sequence
+            driveTrain.followTrajectorySequence(trajWarehouseThreeLoop);
+            if (whLoopParkThroughBarrier) {
+                driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
             }
         }
 
@@ -677,10 +688,6 @@ public class WarehouseLoopTest extends LinearOpMode {
         autonomousController.stopAutoIntake();
         return;
     }
-
-
-
-
 
     public void buildWarehouseAllianceShippingLoopNew() {
         for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
@@ -726,6 +733,76 @@ public class WarehouseLoopTest extends LinearOpMode {
                 .lineToLinearHeading(whThroughBarrierParkingPose[1])
                 .build();
     }
+
+    public void buildWarehouseAllianceShippingThreeLoopSingleSeq() {
+        trajWarehouseThreeLoop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose[0])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToTransport();
+                    intake.startIntakeMotorOutward();
+                    elevator.moveElevatorLevel3Position();
+                })
+                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .addTemporalMarker(() -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .waitSeconds(0.8) // loopWait(800);
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    intake.startIntakeMotorInward();
+                })
+                .lineToLinearHeading(warehousePickElementPose[1])
+                .waitSeconds(0.8) // Instead of Sense;
+                //Second Loop
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToTransport();
+                    intake.startIntakeMotorOutward();
+                    elevator.moveElevatorLevel3Position();
+                })
+                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .addTemporalMarker(() -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .waitSeconds(0.8) // loopWait(800);
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    intake.startIntakeMotorInward();
+                })
+                .lineToLinearHeading(warehousePickElementPose[2])
+                //ThirdLoop
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToTransport();
+                    intake.startIntakeMotorOutward();
+                    elevator.moveElevatorLevel3Position();
+                })
+                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .addTemporalMarker(() -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .waitSeconds(0.8) // loopWait(800);
+                //Go to Park
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    //intake.startIntakeMotorInward(); Dont pick
+                })
+                .lineToLinearHeading(warehousePickElementPose[2])
+                .build();
+
+        trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+                .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
+                .lineToLinearHeading(whThroughBarrierParkingPose[0])
+                .lineToLinearHeading(whThroughBarrierParkingPose[1])
+                .build();
+    }
+
 
 
     public void rotateCarousal() {
