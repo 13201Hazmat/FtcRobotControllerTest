@@ -41,8 +41,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "WorldAutoLooptest", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
-public class WorldAutoLooptest extends LinearOpMode {
+@Autonomous(name = "WarehouseLoopTest", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+public class WarehouseLoopTest extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -216,7 +216,6 @@ public class WorldAutoLooptest extends LinearOpMode {
     Pose2d whThroughBarrierShShippingParkingPose;
     Pose2d[] warehousePickElementPose = new Pose2d[3];
     Pose2d[] warehouseAllianceShippingPathPose = new Pose2d[3];
-    Pose2d[] warehouseAllianceShippingPathPoseBack = new Pose2d[3];
     Pose2d allianceShippingHubDropElementPose;
 
 
@@ -478,19 +477,14 @@ public class WorldAutoLooptest extends LinearOpMode {
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x 54
             whAlongWallParkingPose[2] = new Pose2d(-72, 45, Math.toRadians(90)); //x 55
 
-            warehousePickElementPose[0] = new Pose2d(-74, 47, Math.toRadians(90)); //y: 46;
-            warehousePickElementPose[1] = new Pose2d(-74, 48, Math.toRadians(90)); //y: 47;
+            warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
+            warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
             warehousePickElementPose[2] = new Pose2d(-74, 52, Math.toRadians(90)); //y: 50;
-            warehouseAllianceShippingPathPose[0] = new Pose2d(-74, 3, Math.toRadians(90));
-            warehouseAllianceShippingPathPose[1] = new Pose2d(-74, 3, Math.toRadians(90));
-            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 20, Math.toRadians(90)); //y=3
+            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 3, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 3, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 3, Math.toRadians(90));
 
-            warehouseAllianceShippingPathPoseBack[0] = new Pose2d(-74, 3, Math.toRadians(135));
-            warehouseAllianceShippingPathPoseBack[1] = new Pose2d(-74, 3, Math.toRadians(135));
-            warehouseAllianceShippingPathPoseBack[2] = new Pose2d(-74, 20, Math.toRadians(135)); //y=3
-
-
-            allianceShippingHubDropElementPose = new Pose2d(-36, 0 , Math.toRadians(135)); //x=-32 y=-3
+            allianceShippingHubDropElementPose = new Pose2d(-32, -3 , Math.toRadians(135));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
@@ -518,14 +512,9 @@ public class WorldAutoLooptest extends LinearOpMode {
             warehousePickElementPose[2] = new Pose2d(72, 52, Math.toRadians(90)); //y: 50
             warehouseAllianceShippingPathPose[0] = new Pose2d(70, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
-            warehouseAllianceShippingPathPose[2] = new Pose2d(72, 15, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
 
-            warehouseAllianceShippingPathPoseBack[0] = new Pose2d(70, 3, Math.toRadians(45));
-            warehouseAllianceShippingPathPoseBack[1] = new Pose2d(71, 3, Math.toRadians(45));
-            warehouseAllianceShippingPathPoseBack[2] = new Pose2d(72, 15, Math.toRadians(45));
-
-
-            allianceShippingHubDropElementPose = new Pose2d(36, 0, Math.toRadians(45)); //x=32, y=-3
+            allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(40, 36, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(40, 68, Math.toRadians(180));
@@ -709,7 +698,6 @@ public class WorldAutoLooptest extends LinearOpMode {
                         intake.stopIntakeMotor();
                     })
                      */
-                    .turn(af*Math.toRadians(60))
                     .lineToLinearHeading(allianceShippingHubDropElementPose)
                     .addTemporalMarker(() -> {
                         //autonomousController.moveAutoMagazineToDrop();
@@ -717,8 +705,7 @@ public class WorldAutoLooptest extends LinearOpMode {
                     })
                     .build();
             trajWarehouseAllianceShippingLoopPick[loop] = driveTrain.trajectorySequenceBuilder(allianceShippingHubDropElementPose)
-                    .lineToLinearHeading(warehouseAllianceShippingPathPoseBack[loop])
-                    .turn(af*Math.toRadians(-60))
+                    .lineToLinearHeading(warehouseAllianceShippingPathPose[loop])
                     .addTemporalMarker(0.5, () -> {
                         //autonomousController.moveAutoMagazineToCollect();
                         magazine.moveMagazineToCollect();

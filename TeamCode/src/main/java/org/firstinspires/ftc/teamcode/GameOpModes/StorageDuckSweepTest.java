@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Autonomous 12", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+@Autonomous(name = "StorageDuckSweepTest", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
 public class StorageDuckSweepTest extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
