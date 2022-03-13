@@ -11,8 +11,8 @@ public class MeepMeepTesting {
         DefaultBotBuilder defaultBotBuilder = new DefaultBotBuilder(meepMeep);
         defaultBotBuilder.setConstraints(50, 50, Math.toRadians(423), Math.toRadians(423), 15);// Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         RoadRunnerBotEntity myBot = defaultBotBuilder
-                .followTrajectorySequence(drive -> {
-                    return drive.trajectorySequenceBuilder(new Pose2d(-72, 47, Math.toRadians(90))/*warehousePickElementPose[0]*/)
+                .followTrajectorySequence(drive ->
+                     drive.trajectorySequenceBuilder(new Pose2d(-72, 47, Math.toRadians(90))/*warehousePickElementPose[0]*/)
                             .lineToLinearHeading(new Pose2d(-72, 3, Math.toRadians(90))/*warehouseAllianceShippingPathPose[0]*/)
                             .addTemporalMarker(0.5, () -> {
                                 //magazine.moveMagazineToTransport();
@@ -20,7 +20,7 @@ public class MeepMeepTesting {
                                 //elevator.moveElevatorLevel3Position();
                             })
                             .lineToLinearHeading(new Pose2d(-32, -3, Math.toRadians(135)) /*allianceShippingHubDropElementPose*/)
-                            .addTemporalMarker(() -> {
+                            .addTemporalMarker(0.5,() -> {
                                 //magazine.moveMagazineToDrop();
                             })
                             .waitSeconds(0.8) // loopWait(800);
@@ -77,7 +77,7 @@ public class MeepMeepTesting {
                                 //intake.startIntakeMotorInward(); Dont pick
                             })
                             .lineToLinearHeading(new Pose2d(-74, 52, Math.toRadians(90)) /*warehousePickElementPose[2]*/)
-                            .build();
+                            .build()
 
         /*trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                 .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
@@ -88,7 +88,7 @@ public class MeepMeepTesting {
                 );
 
          */
-                        });
+                        );
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_ADI_DARK)
