@@ -755,52 +755,63 @@ public class WarehouseLoopTest extends LinearOpMode {
                     magazine.moveMagazineToDrop();
                 })
                 .waitSeconds(0.8) // loopWait(800);
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
-                .addTemporalMarker(0.5, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
+                //UNSTABLE_addTemporalMarkerOffset is to position timer marker relative this position than global timer.
+                // Check documentation at https://learnroadrunner.com/trajectory-sequence.html#unstable-addtemporalmarkeroffset-offset-markercallback
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+               //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
-                .lineToLinearHeading(warehousePickElementPose[1])
+                .lineToLinearHeading(warehousePickElementPose[1]) // Moved here for UNSTABLE_addTemporalMarkerOffset
                 .waitSeconds(0.8) // Instead of Sense;
                 //Second Loop
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
-                .addTemporalMarker(0.5, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToTransport();
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
                 .waitSeconds(0.8) // loopWait(800);
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .addTemporalMarker(0.5, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .lineToLinearHeading(warehousePickElementPose[2])
                 //ThirdLoop
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .addTemporalMarker(0.5, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToTransport();
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
                 .waitSeconds(0.8) // loopWait(800);
                 //Go to Park
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .addTemporalMarker(0.5, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     //intake.startIntakeMotorInward(); Dont pick
                 })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .lineToLinearHeading(warehousePickElementPose[2])
                 .build();
 
