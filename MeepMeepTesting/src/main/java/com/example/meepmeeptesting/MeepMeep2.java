@@ -14,12 +14,35 @@ public class MeepMeep2 {
                 ;
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-                .setConstraints(60,60,Math.toRadians(180),Math.toRadians(100), 15)
+                .setConstraints(60,60,Math.toRadians(423),Math.toRadians(423), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(10,64,Math.toRadians(90)))
-                        .lineToLinearHeading(new Pose2d(-5,42,Math.toRadians(260)))
+                        .lineToLinearHeading(new Pose2d(-5,42,Math.toRadians(70)))
+                                //loop 1
                         .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(42,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-5,42, Math.toRadians(70)))
+                                //loop 2
+                        .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(42, 64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24, 64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(10, 64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-5,42, Math.toRadians(70)))
+                                //loop 3
+                        .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24, 64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(42,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24,64, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(10,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-5, 42, Math.toRadians(70)))
+                                //Parking in warehouse
+                        .lineToLinearHeading(new Pose2d(10,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(42,64,Math.toRadians(0)))
                         .build()
 
 
