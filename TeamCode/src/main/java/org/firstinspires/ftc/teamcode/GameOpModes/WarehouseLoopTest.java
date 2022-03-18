@@ -481,11 +481,11 @@ public class WarehouseLoopTest extends LinearOpMode {
             warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
             warehousePickElementPose[2] = new Pose2d(-74, 52, Math.toRadians(90)); //y: 50;
-            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 3, Math.toRadians(90));
-            warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 3, Math.toRadians(90));
-            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 3, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 2, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 2, Math.toRadians(90));
+            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 2, Math.toRadians(95)); // angle: 90
 
-            allianceShippingHubDropElementPose = new Pose2d(-32, -3 , Math.toRadians(135));
+            allianceShippingHubDropElementPose = new Pose2d(-31, 2 , Math.toRadians(135)); //x = -32, y= -3
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));

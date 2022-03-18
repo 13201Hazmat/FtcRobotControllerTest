@@ -18,29 +18,47 @@ public class MeepMeep2 {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(10,64,Math.toRadians(90)))
                         .lineToLinearHeading(new Pose2d(-5,42,Math.toRadians(70)))
+                                .addTemporalMarker(0.5, () -> {
+                                })
                                 //loop 1
                         .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(42,64,Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(-5,42, Math.toRadians(70)))
+                                .waitSeconds(0.5)
+
                                 //loop 2
                         .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24,64, Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(42, 64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24, 64, Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(10, 64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(-5,42, Math.toRadians(70)))
+                                .waitSeconds(0.5)
+
                                 //loop 3
                         .lineToLinearHeading(new Pose2d(10,64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24, 64, Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(42,64, Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24,64, Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(10,64,Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(-5, 42, Math.toRadians(70)))
+                                .waitSeconds(0.5)
+
                                 //Parking in warehouse
                         .lineToLinearHeading(new Pose2d(10,64,Math.toRadians(0)))
+                                .waitSeconds(0.5)
                         .lineToLinearHeading(new Pose2d(24,64,Math.toRadians(0)))
                         .lineToLinearHeading(new Pose2d(42,64,Math.toRadians(0)))
                         .build()
