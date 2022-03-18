@@ -51,7 +51,7 @@ public class TeleOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap);
+        driveTrain = new DriveTrain(hardwareMap, gamepadController);
         intake = new Intake(hardwareMap);
         elevator = new Elevator(hardwareMap);
         magazine = new Magazine(hardwareMap);
