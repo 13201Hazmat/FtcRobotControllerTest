@@ -7,7 +7,9 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.Frame;
 
+import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -113,6 +115,7 @@ public class DriveTrain extends SampleMecanumDrive {
     }
 
 
+    GamepadController gamepadController;
     /**
      * Main drive modes implemented here
      *  - Robot or Field centric selection
@@ -120,8 +123,9 @@ public class DriveTrain extends SampleMecanumDrive {
      *      - Turn to Center lie (0 deg)
      *      - Delta turn by 5 degrees (left and right)
      */
-    public void driveTrainPointFieldModes(){
+    public void driveTrainPointFieldModes(GamepadController gamepadController){
         //poseEstimate = getPoseEstimate();
+        this.gamepadController = gamepadController;
 
         // Set input bounds for the heading controller
         // Automatically handles overflow
@@ -231,5 +235,23 @@ public class DriveTrain extends SampleMecanumDrive {
         if (FtcDashboard_FLAG) FtcDashboard.getInstance().sendTelemetryPacket(packet); //FTCDashBoard Code */
     }
 
+    public void turn(double angle) {
+        turnAsync(angle);
+        waitForIdle();
+    }
+
+    public void waitForIdle() {
+        while (!Thread.currentThread().isInterrupted() && isBusy()) {
+            gamepadController.runIntake();
+            gamepadController.runElevator();
+            gamepadController.runMagazine();
+            gamepadController.runSpinner();
+            gamepadController.runMajorArm();
+            update();
+        }
+    }
 
 }
+
+
+

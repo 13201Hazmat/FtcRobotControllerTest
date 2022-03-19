@@ -95,7 +95,7 @@ public class GamepadTestController {
             driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
         }
 
-        driveTrain.driveTrainPointFieldModes();
+        //driveTrain.driveTrainPointFieldModes(this);
 
     }
 

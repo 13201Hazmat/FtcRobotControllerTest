@@ -274,7 +274,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
             carousalPose = new Pose2d(50, -64, Math.toRadians(-60)); // x=53;
 
             pickDuckPose[0] = new Pose2d(51, -62, Math.toRadians(-10)); //AADI TO UPDATE
-            pickDuckPose[1] = new Pose2d(52, -61, Math.toRadians(70)); //AADI TO UPDATE
+            pickDuckPose[1] = new Pose2d(53, -61, Math.toRadians(70)); //AADI TO UPDATE x=52
 
             carousalToAlliancePathPose = new Pose2d(13, -59, Math.toRadians(-90)); // x=12
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
