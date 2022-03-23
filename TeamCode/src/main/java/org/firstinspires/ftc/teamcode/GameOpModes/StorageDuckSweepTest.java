@@ -231,7 +231,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(-50, -38, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
-            carousalPose = new Pose2d(-59, -64, Math.toRadians(-155));
+            carousalPose = new Pose2d(-58, -68, Math.toRadians(-155));
 
             pickDuckPose[0] = new Pose2d(-61, -62, Math.toRadians(190));
             pickDuckPose[1] = new Pose2d(-63, -61, Math.toRadians(120)); //x=-62
@@ -239,7 +239,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
             carousalToAlliancePathPose = new Pose2d(-23, -63, Math.toRadians(-90)); //-19 for x
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-23, -35, Math.toRadians(-90)); //-34 for x
+            alShippingHubPose = new Pose2d(-23, -38, Math.toRadians(-90)); //-34 for x
 
             storageParkingPose = new Pose2d(-36,-68, Math.toRadians(90)); //x=-34
 
@@ -364,8 +364,8 @@ public class StorageDuckSweepTest extends LinearOpMode {
 
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                    .addTemporalMarker(1,()->{moveElevatorToLevel(1);})
                     .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                    //.addTemporalMarker(1,()->{moveElevatorToLevel(1);})
                     .lineToLinearHeading(storageParkingPose)
                     .build();
         } else { //parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE
@@ -466,7 +466,11 @@ public class StorageDuckSweepTest extends LinearOpMode {
         //Carousal to Shipping pose TO carousal pose
         driveTrain.followTrajectorySequence(trajASAlShippingToCarousalPickDuckToAllianceShipping);
 
-        dropBoxToLevel();
+        autonomousController.moveAutoMagazineToDrop();
+        safeWait(1500);
+        autonomousController.moveAutoMagazineToTransport();
+
+
 
         //Move to Parking
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
@@ -781,7 +785,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
     //Drops pre-loaded box at the correct level determined by capstone position
     public void dropBoxToLevel(){
         autonomousController.moveAutoMagazineToDrop();
-        safeWait(800);
+        safeWait(1000);
         autonomousController.moveAutoMagazineToTransport();
         safeWait(100);
     }
