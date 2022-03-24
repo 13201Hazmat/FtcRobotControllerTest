@@ -209,6 +209,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
     Pose2d carousalPose;
     Pose2d[] pickDuckPose = new Pose2d[2];
     Pose2d carousalToAlliancePathPose;
+    Pose2d carousalToAlliancePathPose1;
     Pose2d alShippingHubPose;
     Pose2d storageParkingPose;
     Pose2d[] whAlongWallParkingPose = new Pose2d[3];
@@ -237,6 +238,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
             pickDuckPose[1] = new Pose2d(-63, -61, Math.toRadians(120)); //x=-62
 
             carousalToAlliancePathPose = new Pose2d(-23, -63, Math.toRadians(-90)); //-19 for x
+            carousalToAlliancePathPose1 = new Pose2d(-23,-63, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
             alShippingHubPose = new Pose2d(-24, -40, Math.toRadians(-90)); //-34 for x
@@ -271,14 +273,15 @@ public class StorageDuckSweepTest extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(50, -64, Math.toRadians(-60)); // x=53;
+            carousalPose = new Pose2d(48, -60, Math.toRadians(-60)); // x=53;
 
-            pickDuckPose[0] = new Pose2d(51, -62, Math.toRadians(-10)); //AADI TO UPDATE
-            pickDuckPose[1] = new Pose2d(52, -61, Math.toRadians(70)); //AADI TO UPDATE
+            pickDuckPose[0] = new Pose2d(50, -58, Math.toRadians(-6)); //AADI TO UPDATE
+            pickDuckPose[1] = new Pose2d(52, -55, Math.toRadians(80)); //AADI TO UPDATE
 
-            carousalToAlliancePathPose = new Pose2d(13, -59, Math.toRadians(-90)); // x=12
+            carousalToAlliancePathPose = new Pose2d(9, -58, Math.toRadians(-90)); // x=12
+            carousalToAlliancePathPose1 = new Pose2d(1,-58,Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(13, -27, Math.toRadians(-90));
+            alShippingHubPose = new Pose2d(10, -31, Math.toRadians(-90));
             storageParkingPose = new Pose2d(26, -67, Math.toRadians(90)); //x = 24;
 
 
@@ -334,7 +337,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
         //Move from Carousal to Alliance Shipping Hub
         trajASCarousalToAlShipping = driveTrain.trajectorySequenceBuilder(carousalPose/*driveTrain.getPoseEstimate()*/)
                 .addTemporalMarker(0, () -> {moveElevatorToTargetZoneLevel();})
-                .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
                 .lineToLinearHeading(alShippingHubPose)
                 .build();
 
