@@ -241,9 +241,9 @@ public class StorageDuckSweepTest extends LinearOpMode {
             carousalToAlliancePathPose1 = new Pose2d(-23,-63, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-24, -40, Math.toRadians(-90)); //-34 for x
+            alShippingHubPose = new Pose2d(-23, -38, Math.toRadians(-90)); //-34 for x
 
-            storageParkingPose = new Pose2d(-38,-70, Math.toRadians(90)); //x=-34
+            storageParkingPose = new Pose2d(-36,-70, Math.toRadians(90)); //x=-34
 
             whAlongWallParkingPose[0] = new Pose2d(-63, -43, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x -70
@@ -268,20 +268,20 @@ public class StorageDuckSweepTest extends LinearOpMode {
         } else {
             //RED_STORAGE_STARTPOS =  Pose2d(61,-40,Math.toRadians(0));
             initPose = GameField.RED_STORAGE_STARTPOS;
-            offWallPose = new Pose2d(56,-40,Math.toRadians(0));
+            offWallPose = new Pose2d(53,-40,Math.toRadians(0));
             barcodePose[1-1] = new Pose2d(49,-39, Math.toRadians(-5)); //fixed 1/8/22
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(48, -60, Math.toRadians(-60)); // x=53;
+            carousalPose = new Pose2d(45, -70, Math.toRadians(-25)); // x=53;
 
-            pickDuckPose[0] = new Pose2d(50, -58, Math.toRadians(-6)); //AADI TO UPDATE
-            pickDuckPose[1] = new Pose2d(52, -55, Math.toRadians(80)); //AADI TO UPDATE
+            pickDuckPose[0] = new Pose2d(54, -58, Math.toRadians(-20)); //AADI TO UPDATE
+            pickDuckPose[1] = new Pose2d(54, -55, Math.toRadians(50)); //AADI TO UPDATE
 
-            carousalToAlliancePathPose = new Pose2d(9, -58, Math.toRadians(-90)); // x=12
-            carousalToAlliancePathPose1 = new Pose2d(1,-58,Math.toRadians(-90));
+            carousalToAlliancePathPose = new Pose2d(9, -62, Math.toRadians(-90)); // x=12
+            carousalToAlliancePathPose1 = new Pose2d(9,-62,Math.toRadians(-90)); //x=1, y=-58
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(10, -31, Math.toRadians(-90));
+            alShippingHubPose = new Pose2d(9, -36, Math.toRadians(-90));
             storageParkingPose = new Pose2d(26, -67, Math.toRadians(90)); //x = 24;
 
 
@@ -343,18 +343,18 @@ public class StorageDuckSweepTest extends LinearOpMode {
 
         //Move from Alliance shipping o carousal
         trajASAlShippingToCarousalPickDuckToAllianceShipping = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
-                .addTemporalMarker(0, () -> {})
+                //.addTemporalMarker(0, () -> {})
                 .lineToLinearHeading(carousalToAlliancePathPose)
                 .addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
-                .lineToLinearHeading(carousalPose)
+                //.lineToLinearHeading(carousalPose)
                 .lineToLinearHeading(pickDuckPose[0])
                 .setVelConstraint(getVelocityConstraint(5, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(pickDuckPose[1])
-                .lineToLinearHeading(pickDuckPose[0])
+                //.lineToLinearHeading(pickDuckPose[0])
                 .resetVelConstraint()
                 .addTemporalMarker(()->{
                     magazine.moveMagazineToTransport();
@@ -364,13 +364,14 @@ public class StorageDuckSweepTest extends LinearOpMode {
                 .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
                 .lineToLinearHeading(alShippingHubPose)
                 .addTemporalMarker(()->{
-                    magazine.magazineServo.setPosition(0.22);
+                    magazine.moveMagazineToDrop();
+                    //magazine.magazineServo.setPosition(0.22);
                 })
                 .build();
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                     .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
-                    //.addTemporalMarker(1,()->{moveElevatorToLevel(1);})
+                    .addTemporalMarker(1,()->{moveElevatorToLevel(0);})
                     .lineToLinearHeading(storageParkingPose)
                     .build();
         } else { //parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE
@@ -470,6 +471,7 @@ public class StorageDuckSweepTest extends LinearOpMode {
 
         //Carousal to Shipping pose TO carousal pose
         driveTrain.followTrajectorySequence(trajASAlShippingToCarousalPickDuckToAllianceShipping);
+        loopWait( 800);
 
         //Move to Parking
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
