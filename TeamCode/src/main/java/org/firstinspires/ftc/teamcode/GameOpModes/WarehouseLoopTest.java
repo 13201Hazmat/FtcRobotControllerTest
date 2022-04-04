@@ -629,66 +629,67 @@ public class WarehouseLoopTest extends LinearOpMode {
 
         //Move from wall to offWall position
         //driveTrain.followTrajectorySequence(trajInitToOffWall);
-
-        if (pickShippingElement) {
-            //Move arm to Pickup Capstone level and open Grip
-            moveMajorArmToPickupAndOpenClaw();
-
-            //Move forward to Capstone Pickup Position
-            driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
-
-            //Collect Capstone and move arm to parking position
-            moveMajorArmToParkingAfterClosingClaw();
-
-            //Move to Alliance Shipping Hub
-            driveTrain.followTrajectorySequence(trajAWBarCodeToAlShipping[targetZoneLevel]);
+        if (loopsFromWarehouseToAlShippingHub ==3) {
+            //WORLD Try single sequence
+            driveTrain.followTrajectorySequence(trajWarehouseThreeLoop);
         } else {
-            driveTrain.followTrajectorySequence(trajOffWalltoAlShipping);
-        }
 
-        //Drop pre-loaded box in correct level
-        dropBoxToLevel();
+            if (pickShippingElement) {
+                //Move arm to Pickup Capstone level and open Grip
+                moveMajorArmToPickupAndOpenClaw();
 
-        //Move to Parking
-        driveTrain.followTrajectorySequence(trajAlShippingToWHParking[0]);
-        driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
-        if (loopsFromWarehouseToAlShippingHub == 0) {
+                //Move forward to Capstone Pickup Position
+                driveTrain.followTrajectorySequence(trajOffWallToBarCode[targetZoneLevel]);
 
-        } else {
-            //WORLD Trying Loops without Sensing
-            if (loopsFromWarehouseToAlShippingHub <=2) {
-                for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
+                //Collect Capstone and move arm to parking position
+                moveMajorArmToParkingAfterClosingClaw();
+
+                //Move to Alliance Shipping Hub
+                driveTrain.followTrajectorySequence(trajAWBarCodeToAlShipping[targetZoneLevel]);
+            } else {
+                driveTrain.followTrajectorySequence(trajOffWalltoAlShipping);
+            }
+
+            //Drop pre-loaded box in correct level
+            dropBoxToLevel();
+
+            //Move to Parking
+            driveTrain.followTrajectorySequence(trajAlShippingToWHParking[0]);
+            driveTrain.followTrajectorySequence(trajAlShippingToWHParking[1]);
+            if (loopsFromWarehouseToAlShippingHub == 0) {
+
+            } else {
+                //WORLD Trying Loops without Sensing
+                if (loopsFromWarehouseToAlShippingHub <= 2) {
+                    for (int loop = 0; loop < loopsFromWarehouseToAlShippingHub; loop++) {
 
 
-                    //while (gameTimer.time() < 26000) {
-                    //if (senseIntakeCollectAndStop() == true) {
-                    driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop[loop]);
-                    loopWait(800);
-                    if (!(loop == loopsFromWarehouseToAlShippingHub - 1)) {
-                        driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick[loop]);
-                    } else {
-                        if (!whLoopParkThroughBarrier) {
+                        //while (gameTimer.time() < 26000) {
+                        //if (senseIntakeCollectAndStop() == true) {
+                        driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopDrop[loop]);
+                        loopWait(800);
+                        if (!(loop == loopsFromWarehouseToAlShippingHub - 1)) {
                             driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick[loop]);
                         } else {
-                            driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
+                            if (!whLoopParkThroughBarrier) {
+                                driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingLoopPick[loop]);
+                            } else {
+                                driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
+                            }
                         }
+                        //break;
+                        //};
+                        //};
+
                     }
-                    //break;
-                    //};
-                    //};
-
                 }
-            }
 
-            if (loopsFromWarehouseToAlShippingHub ==3) {
-                //WORLD Try single sequence
-                driveTrain.followTrajectorySequence(trajWarehouseThreeLoop);
-            }
 
-            if (whLoopParkThroughBarrier) {
-                driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
-            }
+                if (whLoopParkThroughBarrier) {
+                    driveTrain.followTrajectorySequence(trajWarehouseAllianceShippingToParkBarrier);
+                }
 
+            }
         }
 
         moveElevatorToLevel(0);
@@ -743,18 +744,45 @@ public class WarehouseLoopTest extends LinearOpMode {
     }
 
     public void buildWarehouseAllianceShippingThreeLoopSingleSeq() {
-        trajWarehouseThreeLoop = driveTrain.trajectorySequenceBuilder(warehousePickElementPose[0])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .addTemporalMarker(0.5, () -> {
-                    magazine.moveMagazineToTransport();
-                    intake.startIntakeMotorOutward();
-                    elevator.moveElevatorLevel3Position();
+        trajWarehouseThreeLoop = driveTrain.trajectorySequenceBuilder(initPose)
+                //Initial drop
+                .addTemporalMarker(0,() -> {
+                    moveElevatorToTargetZoneLevel();
                 })
                 .lineToLinearHeading(alShippingHubPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .waitSeconds(0.8)
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    intake.startIntakeMotorInward();
+                })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .lineToLinearHeading(warehousePickElementPose[0])
+                .lineToLinearHeading(warehousePickElementPose[1])
+                .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
+                .waitSeconds(0.8) // Instead of Sense;
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToTransport();
+                    intake.startIntakeMotorOutward();
+                    elevator.moveElevatorLevel3Position();
+                })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .addTemporalMarker(() -> {
+                    magazine.moveMagazineToDrop();
+                })
                 .waitSeconds(0.8) // loopWait(800);
+                //First Loop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[1]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
                 //UNSTABLE_addTemporalMarkerOffset is to position timer marker relative this position than global timer.
                 // Check documentation at https://learnroadrunner.com/trajectory-sequence.html#unstable-addtemporalmarkeroffset-offset-markercallback
@@ -797,6 +825,8 @@ public class WarehouseLoopTest extends LinearOpMode {
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .lineToLinearHeading(warehousePickElementPose[0])
+                .lineToLinearHeading(warehousePickElementPose[1])
                 .lineToLinearHeading(warehousePickElementPose[2])
                 //ThirdLoop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
@@ -807,6 +837,8 @@ public class WarehouseLoopTest extends LinearOpMode {
                     elevator.moveElevatorLevel3Position();
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
