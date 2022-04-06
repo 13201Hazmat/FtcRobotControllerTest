@@ -472,7 +472,7 @@ public class WarehouseLoopTest extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(-49, 9, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-51, -1, Math.toRadians(165));
 
-            alShippingHubPose = new Pose2d(-32, 2 , Math.toRadians(135));
+            alShippingHubPose = new Pose2d(-36, -4 , Math.toRadians(135));
 
             whAlongWallParkingPose[0] = new Pose2d(-72, 3, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x 54
@@ -480,12 +480,12 @@ public class WarehouseLoopTest extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
-            warehousePickElementPose[2] = new Pose2d(-74, 52, Math.toRadians(90)); //y: 50;
-            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(120)); //angle; 90
-            warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(100)); //angle; 90
-            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 18, Math.toRadians(95)); //angle;90
+            warehousePickElementPose[2] = new Pose2d(-74, 49, Math.toRadians(80)); //y: 50;
+            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(100)); //angle; 90
+            warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(95)); //angle; 90
+            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 18, Math.toRadians(90)); //angle;90
 
-            allianceShippingHubDropElementPose = new Pose2d(-32, -3 , Math.toRadians(180));
+            allianceShippingHubDropElementPose = new Pose2d(-36, -4 , Math.toRadians(160));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
@@ -761,12 +761,13 @@ public class WarehouseLoopTest extends LinearOpMode {
                     intake.startIntakeMotorInward();
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .lineToLinearHeading(warehousePickElementPose[0])
-                .lineToLinearHeading(warehousePickElementPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                //.lineToLinearHeading(warehousePickElementPose[0])
+                //.lineToLinearHeading(warehousePickElementPose[1])
+                .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
-                .waitSeconds(0.8) // Instead of Sense;
+                .waitSeconds(0.4)
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
@@ -774,13 +775,16 @@ public class WarehouseLoopTest extends LinearOpMode {
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                /*.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                 */
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .resetVelConstraint()
                 .waitSeconds(0.8) // loopWait(800);
                 //First Loop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[1]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
@@ -792,13 +796,15 @@ public class WarehouseLoopTest extends LinearOpMode {
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .lineToLinearHeading(warehousePickElementPose[0])
-                .lineToLinearHeading(warehousePickElementPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+               // .lineToLinearHeading(warehousePickElementPose[0])
+                //.lineToLinearHeading(warehousePickElementPose[1])
+                .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
-                .waitSeconds(0.8) // Instead of Sense;
+                .waitSeconds(0.4) // Instead of Sense;
                 //Second Loop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
@@ -807,13 +813,16 @@ public class WarehouseLoopTest extends LinearOpMode {
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .setVelConstraint(getVelocityConstraint(60, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
+
                 .waitSeconds(0.8) // loopWait(800);
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
@@ -823,10 +832,11 @@ public class WarehouseLoopTest extends LinearOpMode {
                     intake.startIntakeMotorInward();
                 })
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .lineToLinearHeading(warehousePickElementPose[0])
-                .lineToLinearHeading(warehousePickElementPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                //.lineToLinearHeading(warehousePickElementPose[0])
+                //.lineToLinearHeading(warehousePickElementPose[1])
+                .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehousePickElementPose[2])
                 //ThirdLoop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
@@ -836,10 +846,12 @@ public class WarehouseLoopTest extends LinearOpMode {
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+               // .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+               // .lineToLinearHeading(warehouseAllianceShippingPathPose[1])
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .setVelConstraint(getVelocityConstraint(60, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
@@ -852,7 +864,8 @@ public class WarehouseLoopTest extends LinearOpMode {
                     elevator.moveElevatorLevel0Position();
                     //intake.startIntakeMotorInward(); Dont pick
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                .setVelConstraint(getVelocityConstraint(80, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(warehousePickElementPose[2])
                 .build();
 
