@@ -480,12 +480,14 @@ public class WarehouseLoopTest1 extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
-            warehousePickElementPose[2] = new Pose2d(-74, 45, Math.toRadians(75)); //y: 50; angle=80, x=49
-            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(100)); //angle; 90
+            warehousePickElementPose[2] = new Pose2d(-73, 44, Math.toRadians(80)); //y: 50; angle=80, x=49
+            warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(97)); //angle; 90
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(95)); //angle; 90
-            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 18, Math.toRadians(90)); //angle;90
+            warehouseAllianceShippingPathPose[2] = new Pose2d(-72, 6, Math.toRadians(97)); //angle;90
 
-            allianceShippingHubDropElementPose = new Pose2d(-36, -6 , Math.toRadians(135)); //angle=160
+            allianceShippingHubDropElementPose = new Pose2d(-37, -6 , Math.toRadians(160)); //angle=160
+            //allianceShippingHubDropElementPose = new Pose2d(-40, -12 , Math.toRadians(180)); //angle=160
+
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
@@ -769,14 +771,20 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                /*.UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                 */
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .setReversed(true)
+                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
                 //.waitSeconds(0.2) // loopWait(800);
                 //First Loop
-                //.lineToLinearHeading(warehouseAllianceShippingPathPose[1]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
                 //UNSTABLE_addTemporalMarkerOffset is to position timer marker relative this position than global timer.
                 // Check documentation at https://learnroadrunner.com/trajectory-sequence.html#unstable-addtemporalmarkeroffset-offset-markercallback
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
@@ -785,32 +793,36 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
+                .lineToLinearHeading(warehousePickElementPose[2])
+                //.splineToLinearHeading(warehousePickElementPose[2],warehousePickElementPose[2].getHeading())
+                //.splineToLinearHeading(warehouseAllianceShippingPathPose[0],warehouseAllianceShippingPathPose[0].getHeading())
+                //.lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
                 //.waitSeconds(0.3) // Instead of Sense;
                 //Second Loop
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[1])
+                .setReversed(true)
+                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                 //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToTransport();
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
-
                 //.waitSeconds(0.8) // loopWait(800);
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose[2])
+                //.lineToLinearHeading(warehousePickElementPose[2])
+                //.splineToLinearHeading(warehouseAllianceShippingPathPose[0],warehouseAllianceShippingPathPose[0].getHeading())
                 //ThirdLoop
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
@@ -818,20 +830,21 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
-                .UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .setReversed(true)
+                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
                 //.waitSeconds(0.8) // loopWait(800);
                 //Go to Park
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     //intake.startIntakeMotorInward(); Dont pick
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose[2])
                 .resetVelConstraint()
                 .build();
