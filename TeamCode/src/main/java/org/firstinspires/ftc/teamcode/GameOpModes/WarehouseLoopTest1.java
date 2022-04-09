@@ -480,12 +480,12 @@ public class WarehouseLoopTest1 extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
-            warehousePickElementPose[2] = new Pose2d(-73, 44, Math.toRadians(80)); //y: 50; angle=80, x=49
+            warehousePickElementPose[2] = new Pose2d(-74, 48, Math.toRadians(75)); //y: 50; angle=80, x=49
             warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(97)); //angle; 90
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(95)); //angle; 90
-            warehouseAllianceShippingPathPose[2] = new Pose2d(-72, 6, Math.toRadians(97)); //angle;90
+            warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 12, Math.toRadians(97)); //angle;90
 
-            allianceShippingHubDropElementPose = new Pose2d(-37, -6 , Math.toRadians(160)); //angle=160
+            allianceShippingHubDropElementPose = new Pose2d(-53, -2 , Math.toRadians(155)); //angle=160 //y=-6 x=-39
             //allianceShippingHubDropElementPose = new Pose2d(-40, -12 , Math.toRadians(180)); //angle=160
 
 
@@ -765,6 +765,14 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
                 //.waitSeconds(0.3)
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                /*.UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
+                    magazine.moveMagazineToDrop();
+                })
+                 */
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                .setReversed(true)
+                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToTransport();
@@ -772,17 +780,9 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                     elevator.moveElevatorLevel3Position();
                 })
                 //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
-                /*.UNSTABLE_addTemporalMarkerOffset(1.3, () -> {
-                    magazine.moveMagazineToDrop();
-                })
-                 */
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .setReversed(true)
-                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
-                //.waitSeconds(0.2) // loopWait(800);
                 //First Loop
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[2]) //Moved after .UNSTABLE_addTemporalMarkerOffset()
                 //UNSTABLE_addTemporalMarkerOffset is to position timer marker relative this position than global timer.
@@ -824,19 +824,18 @@ public class WarehouseLoopTest1 extends LinearOpMode {
                 //.lineToLinearHeading(warehousePickElementPose[2])
                 //.splineToLinearHeading(warehouseAllianceShippingPathPose[0],warehouseAllianceShippingPathPose[0].getHeading())
                 //ThirdLoop
+                .setReversed(true)
+                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToTransport();
                     intake.startIntakeMotorOutward();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
+                //.lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .setReversed(true)
-                .splineToLinearHeading(allianceShippingHubDropElementPose, allianceShippingHubDropElementPose.getHeading())
-                //.waitSeconds(0.8) // loopWait(800);
                 //Go to Park
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[2])
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
