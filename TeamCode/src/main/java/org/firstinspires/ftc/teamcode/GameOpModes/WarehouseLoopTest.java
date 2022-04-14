@@ -201,7 +201,7 @@ public class WarehouseLoopTest extends LinearOpMode {
     TrajectorySequence[] trajAlShippingToWHParking = new TrajectorySequence[2];
     TrajectorySequence[] trajWarehouseAllianceShippingLoopPick = new TrajectorySequence[4];;
     TrajectorySequence[] trajWarehouseAllianceShippingLoopDrop = new TrajectorySequence[4];;
-    TrajectorySequence trajWarehouseThreeLoop;
+    TrajectorySequence trajWarehouseTwoLoop;
     TrajectorySequence trajWarehouseAllianceShippingToParkBarrier;
 
 
@@ -671,9 +671,9 @@ public class WarehouseLoopTest extends LinearOpMode {
 
         //Move from wall to offWall position
         //driveTrain.followTrajectorySequence(trajInitToOffWall);
-        if (loopsFromWarehouseToAlShippingHub ==3) {
+        if (loopsFromWarehouseToAlShippingHub ==2) {
             //WORLD Try single sequence
-            driveTrain.followTrajectorySequence(trajWarehouseThreeLoop);
+            driveTrain.followTrajectorySequence(trajWarehouseTwoLoop);
         } else {
 
             if (pickShippingElement) {
@@ -786,7 +786,7 @@ public class WarehouseLoopTest extends LinearOpMode {
     }
 
     public void buildWarehouseAllianceShippingThreeLoopSingleSeq() {
-        trajWarehouseThreeLoop = driveTrain.trajectorySequenceBuilder(initPose)
+        trajWarehouseTwoLoop = driveTrain.trajectorySequenceBuilder(initPose)
                 //Initial drop
                 .addTemporalMarker(0,() -> {
                     moveElevatorToTargetZoneLevel();
