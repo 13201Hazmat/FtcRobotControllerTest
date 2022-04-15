@@ -41,10 +41,10 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * Camera on either side is used using Vuforia to determine target for Wobble Goal<BR>
  */
 //TODO: Copy and Rename Autonomous Mode
-@Autonomous(name = "Combined Auto", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
+@Autonomous(name = "World Auto", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
 public class AutoWorldChamps extends LinearOpMode {
 
-    public boolean DEBUG_FLAG = true;
+    public boolean DEBUG_FLAG = false;
 
     public GamepadController gamepadController;
     public AutonomousController autonomousController;
@@ -275,13 +275,13 @@ public class AutoWorldChamps extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(45, -70, Math.toRadians(-25)); // x=53;
+            carousalPose = new Pose2d(46, -70, Math.toRadians(-25)); // x=53;
 
             pickDuckPose[0] = new Pose2d(54, -58, Math.toRadians(-20)); //AADI TO UPDATE
             pickDuckPose[1] = new Pose2d(54, -55, Math.toRadians(50)); //AADI TO UPDATE
 
-            carousalToAlliancePathPose = new Pose2d(9, -62, Math.toRadians(-90)); // x=12
-            carousalToAlliancePathPose1 = new Pose2d(9,-62,Math.toRadians(-90)); //x=1, y=-58
+            carousalToAlliancePathPose = new Pose2d(9, -60, Math.toRadians(-90)); // x=12
+            carousalToAlliancePathPose1 = new Pose2d(11,-60,Math.toRadians(-90)); //x=1, y=-58
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
             alShippingHubPose = new Pose2d(9, -36, Math.toRadians(-90));
             storageParkingPose = new Pose2d(26, -67, Math.toRadians(90)); //x = 24;
@@ -338,37 +338,63 @@ public class AutoWorldChamps extends LinearOpMode {
 
         //Move from Carousal to Alliance Shipping Hub
         trajASCarousalToAlShipping = driveTrain.trajectorySequenceBuilder(carousalPose/*driveTrain.getPoseEstimate()*/)
-                .addTemporalMarker(0, () -> {moveElevatorToTargetZoneLevel();})
+                .addTemporalMarker(0, () -> {
+                    magazine.moveMagazineToTransport();
+                    moveElevatorToTargetZoneLevel();
+                })
                 .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(alShippingHubPose)
+                .UNSTABLE_addTemporalMarkerOffset(0.6,() -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel0Position();
+                    intake.startIntakeMotorInward();
+                })
+                .resetVelConstraint()
                 .build();
 
         //Move from Alliance shipping o carousal
         trajASAlShippingToCarousalPickDuckToAllianceShipping = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                 //.addTemporalMarker(0, () -> {})
                 .lineToLinearHeading(carousalToAlliancePathPose)
-                .addTemporalMarker(0.5, () -> {
+                /*.addTemporalMarker(0, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
-                })
+                })*/
                 //.lineToLinearHeading(carousalPose)
                 .lineToLinearHeading(pickDuckPose[0])
-                .setVelConstraint(getVelocityConstraint(5, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(getVelocityConstraint(8, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(pickDuckPose[1])
                 //.lineToLinearHeading(pickDuckPose[0])
                 .resetVelConstraint()
-                .addTemporalMarker(()->{
+                .UNSTABLE_addTemporalMarkerOffset(0,()->{
                     magazine.moveMagazineToTransport();
                     intake.stopIntakeMotor();
                     elevator.moveElevatorLevel3Position();
                 })
-                .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
+                .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(alShippingHubPose)
-                .addTemporalMarker(()->{
+                .UNSTABLE_addTemporalMarkerOffset(1.2,() -> {
+                    magazine.moveMagazineToDrop();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    //.addTemporalMarker(0.5, () -> {
+                    magazine.moveMagazineToCollect();
+                    elevator.moveElevatorLevel1Position();
+                    //intake.startIntakeMotorInward();
+                })
+
+                /*.addTemporalMarker(()->{
                     magazine.moveMagazineToDrop();
                     //magazine.magazineServo.setPosition(0.22);
-                })
+                })*/
+                .resetVelConstraint()
                 .build();
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
             trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
@@ -381,7 +407,9 @@ public class AutoWorldChamps extends LinearOpMode {
                 trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                         .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                        .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                         .lineToLinearHeading(whAlongWallParkingPose[0])
+                        .resetVelConstraint()
                         .build();
                 if (!GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
                     if (loopsFromWarehouseToAlShippingHub == 0) {
@@ -416,7 +444,9 @@ public class AutoWorldChamps extends LinearOpMode {
                 trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
                         .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
+                        .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
                         .lineToLinearHeading(whThroughBarrierParkingPose[0])
+                        .resetVelConstraint()
                         .build();
                 if (!GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB) {
                     trajAlShippingToWHParking[1] = driveTrain.trajectorySequenceBuilder(whThroughBarrierParkingPose[0])
@@ -469,11 +499,11 @@ public class AutoWorldChamps extends LinearOpMode {
         driveTrain.followTrajectorySequence(trajASCarousalToAlShipping);
 
         //Drop pre-loaded box in correct level
-        dropBoxToLevel();
+        //dropBoxToLevel();
 
         //Carousal to Shipping pose TO carousal pose
         driveTrain.followTrajectorySequence(trajASAlShippingToCarousalPickDuckToAllianceShipping);
-        loopWait( 800);
+        //loopWait( 800);
 
         //Move to Parking
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
@@ -742,7 +772,8 @@ public class AutoWorldChamps extends LinearOpMode {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
                     intake.startIntakeMotorInward();
-                })                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
+                })
+                .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
                 .lineToLinearHeading(warehousePickElementPose[2])// Moved here for UNSTABLE_addTemporalMarkerOffset
 
                 .lineToLinearHeading(warehouseAllianceShippingPathPose[0])
@@ -947,10 +978,10 @@ public class AutoWorldChamps extends LinearOpMode {
 
     public void selectGamePlan(){
         telemetry.setAutoClear(true);
-        telemetry.addData("Compile time : ", "22:00 :: 1/27/2022");
+        telemetry.addData("Compile time : ", "11:00 :: 4/15/2022");
 
         //***** Select Alliance ******
-        telemetry.addData("Enter PLaying Alliance :", "(Blue: (X),    Red: (B))");
+        telemetry.addData("Enter Playing Alliance :", "(Blue: (X),    Red: (B))");
         telemetry.update();
 
         //Add logic to select autonomous mode based on keypad entry
@@ -1008,7 +1039,7 @@ public class AutoWorldChamps extends LinearOpMode {
             }
         }
 
-        while (!isStopRequested()) {
+        /*while (!isStopRequested()) {
             telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
             telemetry.addData("StartPosition : ", GameField.startPosition);
             telemetry.addData("Pick Game Shipping Element :","");
@@ -1025,7 +1056,8 @@ public class AutoWorldChamps extends LinearOpMode {
                 break;
             }
             telemetry.update();
-        }
+        }*/
+        pickShippingElement = false;
 
 
         if (GameField.startPosition == GameField.START_POSITION.WAREHOUSE) {
@@ -1033,8 +1065,8 @@ public class AutoWorldChamps extends LinearOpMode {
             while (!isStopRequested()) {
                 telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
                 telemetry.addData("StartPosition : ", GameField.startPosition);
-                telemetry.addData("Parking Location: ",parkingLocation);
-                telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+                //telemetry.addData("Parking Location: ",parkingLocation);
+                //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                 telemetry.addData("Enter Autonomous Route :","");
                 telemetry.addData("  WAREHOUSE PARK ALONG WALL (X)","");
                 telemetry.addData("  WAREHOUSE PARK THROUGH BARRIER (B)","");
@@ -1056,8 +1088,8 @@ public class AutoWorldChamps extends LinearOpMode {
                     telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
                     telemetry.addData("StartPosition : ", GameField.startPosition);
                     telemetry.addData("Autonomous Route : ", autonomousRoute);
-                    telemetry.addData("Parking Location: ", parkingLocation);
-                    telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+                    //telemetry.addData("Parking Location: ", parkingLocation);
+                    //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                     telemetry.addData("No. of Loop from Warehouse to AlShipping Hub :", "");
                     telemetry.addData("  0 (A)", "");
                     telemetry.addData("  1 (X)", "");
@@ -1095,9 +1127,8 @@ public class AutoWorldChamps extends LinearOpMode {
                 telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
                 telemetry.addData("StartPosition : ", GameField.startPosition);
                 telemetry.addData("Autonomous Route : ", autonomousRoute);
-                telemetry.addData("Parking Location: ", parkingLocation);
-                telemetry.addData("Pick Shipping Element : ", pickShippingElement);
-                telemetry.addData("No. of Loop from Warehouse to AlShipping Hub :", "");
+                //telemetry.addData("Parking Location: ", parkingLocation);
+                //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                 telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                 telemetry.addData("Park along wall or through barrier :","");
                 telemetry.addData("  Loop PARK ALONG WALL (X)","");
@@ -1124,7 +1155,7 @@ public class AutoWorldChamps extends LinearOpMode {
             while (!isStopRequested()) {
                 telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
                 telemetry.addData("StartPosition : ", GameField.startPosition);
-                telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+                //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                 telemetry.addData("Enter Autonomous Route & Parking :","");
                 telemetry.addData("  STORAGE PARK (A)","");
                 telemetry.addData("  WAREHOUSE PARK ALONG WALL (X)","");
@@ -1160,7 +1191,7 @@ public class AutoWorldChamps extends LinearOpMode {
                     telemetry.addData("StartPosition : ", GameField.startPosition);
                     telemetry.addData("Autonomous Route : ", autonomousRoute);
                     telemetry.addData("Parking Location: ", parkingLocation);
-                    telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+                    //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                     telemetry.addData("No. of Loop from Warehouse to AlShipping Hub :", "");
                     telemetry.addData("  0 (A)", "");
                     telemetry.addData("  1 (X)", "");
@@ -1176,7 +1207,7 @@ public class AutoWorldChamps extends LinearOpMode {
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
                     }
-                    if (gamepadController.gp1GetButtonYPress()) {
+                    /*if (gamepadController.gp1GetButtonYPress()) {
                         loopsFromWarehouseToAlShippingHub = 2;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
@@ -1185,7 +1216,7 @@ public class AutoWorldChamps extends LinearOpMode {
                         loopsFromWarehouseToAlShippingHub = 3;
                         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
                         break;
-                    }
+                    }*/
                     telemetry.update();
                 }
             }
@@ -1199,7 +1230,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 telemetry.addData("StartPosition : ", GameField.startPosition);
                 telemetry.addData("Autonomous Route : ", autonomousRoute);
                 telemetry.addData("Parking Location: ", parkingLocation);
-                telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+                //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
                 telemetry.addData("No. of Loops from WH to AlShipping Hub : ", loopsFromWarehouseToAlShippingHub);
                 telemetry.addData("Enter End Parking facing Shared Shipping Hub :", "");
                 telemetry.addData("  YES (Y)", "");
@@ -1223,7 +1254,7 @@ public class AutoWorldChamps extends LinearOpMode {
         telemetry.addData("Start Position : ", GameField.startPosition);
         telemetry.addData("Autonomous route : ", autonomousRoute);
         telemetry.addData("Parking Location : ", parkingLocation);
-        telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+        //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
         telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
         telemetry.addData("End Parking facing Shared Shipping Hub :", GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB);
         telemetry.update();
