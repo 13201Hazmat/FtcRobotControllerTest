@@ -133,8 +133,10 @@ public class GamepadController {
 
             } else {
                 driveTrain.gamepadInput = new Vector2d(
-                        -limitStick(gp2GetLeftStickY()),
-                        -limitStick(gp2GetLeftStickX()));
+                        -gp2TurboMode(gp2GetLeftStickY()),
+                        -gp2TurboMode(gp2GetLeftStickX()));
+                        //-limitStick(gp2GetLeftStickY()),
+                        //-limitStick(gp2GetLeftStickX()));
             }
         };
 
@@ -489,7 +491,11 @@ public class GamepadController {
                 majorArm.pullUpResetMajorArm();
             }
         }
-        if(gp2GetRightTriggerPress()){
+
+        /*if(gp2GetRightTriggerPress()){
+            majorArm.moveMajorArmParkingPosition();
+        }*/
+        if(gp2GetLeftTriggerPress()){
             majorArm.moveMajorArmParkingPosition();
         }
 
@@ -502,7 +508,7 @@ public class GamepadController {
         }
         majorArm.moveMajorArmWristToPosition();
 
-        if (!gp2GetStart()) {
+        /*if (!gp2GetStart()) {
             if (gp2GetLeftTriggerPress()) {
                 majorArm.moveMajorArmSlightlyDown();
                 if (majorArm.runMajorArmToLevelState) {
@@ -516,7 +522,7 @@ public class GamepadController {
                     majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
                 }
             }
-        }
+        }*/
 
         if(gp2GetRightBumperPress()){
             majorArm.changeMajorClawState();
@@ -578,6 +584,19 @@ public class GamepadController {
         double turboFactor;
 
         rightTriggerValue = gp1GetRightTrigger();
+        //acceleration_factor = 1.0 + 3.0 * rightTriggerValue;
+        acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
+        turboFactor = limitStick(stickInput) * acceleration_factor;
+        return turboFactor;
+    }
+    public double gp2TurboMode(double stickInput) {
+
+        double acceleration_factor;
+        double rightTriggerValue;
+
+        double turboFactor;
+
+        rightTriggerValue = gp2GetRightTrigger();
         //acceleration_factor = 1.0 + 3.0 * rightTriggerValue;
         acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
         turboFactor = limitStick(stickInput) * acceleration_factor;

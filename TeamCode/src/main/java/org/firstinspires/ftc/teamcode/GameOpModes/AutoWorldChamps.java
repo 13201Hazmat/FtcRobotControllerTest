@@ -524,7 +524,7 @@ public class AutoWorldChamps extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(-72, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(-73, 48, Math.toRadians(90)); //y: 47;
-            warehousePickElementPose[2] = new Pose2d(-74, 48, Math.toRadians(75)); //y: 50; angle=80, x=49
+            warehousePickElementPose[2] = new Pose2d(-74, 46, Math.toRadians(75)); //y: 50; angle=80, x=49
             warehouseAllianceShippingPathPose[0] = new Pose2d(-72, 6, Math.toRadians(100)); //angle; 90
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(95)); //angle; 90
             warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 18, Math.toRadians(90)); //angle;90
@@ -554,14 +554,14 @@ public class AutoWorldChamps extends LinearOpMode {
 
             warehousePickElementPose[0] = new Pose2d(70, 47, Math.toRadians(90)); //y: 46;
             warehousePickElementPose[1] = new Pose2d(71, 48, Math.toRadians(90)); //y: 47;
-            warehousePickElementPose[2] = new Pose2d(72, 43, Math.toRadians(90)); //y: 50
-            warehouseAllianceShippingPathPose[0] = new Pose2d(70, 3, Math.toRadians(90));
+            warehousePickElementPose[2] = new Pose2d(74, 41, Math.toRadians(100)); //y: 50
+            warehouseAllianceShippingPathPose[0] = new Pose2d(74, 1, Math.toRadians(90));
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
 
             allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 
-            whAlongWallShShippingParkingPose[0] = new Pose2d(38, 36, Math.toRadians(135));
+            whAlongWallShShippingParkingPose[0] = new Pose2d(38, 32, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(38, 68, Math.toRadians(180));
 
             whThroughBarrierParkingPose[0] = new Pose2d(50, -10, Math.toRadians(120));
