@@ -278,11 +278,11 @@ public class AutoWorldChamps extends LinearOpMode {
             pickDuckPose[0] = new Pose2d(54, -58, Math.toRadians(-20)); //AADI TO UPDATE
             pickDuckPose[1] = new Pose2d(54, -55, Math.toRadians(50)); //AADI TO UPDATE
 
-            carousalToAlliancePathPose = new Pose2d(9, -60, Math.toRadians(-90)); // x=12
-            carousalToAlliancePathPose1 = new Pose2d(11,-60,Math.toRadians(-90)); //x=1, y=-58
+            carousalToAlliancePathPose = new Pose2d(8, -58, Math.toRadians(-90)); // x=9, y =-60
+            carousalToAlliancePathPose1 = new Pose2d(11,-58,Math.toRadians(-90)); //x=1, y=-60
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(9, -36, Math.toRadians(-90));
-            storageParkingPose = new Pose2d(26, -67, Math.toRadians(90)); //x = 24;
+            alShippingHubPose = new Pose2d(9, -34, Math.toRadians(-90));
+            storageParkingPose = new Pose2d(24, -67, Math.toRadians(90)); //x = 26;
 
 
             whAlongWallParkingPose[0] = new Pose2d(63, -43, Math.toRadians(90)); //x -69

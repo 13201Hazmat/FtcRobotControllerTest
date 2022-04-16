@@ -331,7 +331,7 @@ public class GamepadController {
         }
 
         //if (gp1GetStart() && gp1GetLeftTriggerPersistent() && gp1GetDpad_left()){
-        if (gp2GetStart() && gp2GetLeftBumper() && gp2GetDpad_left()){
+        if (gp2GetStart() && gp2GetDpad_down()){
                 elevator.pushDownResetElevator();
         }
 
