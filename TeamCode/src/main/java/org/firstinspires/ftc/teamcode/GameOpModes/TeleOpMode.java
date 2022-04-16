@@ -26,8 +26,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
 @TeleOp(name = "TeleOp", group = "00-Teleop")
 public class TeleOpMode extends LinearOpMode {
 
-    public boolean DEBUG_FLAG = true;
-
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
     public Intake intake;
@@ -72,6 +70,8 @@ public class TeleOpMode extends LinearOpMode {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
+        GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+
         /* Set Initial State of any subsystem when TeleOp is to be started*/
 
         majorArm.moveMajorArmParkingPosition();
@@ -88,7 +88,7 @@ public class TeleOpMode extends LinearOpMode {
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
 
-            if(DEBUG_FLAG) {
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                 printDebugMessages();
                 telemetry.update();
             }
@@ -100,7 +100,7 @@ public class TeleOpMode extends LinearOpMode {
                     blinkinDisplay.setPatternEndGame();
                 }
 
-                if(DEBUG_FLAG) {
+                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
@@ -117,43 +117,47 @@ public class TeleOpMode extends LinearOpMode {
      */
     public void printDebugMessages(){
         telemetry.setAutoClear(true);
-        telemetry.addData("DEBUG_FLAG is : ", DEBUG_FLAG);
+        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
+        telemetry.addData("Robot ready to start","");
 
-        telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-        telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-        telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-        telemetry.addData("startPose : ", startPose);
+        if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
 
-        //****** Drive debug ******
-        telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-        telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-        telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
+            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
+            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
+            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            telemetry.addData("startPose : ", startPose);
 
-        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
-        telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
-        telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
-        telemetry.addData("Major Wrist Position : ",majorArm.majorWristServo.getPosition());
+            //****** Drive debug ******
+            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
 
-        telemetry.addData("Intake State : ", intake.getIntakeMotorState());
-        telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
+            telemetry.addData("Major Arm Position : ", majorArm.getMajorArmPosition());
+            telemetry.addData("Major Claw State : ", majorArm.getMajorClawState());
+            telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
+            telemetry.addData("Major Wrist Position : ", majorArm.majorWristServo.getPosition());
 
-        telemetry.addData("Elevator State : ", elevator.getElevatorState());
-        telemetry.addData("Elevator encoder count : ", elevator.elevatorMotor.getCurrentPosition());
-        telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
+            telemetry.addData("Intake State : ", intake.getIntakeMotorState());
+            telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
 
-        telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
-        telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
-        telemetry.addData("Magazine Color Sensor Distance :", "%.3f",magazine.getMagazineColorSensorDistance());
-        telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
+            telemetry.addData("Elevator State : ", elevator.getElevatorState());
+            telemetry.addData("Elevator encoder count : ", elevator.elevatorMotor.getCurrentPosition());
+            telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
 
-        telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
-        telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
+            telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
+            telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
+            telemetry.addData("Magazine Color Sensor Distance :", "%.3f", magazine.getMagazineColorSensorDistance());
+            telemetry.addData("Magazine Auto State : ", gamepadController.autoMagazine);
 
-        telemetry.addData("Minor Arm Position : ",minorArm.getMinorServoState());
-        telemetry.addData("Minor Claw State : ",minorArm.getMinorClawState());
+            telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
+            telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
 
-        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
-        telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addData("Minor Arm Position : ", minorArm.getMinorServoState());
+            telemetry.addData("Minor Claw State : ", minorArm.getMinorClawState());
+
+            telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
+            telemetry.addData("Game Timer : ", gameTimer.time());
+        }
 
         telemetry.update();
 

@@ -44,8 +44,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous(name = "World Auto", group = "00-Autonomous" , preselectTeleOp = "TeleOp")
 public class AutoWorldChamps extends LinearOpMode {
 
-    public boolean DEBUG_FLAG = false;
-
     public GamepadController gamepadController;
     public AutonomousController autonomousController;
     public DriveTrain driveTrain;
@@ -141,7 +139,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 autonomousController.runAutoControl();
             }
 
-            if (DEBUG_FLAG) {
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                 printDebugMessages();
                 telemetry.update();
             }
@@ -173,7 +171,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 GameField.currentPose = driveTrain.getPoseEstimate();
                 GameField.poseSetInAutonomous = true;
 
-                if (DEBUG_FLAG) {
+                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
@@ -344,11 +342,11 @@ public class AutoWorldChamps extends LinearOpMode {
                 })
                 .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
                 .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                .UNSTABLE_addTemporalMarkerOffset(0.6,() -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7,() -> {
                     magazine.moveMagazineToDrop();
                 })
                 .lineToLinearHeading(alShippingHubPose)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel0Position();
@@ -379,11 +377,11 @@ public class AutoWorldChamps extends LinearOpMode {
                 })
                 .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
                 .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                .UNSTABLE_addTemporalMarkerOffset(0.6,() -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7,() -> {
                     magazine.moveMagazineToDrop();
                 })
                 .lineToLinearHeading(alShippingHubPose)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
                     elevator.moveElevatorLevel1Position();
@@ -1267,57 +1265,66 @@ public class AutoWorldChamps extends LinearOpMode {
      */
     public void printDebugMessages(){
         telemetry.setAutoClear(true);
-        telemetry.addData("DEBUG_FLAG is : ", DEBUG_FLAG);
+        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
 
         telemetry.addData("Playing Alliance Selected : ", GameField.playingAlliance);
         telemetry.addData("Start Position : ", GameField.startPosition);
         telemetry.addData("Autonomous route : ", autonomousRoute);
         telemetry.addData("Parking Location : ", parkingLocation);
-        telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+        //telemetry.addData("Pick Shipping Element : ", pickShippingElement);
+        telemetry.addData("No. of Loops from WH to AlShippingHub : ", loopsFromWarehouseToAlShippingHub);
+        telemetry.addData("End Parking facing Shared Shipping Hub :", GameField.END_PARKING_FACING_SHARED_SHIPPING_HUB);
 
-        telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-        telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-        telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-        telemetry.addData("startPose : ", startPose);
-
-        //****** Drive debug ******
-        telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-        telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-        telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
 
         telemetry.addData("Vision targetLevelDetected : ", vision.targetLevelDetected);
         telemetry.addData("Vision detectedLabel", vision.detectedLabel);
-        telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
-        telemetry.addData("Vision targetZone :", targetZone);
-        telemetry.addData("Vision targetZoneLevel :", targetZoneLevel);
 
-        telemetry.addData("Major Arm Position : ",majorArm.getMajorArmPosition());
-        telemetry.addData("Major Claw State : ",majorArm.getMajorClawState());
-        telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
-        telemetry.addData("Major Wrist Position : ", majorArm.majorWristServo.getPosition());
 
-        telemetry.addData("Intake State : ", intake.getIntakeMotorState());
-        telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
+        if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
+            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
+            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            telemetry.addData("startPose : ", startPose);
 
-        telemetry.addData("Elevator State : ", elevator.getElevatorState());
-        telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
 
-        telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
-        telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
-        telemetry.addData("Magazine Color Sensor Distance :",magazine.getMagazineColorSensorDistance());
+            //****** Drive debug ******
+            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
 
-        telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
-        telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
+            telemetry.addData("Vision detectedLabelLeft :", vision.detectedLabelLeft);
+            telemetry.addData("Vision targetZone :", targetZone);
+            telemetry.addData("Vision targetZoneLevel :", targetZoneLevel);
 
-        telemetry.addData("Minor Arm Position : ",minorArm.getMinorServoState());
-        telemetry.addData("Minor Claw State : ",minorArm.getMinorClawState());
+            telemetry.addData("Major Arm Position : ", majorArm.getMajorArmPosition());
+            telemetry.addData("Major Claw State : ", majorArm.getMajorClawState());
+            telemetry.addData("Major Arm Position Count : ", majorArm.getMajorArmPositionCount());
+            telemetry.addData("Major Wrist Position : ", majorArm.majorWristServo.getPosition());
 
-        telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
-        telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addData("Intake State : ", intake.getIntakeMotorState());
+            telemetry.addData("Intake Motor Power : ", intake.getIntakeMotorPower());
+
+            telemetry.addData("Elevator State : ", elevator.getElevatorState());
+            telemetry.addData("Elevator Position Count : ", elevator.getElevatorPositionCount());
+
+            telemetry.addData("Magazine State : ", magazine.getMagazineServoState());
+            telemetry.addData("Magazine Color Sensor State : ", magazine.getMagazineColorSensorState());
+            telemetry.addData("Magazine Color Sensor Distance :", magazine.getMagazineColorSensorDistance());
+
+            telemetry.addData("Spinner State : ", spinner.getSpinnerMotorState());
+            telemetry.addData("Spinner Motor Power : ", spinner.getSpinnerMotorPower());
+
+            telemetry.addData("Minor Arm Position : ", minorArm.getMinorServoState());
+            telemetry.addData("Minor Claw State : ", minorArm.getMinorClawState());
+
+            telemetry.addData("Blinkin Pattern : ", blinkinDisplay.currentPattern);
+            telemetry.addData("Game Timer : ", gameTimer.time());
+        }
 
         telemetry.update();
 
     }
+
 }
 
 

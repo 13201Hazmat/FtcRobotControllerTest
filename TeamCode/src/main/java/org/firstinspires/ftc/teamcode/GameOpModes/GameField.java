@@ -23,6 +23,13 @@ public class GameField {
     public static final Pose2d RED_WAREHOUSE_STARTPOS =  new Pose2d(61,7,Math.toRadians(0));
     public static final Pose2d RED_STORAGE_STARTPOS =  new Pose2d(61,-40,Math.toRadians(0));
 
+    public enum DEBUG_LEVEL{
+        NONE,
+        MINIMUM,
+        MAXIMUM
+    }
+    public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.MINIMUM;
+
     //Define and declare Playing Alliance
     public enum PLAYING_ALLIANCE{
         RED_ALLIANCE,
