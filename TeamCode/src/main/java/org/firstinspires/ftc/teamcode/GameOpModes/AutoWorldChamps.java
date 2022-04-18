@@ -210,7 +210,8 @@ public class AutoWorldChamps extends LinearOpMode {
     Pose2d[] barcodePose = new Pose2d[3];
     Pose2d carousalPose;
     Pose2d carousalToAlliancePathPose;
-    Pose2d alShippingHubPose;
+    Pose2d storageAlShippingHubPose;
+    Pose2d storageAlShippingHubDropDuckPose;
     Pose2d[] pickDuckPose = new Pose2d[2];
     Pose2d carousalToAlliancePathPose1;
     Pose2d storageParkingPose;
@@ -221,7 +222,7 @@ public class AutoWorldChamps extends LinearOpMode {
     Pose2d whThroughBarrierShShippingParkingPose;
     Pose2d[] warehousePickElementPose = new Pose2d[3];
     Pose2d[] warehouseAllianceShippingPathPose = new Pose2d[3];
-    Pose2d allianceShippingHubDropElementPose;
+    Pose2d warehouseAllianceShippingHubDropElementPose;
 
     public void buildAutoStorage(){
         if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
@@ -232,16 +233,17 @@ public class AutoWorldChamps extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(-50, -38, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-50, -48, Math.toRadians(165));
 
-            carousalPose = new Pose2d(-58, -68, Math.toRadians(-155));
+            carousalPose = new Pose2d(-61, -69, Math.toRadians(-155));
 
-            pickDuckPose[0] = new Pose2d(-61, -62, Math.toRadians(190));
-            pickDuckPose[1] = new Pose2d(-63, -61, Math.toRadians(120)); //x=-62
+            pickDuckPose[0] = new Pose2d(-65, -56, Math.toRadians(190));
+            pickDuckPose[1] = new Pose2d(-67, -55, Math.toRadians(120)); //x=-62
 
             carousalToAlliancePathPose = new Pose2d(-23, -63, Math.toRadians(-90)); //-19 for x
             carousalToAlliancePathPose1 = new Pose2d(-23,-63, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-23, -34, Math.toRadians(-90)); //-34 for x
+            storageAlShippingHubPose = new Pose2d(-23, -40, Math.toRadians(-90)); //-34 for x
+            storageAlShippingHubDropDuckPose = new Pose2d(-23, -32, Math.toRadians(-90));
 
             storageParkingPose = new Pose2d(-36,-70, Math.toRadians(90)); //x=-34
 
@@ -256,7 +258,7 @@ public class AutoWorldChamps extends LinearOpMode {
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 3, Math.toRadians(90));
 
-            allianceShippingHubDropElementPose = new Pose2d(-33, 0 , Math.toRadians(135));
+            warehouseAllianceShippingHubDropElementPose = new Pose2d(-33, 0 , Math.toRadians(135));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
@@ -273,7 +275,7 @@ public class AutoWorldChamps extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,-39, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(48, -34, Math.toRadians(-50)); //fixed 1/8/22
 
-            carousalPose = new Pose2d(46, -70, Math.toRadians(-25)); // x=53;
+            carousalPose = new Pose2d(46, -69, Math.toRadians(-25)); // x=53;
 
             pickDuckPose[0] = new Pose2d(54, -58, Math.toRadians(-20)); //AADI TO UPDATE
             pickDuckPose[1] = new Pose2d(54, -55, Math.toRadians(50)); //AADI TO UPDATE
@@ -281,7 +283,8 @@ public class AutoWorldChamps extends LinearOpMode {
             carousalToAlliancePathPose = new Pose2d(8, -58, Math.toRadians(-90)); // x=9, y =-60
             carousalToAlliancePathPose1 = new Pose2d(11,-58,Math.toRadians(-90)); //x=1, y=-60
             //alShippingHubPose = new Pose2d(33.5, -23.5, Math.toRadians(-45));
-            alShippingHubPose = new Pose2d(9, -34, Math.toRadians(-90));
+            storageAlShippingHubPose = new Pose2d(9, -32, Math.toRadians(-90));
+            storageAlShippingHubDropDuckPose = new Pose2d(9, -28, Math.toRadians(-90));
             storageParkingPose = new Pose2d(24, -67, Math.toRadians(90)); //x = 26;
 
 
@@ -296,7 +299,7 @@ public class AutoWorldChamps extends LinearOpMode {
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
 
-            allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
+            warehouseAllianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(40, 36, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(40, 68, Math.toRadians(180));
@@ -345,8 +348,8 @@ public class AutoWorldChamps extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.0,() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .lineToLinearHeading(storageAlShippingHubPose)
                 .waitSeconds(0.3)
-                .lineToLinearHeading(alShippingHubPose)
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
@@ -357,7 +360,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .build();
 
         //Move from Alliance shipping o carousal
-        trajASAlShippingToCarousalPickDuckToAllianceShipping = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+        trajASAlShippingToCarousalPickDuckToAllianceShipping = driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                 //.addTemporalMarker(0, () -> {})
                 .lineToLinearHeading(carousalToAlliancePathPose)
                 /*.addTemporalMarker(0, () -> {
@@ -381,8 +384,8 @@ public class AutoWorldChamps extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.0,() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .lineToLinearHeading(storageAlShippingHubDropDuckPose)
                 .waitSeconds(0.3)
-                .lineToLinearHeading(alShippingHubPose)
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
@@ -397,14 +400,14 @@ public class AutoWorldChamps extends LinearOpMode {
                 .resetVelConstraint()
                 .build();
         if (parkingLocation == GameField.PARKING_LOCATION.STORAGE) {
-            trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+            trajASAlShippingToStorageParking = driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                     .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
                     .addTemporalMarker(1,()->{moveElevatorToLevel(0);})
                     .lineToLinearHeading(storageParkingPose)
                     .build();
         } else { //parkingLocation == GameField.PARKING_LOCATION.WAREHOUSE
             if (autonomousRoute == GameField.AUTONOMOUS_ROUTE.ALONG_WALL) {
-                trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+                trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                         .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
                         .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
@@ -441,7 +444,7 @@ public class AutoWorldChamps extends LinearOpMode {
                             .build();
                 }
             } else { //(autonomousRoute == GameField.AUTONOMOUS_ROUTE.THROUGH_BARRIER)
-                trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+                trajAlShippingToWHParking[0] = driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                         .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                         .lineToLinearHeading(carousalToAlliancePathPose) //Avoid Capstone
                         .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
@@ -546,7 +549,7 @@ public class AutoWorldChamps extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(-49, 9, Math.toRadians(180));
             barcodePose[3-1] = new Pose2d(-51, -1, Math.toRadians(165));
 
-            alShippingHubPose = new Pose2d(-36, -4 , Math.toRadians(135));
+            storageAlShippingHubPose = new Pose2d(-36, -4 , Math.toRadians(135));
 
             whAlongWallParkingPose[0] = new Pose2d(-72, 3, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(-72, 36, Math.toRadians(90)); //x 54
@@ -559,7 +562,7 @@ public class AutoWorldChamps extends LinearOpMode {
             warehouseAllianceShippingPathPose[1] = new Pose2d(-73, 12, Math.toRadians(95)); //angle; 90
             warehouseAllianceShippingPathPose[2] = new Pose2d(-74, 18, Math.toRadians(90)); //angle;90
 
-            allianceShippingHubDropElementPose = new Pose2d(-35, -4 , Math.toRadians(135)); //angle=160
+            warehouseAllianceShippingHubDropElementPose = new Pose2d(-35, -4 , Math.toRadians(135)); //angle=160
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(-40, 36, Math.toRadians(45));
             whAlongWallShShippingParkingPose[1] = new Pose2d(-40, 68, Math.toRadians(0));
@@ -576,7 +579,7 @@ public class AutoWorldChamps extends LinearOpMode {
             barcodePose[2-1] = new Pose2d(49,8, Math.toRadians(-35)); //fixed 1/8/22
             barcodePose[3-1] = new Pose2d(49, 13, Math.toRadians(-45)); //fixed 1/8/22
 
-            alShippingHubPose = new Pose2d(32, 0, Math.toRadians(45));
+            storageAlShippingHubPose = new Pose2d(32, 0, Math.toRadians(45));
 
             whAlongWallParkingPose[0] = new Pose2d(70, 3, Math.toRadians(90)); //x -69
             whAlongWallParkingPose[1] = new Pose2d(70, 36, Math.toRadians(90)); //x 54
@@ -589,7 +592,7 @@ public class AutoWorldChamps extends LinearOpMode {
             warehouseAllianceShippingPathPose[1] = new Pose2d(71, 3, Math.toRadians(90));
             warehouseAllianceShippingPathPose[2] = new Pose2d(72, 3, Math.toRadians(90));
 
-            allianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
+            warehouseAllianceShippingHubDropElementPose = new Pose2d(32, -3, Math.toRadians(45));
 
             whAlongWallShShippingParkingPose[0] = new Pose2d(38, 32, Math.toRadians(135));
             whAlongWallShShippingParkingPose[1] = new Pose2d(38, 68, Math.toRadians(180));
@@ -618,7 +621,7 @@ public class AutoWorldChamps extends LinearOpMode {
                         .addTemporalMarker(0,() -> {
                             moveElevatorToTargetZoneLevel();
                         })
-                        .lineToLinearHeading(alShippingHubPose)
+                        .lineToLinearHeading(storageAlShippingHubPose)
                         .build();
             }
         } else {
@@ -626,7 +629,7 @@ public class AutoWorldChamps extends LinearOpMode {
                     .addTemporalMarker(0,() -> {
                         moveElevatorToTargetZoneLevel();
                     })
-                    .lineToLinearHeading(alShippingHubPose)
+                    .lineToLinearHeading(storageAlShippingHubPose)
                     .build();
         }
 
@@ -703,13 +706,13 @@ public class AutoWorldChamps extends LinearOpMode {
                         intake.stopIntakeMotor();
                     })
                      */
-                    .lineToLinearHeading(allianceShippingHubDropElementPose)
+                    .lineToLinearHeading(warehouseAllianceShippingHubDropElementPose)
                     .addTemporalMarker(() -> {
                         //autonomousController.moveAutoMagazineToDrop();
                         magazine.moveMagazineToDrop();
                     })
                     .build();
-            trajWarehouseAllianceShippingLoopPick[loop] = driveTrain.trajectorySequenceBuilder(allianceShippingHubDropElementPose)
+            trajWarehouseAllianceShippingLoopPick[loop] = driveTrain.trajectorySequenceBuilder(warehouseAllianceShippingHubDropElementPose)
                     .lineToLinearHeading(warehouseAllianceShippingPathPose[loop])
                     .addTemporalMarker(0.5, () -> {
                         //autonomousController.moveAutoMagazineToCollect();
@@ -725,7 +728,7 @@ public class AutoWorldChamps extends LinearOpMode {
 
         }
 
-        trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+        trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                 .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                 .lineToLinearHeading(whThroughBarrierParkingPose[0])
                 .lineToLinearHeading(whThroughBarrierParkingPose[1])
@@ -740,7 +743,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .addTemporalMarker(0,() -> {
                     moveElevatorToTargetZoneLevel();
                 })
-                .lineToLinearHeading(alShippingHubPose)
+                .lineToLinearHeading(storageAlShippingHubPose)
                 .addTemporalMarker(0.6,() -> {
                     magazine.moveMagazineToDrop();
                 })
@@ -764,7 +767,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.2, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .lineToLinearHeading(warehouseAllianceShippingHubDropElementPose)
                 //start of Second Loop
                 //UNSTABLE_addTemporalMarkerOffset is to position timer marker relative this position than global timer.
                 // Check documentation at https://learnroadrunner.com/trajectory-sequence.html#unstable-addtemporalmarkeroffset-offset-markercallback
@@ -787,7 +790,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.2, () -> {
                     magazine.moveMagazineToDrop();
                 })
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .lineToLinearHeading(warehouseAllianceShippingHubDropElementPose)
                 .resetVelConstraint()
                 .build();
 
@@ -799,7 +802,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .addTemporalMarker(0,() -> {
                     moveElevatorToTargetZoneLevel();
                 })
-                .lineToLinearHeading(alShippingHubPose)
+                .lineToLinearHeading(storageAlShippingHubPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
@@ -820,7 +823,7 @@ public class AutoWorldChamps extends LinearOpMode {
                     elevator.moveElevatorLevel3Position();
                 })
                 .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                .lineToLinearHeading(allianceShippingHubDropElementPose)
+                .lineToLinearHeading(warehouseAllianceShippingHubDropElementPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
@@ -836,7 +839,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .addTemporalMarker(0,() -> {
                     moveElevatorToTargetZoneLevel();
                 })
-                .lineToLinearHeading(alShippingHubPose)
+                .lineToLinearHeading(storageAlShippingHubPose)
                 .addTemporalMarker(() -> {
                     magazine.moveMagazineToDrop();
                 })
@@ -846,7 +849,7 @@ public class AutoWorldChamps extends LinearOpMode {
     }
 
     public void buildWarehouseParkingSequence(){
-        trajWarehouseAllianceShippingToParkAlongWall= driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+        trajWarehouseAllianceShippingToParkAlongWall= driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     //.addTemporalMarker(0.5, () -> {
                     magazine.moveMagazineToCollect();
@@ -860,7 +863,7 @@ public class AutoWorldChamps extends LinearOpMode {
                 .resetVelConstraint()
                 .build();
 
-        trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(alShippingHubPose)
+        trajWarehouseAllianceShippingToParkBarrier= driveTrain.trajectorySequenceBuilder(storageAlShippingHubPose)
                 .addTemporalMarker(0,()->{moveElevatorToLevel(1);})
                 .lineToLinearHeading(whThroughBarrierParkingPose[0])
                 .lineToLinearHeading(whThroughBarrierParkingPose[1])
