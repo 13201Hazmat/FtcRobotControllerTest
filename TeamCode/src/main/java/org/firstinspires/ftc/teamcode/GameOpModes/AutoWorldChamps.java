@@ -241,7 +241,7 @@ public class AutoWorldChamps extends LinearOpMode {
             carousalToAlliancePathPose1 = new Pose2d(-23,-63, Math.toRadians(-90));
             //alShippingHubPose = new Pose2d(-38, -21 , Math.toRadians(-145));
 
-            alShippingHubPose = new Pose2d(-23, -38, Math.toRadians(-90)); //-34 for x
+            alShippingHubPose = new Pose2d(-23, -34, Math.toRadians(-90)); //-34 for x
 
             storageParkingPose = new Pose2d(-36,-70, Math.toRadians(90)); //x=-34
 
@@ -342,9 +342,10 @@ public class AutoWorldChamps extends LinearOpMode {
                 })
                 .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
                 .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                .UNSTABLE_addTemporalMarkerOffset(0.7,() -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.0,() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .waitSeconds(0.3)
                 .lineToLinearHeading(alShippingHubPose)
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
@@ -377,9 +378,10 @@ public class AutoWorldChamps extends LinearOpMode {
                 })
                 .lineToLinearHeading(carousalToAlliancePathPose1) //Avoid Capstone
                 .setVelConstraint(getVelocityConstraint(70, DriveConstants.MAX_VEL, DriveConstants.TRACK_WIDTH))
-                .UNSTABLE_addTemporalMarkerOffset(0.7,() -> {
+                .UNSTABLE_addTemporalMarkerOffset(1.0,() -> {
                     magazine.moveMagazineToDrop();
                 })
+                .waitSeconds(0.3)
                 .lineToLinearHeading(alShippingHubPose)
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     //.addTemporalMarker(0.5, () -> {
