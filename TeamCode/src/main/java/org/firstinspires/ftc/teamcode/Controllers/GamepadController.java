@@ -7,14 +7,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.BlinkinDisplay;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Elevator;
-import org.firstinspires.ftc.teamcode.SubSystems.Intake;
-import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
-import org.firstinspires.ftc.teamcode.SubSystems.MajorArm;
-import org.firstinspires.ftc.teamcode.SubSystems.MinorArm;
-import org.firstinspires.ftc.teamcode.SubSystems.Spinner;
+
 
 /**
  * Defenition of the HzGamepad Class <BR>
@@ -59,13 +53,6 @@ public class GamepadController {
     //Create object reference to objects to systems passed from TeleOp
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
-    public Intake intake;
-    public Elevator elevator;
-    public Magazine magazine;
-    public Spinner spinner;
-    public MajorArm majorArm;
-    public MinorArm minorArm;
-    public BlinkinDisplay blinkinDisplay;
 
     /**
      * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
@@ -73,35 +60,17 @@ public class GamepadController {
      */
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
-                             DriveTrain driveTrain,
-                             Intake intake,
-                             Elevator elevator,
-                             Magazine magazine,
-                             Spinner spinner,
-                             MajorArm majorArm,
-                             MinorArm minorArm,
-                             BlinkinDisplay blinkinDisplay) {
+                             DriveTrain driveTrain
+                            ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
-        this.intake = intake;
-        this.elevator = elevator;
-        this.magazine = magazine;
-        this.spinner = spinner;
-        this.majorArm = majorArm;
-        this.minorArm = minorArm;
-        this.blinkinDisplay = blinkinDisplay;
     }
 
     /**
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
-        runIntake();
-        runElevator();
-        runMagazine();
-        runSpinner();
-        runMajorArm();
         runDriveControl_byRRDriveModes();
     }
 
@@ -191,343 +160,7 @@ public class GamepadController {
 
     }
 
-    //TODO: Add controller code for more subsystems as above
-    /**
-     * runIntake sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck freight to be out of intake. <BR>
-     */
-    public void runIntake(){ //this function should be at LaunchController's place after order change
-        if (gp1GetLeftBumperPress()/*gp1GetDpad_downPress()*/) {
-            if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
-                //&& elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                    elevator.moveElevatorLevel0Position();
-                }
-                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.COLLECT) {
-                    magazine.moveMagazineToCollect();
-                }
-                intake.startIntakeMotorInward();
-                intakeReverseStopFlag = false;
-            } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                intakeReverseStopFlag = false;
-                intake.stopIntakeMotor();
-                //startReverseAndStopIntake();
-            }
-        }
-        //Stop Intake after reverse and stop timer is done
-        finishReverseAndStopIntake();
 
-        //Reverse Intake motors and run - in case of stuck state)
-        if (gp1GetLeftTriggerPress()/*gp1GetDpad_upPress()*/) {
-            if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.REVERSING) {
-                intake.startIntakeMotorOutward();
-            } else if (intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                intakeReverseStopFlag = false;
-                intake.stopIntakeMotor();
-            }
-        }
-    }
-
-
-    public boolean intakeReverseStopFlag = false;
-    ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
-    public void startReverseAndStopIntake(){
-        intakeReverseTimer.reset();
-        intake.startIntakeMotorOutward();
-        intakeReverseStopFlag = true;
-    }
-
-    public void finishReverseAndStopIntake(){
-        if (intakeReverseTimer.time() > 500 && intakeReverseStopFlag &&
-                intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.REVERSING) {
-            intake.stopIntakeMotor();
-            intakeReverseStopFlag = false;
-        }
-    }
-
-    /**
-     * runElevator sets the different elevator controls, if the elevator should be in a specific level
-     * and has protection for drivers for the magazine and the intial level state position.<BR>
-     */
-    public void runElevator(){ //this function should be at LaunchController's place after order change
-        //TODO: Protect turning on grip only when elevator motor is not moving
-
-        if (gp1GetButtonAPress()){
-            if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                elevator.moveElevatorLevel0Position();
-            }
-            if (elevator.runElevatorToLevelState){
-                elevator.runElevatorToLevel(elevator.motorPowerToRun);
-            }
-            if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.COLLECT) {
-                magazine.moveMagazineToCollect();
-            }
-        }
-
-        if (gp1GetButtonXPress()){
-            if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                //intake.stopIntakeMotor();
-                startReverseAndStopIntake();
-            }
-            if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                magazine.moveMagazineToTransport();
-            }
-            if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_1) {
-                elevator.moveElevatorLevel1Position();
-            }
-
-        }
-
-        if (gp1GetButtonYPress()){
-            if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                //intake.stopIntakeMotor();
-                startReverseAndStopIntake();
-            }
-            if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                magazine.moveMagazineToTransport();
-            }
-            if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_2) {
-                elevator.moveElevatorLevel2Position();
-            }
-
-        }
-
-        if (gp1GetButtonBPress()){
-            if(intake.getIntakeMotorState() == Intake.INTAKE_MOTOR_STATE.RUNNING){
-                //intake.stopIntakeMotor();
-                startReverseAndStopIntake();
-            }
-            if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                magazine.moveMagazineToTransport();
-            }
-            if (elevator.elevatorState != Elevator.ELEVATOR_STATE.LEVEL_3) {
-                elevator.moveElevatorLevel3Position();
-            }
-        }
-
-        /*if (!gp1GetStart()) {
-            if (gp1GetLeftTriggerPersistent()) {
-                elevator.moveElevatorSlightlyUp();
-            }
-        } else {
-            if (gp1GetLeftTriggerPersistent()) {
-                elevator.moveElevatorSlightlyDown();
-            }
-        }*/
-        if (!gp2GetStart()) {
-            //if (gp2GetLeftTriggerPersistent()) {
-            if (gp2GetLeftBumperPress()) {
-                elevator.moveElevatorSlightlyUp();
-            }
-        } else {
-            //if (gp2GetLeftTriggerPersistent()) {
-            if (gp2GetLeftBumperPress()) {
-                elevator.moveElevatorSlightlyDown();
-            }
-        }
-
-        if (elevator.runElevatorToLevelState){
-            elevator.runElevatorToLevel(elevator.motorPowerToRun);
-        }
-
-        //if (gp1GetStart() && gp1GetLeftTriggerPersistent() && gp1GetDpad_left()){
-        if (gp2GetStart() && gp2GetDpad_down()){
-            elevator.pushDownResetElevator();
-        }
-
-    }
-
-    public enum AUTO_MAGAZINE {
-        ON,
-        OFF
-    }
-    public AUTO_MAGAZINE autoMagazine = AUTO_MAGAZINE.ON;
-
-    /**
-     * runMagazine sets the different magazine controls, if the magazine should be in transport or
-     * drop position depending on the current elevator position and other states. <BR>
-     */
-    public void runMagazine(){ //this function should be at LaunchController's place after order change
-        if (gp1GetRightBumperPress()) {
-
-            //To toggle automation to off or on if needed
-            if (gp2GetStart()) {
-                if (autoMagazine == AUTO_MAGAZINE.ON) {
-                    autoMagazine = AUTO_MAGAZINE.OFF;
-                } else {
-                    autoMagazine = AUTO_MAGAZINE.ON;
-                }
-            }
-
-            if(elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP &&
-                        magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
-                    if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_1) {
-                        magazine.moveMagazineToDrop();
-                    } else { //elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_2 / LEVEL_3)
-                        magazine.moveMagazineToDropLevel23();
-                    }
-                } else if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP ||
-                        magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.DROP_LEVEL23) {
-                    magazine.moveMagazineToTransport();
-                }
-            } else{
-                if (magazine.getMagazineServoState() == Magazine.MAGAZINE_SERVO_STATE.TRANSPORT ) {
-                    magazine.moveMagazineToCollect();
-                } else if(intake.getIntakeMotorState() != Intake.INTAKE_MOTOR_STATE.RUNNING) {
-                    intake.stopIntakeMotor();
-                    magazine.moveMagazineToTransport();
-                }
-            }
-        }
-
-        /*if (magazine.magazineColorSensor instanceof SwitchableLight) {
-            if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0 &&
-                    magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.EMPTY) {
-                ((SwitchableLight) magazine.magazineColorSensor).enableLight(true);
-            } else {
-                ((SwitchableLight) magazine.magazineColorSensor).enableLight(false);
-            }
-        }*/
-
-        if (autoMagazine == AUTO_MAGAZINE.ON) {
-            if (elevator.getElevatorState() == Elevator.ELEVATOR_STATE.LEVEL_0) {
-                if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED) {
-                    if (magazine.getMagazineServoState() != Magazine.MAGAZINE_SERVO_STATE.TRANSPORT) {
-                        magazine.moveMagazineToTransport();
-                        elevator.moveElevatorLevel1Position();
-                        //intake.stopIntakeMotor();
-                        startReverseAndStopIntake();
-                    }
-                }
-            }
-            if (magazine.getMagazineColorSensorState() == Magazine.MAGAZINE_COLOR_SENSOR_STATE.LOADED){
-                blinkinDisplay.setPatternElementLoaded();
-            } else {
-                blinkinDisplay.setPatternDefault();
-            }
-        }
-    }
-
-    /**
-     * runSpinner sets the different spinner controls, if the spinner should be spinning clockwise or
-     * anticlockwise or not spinning at all, this functions reads the current state and depending on
-     * the state, the function will execute the motion the spinner moves in. <BR>
-     */
-    public void runSpinner(){ //this function should be at LaunchController's place after order change
-       /* if (!gp2GetStart()) { //Normal condition, start not pressed
-            if (gp2GetLeftBumperPress()) {
-                //Spinner is running
-                if (spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.CLOCKWISE ||
-                        spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
-                    spinner.stopSpinnerMotor();
-                } else {
-                    //Spinner not running
-                    if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                        if (spinner.getSpinnerMotorState() != Spinner.SPINNER_MOTOR_STATE.CLOCKWISE) {
-                            spinner.runSpinnerMotorClockwise();
-                        }
-                    } else { //if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                        if (spinner.getSpinnerMotorState() != Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
-                            spinner.runSpinnerMotorAnticlockwise();
-                        }
-                    }
-                }
-            }
-        } else { //Alternate  condition, start pressed
-            if (gp2GetLeftBumperPress()) {
-                //Spinner is running
-                if (spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.CLOCKWISE ||
-                        spinner.getSpinnerMotorState() == Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
-                    spinner.stopSpinnerMotor();
-                } else {
-                    //Spinner not running
-                    if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
-                        if (spinner.getSpinnerMotorState() != Spinner.SPINNER_MOTOR_STATE.ANTICLOCKWISE) {
-                            spinner.runSpinnerMotorAnticlockwise();
-                        }
-                    } else { //if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE)
-                        if (spinner.getSpinnerMotorState() != Spinner.SPINNER_MOTOR_STATE.CLOCKWISE) {
-                            spinner.runSpinnerMotorClockwise();
-                        }
-                    }
-                }
-            }
-        }
-        */
-        if(gp2GetDpad_left()){
-            spinner.runSpinnerMotorAnticlockwise();
-        } else if(gp2GetDpad_right()){
-            spinner.runSpinnerMotorClockwise();
-        } else {
-            spinner.stopSpinnerMotor();
-        }
-    }
-
-
-    /**
-     * runMajorArm sets the different majorArm controls, if the majorArm should be down or up one
-     * level or change the arm specifically to a another level by one button press. <BR>
-     */
-    public void runMajorArm(){ //this function should be at LaunchController's place after order change
-        if (gp2GetButtonXPress()){
-            //majorArm.moveMajorArmDownOne();
-            majorArm.moveMajorArmLevel1Position();
-        }
-        if (gp2GetButtonBPress()) {
-            //majorArm.moveMajorArmUpOne();
-            majorArm.moveMajorArmLevel3Position();
-        }
-        if(gp2GetButtonAPress()){
-            majorArm.moveMajorArmBlockPickupPosition();
-        }
-
-        if (!gp2GetStart()) {
-            if (gp2GetButtonYPress()) {
-                majorArm.moveMajorArmCapstoneDropPosition();
-            }
-        } else { // reset functionality in case arm is down and robot resets
-            if (gp2GetButtonYPress()) {
-                majorArm.pullUpResetMajorArm();
-            }
-        }
-
-        /*if(gp2GetRightTriggerPress()){
-            majorArm.moveMajorArmParkingPosition();
-        }*/
-        if(gp2GetLeftTriggerPress()){
-            majorArm.moveMajorArmParkingPosition();
-        }
-
-        if (majorArm.runMajorArmToLevelState) {
-            if (majorArm.currentMajorArmState != MajorArm.MAJOR_ARM_STATE.PARKED) {
-                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_POWER);
-            } else {
-                majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_SLOW_POWER);
-            }
-        }
-        majorArm.moveMajorArmWristToPosition();
-
-        /*if (!gp2GetStart()) {
-            if (gp2GetLeftTriggerPress()) {
-                majorArm.moveMajorArmSlightlyDown();
-                if (majorArm.runMajorArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
-                }
-            }
-        } else {
-            if (gp2GetLeftTriggerPress()) {
-                majorArm.moveMajorArmSlightlyUp();
-                if (majorArm.runMajorArmToLevelState) {
-                    majorArm.runMajorArmToLevel(majorArm.MAJORARM_MOTOR_DELTA_POWER);
-                }
-            }
-        }*/
-
-        if(gp2GetRightBumperPress()){
-            majorArm.changeMajorClawState();
-        }
-    }
 
     //*********** KEY PAD MODIFIERS BELOW ***********
 
