@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Arm;
+import org.firstinspires.ftc.teamcode.SubSystems.Hand;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -21,6 +26,11 @@ public class TeleOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
+    public Arm arm;
+    public Hand hand;
+    public Lights lights;
+    public Shoulder shoulder;
+    public Turret turret;
 
 
     //public Vuforia Vuforia1;
@@ -39,10 +49,14 @@ public class TeleOpMode extends LinearOpMode {
 
         /* Create Subsystem Objects*/
         driveTrain = new DriveTrain(hardwareMap);
-
+        arm = new Arm(hardwareMap);
+        hand = new Hand(hardwareMap);
+        lights = new Lights(hardwareMap);
+        shoulder = new Shoulder(hardwareMap);
+        turret = new Turret(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, lights, shoulder, turret);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */

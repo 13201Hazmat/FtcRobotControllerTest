@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-
+import org.firstinspires.ftc.teamcode.SubSystems.Arm;
+import org.firstinspires.ftc.teamcode.SubSystems.Hand;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
  * Defenition of the HzGamepad Class <BR>
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
  * HzGamepad consists of system provided gamepad(s) and adds functionality to the selection
  * made on gamepads <BR>
  *
- * For Hazmat Freight Frenzy, two Gamepads are used (gamepad1 and gamepad2) <BR>
+ * For Hazmat  PowerPlay, two Gamepads are used (gamepad1 and gamepad2) <BR>
  *
  * The controls are as follows: (replace with gamepad2 for 2nd gamepad) <BR>
  *  *      Left Stick for pan motion (gamepad1.left_stick_x and gamepad2.left_stick_y) <BR>
@@ -53,6 +54,11 @@ public class GamepadController {
     //Create object reference to objects to systems passed from TeleOp
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
+    public Arm arm;
+    public Hand hand;
+    public Lights lights;
+    public Shoulder shoulder;
+    public Turret turret;
 
     /**
      * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
@@ -60,17 +66,32 @@ public class GamepadController {
      */
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
-                             DriveTrain driveTrain
+                             DriveTrain driveTrain,
+                             Arm arm,
+                             Hand hand,
+                             Lights lights,
+                             Shoulder shoulder,
+                             Turret turret
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
+        this.arm = arm;
+        this.hand = hand;
+        this.lights = lights;
+        this.shoulder = shoulder;
+        this.turret = turret;
     }
 
     /**
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
+        runArm();
+        runHand();
+        runLights();
+        runShoulder();
+        runTurret();
         runDriveControl_byRRDriveModes();
     }
 
@@ -160,7 +181,29 @@ public class GamepadController {
 
     }
 
+    /**
+     * runIntake sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
+    public void runArm(){
 
+    }
+
+    public void runHand(){
+
+    }
+
+    public void runLights(){
+
+    }
+
+    public void runShoulder(){
+
+    }
+
+    public void runTurret(){
+
+    }
 
     //*********** KEY PAD MODIFIERS BELOW ***********
 
