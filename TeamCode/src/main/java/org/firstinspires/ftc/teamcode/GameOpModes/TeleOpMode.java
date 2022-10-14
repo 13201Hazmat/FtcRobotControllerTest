@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
+import org.firstinspires.ftc.teamcode.SubSystems.Camera;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -28,10 +29,10 @@ public class TeleOpMode extends LinearOpMode {
     public DriveTrain driveTrain;
     public Arm arm;
     public Hand hand;
-    public Lights lights;
     public Shoulder shoulder;
     public Turret turret;
-
+    public Lights lights;
+    public Camera camera;
 
     //public Vuforia Vuforia1;
 
@@ -51,12 +52,13 @@ public class TeleOpMode extends LinearOpMode {
         driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
         hand = new Hand(hardwareMap);
-        lights = new Lights(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
+        lights = new Lights(hardwareMap);
+        camera = new Camera(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, lights, shoulder, turret);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
@@ -121,7 +123,26 @@ public class TeleOpMode extends LinearOpMode {
             //****** Drive debug ******
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-            //elemetry.addData("Battery Power", driveTrain.getBatteryVoltage(hardwareMap));
+
+            /*
+            telemetry.addData("Arm Motor Power:", arm.getArmMotorPower);
+            telemetry.addData("Arm Motor Position: ", arm.getArmMotorPosition);
+
+            telemetry.addData("Camera State : ", camera.getCameraState);
+
+            telemetry.addData("Wrist Servo Power : ", hand.getWristServoPower);
+            telemetry.addData("Grips Servo Power : ", hand.getGripServoPower);
+            telemetry.addData("Left Intake Servo Power : ", hand.getIntklServoPower);
+            telemetry.addData("Right Intake Servo Power : ", hand.getIntkrServoPower);
+
+            telemetry.addData("Right Motor Shoulder Power : ", shoulder.getRshMotorPower);
+            telemetry.addData("Left Motor Shoulder Power: ", shoulder.getLshMotorPower);
+            telemetry.addData("Right Motor Shoulder Position : ", shoulder.getRshMotorPositon);
+            telemetry.addData("Left Motor Shoulder Position : ", shoulder.getLshMotorPosition);
+
+            telemetry.addData("Turret Motor Power : ", turret.getTurretMotorPower);
+            telemetry.addData("Turret Motor Position : ", turret.getTurretMotorPosition);
+            */
 
             telemetry.addData("Game Timer : ", gameTimer.time());
         }

@@ -18,15 +18,18 @@ import com.qualcomm.robotcore.hardware.Servo;
  *     sets intake motor state to REVERSING <BR>
  */
 public class Hand {
+    //Initialization of <Fill>
     public Servo wristservo;
     public Servo gripservo;
     public Servo intkltservo;
     public Servo intkrtservo;
 
+    //Constructor
     public Hand(HardwareMap hardwareMap){
         initHand();
     }
 
+    //Method is able to <Fill>
     public void initHand(){
 
     }

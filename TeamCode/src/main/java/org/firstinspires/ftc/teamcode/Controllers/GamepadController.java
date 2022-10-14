@@ -69,18 +69,18 @@ public class GamepadController {
                              DriveTrain driveTrain,
                              Arm arm,
                              Hand hand,
-                             Lights lights,
                              Shoulder shoulder,
-                             Turret turret
+                             Turret turret,
+                             Lights lights
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
         this.arm = arm;
         this.hand = hand;
-        this.lights = lights;
         this.shoulder = shoulder;
         this.turret = turret;
+        this.lights = lights;
     }
 
     /**
@@ -89,9 +89,9 @@ public class GamepadController {
     public void runByGamepadControl(){
         runArm();
         runHand();
-        runLights();
         runShoulder();
         runTurret();
+        runLights();
         runDriveControl_byRRDriveModes();
     }
 
@@ -182,29 +182,44 @@ public class GamepadController {
     }
 
     /**
-     * runIntake sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runArm(){
 
     }
 
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
     public void runHand(){
 
     }
 
-    public void runLights(){
-
-    }
-
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
     public void runShoulder(){
 
     }
 
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
     public void runTurret(){
 
     }
 
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
+    public void runLights(){
+
+    }
     //*********** KEY PAD MODIFIERS BELOW ***********
 
     //**** Gamepad buttons

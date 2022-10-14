@@ -19,27 +19,34 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 public class Shoulder {
+    //Initialization of <Fill>
     public DcMotor rshmotor, lshmotor;
 
+    //Initialization of <Fill>
     public enum RIGHT_SHOULDER_MOTOR_POSITION{
 
     }
 
+    //Initialization of <Fill>
     public enum LEFT_SHOULDER_MOTOR_POSITION{
 
     }
 
+    //Initialization of <Fill>
     public RIGHT_SHOULDER_MOTOR_POSITION rightShoulderMotorPosition;
     public LEFT_SHOULDER_MOTOR_POSITION leftShoulderMotorPosition;
 
+    //Initialization of <Fill>
     public double rightShoulderMotorPower = 1.0;
     public double leftShoulderMotorPower = 1.0;
 
+    //Constructor
     public Shoulder(HardwareMap hardwareMap){
 
         initShoulder();
     }
 
+    //Method is able to <Fill>
     public void initShoulder(){
 
     }

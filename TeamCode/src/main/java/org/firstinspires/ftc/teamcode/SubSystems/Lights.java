@@ -19,10 +19,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Lights {
 
+    //Constructor
     public Lights(HardwareMap hardwareMap){
         initLights();
     }
 
+    //Method is able <Fill>
     public void initLights(){
 
     }

@@ -19,23 +19,31 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *     sets intake motor state to REVERSING <BR>
  */
 public class Arm {
+    //Initialization of <Fill>
     public DcMotor armmotor;
 
+    //Initialization of <Fill>
     public enum ARM_MOTOR_POSITION{
 
     }
 
+    //Initialization of <Fill>
     public ARM_MOTOR_POSITION armMotorPosition;
 
+    //Initialization of <Fill>
     public double armMotorPower = 1.0;
 
+    //Constructor
     public Arm(HardwareMap hardwareMap){
 
         initArm();
     }
 
+    //Method is able to <Fill>
     public void initArm(){
 
     }
+
+
 
 }

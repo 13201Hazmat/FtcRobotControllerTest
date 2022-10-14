@@ -20,20 +20,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Turret {
 
+    //Initialization of <Fill>
     public DcMotor turretmotor;
 
+    //Initialization of <Fill>
     public enum TURRET_MOTOR_POSITION{
 
     }
 
+    //Initialization of <Fill>
     public TURRET_MOTOR_POSITION turretMotorPosition;
 
+    //Initialization of <Fill>
     public double turretMotorPower = 1.0;
 
+    //Constructor
     public Turret(HardwareMap hardwareMap){
         initTurret();
     }
 
+    //Method is able to <Fill>
     public void initTurret(){
 
     }
