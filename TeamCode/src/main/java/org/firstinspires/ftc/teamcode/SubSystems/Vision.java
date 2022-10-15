@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+//import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 import java.util.List;
 
@@ -118,9 +118,9 @@ public class Vision {
 
 
     // Class Members
-    private OpenGLMatrix lastLocation = null;
+    //private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
-    private VuforiaTrackables targets   = null ;
+    //private VuforiaTrackables targets   = null ;
 
     /**
      * This is the webcam we are to use. As with other hardware devices such as motors and
@@ -138,16 +138,11 @@ public class Vision {
     public List<VuforiaTrackable> allTrackables;
 
     //Tensor Flow parameters
-    /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
-     * the following 4 detectable objects
-     *  0: Ball,
-     *  1: Cube,
-     *  2: Duck,
-     *  3: Marker (duck location tape marker)
-     *
-     *  Two additional model assets are available which only contain a subset of the objects:
-     *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-     *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+    /* Note: This sample uses the all-objects Tensor Flow model (PowerPlay.tflite), which contains
+     * the following 3 detectable objects
+     *  0: Bolt,
+     *  1: Bulb,
+     *  2: Panel,
      */
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
@@ -160,10 +155,8 @@ public class Vision {
     };
 
 
-    public String targetLabel1 = LABELS[2]; // Default "Duck"
-    public String targetLabel2 = LABELS[3]; // "Marker" //TODO Adjust to correct one
+
     public String detectedLabel = "None";
-    public float detectedLabelLeft, detectedLabelRight, detectedLabelTop, detectedLabelBottom;
     public static float[] targetPosition = {
             //TODO : Update values based on marker location identifier
             250,
