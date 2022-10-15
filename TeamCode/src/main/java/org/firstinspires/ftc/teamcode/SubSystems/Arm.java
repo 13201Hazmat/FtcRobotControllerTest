@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *     sets intake motor state to REVERSING <BR>
  */
 public class Arm {
-    //Initialization of <Fill>
+    //Initialization of armmotor
     public DcMotorEx armmotor;
 
 
@@ -30,7 +30,7 @@ public class Arm {
         RETRACTED
     }
 
-    //Initialization of <Fill>
+    //Initialization of ARM_MOTOR_POSITION
     public enum ARM_MOTOR_POSITION{
         GROUND_JUNCTION,
         LOW_JUNCTION,
@@ -40,7 +40,7 @@ public class Arm {
 
     }
 
-    //Initialization of <Fill>
+    //Initialization of ARM_MOTOR_POSITION and ARM_STATE enums
     public ARM_MOTOR_POSITION armMotorPosition;
     public ARM_STATE armState;
 
@@ -72,7 +72,7 @@ public class Arm {
         initArm();
     }
 
-    //Method is able to <Fill>
+    //Method is able to initialize the arm
     public void initArm(){
         resetArm();
         turnArmBrakeModeOff();
@@ -83,13 +83,17 @@ public class Arm {
         previousArmPosition = armMotorPosition.PARKED;
     }
 
+    //Turns on the brake for arm
     public void turnArmBrakeModeOn(){
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
+    //Turns brake for arm off
     public void turnArmBrakeModeOff() {
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
+    //Sets arm poision to ground junction
     public void moveToArmGroundJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(GROUND_JUNCTION + armmotorBaselineEncoderCount);
@@ -98,6 +102,7 @@ public class Arm {
         currentArmPosition = armMotorPosition.GROUND_JUNCTION;
     }
 
+    //Sets arm position to low junction
     public void moveToArmLowJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(LOW_JUNCTION + armmotorBaselineEncoderCount);
@@ -106,6 +111,7 @@ public class Arm {
         currentArmPosition = armMotorPosition.LOW_JUNCTION;
     }
 
+    //Sets arm position or mid junction
     public void moveToArmMidJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(MEDIUM_JUNCTION + armmotorBaselineEncoderCount);
@@ -114,6 +120,7 @@ public class Arm {
         currentArmPosition = armMotorPosition.MEDIUM_JUNCTION;
     }
 
+    //Sets arm position to high junction
     public void moveToArmHighJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(HIGH_JUNCTION + armmotorBaselineEncoderCount);
@@ -122,6 +129,7 @@ public class Arm {
         currentArmPosition = armMotorPosition.HIGH_JUNCTION;
     }
 
+    //sets the arm power
     public void runArmToLevel(double power){
         armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (runArmToLevelState == true){
@@ -152,12 +160,14 @@ public class Arm {
         }
     }
 
+    //Resets the arm
     public void resetArm(){
         DcMotor.RunMode runMode = armmotor.getMode();
         armmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotor.setMode(runMode);
     }
 
+    //Returns the current arm position
     public int getArmPositionCount(){
         return armmotor.getCurrentPosition();
     }
