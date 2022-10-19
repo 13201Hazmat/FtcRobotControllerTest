@@ -32,24 +32,28 @@ public class ArmTestOpMode extends LinearOpMode {
                 arm.runArmToLevelState = false;
             }
 
-            //Move arm to preset positions
+            //Move arm to low junction if x is pressed
             if (gamepad2.x){
                 arm.moveToArmLowJunction();
                 arm.runArmToLevel(arm.MED_POWER);
                 arm.runArmToLevelState = false;
             }
 
+            //Moves arm to the high junction position if gamepad b is pressed
             if (gamepad2.b){
                 arm.moveToArmHighJunction();
                 arm.runArmToLevel(arm.MED_POWER);
                 arm.runArmToLevelState = false;
             }
 
+            //Moves arm to ground junction if gamepad a is pressed
             if (gamepad2.a){
                 arm.moveToArmGroundJunction();
                 arm.runArmToLevel(arm.MED_POWER);
                 arm.runArmToLevelState = false;
             }
+
+            //Moves arm to middle junciton if y is pressed
             if (gamepad2.y){
                 arm.moveToArmMidJunction();
                 arm.runArmToLevel(arm.MED_POWER);
