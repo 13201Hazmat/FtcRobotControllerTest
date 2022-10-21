@@ -26,7 +26,7 @@ public class Arm {
 
     //Arm states, either fully extended or retracted all the way
     public enum ARM_STATE{
-        MAX_EXTENDED,
+        maxExtended,
         RETRACTED
     }
 
@@ -64,9 +64,9 @@ public class Arm {
     public ARM_MOTOR_POSITION currentArmPosition = ARM_MOTOR_POSITION.PARKED;
     public ARM_MOTOR_POSITION previousArmPosition = ARM_MOTOR_POSITION.PARKED;
     public boolean runArmToLevelState = false;
-    public int armmotorBaselineEncoderCount = 0;//Need tested values
+    public int armMotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
-    public double max_extended= 0; //Need tested values
+    public double maxExtended= 0; //Need tested values
 
     //Constructor
     public Arm(HardwareMap hardwareMap){
@@ -98,7 +98,7 @@ public class Arm {
     //Sets arm poision to ground junction
     public void moveToArmGroundJunction(){
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(GROUND_JUNCTION + armmotorBaselineEncoderCount);
+        armmotor.setTargetPosition(GROUND_JUNCTION + armMotorBaselineEncoderCount);
         runArmToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.GROUND_JUNCTION;
@@ -107,7 +107,7 @@ public class Arm {
     //Sets arm position to low junction
     public void moveToArmLowJunction(){
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(LOW_JUNCTION + armmotorBaselineEncoderCount);
+        armmotor.setTargetPosition(LOW_JUNCTION + armMotorBaselineEncoderCount);
         runArmToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.LOW_JUNCTION;
@@ -116,7 +116,7 @@ public class Arm {
     //Sets arm position or mid junction
     public void moveToArmMidJunction(){
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(MEDIUM_JUNCTION + armmotorBaselineEncoderCount);
+        armmotor.setTargetPosition(MEDIUM_JUNCTION + armMotorBaselineEncoderCount);
         runArmToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.MEDIUM_JUNCTION;
@@ -125,7 +125,7 @@ public class Arm {
     //Sets arm position to high junction
     public void moveToArmHighJunction(){
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(HIGH_JUNCTION + armmotorBaselineEncoderCount);
+        armmotor.setTargetPosition(HIGH_JUNCTION + armMotorBaselineEncoderCount);
         runArmToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.HIGH_JUNCTION;
@@ -156,8 +156,8 @@ public class Arm {
     //extends the arm for the joystick control
     public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
         armDeltaCount = (int) (Math.pow((joystickAmount - 0.2), 3) * MAX_DELTA);
-        //max_extended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
-        if (armCurrentArmPositionCount < max_extended && armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount){
+        //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
+        if (armCurrentArmPositionCount < maxExtended && armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount){
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount + armDeltaCount;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
