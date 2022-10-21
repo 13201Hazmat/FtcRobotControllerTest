@@ -144,7 +144,7 @@ public class Arm {
 
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
-        armDeltaCount = (int) (Math.pow((joystickAmount - 0.2), 3) * MAX_DELTA);
+        //armDeltaCount = (int) (Math.pow((joystickAmount - 0.2), 3) * MAX_DELTA); Need to use scale function
         if (armCurrentArmPositionCount > RETRACTED && armCurrentArmPositionCount >= GROUND_JUNCTION + armDeltaCount){
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - armDeltaCount;
@@ -155,7 +155,7 @@ public class Arm {
 
     //extends the arm for the joystick control
     public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
-        armDeltaCount = (int) (Math.pow((joystickAmount - 0.2), 3) * MAX_DELTA);
+        //armDeltaCount = (int) (Math.pow((joystickAmount - 0.2), 3) * MAX_DELTA); Need to use scale function
         //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
         if (armCurrentArmPositionCount < maxExtended && armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount){
             turnArmBrakeModeOn();
