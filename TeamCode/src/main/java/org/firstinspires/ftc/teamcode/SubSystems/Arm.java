@@ -47,24 +47,26 @@ public class Arm {
 
     //Constants for Arm positions
     public static final int RETRACTED= 0; //Need tested values
-    public static final int MAX_EXTENDED= 0; //Need tested values
     public static final int GROUND_JUNCTION= 0; //Need tested values
     public static final int LOW_JUNCTION= 0; //Need tested values
     public static final int MEDIUM_JUNCTION= 0; //Need tested values
     public static final int HIGH_JUNCTION= 0; //Need tested values
     public static final int PARKED = 0; //Need tested values
+    public static final int AUTO_RETRACTION_AMOUNT = 0; //need tested values
+    public static final int MAX_DELTA = 0; //need tested values
 
     //Different constants of arm speed
     public static final double HIGH_POWER = 1.0;
     public static final double MED_POWER = 0.5;
     public static final double LOW_POWER = 0.2;
 
-    public static int ARM_DELTA_COUNT = 0; //Need tested value
+    public int arm_delta_count = 0; //Need tested value
     public ARM_MOTOR_POSITION currentArmPosition = ARM_MOTOR_POSITION.PARKED;
     public ARM_MOTOR_POSITION previousArmPosition = ARM_MOTOR_POSITION.PARKED;
     public boolean runArmToLevelState = false;
     public int armmotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
+    public double max_extended= 0; //Need tested values
 
     //Constructor
     public Arm(HardwareMap hardwareMap){
@@ -77,7 +79,7 @@ public class Arm {
         resetArm();
         turnArmBrakeModeOff();
         armmotor.setPositionPIDFCoefficients(5.0);
-        armmotor.setTargetPosition(GROUND_JUNCTION);
+        armmotor.setTargetPosition(PARKED);
         armmotor.setDirection(DcMotor.Direction.FORWARD);
         currentArmPosition = armMotorPosition.PARKED;
         previousArmPosition = armMotorPosition.PARKED;
@@ -141,22 +143,31 @@ public class Arm {
     }
 
     //retracts the arm for joystick control
-    public void retractArm(){
-        if (armCurrentArmPositionCount > RETRACTED && armCurrentArmPositionCount >= GROUND_JUNCTION + ARM_DELTA_COUNT){
+    public void retractArm(double right_stick_x){
+        arm_delta_count = (int) (Math.pow((right_stick_x - 0.2), 3) * MAX_DELTA);
+        if (armCurrentArmPositionCount > RETRACTED && armCurrentArmPositionCount >= GROUND_JUNCTION + arm_delta_count){
             turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount - ARM_DELTA_COUNT;
+            armCurrentArmPositionCount = armCurrentArmPositionCount - arm_delta_count;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
             runArmToLevelState = true;
         }
     }
 
     //extends the arm for the joystick control
-    public void extendArm(){
-        if (armCurrentArmPositionCount < MAX_EXTENDED && armCurrentArmPositionCount <= GROUND_JUNCTION - ARM_DELTA_COUNT){
+    public void extendArm( /* getShoulderPositionCount */ double right_stick_x ){
+        arm_delta_count = (int) (Math.pow((right_stick_x - 0.2), 3) * MAX_DELTA);
+        //max_extended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
+        if (armCurrentArmPositionCount < max_extended && armCurrentArmPositionCount <= GROUND_JUNCTION - arm_delta_count){
             turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount + ARM_DELTA_COUNT;
+            armCurrentArmPositionCount = armCurrentArmPositionCount + arm_delta_count;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
             runArmToLevelState = true;
+        } else{
+            turnArmBrakeModeOn();
+            armCurrentArmPositionCount = armCurrentArmPositionCount - AUTO_RETRACTION_AMOUNT;
+            armmotor.setTargetPosition(armCurrentArmPositionCount);
+            runArmToLevelState = true;
+
         }
     }
 
@@ -172,3 +183,8 @@ public class Arm {
         return armmotor.getCurrentPosition();
     }
 }
+
+//change delta funciton to be exponential in proportion to the joystick, put threshold on joystick(0.2), exponential 0.2-1
+
+
+
