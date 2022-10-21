@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
- * Ultimate Goal TeleOp mode <BR>
+ * TestOp Arm <BR>
  *
- * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
+ * This code defines the TeleOp mode is done by Hazmat Robot for Powerplay<BR>
  *
  */
 @TeleOp(name = "TestOpArm", group = "TestOp")
