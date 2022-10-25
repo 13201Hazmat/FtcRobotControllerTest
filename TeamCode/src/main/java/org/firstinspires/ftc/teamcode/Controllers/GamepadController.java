@@ -188,6 +188,49 @@ public class GamepadController {
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runArm(){
+        arm.turnArmBrakeModeOn();
+
+        //Extend the arm based on the right joystick
+        if (gp2GetRightStickX() > 0.2) {
+            arm.extendArm(gp2GetRightStickX());
+            arm.runArmToLevel(gp2GetRightStickX());
+            arm.runArmToLevelState = false;
+        }
+
+        //retract the arm based on the right joystick
+        if (gp2GetRightStickX() < -0.2) {
+            arm.retractArm(gp2GetRightStickX());
+            arm.runArmToLevel(gp2GetRightStickX());
+            arm.runArmToLevelState = false;
+        }
+
+        //Move arm to low junction if x is pressed
+        if (gp2GetButtonXPress()){
+            arm.moveToArmLowJunction();
+            arm.runArmToLevel(arm.MED_POWER);
+            arm.runArmToLevelState = false;
+        }
+
+        //Moves arm to the high junction position if gamepad b is pressed
+        if (gp2GetButtonBPress()){
+            arm.moveToArmHighJunction();
+            arm.runArmToLevel(arm.MED_POWER);
+            arm.runArmToLevelState = false;
+        }
+
+        //Moves arm to ground junction if gamepad a is pressed
+        if (gp2GetButtonAPress()){
+            arm.moveToArmGroundJunction();
+            arm.runArmToLevel(arm.MED_POWER);
+            arm.runArmToLevelState = false;
+        }
+
+        //Moves arm to middle junction if y is pressed
+        if (gp2GetButtonYPress()){
+            arm.moveToArmMidJunction();
+            arm.runArmToLevel(arm.MED_POWER);
+            arm.runArmToLevelState = false;
+        }
 
     }
 
