@@ -4,20 +4,23 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Definition of Subsystem Class <BR>
+ * Definition of Arm Subsystem Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Arm consists of linear slides starting from the shoulder(pivot) and can extend to a fixed length
+ * by the driver, holding the hand at the end<BR>
  *
  * The states are as followed: <BR>
- *     INTAKE_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing  <BR>
- *     INTAKE_SERVO_LEVEL2 for another state  = example if the intake is on or off  <BR>
+ *     ARM_STATE - example if linear slides are either fully extended or fully retracted  <BR>
+ *     ARM_MOTOR_POSITION -  linear slides are at preset positions <BR>
  *
- * The functions are as followed: Example assumes a motor like an intake <BR>
- *     runIntakeMotor checks if the motor is not running and runs the intake  <BR>
- *     stopIntakeMotor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets intakeMotorState to INTAKE_SERVO_LEVEL1.STOPPED  <BR>
- *      startReverseIntakeMotor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING <BR>
+ * The functions are as followed: <BR>
+ *     initArm resets the motors and positions <BR>
+ *     turnArmBrakeModeOn and turnArmBrakeModeOff puts the arm motor in a stopped or active state <BR>
+ *     moveToJunction functions set the target position to preset positions corresponding to function<BR>
+ *     extendArm and retractArm functions extend and retract arm based on a delta value determined
+ *     by the joystick <BR>
+ *     resetArm resets the arm to the original position and states <BR>
+ *     runArmToLevel runs the arm to the levels determined by the other functions <BR>
  */
 public class Arm {
     //Initialization of armmotor
