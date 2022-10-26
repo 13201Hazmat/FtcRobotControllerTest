@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Definition of Arm Subsystem Class <BR>
+ * Definition of Arm Class <BR>
  *
  * Arm consists of linear slides starting from the shoulder(pivot) and can extend to a fixed length
  * by the driver, holding the hand at the end<BR>
