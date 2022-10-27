@@ -207,29 +207,37 @@ public class GamepadController {
         //Move arm to low junction if x is pressed
         if (gp2GetButtonXPress()){
             arm.moveToArmLowJunction();
-            arm.runArmToLevel(arm.MED_POWER);
-            arm.runArmToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
+                arm.runArmToLevelState = false;
+            }
         }
 
         //Moves arm to the high junction position if gamepad b is pressed
         if (gp2GetButtonBPress()){
             arm.moveToArmHighJunction();
-            arm.runArmToLevel(arm.MED_POWER);
-            arm.runArmToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
+                arm.runArmToLevelState = false;
+            }
         }
 
         //Moves arm to ground junction if gamepad a is pressed
         if (gp2GetButtonAPress()){
             arm.moveToArmGroundJunction();
-            arm.runArmToLevel(arm.MED_POWER);
-            arm.runArmToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
+                arm.runArmToLevelState = false;
+            }
         }
 
         //Moves arm to middle junction if y is pressed
         if (gp2GetButtonYPress()){
             arm.moveToArmMidJunction();
-            arm.runArmToLevel(arm.MED_POWER);
-            arm.runArmToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
+                arm.runArmToLevelState = false;
+            }
         }
 
     }

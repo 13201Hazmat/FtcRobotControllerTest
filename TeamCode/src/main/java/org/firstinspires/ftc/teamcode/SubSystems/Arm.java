@@ -22,10 +22,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *     resetArm resets the arm to the original position and states <BR>
  *     runArmToLevel runs the arm to the levels determined by the other functions <BR>
  */
+
 public class Arm {
     //Initialization of armmotor
     public DcMotorEx armmotor;
-
 
     //Arm states, either fully extended or retracted all the way
     public enum ARM_STATE{
