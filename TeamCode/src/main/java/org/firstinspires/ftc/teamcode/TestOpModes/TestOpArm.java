@@ -50,7 +50,7 @@ public class TestOpArm extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap);
+        //driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
         hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
@@ -63,11 +63,14 @@ public class TestOpArm extends LinearOpMode {
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        /*
         if ( GameField.poseSetInAutonomous == true) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
+        */
+
 
         GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
         //GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
@@ -91,7 +94,7 @@ public class TestOpArm extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+               // gamepadController.runByGamepadControl();
 
 
                 arm.turnArmBrakeModeOn();

@@ -69,9 +69,9 @@ public class Arm {
     public boolean runArmToLevelState = false;
     public int armMotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
-    public double maxExtended= 0; //Need tested values
+    public double maxExtended= 50; //Need tested values
 
-    //Constructor
+    //Constructor`
     public Arm(HardwareMap hardwareMap){
         armmotor = hardwareMap.get(DcMotorEx.class, "armmotor");
         initArm();
@@ -147,7 +147,7 @@ public class Arm {
 
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
-        //armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * MAX_DELTA); Function is normalized 0.2-1 to 0-1
+        armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * MAX_DELTA); //Function is normalized 0.2-1 to 0-1
         if (armCurrentArmPositionCount > RETRACTED && armCurrentArmPositionCount >= GROUND_JUNCTION + armDeltaCount){
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - armDeltaCount;
@@ -158,7 +158,7 @@ public class Arm {
 
     //extends the arm for the joystick control
     public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
-        //armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) *  MAX_DELTA); Function is normalized 0.2-1 to 0-1
+        armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) *  MAX_DELTA); //Function is normalized 0.2-1 to 0-1
         //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
         if (armCurrentArmPositionCount < maxExtended && armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount){
             turnArmBrakeModeOn();
