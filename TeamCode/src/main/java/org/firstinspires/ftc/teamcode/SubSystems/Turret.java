@@ -20,27 +20,106 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Turret {
 
-    //Initialization of <Fill>
-    public DcMotor turretmotor;
 
-    //Initialization of <Fill>
-    public enum TURRET_MOTOR_POSITION{
+    //TurretMotor declarations
+    DcMotor TurretMotor;
 
+    //value declarations
+    public boolean runTurretToLevelState = false;
+    public static int TURRET_DELTA_COUNT = (int) Math.toDegrees(5); //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public static double turretMotorPosition = (int) Math.toDegrees(0); //change to degrees, degree position of turret
+
+
+    // Used for both Teleop and Autonomous
+    public TURRET_STATE turret_state;// declare turret state enum
+
+    public enum TURRET_STATE{
+        FACING_FORWARD, //get values from test robot
+        FACING_BACKWARD, //get values from test robot
+        FACING_LEFT, //get values from test robot
+        FACING_RIGHT //get values from test robot
     }
 
-    //Initialization of <Fill>
-    public TURRET_MOTOR_POSITION turretMotorPosition;
-
-    //Initialization of <Fill>
-    public double turretMotorPower = 1.0;
-
-    //Constructor
-    public Turret(HardwareMap hardwareMap){
+    public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
+        TurretMotor = hardwareMap.get(DcMotor.class, "TurretMotor1");
         initTurret();
     }
 
-    //Method is able to <Fill>
+    public void faceForward() {
+        turret_state = TURRET_STATE.FACING_FORWARD;
+        runTurretToLevelState = true;
+        //assign value after testing
+    }
+    //commented out, as use not needed yet
+
+    public void faceBackward() {
+        turret_state = TURRET_STATE.FACING_BACKWARD;
+        runTurretToLevelState = true;
+        //assign value after testing
+    }
+    public void faceLeft() {
+        turret_state = TURRET_STATE.FACING_LEFT;
+        runTurretToLevelState = true;
+        //assign value after testing
+    }
+    public void faceRight() {
+        turret_state = TURRET_STATE.FACING_RIGHT;
+        runTurretToLevelState = true;
+        //assign value after testing
+    }
+
+    //turret initialization
     public void initTurret(){
+        resetTurret();
+        //set motor direction opposite for rotation
+        TurretMotor.setDirection(DcMotor.Direction.FORWARD);
+        faceForward();
+    }
+
+
+    /**
+     * Move Turret Left
+     * convert turret position value to degrees
+     * assign to gamepad value once done
+     * @param v
+     */
+    public void moveTurretCounterClockwise(double v){
+        faceLeft();
+        if (turretMotorPosition > -180 && turretMotorPosition <= 0){
+            turretMotorPosition = turretMotorPosition - TURRET_DELTA_COUNT;
+        }
+        runTurretToLevelState = true;
+    }
+    /**
+     * Move Turret Right
+     * assign to gamepad value once done
+     * convert turret position value to degrees
+     * @param v
+     */
+    public void moveTurretClockwise(double v){
+        faceRight();
+        if (turretMotorPosition < 180 && turretMotorPosition <= 0){
+            turretMotorPosition = turretMotorPosition + TURRET_DELTA_COUNT;
+        }
+        runTurretToLevelState = true;
+    }
+
+    public void resetTurret(){
+        DcMotor.RunMode runMode = TurretMotor.getMode();
+        TurretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        TurretMotor.setMode(runMode);
+        runTurretToLevelState = false;
 
     }
+    public void runTurretToPosition(double power){//receive value from testing
+        TurretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (runTurretToLevelState == true){
+            TurretMotor.setPower(power);
+            runTurretToLevelState = false;
+        } else{
+            TurretMotor.setPower(0.0);
+        }
+    }
+
+
 }
