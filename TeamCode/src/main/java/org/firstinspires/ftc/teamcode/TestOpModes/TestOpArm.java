@@ -26,6 +26,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 @TeleOp(name = "TestOpArm", group = "TestOp")
 public class TestOpArm extends LinearOpMode {
 
+    public boolean DEBUG_FLAG = true;
+
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
     public Arm arm;
@@ -88,7 +90,7 @@ public class TestOpArm extends LinearOpMode {
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
 
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+            if (DEBUG_FLAG) {
                 printDebugMessages();
                 telemetry.update();
             }
@@ -103,15 +105,24 @@ public class TestOpArm extends LinearOpMode {
                 if (gamepadController.gp2GetRightStickX() > 0.2) {
                     arm.extendArm(gamepadController.gp2GetRightStickX());
                     arm.runArmToLevel(gamepadController.gp2GetRightStickX());
-                    arm.runArmToLevelState = false;
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(gamepadController.gp2GetRightStickX());
+                        arm.runArmToLevelState = false;
+                    }
                 }
 
                 //retract the arm based on the right joystick
-                if (gamepadController.gp2GetRightStickX() < -0.2) {
+                else if(gamepadController.gp2GetRightStickX() < -0.2) {
                     arm.retractArm(gamepadController.gp2GetRightStickX());
                     arm.runArmToLevel(gamepadController.gp2GetRightStickX());
-                    arm.runArmToLevelState = false;
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(gamepadController.gp2GetRightStickX());
+                        arm.runArmToLevelState = false;
+                    }
+                } else {
+                    arm.turnArmBrakeModeOn();
                 }
+
 
                 //Move arm to low junction if x is pressed
                 if (gamepadController.gp2GetButtonXPress()){
@@ -150,7 +161,7 @@ public class TestOpArm extends LinearOpMode {
                 }
 
 
-                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+                if (DEBUG_FLAG) {
                     printDebugMessages();
                     telemetry.update();
                 }
@@ -167,21 +178,19 @@ public class TestOpArm extends LinearOpMode {
      */
     public void printDebugMessages(){
         telemetry.setAutoClear(true);
-        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
+        telemetry.addData("DEBUG_LEVEL is : ", DEBUG_FLAG);
         telemetry.addData("Robot ready to start","");
+        telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
+        telemetry.addData("Arm Motor State: ", arm.currentArmPosition);
 
-        if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
-
-            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
-
-            //****** Drive debug ******
+            /*
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
-            /*
+
+
+
+
             telemetry.addData("Arm Motor Power:", arm.getArmMotorPower);
             telemetry.addData("Arm Motor Position: ", arm.getArmMotorPosition);
 
@@ -199,10 +208,13 @@ public class TestOpArm extends LinearOpMode {
 
             telemetry.addData("Turret Motor Power : ", turret.getTurretMotorPower);
             telemetry.addData("Turret Motor Position : ", turret.getTurretMotorPosition);
-            */
+
 
             telemetry.addData("Game Timer : ", gameTimer.time());
-        }
+
+
+             */
+
 
         telemetry.update();
 

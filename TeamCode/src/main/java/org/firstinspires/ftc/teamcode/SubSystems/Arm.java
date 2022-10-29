@@ -50,26 +50,26 @@ public class Arm {
 
     //Constants for Arm positions
     public static final int RETRACTED= 0; //Need tested values
-    public static final int GROUND_JUNCTION= 100; //Need tested values
-    public static final int LOW_JUNCTION = 200; //Need tested values
-    public static final int MEDIUM_JUNCTION= 400; //Need tested values
-    public static final int HIGH_JUNCTION= 600; //Need tested values
+    public static final int GROUND_JUNCTION= 1000; //Need tested values
+    public static final int LOW_JUNCTION = 2000; //Need tested values
+    public static final int MEDIUM_JUNCTION= 3000; //Need tested values
+    public static final int HIGH_JUNCTION= 4000; //Need tested values
     public static final int PARKED = 0; //Need tested values
-    public static final int AUTO_RETRACTION_AMOUNT = 50; //need tested values
-    public static final int MAX_DELTA = 100; //need tested values
+    public static final int AUTO_RETRACTION_AMOUNT = 200; //need tested values
+    public static final int MAX_DELTA = 200; //need tested values
 
     //Different constants of arm speed
     public static final double HIGH_POWER = 1.0;
     public static final double MED_POWER = 0.5;
     public static final double LOW_POWER = 0.2;
 
-    public int armDeltaCount = 20; //Need tested value
+    public int armDeltaCount = 50; //Need tested value
     public ARM_MOTOR_POSITION currentArmPosition = ARM_MOTOR_POSITION.PARKED;
     public ARM_MOTOR_POSITION previousArmPosition = ARM_MOTOR_POSITION.PARKED;
     public boolean runArmToLevelState = false;
     public int armMotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
-    public double maxExtended = 1000; //Need to fix algorithm with actual robot values
+    public double maxExtended = 100000000; //Need to fix algorithm with actual robot values
 
     //Constructor`
     public Arm(HardwareMap hardwareMap){
@@ -148,9 +148,10 @@ public class Arm {
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * MAX_DELTA); //Function is normalized 0.2-1 to 0-1
-        if (armCurrentArmPositionCount > RETRACTED && armCurrentArmPositionCount >= GROUND_JUNCTION + armDeltaCount){
+        if (armCurrentArmPositionCount > RETRACTED + armDeltaCount ){
+                //|| armCurrentArmPositionCount >= GROUND_JUNCTION + armDeltaCount)
             turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount - armDeltaCount;
+            armCurrentArmPositionCount = armCurrentArmPositionCount - MAX_DELTA;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
             runArmToLevelState = true;
         }
@@ -160,9 +161,10 @@ public class Arm {
     public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) *  MAX_DELTA); //Function is normalized 0.2-1 to 0-1
         //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
-        if (armCurrentArmPositionCount < maxExtended && armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount){
+        if (armCurrentArmPositionCount < maxExtended - armDeltaCount){
+                //|| armCurrentArmPositionCount <= GROUND_JUNCTION - armDeltaCount)
             turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount + armDeltaCount;
+            armCurrentArmPositionCount = armCurrentArmPositionCount + MAX_DELTA;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
             runArmToLevelState = true;
         } else{
