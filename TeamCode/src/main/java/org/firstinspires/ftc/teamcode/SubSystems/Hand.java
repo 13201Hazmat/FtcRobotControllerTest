@@ -37,12 +37,13 @@ public class Hand {
     public boolean runHandToLevelState = false;
     public static final double WRIST_UP_POSITION = 180;//get position from robot
     public static final double WRIST_DOWN_POSITION = -180;//get position from robot
-    public static final double WRIST_DEFAULT_POSITION = 0;//get position from robot
+    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0;//get position from robot
+    public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
 
     //Hand - wrist, grip enum declaration
     public enum WRIST_STATE {
-        DEFAULT,
         WRIST_UP,
+        WRIST_LEVEL,
         WRIST_DOWN
     }
     public enum HAND_GRIP_STATE{ //state of the Hand Grip
@@ -62,8 +63,7 @@ public class Hand {
 
     //initialize arm
     public void initHand(){
-        resetHand();
-        wristServo.setPosition((int) WRIST_DEFAULT_POSITION);
+        wristServo.setPosition((int) WRIST_DEFAULT_LEVEL_POSITION);
     }
     /**
      *If state of hand grip is set to open, set position of servo's to specified
@@ -93,51 +93,25 @@ public class Hand {
     }
 
     //rotates wrist to level position
-    public void rotateWristLevel(){
-        wristServo.setPosition(WRIST_DEFAULT_POSITION);
-        //runHandToLevelState = true;
-        //moveWristToLevel();
+    public void moveWristLevel(){
+        wristLevelPosition = determineWristLevelPosition();
+        wristServo.setPosition(wristLevelPosition);
+        wristState = WRIST_STATE.WRIST_LEVEL;
     }
     //rotates hand up given controller input
-    public void runWristUp(){
-        if(wristState != WRIST_STATE.WRIST_UP) {
-            wristServo.setPosition((int) WRIST_UP_POSITION);
-            runHandToLevelState = true;
-        }
-        else{
-            wristServo.setPosition((int) WRIST_DEFAULT_POSITION);
-        }
-        //runHandToLevelState = true;
-        //moveWristToLevel();
+    public void moveWristUp(){
+        wristServo.setPosition((int) WRIST_UP_POSITION);
+        wristState = WRIST_STATE.WRIST_UP;
     }
+
     //rotates hand down given controller input
-    public void runWristDown(){
-        if(wristState != WRIST_STATE.WRIST_DOWN) {
-            wristServo.setPosition((int) WRIST_DOWN_POSITION);
-        }
-        else{
-            wristServo.setPosition((int) WRIST_DEFAULT_POSITION);
-        }
-        //runHandToLevelState = true;
-        //moveWristToLevel();
-    }
-    //sets the hand power
-    /**
-    public void moveWristToLevel(){ //set HandPower from testing
-        //wristservo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (runHandToLevelState == true){
-            wristservo.setPosition();
-            runHandToLevelState = false;
-        } else{
-            //wristservo.setPower(0.0);
-        }
-    }
-    */
-
-    public void resetHand(){
-        //DcMotor.RunMode runMode = wristservo.getMode();
-        wristServo.setPosition(WRIST_DEFAULT_POSITION);
-        wristState = WRIST_STATE.DEFAULT;
+    public void moveWristDown(){
+        wristServo.setPosition((int) WRIST_DOWN_POSITION);
+        wristState = WRIST_STATE.WRIST_DOWN;
     }
 
+    public double determineWristLevelPosition(){
+        //TOBE FILLED based on Shoulder angle
+        return 0;
+    }
 }
