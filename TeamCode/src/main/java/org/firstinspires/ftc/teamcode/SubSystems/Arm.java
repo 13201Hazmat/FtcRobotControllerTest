@@ -50,26 +50,26 @@ public class Arm {
 
     //Constants for Arm positions
     public static final int RETRACTED= 0; //Need tested values
-    public static final int GROUND_JUNCTION= 0; //Need tested values
-    public static final int LOW_JUNCTION= 0; //Need tested values
-    public static final int MEDIUM_JUNCTION= 0; //Need tested values
-    public static final int HIGH_JUNCTION= 0; //Need tested values
+    public static final int GROUND_JUNCTION= 100; //Need tested values
+    public static final int LOW_JUNCTION = 200; //Need tested values
+    public static final int MEDIUM_JUNCTION= 400; //Need tested values
+    public static final int HIGH_JUNCTION= 600; //Need tested values
     public static final int PARKED = 0; //Need tested values
-    public static final int AUTO_RETRACTION_AMOUNT = 0; //need tested values
-    public static final int MAX_DELTA = 0; //need tested values
+    public static final int AUTO_RETRACTION_AMOUNT = 50; //need tested values
+    public static final int MAX_DELTA = 100; //need tested values
 
     //Different constants of arm speed
     public static final double HIGH_POWER = 1.0;
     public static final double MED_POWER = 0.5;
     public static final double LOW_POWER = 0.2;
 
-    public int armDeltaCount = 0; //Need tested value
+    public int armDeltaCount = 20; //Need tested value
     public ARM_MOTOR_POSITION currentArmPosition = ARM_MOTOR_POSITION.PARKED;
     public ARM_MOTOR_POSITION previousArmPosition = ARM_MOTOR_POSITION.PARKED;
     public boolean runArmToLevelState = false;
     public int armMotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
-    public double maxExtended= 50; //Need tested values
+    public double maxExtended = 1000; //Need to fix algorithm with actual robot values
 
     //Constructor`
     public Arm(HardwareMap hardwareMap){
