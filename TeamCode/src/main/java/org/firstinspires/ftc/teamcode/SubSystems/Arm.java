@@ -88,17 +88,17 @@ public class Arm {
         previousArmPosition = armMotorPosition.PARKED;
     }
 
-    //Turns on the brake for arm
+    //Turns on the brake for arm motor
     public void turnArmBrakeModeOn(){
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    //Turns brake for arm off
+    //Turns brake for arm motor off
     public void turnArmBrakeModeOff() {
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    //Sets arm poision to ground junction
+    //Sets arm position to ground junction
     public void moveToArmGroundJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(GROUND_JUNCTION + armMotorBaselineEncoderCount);
@@ -134,7 +134,7 @@ public class Arm {
         currentArmPosition = armMotorPosition.HIGH_JUNCTION;
     }
 
-    //sets the arm power
+    //sets the arm motor power
     public void runArmToLevel(double power){
         armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (runArmToLevelState == true){
@@ -187,7 +187,7 @@ public class Arm {
     }
 }
 
-//change delta funciton to be exponential in proportion to the joystick, put threshold on joystick(0.2), exponential 0.2-1
+
 
 
 

@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 /**
  * TestOp Arm <BR>
  *
- * This code defines the TeleOp mode is done by Hazmat Robot for Powerplay<BR>
+ * This code defines the ArmTeleOp mode is done by Hazmat Robot for Powerplay<BR>
  *
  */
 @TeleOp(name = "TestOpArm", group = "TestOp")
