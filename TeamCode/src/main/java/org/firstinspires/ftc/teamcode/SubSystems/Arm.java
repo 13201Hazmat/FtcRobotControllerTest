@@ -66,7 +66,7 @@ public class Arm {
     public int armDeltaCount = 50; //Need tested value
     public ARM_MOTOR_POSITION currentArmPosition = ARM_MOTOR_POSITION.PARKED;
     public ARM_MOTOR_POSITION previousArmPosition = ARM_MOTOR_POSITION.PARKED;
-    public boolean runArmToLevelState = false;
+    public boolean runShoulderToLevelState = false;
     public int armMotorBaselineEncoderCount = 0;//Need tested values
     public int armCurrentArmPositionCount = GROUND_JUNCTION; //Default arm position count
     public double maxExtended = 100000000; //Need to fix algorithm with actual robot values
@@ -102,7 +102,7 @@ public class Arm {
     public void moveToArmGroundJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(GROUND_JUNCTION + armMotorBaselineEncoderCount);
-        runArmToLevelState = true;
+        runShoulderToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.GROUND_JUNCTION;
     }
@@ -111,7 +111,7 @@ public class Arm {
     public void moveToArmLowJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(LOW_JUNCTION + armMotorBaselineEncoderCount);
-        runArmToLevelState = true;
+        runShoulderToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.LOW_JUNCTION;
     }
@@ -120,7 +120,7 @@ public class Arm {
     public void moveToArmMidJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(MEDIUM_JUNCTION + armMotorBaselineEncoderCount);
-        runArmToLevelState = true;
+        runShoulderToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.MEDIUM_JUNCTION;
     }
@@ -129,17 +129,17 @@ public class Arm {
     public void moveToArmHighJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(HIGH_JUNCTION + armMotorBaselineEncoderCount);
-        runArmToLevelState = true;
+        runShoulderToLevelState = true;
         previousArmPosition = currentArmPosition;
         currentArmPosition = armMotorPosition.HIGH_JUNCTION;
     }
 
     //sets the arm motor power
-    public void runArmToLevel(double power){
+    public void runShoulderToLevel(double power){
         armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (runArmToLevelState == true){
+        if (runShoulderToLevelState == true){
             armmotor.setPower(power);
-            runArmToLevelState = false;
+            runShoulderToLevelState = false;
         } else{
             armmotor.setPower(0.0);
         }
@@ -153,7 +153,7 @@ public class Arm {
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - MAX_DELTA;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
-            runArmToLevelState = true;
+            runShoulderToLevelState = true;
         }
     }
 
@@ -166,12 +166,12 @@ public class Arm {
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount + MAX_DELTA;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
-            runArmToLevelState = true;
+            runShoulderToLevelState = true;
         } else{
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - AUTO_RETRACTION_AMOUNT;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
-            runArmToLevelState = true;
+            runShoulderToLevelState = true;
 
         }
     }

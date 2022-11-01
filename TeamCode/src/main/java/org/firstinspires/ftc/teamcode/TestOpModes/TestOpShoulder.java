@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  * This code defines the ArmTeleOp mode is done by Hazmat Robot for Powerplay<BR>
  *
  */
-@TeleOp(name = "TestOpArm", group = "TestOp")
-public class TestOpArm extends LinearOpMode {
+@TeleOp(name = "TestOpShoulder", group = "TestOp")
+public class TestOpShoulder extends LinearOpMode {
 
     public boolean DEBUG_FLAG = true;
 
@@ -96,66 +96,66 @@ public class TestOpArm extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-               // gamepadController.runByGamepadControl();
+                // gamepadController.runByGamepadControl();
 
-                arm.turnArmBrakeModeOn();
+                shoulder.turnShoulderBrakeModeOn();
 
-                //Extend the arm based on the right joystick
-                if (gamepadController.gp2GetRigtTrigger() > 0.2) {
-                    arm.extendArm(gamepadController.gp2GetRigtTrigger());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
-                        arm.runShoulderToLevelState = false;
+                //Extend the shoulder based on the right joystick
+                if (gamepadController.gp2GetRightTrigger() > 0.2) {
+                    shoulder.raiseShoulder(gamepadController.gp2GetRightTrigger());
+                    shoulder.runShoulderToLevel(gamepadController.gp2GetRightTrigger());
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(gamepadController.gp2GetRightTrigger());
+                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
                 //retract the arm based on the right joystick
-                else if(gamepadController.gp2GetRigtTrigger() < -0.2) {
-                    arm.retractArm(gamepadController.gp2GetRigtTrigger());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
-                        arm.runShoulderToLevelState = false;
+                else if(gamepadController.gp2GetLeftTrigger() > 0.2) {
+                    shoulder.lowerShoulder(gamepadController.gp2GetLeftTrigger());
+                    shoulder.runShoulderToLevel(gamepadController.gp2GetLeftTrigger());
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(gamepadController.gp2GetLeftTrigger());
+                        shoulder.runShoulderToLevelState = false;
                     }
                 } else {
-                    arm.turnArmBrakeModeOn();
+                    shoulder.turnShoulderBrakeModeOn();
                 }
 
 
                 //Move arm to low junction if x is pressed
                 if (gamepadController.gp2GetButtonXPress()){
-                    arm.moveToArmLowJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+                    shoulder.moveToShoulderLowJunction();
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
                 //Moves arm to the high junction position if gamepad b is pressed
                 if (gamepadController.gp2GetButtonBPress()){
-                    arm.moveToArmHighJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+                    shoulder.moveToShoulderHighJunction();
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
                 //Moves arm to ground junction if gamepad a is pressed
                 if (gamepadController.gp2GetButtonAPress()){
-                    arm.moveToArmGroundJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+                    shoulder.moveToShoulderGroundJunction();
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
                 //Moves arm to middle junction if y is pressed
                 if (gamepadController.gp2GetButtonYPress()){
-                    arm.moveToArmMidJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+                    shoulder.moveToShoulderMidJunction();
+                    if (shoulder.runShoulderToLevelState){
+                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
@@ -179,9 +179,9 @@ public class TestOpArm extends LinearOpMode {
         telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_LEVEL is : ", DEBUG_FLAG);
         telemetry.addData("Robot ready to start","");
-        telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
-        telemetry.addData("Arm Motor State: ", arm.currentArmPosition);
-        telemetry.addData("Arm Delta Value: ", arm.armDeltaCount);
+        telemetry.addData("Arm Motor Position: ", shoulder.getShoulderPositionCount());
+        telemetry.addData("Arm Motor State: ", shoulder.currentShoulderPosition);
+        telemetry.addData("Arm Delta Value: ", shoulder.shoulderDeltaCount);
 
             /*
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
