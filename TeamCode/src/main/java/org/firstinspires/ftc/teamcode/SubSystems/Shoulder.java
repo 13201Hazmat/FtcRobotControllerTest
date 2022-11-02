@@ -44,9 +44,6 @@ public class Shoulder {
     public SHOULDER_MOTOR_POSITION shoulderMotorPosition;
     public SHOULDER_STATE shoulderState;
 
-    //Initialization of <Fill>
-    public double rightShoulderMotorPower = 1.0;
-    public double leftShoulderMotorPower = 1.0;
 
     public boolean runShoulderToLevelState = false;
     public int shoulderDeltaCount = 50; //Need tested value
@@ -71,7 +68,8 @@ public class Shoulder {
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
-
+        lshmotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
+        rshmotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
         initShoulder();
     }
 
@@ -190,10 +188,6 @@ public class Shoulder {
             runShoulderToLevelState = true;
         }
     }
-
-
-
-
 
 
 

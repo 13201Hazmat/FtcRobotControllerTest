@@ -53,7 +53,7 @@ public class TestOpShoulder extends LinearOpMode {
 
         /* Create Subsystem Objects*/
         //driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
+        //arm = new Arm(hardwareMap);
         hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
@@ -127,7 +127,7 @@ public class TestOpShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonXPress()){
                     shoulder.moveToShoulderLowJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
                         shoulder.runShoulderToLevelState = false;
                     }
                 }
@@ -136,7 +136,7 @@ public class TestOpShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonBPress()){
                     shoulder.moveToShoulderHighJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
                         shoulder.runShoulderToLevelState = false;
                     }
                 }
@@ -145,7 +145,7 @@ public class TestOpShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonAPress()){
                     shoulder.moveToShoulderGroundJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
                         shoulder.runShoulderToLevelState = false;
                     }
                 }
@@ -154,7 +154,7 @@ public class TestOpShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonYPress()){
                     shoulder.moveToShoulderMidJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(arm.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
                         shoulder.runShoulderToLevelState = false;
                     }
                 }
