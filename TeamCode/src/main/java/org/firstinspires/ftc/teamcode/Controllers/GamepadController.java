@@ -83,6 +83,8 @@ public class GamepadController {
         this.lights = lights;
     }
 
+
+
     /**
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
@@ -149,7 +151,7 @@ public class GamepadController {
         if (Math.abs(gp1GetRightStickX())>0.1) {
             driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
         } else {
-            driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
+            driveTrain.gamepadInputTurn = -limitStick(gp2GetRigtTrigger());
         }
 
         //TCode to implement slight left / right turn. Uncomment to use
@@ -186,6 +188,57 @@ public class GamepadController {
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runArm(){
+        arm.turnArmBrakeModeOn();
+
+        //Extend the arm based on the right joystick
+        if (gp2GetRigtTrigger() > 0.2) {
+            arm.extendArm(gp2GetRigtTrigger());
+            arm.runShoulderToLevel(gp2GetRigtTrigger());
+            arm.runShoulderToLevelState = false;
+        }
+
+        //retract the arm based on the right joystick
+        if (gp2GetRigtTrigger() < -0.2) {
+            arm.retractArm(gp2GetRigtTrigger());
+            arm.runShoulderToLevel(gp2GetRigtTrigger());
+            arm.runShoulderToLevelState = false;
+        }
+
+        //Move arm to low junction if x is pressed
+        if (gp2GetButtonXPress()){
+            arm.moveToArmLowJunction();
+            if (arm.runShoulderToLevelState){
+                arm.runShoulderToLevel(arm.MED_POWER);
+                arm.runShoulderToLevelState = false;
+            }
+        }
+
+        //Moves arm to the high junction position if gamepad b is pressed
+        if (gp2GetButtonBPress()){
+            arm.moveToArmHighJunction();
+            if (arm.runShoulderToLevelState){
+                arm.runShoulderToLevel(arm.MED_POWER);
+                arm.runShoulderToLevelState = false;
+            }
+        }
+
+        //Moves arm to ground junction if gamepad a is pressed
+        if (gp2GetButtonAPress()){
+            arm.moveToArmGroundJunction();
+            if (arm.runShoulderToLevelState){
+                arm.runShoulderToLevel(arm.MED_POWER);
+                arm.runShoulderToLevelState = false;
+            }
+        }
+
+        //Moves arm to middle junction if y is pressed
+        if (gp2GetButtonYPress()){
+            arm.moveToArmMidJunction();
+            if (arm.runShoulderToLevelState){
+                arm.runShoulderToLevel(arm.MED_POWER);
+                arm.runShoulderToLevelState = false;
+            }
+        }
 
     }
 
@@ -328,7 +381,7 @@ public class GamepadController {
     public double gp1GetRightStickX() {
         return hzGamepad1.right_stick_x;
     }
-    public double gp2GetRightStickX() {
+    public double gp2GetRigtTrigger() {
         return hzGamepad2.right_stick_x;
     }
     public double gp1GetRightStickY() {
