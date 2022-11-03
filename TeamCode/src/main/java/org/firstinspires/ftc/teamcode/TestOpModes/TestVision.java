@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
 @TeleOp(name = "Vision Test OpMode", group = "Concept")
-public class VisionTestOpMode extends LinearOpMode {
+public class TestVision extends LinearOpMode {
 
     public HardwareMap hardwareMap;
     public Vision vision;

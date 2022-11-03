@@ -24,21 +24,24 @@ public class Turret {
     //TurretMotor declarations
     public DcMotorEx turretMotor;
 
+    public enum TURRET_MOTOR_POSITION{
+        FACING_FORWARD,
+        FACING_BACKWARD,
+        FACING_LEFT,
+        FACING_RIGHT,
+        FACING_RANDOM
+    }
+    public static double turretMotorPosition;
+
     //value declarations
     public boolean runTurretToLevelState = false;
     public static int TURRET_DELTA_COUNT = (int) Math.toDegrees(5); //movement value of turret given clockwise or counterclockwise rotation(changeable)
-    public static double turretMotorPosition = (int) Math.toDegrees(0); //change to degrees, degree position of turret
 
 
     // Used for both TeleOp and Autonomous
-    public TURRET_STATE turret_state;// declare turret state enum
+    public TURRET_MOTOR_POSITION turret_state;// declare turret state enum
 
-    public enum TURRET_STATE{
-        FACING_FORWARD, //get values from test robot
-        FACING_BACKWARD, //get values from test robot
-        FACING_LEFT, //get values from test robot
-        FACING_RIGHT //get values from test robot
-    }
+
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretmotor");
@@ -46,24 +49,24 @@ public class Turret {
     }
 
     public void faceForward() {
-        turret_state = TURRET_STATE.FACING_FORWARD;
+        turret_state = TURRET_MOTOR_POSITION.FACING_FORWARD;
         runTurretToLevelState = true;
         //assign value after testing
     }
     //commented out, as use not needed yet
 
     public void faceBackward() {
-        turret_state = TURRET_STATE.FACING_BACKWARD;
+        turret_state = TURRET_MOTOR_POSITION.FACING_BACKWARD;
         runTurretToLevelState = true;
         //assign value after testing
     }
     public void faceLeft() {
-        turret_state = TURRET_STATE.FACING_LEFT;
+        turret_state = TURRET_MOTOR_POSITION.FACING_LEFT;
         runTurretToLevelState = true;
         //assign value after testing
     }
     public void faceRight() {
-        turret_state = TURRET_STATE.FACING_RIGHT;
+        turret_state = TURRET_MOTOR_POSITION.FACING_RIGHT;
         runTurretToLevelState = true;
         //assign value after testing
     }
