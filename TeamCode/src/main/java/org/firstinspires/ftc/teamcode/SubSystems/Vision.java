@@ -41,6 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 //import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 import java.util.List;
@@ -151,22 +152,19 @@ public class Vision {
     private static final String[] LABELS = {
             "1 Bolt",
             "2 Bulb",
-            "3 Panel"
+            "3 Panel",
+            "4 Green",
+            "5 Yellow",
+            "6 Purple"
     };
 
 
 
     public String detectedLabel = "None";
-    public static float[] targetPosition = {
-            //TODO : Update values based on marker location identifier
-            250,
-            600,
-            1000
-    };
 
     private TFObjectDetector tfod;
     private List<Recognition> recognitions;
-    //public GameField.VISION_IDENTIFIED_TARGET targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.UNKNOWN;
+    public GameField.VISION_IDENTIFIED_TARGET targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
 
     /**
      * Initialize the Vuforia localization engine.
@@ -253,9 +251,8 @@ public class Vision {
      * This is to be run till the play button is pressed.. the last target zone identified is returned.
      * @return
      */
-    public String runVuforiaTensorFlow() {
+    public GameField.VISION_IDENTIFIED_TARGET runVuforiaTensorFlow() {
         visionState = VISION_STATE.TFOD_RUNNING;
-
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -265,12 +262,27 @@ public class Vision {
                     for (Recognition recognition : recognitions) {
                         // check label to see which target zone to go after.
                         detectedLabel = recognition.getLabel();
+                        switch(detectedLabel){
+                            case "1 Bolt":
+                            case "6 Purple":
+                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
+                                break;
+                            case "2 Bulb":
+                            case "5 Yellow":
+                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
+                                break;
+                            case "3 Panel":
+                            case "4 Green":
+                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
+                                break;
+                        }
+                        }
                         }
                     }
-                }
+
 
         //}
-        return detectedLabel;
+        return targetLevelDetected;
     }
 
     /**

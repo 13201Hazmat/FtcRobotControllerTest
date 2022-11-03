@@ -88,5 +88,17 @@ public class GameField {
     public static boolean poseSetInAutonomous = false;
     public static Pose2d currentPose = new Pose2d();
 
-    public enum VISION_IDENTIFIED_TARGET {}
+    public enum VISION_IDENTIFIER{
+        BOLT,
+        BULB,
+        PANEL,
+        GREEN,
+        YELLOW,
+        PURPLE
+    }
+    public enum VISION_IDENTIFIED_TARGET {
+        LOCATION1,
+        LOCATION2,
+        LOCATION3
+    }
 }
