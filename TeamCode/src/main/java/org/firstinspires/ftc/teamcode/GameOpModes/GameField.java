@@ -43,47 +43,6 @@ public class GameField {
     public static PLAYING_ALLIANCE playingAlliance = PLAYING_ALLIANCE.BLUE_ALLIANCE;
     public static double ALLIANCE_FACTOR = 1;
 
-
-    //Define and declare Robot Starting Locations
-    /*
-    public enum START_POSITION{
-        WAREHOUSE,
-        STORAGE,
-        MIDDLE,
-        ORIGIN
-    }
-    public static START_POSITION startPosition = START_POSITION.WAREHOUSE;
-
-    public enum PARKING_LOCATION{
-        WAREHOUSE,
-        STORAGE,
-        NO_PARKING
-    }
-
-    public enum AUTONOMOUS_ROUTE {
-        THROUGH_BARRIER,
-        ALONG_WALL,
-        NOT_APPLICABLE
-    }
-
-    public static boolean END_PARKING_FACING_SHARED_SHIPPING_HUB = false;
-
-    //Define targets for Vision to determine Autonomous mode action based on camera detection
-    public enum VISION_IDENTIFIED_TARGET {
-        LEVEL1,
-        LEVEL2,
-        LEVEL3,
-        UNKNOWN;
-    };
-
-    public enum VISION_IDENTIFIER{
-        DUCK,
-        MARKER
-    };
-    public static VISION_IDENTIFIER visionIdentifier = VISION_IDENTIFIER.DUCK;
-
-     */
-
     //Static fields to pass Pos from Autonomous to TeleOp
     public static boolean poseSetInAutonomous = false;
     public static Pose2d currentPose = new Pose2d();

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-//import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,15 +17,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
- * TestOp Arm <BR>
+ * Ultimate Goal TeleOp mode <BR>
  *
- * This code defines the ArmTeleOp mode is done by Hazmat Robot for Powerplay<BR>
+ * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TestOpArm", group = "TestOp")
-public class TestOpArm extends LinearOpMode {
-
-    public boolean DEBUG_FLAG = true;
+@TeleOp(name = "TestArm", group = "00-Teleop")
+public class TestArm extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -37,7 +35,7 @@ public class TestOpArm extends LinearOpMode {
 
     //public Vuforia Vuforia1;
 
-    //public Pose2d startPose = GameField.ORIGINPOSE;
+    public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
@@ -50,7 +48,7 @@ public class TestOpArm extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        //driveTrain = new DriveTrain(hardwareMap);
+        driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
         hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
@@ -61,18 +59,16 @@ public class TestOpArm extends LinearOpMode {
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
+
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
-        /*
-        if ( GameField.poseSetInAutonomous == true) {
+        if ( GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
-        */
 
-
-        GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-        //GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
 
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
@@ -87,32 +83,34 @@ public class TestOpArm extends LinearOpMode {
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
 
-            if (DEBUG_FLAG) {
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                 printDebugMessages();
                 telemetry.update();
             }
 
             while (opModeIsActive()) {
-               // gamepadController.runByGamepadControl();
+                gamepadController.runByGamepadControl();
+
+                // gamepadController.runByGamepadControl();
 
                 arm.turnArmBrakeModeOn();
 
                 //Extend the arm based on the right joystick
-                if (gamepadController.gp2GetRigtTrigger() > 0.2) {
-                    arm.extendArm(gamepadController.gp2GetRigtTrigger());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
+                if (gamepadController.gp2GetRightStickX() > 0.2) {
+                    arm.extendArm(gamepadController.gp2GetRightStickX());
+                    arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                     if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
+                        arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                         arm.runShoulderToLevelState = false;
                     }
                 }
 
                 //retract the arm based on the right joystick
-                else if(gamepadController.gp2GetRigtTrigger() < -0.2) {
-                    arm.retractArm(gamepadController.gp2GetRigtTrigger());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
+                else if(gamepadController.gp2GetRightStickX() < -0.2) {
+                    arm.retractArm(gamepadController.gp2GetRightStickX());
+                    arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                     if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRigtTrigger());
+                        arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                         arm.runShoulderToLevelState = false;
                     }
                 } else {
@@ -157,7 +155,7 @@ public class TestOpArm extends LinearOpMode {
                 }
 
 
-                if (DEBUG_FLAG) {
+                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
@@ -174,44 +172,38 @@ public class TestOpArm extends LinearOpMode {
      */
     public void printDebugMessages(){
         telemetry.setAutoClear(true);
-        telemetry.addData("DEBUG_LEVEL is : ", DEBUG_FLAG);
+        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
         telemetry.addData("Robot ready to start","");
-        telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
-        telemetry.addData("Arm Motor State: ", arm.currentArmPosition);
-        telemetry.addData("Arm Delta Value: ", arm.armDeltaCount);
 
-            /*
+        if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+
+            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
+            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
+            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            telemetry.addData("startPose : ", startPose);
+
+            //****** Drive debug ******
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
+            telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
+            telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
 
+            telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
+            telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
+            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
+            telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
+            telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
+            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());
+            telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
 
-
-            telemetry.addData("Arm Motor Power:", arm.getArmMotorPower);
-            telemetry.addData("Arm Motor Position: ", arm.getArmMotorPosition);
-
-            telemetry.addData("Camera State : ", camera.getCameraState);
-
-            telemetry.addData("Wrist Servo Power : ", hand.getWristServoPower);
-            telemetry.addData("Grips Servo Power : ", hand.getGripServoPower);
-            telemetry.addData("Left Intake Servo Power : ", hand.getIntklServoPower);
-            telemetry.addData("Right Intake Servo Power : ", hand.getIntkrServoPower);
-
-            telemetry.addData("Right Motor Shoulder Power : ", shoulder.getRshMotorPower);
-            telemetry.addData("Left Motor Shoulder Power: ", shoulder.getLshMotorPower);
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.getRshMotorPositon);
-            telemetry.addData("Left Motor Shoulder Position : ", shoulder.getLshMotorPosition);
-
-            telemetry.addData("Turret Motor Power : ", turret.getTurretMotorPower);
-            telemetry.addData("Turret Motor Position : ", turret.getTurretMotorPosition);
-
-
+            telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
+            telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
+            
             telemetry.addData("Game Timer : ", gameTimer.time());
-
-
-             */
-
+        }
 
         telemetry.update();
 

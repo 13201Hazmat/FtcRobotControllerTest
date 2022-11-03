@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TestOpModes;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -22,7 +23,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TestTeleOpTemplate", group = "00-Teleop")
+@TeleOp(name = "TeleOpTestTemplate", group = "00-Teleop")
+@Disabled
 public class TestTeleOpModeTemplate extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -59,6 +61,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
+
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
@@ -66,8 +69,8 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
-        GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-        //GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
 
 
         /* Set Initial State of any subsystem when TeleOp is to be started*/
@@ -122,26 +125,22 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
-            /*
-            telemetry.addData("Arm Motor Power:", arm.getArmMotorPower);
-            telemetry.addData("Arm Motor Position: ", arm.getArmMotorPosition);
+            telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
+            telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
 
-            telemetry.addData("Camera State : ", camera.getCameraState);
+            telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
+            telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
+            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
-            telemetry.addData("Wrist Servo Power : ", hand.getWristServoPower);
-            telemetry.addData("Grips Servo Power : ", hand.getGripServoPower);
-            telemetry.addData("Left Intake Servo Power : ", hand.getIntklServoPower);
-            telemetry.addData("Right Intake Servo Power : ", hand.getIntkrServoPower);
+            telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
+            telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
+            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());
+            telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
 
-            telemetry.addData("Right Motor Shoulder Power : ", shoulder.getRshMotorPower);
-            telemetry.addData("Left Motor Shoulder Power: ", shoulder.getLshMotorPower);
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.getRshMotorPositon);
-            telemetry.addData("Left Motor Shoulder Position : ", shoulder.getLshMotorPosition);
-
-            telemetry.addData("Turret Motor Power : ", turret.getTurretMotorPower);
-            telemetry.addData("Turret Motor Position : ", turret.getTurretMotorPosition);
-            */
-
+            telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
+            telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
+            
             telemetry.addData("Game Timer : ", gameTimer.time());
         }
 

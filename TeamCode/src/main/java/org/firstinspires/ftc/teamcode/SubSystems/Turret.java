@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Definition of Subsystem Class <BR>
@@ -22,7 +22,7 @@ public class Turret {
 
 
     //TurretMotor declarations
-    DcMotor TurretMotor;
+    public DcMotorEx turretMotor;
 
     //value declarations
     public boolean runTurretToLevelState = false;
@@ -30,7 +30,7 @@ public class Turret {
     public static double turretMotorPosition = (int) Math.toDegrees(0); //change to degrees, degree position of turret
 
 
-    // Used for both Teleop and Autonomous
+    // Used for both TeleOp and Autonomous
     public TURRET_STATE turret_state;// declare turret state enum
 
     public enum TURRET_STATE{
@@ -41,7 +41,7 @@ public class Turret {
     }
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
-        TurretMotor = hardwareMap.get(DcMotor.class, "TurretMotor1");
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turretmotor");
         initTurret();
     }
 
@@ -72,7 +72,7 @@ public class Turret {
     public void initTurret(){
         resetTurret();
         //set motor direction opposite for rotation
-        TurretMotor.setDirection(DcMotor.Direction.FORWARD);
+        turretMotor.setDirection(DcMotorEx.Direction.FORWARD);
         faceForward();
     }
 
@@ -105,19 +105,19 @@ public class Turret {
     }
 
     public void resetTurret(){
-        DcMotor.RunMode runMode = TurretMotor.getMode();
-        TurretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TurretMotor.setMode(runMode);
+        DcMotorEx.RunMode runMode = turretMotor.getMode();
+        turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setMode(runMode);
         runTurretToLevelState = false;
 
     }
     public void runTurretToPosition(double power){//receive value from testing
-        TurretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runTurretToLevelState == true){
-            TurretMotor.setPower(power);
+            turretMotor.setPower(power);
             runTurretToLevelState = false;
         } else{
-            TurretMotor.setPower(0.0);
+            turretMotor.setPower(0.0);
         }
     }
 

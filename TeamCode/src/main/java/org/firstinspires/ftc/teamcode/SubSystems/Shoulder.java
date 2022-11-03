@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Definition of Subsystem Class <BR>
  *
@@ -21,7 +20,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Shoulder {
     //Initialization of <Fill>
-    public DcMotorEx rshmotor, lshmotor;
+    public DcMotorEx rightShoulderMotor, leftShoulderMotor;
 
     //Initialization of <Fill>
     public enum SHOULDER_MOTOR_POSITION {
@@ -68,8 +67,8 @@ public class Shoulder {
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
-        lshmotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
-        rshmotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
+        leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
+        rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
         initShoulder();
     }
 
@@ -77,58 +76,58 @@ public class Shoulder {
     public void initShoulder(){
         resetShoulder();
         turnShoulderBrakeModeOff();
-        lshmotor.setPositionPIDFCoefficients(5.0);
-        rshmotor.setPositionPIDFCoefficients(5.0);
-        lshmotor.setTargetPosition(PARKED);
-        rshmotor.setTargetPosition(PARKED);
-        lshmotor.setDirection(DcMotor.Direction.FORWARD);
-        rshmotor.setDirection(DcMotor.Direction.REVERSE);
+        leftShoulderMotor.setPositionPIDFCoefficients(5.0);
+        rightShoulderMotor.setPositionPIDFCoefficients(5.0);
+        leftShoulderMotor.setTargetPosition(PARKED);
+        rightShoulderMotor.setTargetPosition(PARKED);
+        leftShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        rightShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
         currentShoulderPosition = shoulderMotorPosition.PARKED;
         previousShoulderPosition = shoulderMotorPosition.PARKED;
     }
 
     public void resetShoulder(){
-        DcMotor.RunMode runMode = lshmotor.getMode();
-        lshmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rshmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lshmotor.setMode(runMode);
-        rshmotor.setMode(runMode);
+        DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
+        leftShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftShoulderMotor.setMode(runMode);
+        rightShoulderMotor.setMode(runMode);
 
     }
 
     public void runShoulderToLevel(double power){
-        rshmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lshmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        leftShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runShoulderToLevelState == true){
-            lshmotor.setPower(power);
-            rshmotor.setPower(power);
+            leftShoulderMotor.setPower(power);
+            rightShoulderMotor.setPower(power);
             runShoulderToLevelState = false;
         } else{
-            lshmotor.setPower(0.0);
-            rshmotor.setPower(0.0);
+            leftShoulderMotor.setPower(0.0);
+            rightShoulderMotor.setPower(0.0);
         }
     }
 
     public void turnShoulderBrakeModeOn() {
-        lshmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rshmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     public void turnShoulderBrakeModeOff() {
-        lshmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rshmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        rightShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
     //gets the position of the shoulder
     public int getShoulderPositionCount() {
-        return rshmotor.getCurrentPosition();
+        return rightShoulderMotor.getCurrentPosition();
     }
 
     //Sets shoulder position to ground junction
     public void moveToShoulderGroundJunction() {
         turnShoulderBrakeModeOn();
-        lshmotor.setTargetPosition(GROUND_JUNCTION + baselineEncoderCount);
-        rshmotor.setTargetPosition(GROUND_JUNCTION + baselineEncoderCount);
+        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION + baselineEncoderCount);
         runShoulderToLevelState = true;
         previousShoulderPosition = currentShoulderPosition;
         currentShoulderPosition = shoulderMotorPosition.GROUND_JUNCTION;
@@ -137,8 +136,8 @@ public class Shoulder {
     //Sets shoulder position to low junction
     public void moveToShoulderLowJunction() {
         turnShoulderBrakeModeOn();
-        lshmotor.setTargetPosition(LOW_JUNCTION + baselineEncoderCount);
-        rshmotor.setTargetPosition(LOW_JUNCTION + baselineEncoderCount);
+        leftShoulderMotor.setTargetPosition(LOW_JUNCTION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(LOW_JUNCTION + baselineEncoderCount);
         runShoulderToLevelState = true;
         previousShoulderPosition = currentShoulderPosition;
         currentShoulderPosition = shoulderMotorPosition.LOW_JUNCTION;
@@ -147,8 +146,8 @@ public class Shoulder {
     //Sets shoulder position or mid junction
     public void moveToShoulderMidJunction() {
         turnShoulderBrakeModeOn();
-        rshmotor.setTargetPosition(MEDIUM_JUNCTION + baselineEncoderCount);
-        lshmotor.setTargetPosition(MEDIUM_JUNCTION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(MEDIUM_JUNCTION + baselineEncoderCount);
+        leftShoulderMotor.setTargetPosition(MEDIUM_JUNCTION + baselineEncoderCount);
         runShoulderToLevelState = true;
         previousShoulderPosition = currentShoulderPosition;
         currentShoulderPosition = shoulderMotorPosition.MEDIUM_JUNCTION;
@@ -157,8 +156,8 @@ public class Shoulder {
     //Sets shoulder position to high junction
     public void moveToShoulderHighJunction() {
         turnShoulderBrakeModeOn();
-        rshmotor.setTargetPosition(HIGH_JUNCTION + baselineEncoderCount);
-        lshmotor.setTargetPosition(HIGH_JUNCTION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(HIGH_JUNCTION + baselineEncoderCount);
+        leftShoulderMotor.setTargetPosition(HIGH_JUNCTION + baselineEncoderCount);
         runShoulderToLevelState = true;
         previousShoulderPosition = currentShoulderPosition;
         currentShoulderPosition = shoulderMotorPosition.HIGH_JUNCTION;
@@ -171,8 +170,8 @@ public class Shoulder {
                 //&& shoulderCurrentShoulderPositionCount >= GROUND_JUNCTION + shoulderDeltaCount)
             turnShoulderBrakeModeOn();
             shoulderCurrentShoulderPositionCount = shoulderCurrentShoulderPositionCount - shoulderDeltaCount;
-            rshmotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
-            lshmotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
+            rightShoulderMotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
+            leftShoulderMotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
             runShoulderToLevelState = true;
         }
     }
@@ -183,8 +182,8 @@ public class Shoulder {
         if (shoulderCurrentShoulderPositionCount < maxPosition && shoulderCurrentShoulderPositionCount <= GROUND_JUNCTION - shoulderDeltaCount){
             turnShoulderBrakeModeOn();
             shoulderCurrentShoulderPositionCount = shoulderCurrentShoulderPositionCount + shoulderDeltaCount;
-            rshmotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
-            lshmotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
+            rightShoulderMotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
+            leftShoulderMotor.setTargetPosition(shoulderCurrentShoulderPositionCount);
             runShoulderToLevelState = true;
         }
     }

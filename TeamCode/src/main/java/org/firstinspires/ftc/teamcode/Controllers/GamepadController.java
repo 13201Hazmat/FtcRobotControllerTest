@@ -130,7 +130,7 @@ public class GamepadController {
                 //-limitStick(gp2GetLeftStickY()),
                 //-limitStick(gp2GetLeftStickX()));
             }
-        };
+        }
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
 
@@ -139,19 +139,19 @@ public class GamepadController {
                         gp1TurboMode(gp1GetLeftStickX()),
                         -gp1TurboMode(gp1GetLeftStickY())
                 ).rotated(-driveTrain.poseEstimate.getHeading());
-            };
+            }
 
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
                 driveTrain.gamepadInput = new Vector2d(
                         -gp1TurboMode(gp1GetLeftStickX()),
                         gp1TurboMode(gp1GetLeftStickY())
                 ).rotated(-driveTrain.poseEstimate.getHeading());
-            };
+            }
         }
         if (Math.abs(gp1GetRightStickX())>0.1) {
             driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
         } else {
-            driveTrain.gamepadInputTurn = -limitStick(gp2GetRigtTrigger());
+            driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
         }
 
         //TCode to implement slight left / right turn. Uncomment to use
@@ -191,16 +191,16 @@ public class GamepadController {
         arm.turnArmBrakeModeOn();
 
         //Extend the arm based on the right joystick
-        if (gp2GetRigtTrigger() > 0.2) {
-            arm.extendArm(gp2GetRigtTrigger());
-            arm.runShoulderToLevel(gp2GetRigtTrigger());
+        if (gp2GetRightStickX() > 0.2) {
+            arm.extendArm(gp2GetRightStickX());
+            arm.runShoulderToLevel(gp2GetRightStickX());
             arm.runShoulderToLevelState = false;
         }
 
         //retract the arm based on the right joystick
-        if (gp2GetRigtTrigger() < -0.2) {
-            arm.retractArm(gp2GetRigtTrigger());
-            arm.runShoulderToLevel(gp2GetRigtTrigger());
+        if (gp2GetRightStickX() < -0.2) {
+            arm.retractArm(gp2GetRightStickX());
+            arm.runShoulderToLevel(gp2GetRightStickX());
             arm.runShoulderToLevelState = false;
         }
 
@@ -381,9 +381,10 @@ public class GamepadController {
     public double gp1GetRightStickX() {
         return hzGamepad1.right_stick_x;
     }
-    public double gp2GetRigtTrigger() {
+    public double gp2GetRightStickX() {
         return hzGamepad2.right_stick_x;
     }
+
     public double gp1GetRightStickY() {
         return hzGamepad1.right_stick_y;
     }
@@ -397,7 +398,6 @@ public class GamepadController {
      * For Hazmat Freight Frenzy Right Trigger pressed means turbo mode on.
      *
      * @return gpGamepad1.right_trigger
-     * @return gpGamepad2.right_trigger
      */
     public double gp1GetRightTrigger() {
         return hzGamepad1.right_trigger;
@@ -408,7 +408,7 @@ public class GamepadController {
 
     /**
      * gp1 right trigger press cubic value when pressed
-     * @return
+     * @return gp1GetRightTriggerPress
      */
     public boolean gp1GetRightTriggerPress() {
         boolean isPressedRightTrigger = false;
@@ -436,7 +436,6 @@ public class GamepadController {
      * Methods to get the value of gamepad Left Trigger
      *
      * @return gpGamepad1.left_trigger
-     * @return gpGamepad2.left_trigger
      */
     public double gp1GetLeftTrigger() {
         return hzGamepad1.left_trigger;

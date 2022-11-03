@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -83,19 +82,19 @@ public class Arm {
         turnArmBrakeModeOff();
         armmotor.setPositionPIDFCoefficients(5.0);
         armmotor.setTargetPosition(PARKED);
-        armmotor.setDirection(DcMotor.Direction.FORWARD);
+        armmotor.setDirection(DcMotorEx.Direction.FORWARD);
         currentArmPosition = armMotorPosition.PARKED;
         previousArmPosition = armMotorPosition.PARKED;
     }
 
     //Turns on the brake for arm motor
     public void turnArmBrakeModeOn(){
-        armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armmotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     //Turns brake for arm motor off
     public void turnArmBrakeModeOff() {
-        armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        armmotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
     //Sets arm position to ground junction
@@ -136,7 +135,7 @@ public class Arm {
 
     //sets the arm motor power
     public void runShoulderToLevel(double power){
-        armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armmotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runShoulderToLevelState == true){
             armmotor.setPower(power);
             runShoulderToLevelState = false;
@@ -178,8 +177,8 @@ public class Arm {
 
     //Resets the arm
     public void resetArm(){
-        DcMotor.RunMode runMode = armmotor.getMode();
-        armmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorEx.RunMode runMode = armmotor.getMode();
+        armmotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         armmotor.setMode(runMode);
     }
 
