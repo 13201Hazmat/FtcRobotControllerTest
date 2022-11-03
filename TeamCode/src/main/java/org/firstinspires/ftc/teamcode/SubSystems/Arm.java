@@ -39,7 +39,6 @@ public class Arm {
         MEDIUM_JUNCTION,
         HIGH_JUNCTION,
         PARKED
-
     }
 
     //Initialization of ARM_MOTOR_POSITION and ARM_STATE enums

@@ -39,6 +39,7 @@ public class TestTurret extends LinearOpMode {
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
+    public double stickVal = 0;
 
     @Override
     /*
@@ -91,6 +92,25 @@ public class TestTurret extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
+                if (gamepadController.gp1GetButtonYPress()){
+                    turret.faceForward();
+                }
+
+                if (gamepadController.gp1GetButtonBPress()){
+                    turret.faceRight();
+                }
+
+                if (gamepadController.gp1GetButtonXPress()){
+                    turret.faceLeft();
+                }
+
+                if (gamepadController.gp2GetRightStickX() > 0.2) {
+                    turret.rotateTurret(gamepadController.gp2GetRightStickX());
+                }
+
+                if (turret.runTurretToLevelState) {
+                    turret.runTurretToPosition(turret.turretPower);
+                }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
