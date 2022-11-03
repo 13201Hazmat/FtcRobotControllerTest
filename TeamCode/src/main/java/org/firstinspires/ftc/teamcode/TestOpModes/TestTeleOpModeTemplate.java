@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
-import org.firstinspires.ftc.teamcode.SubSystems.Camera;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
@@ -33,17 +32,16 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
     public Shoulder shoulder;
     public Turret turret;
     public Lights lights;
-    public Camera camera;
 
     //public Vuforia Vuforia1;
 
     public Pose2d startPose = GameField.ORIGINPOSE;
 
-    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);;
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
 
     @Override
-    /**
+    /*
      * Constructor for passing all the subsystems in order to make the subsystem be able to use
      * and work/be active
      */
@@ -56,14 +54,13 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
         lights = new Lights(hardwareMap);
-        camera = new Camera(hardwareMap);
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
         GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
-        if ( GameField.poseSetInAutonomous == true) {
+        if ( GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);

@@ -62,9 +62,9 @@ public class Shoulder {
     public static final int MAX_DELTA = 200; //need tested values
 
     //Different constants of shoulder speed
-    public static final double HIGH_POWER = 1.0;
-    public static final double MED_POWER = 0.5;
-    public static final double LOW_POWER = 0.2;
+    public double HIGH_POWER = 1.0;
+    public double MED_POWER = 0.5;
+    public double LOW_POWER = 0.2;
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
