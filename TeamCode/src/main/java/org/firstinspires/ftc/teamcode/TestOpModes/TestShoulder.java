@@ -99,10 +99,7 @@ public class TestShoulder extends LinearOpMode {
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(gamepadController.gp2GetRightTrigger());
                     }
-                }
-
-                //retract the arm based on the right joystick
-                else if(gamepadController.gp2GetLeftTrigger() > 0.2) {
+                } else if(gamepadController.gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
                     shoulder.lowerShoulder(gamepadController.gp2GetLeftTrigger());
                     if (shoulder.runShoulderToLevelState) {
                         shoulder.runShoulderToLevel(gamepadController.gp2GetLeftTrigger());
@@ -115,7 +112,6 @@ public class TestShoulder extends LinearOpMode {
                     shoulder.moveToShoulderLowJunction();
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(shoulder.MED_POWER);
-                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
@@ -124,7 +120,6 @@ public class TestShoulder extends LinearOpMode {
                     shoulder.moveToShoulderHighJunction();
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(shoulder.MED_POWER);
-                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
@@ -133,7 +128,6 @@ public class TestShoulder extends LinearOpMode {
                     shoulder.moveToShoulderGroundJunction();
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(shoulder.MED_POWER);
-                        shoulder.runShoulderToLevelState = false;
                     }
                 }
 
@@ -142,7 +136,7 @@ public class TestShoulder extends LinearOpMode {
                     shoulder.moveToShoulderMidJunction();
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(shoulder.MED_POWER);
-                        shoulder.runShoulderToLevelState = false;
+
                     }
                 }
 
