@@ -98,23 +98,17 @@ public class TestArm extends LinearOpMode {
                 //Extend the arm based on the right joystick
                 if (gamepadController.gp2GetRightStickX() > 0.2) {
                     arm.extendArm(gamepadController.gp2GetRightStickX());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
-                        arm.runShoulderToLevelState = false;
                     }
                 }
 
                 //retract the arm based on the right joystick
                 else if(gamepadController.gp2GetRightStickX() < -0.2) {
                     arm.retractArm(gamepadController.gp2GetRightStickX());
-                    arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
-                        arm.runShoulderToLevelState = false;
                     }
-                } else {
-                    arm.turnArmBrakeModeOn();
                 }
 
 
@@ -123,7 +117,6 @@ public class TestArm extends LinearOpMode {
                     arm.moveToArmLowJunction();
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
                     }
                 }
 
@@ -132,7 +125,7 @@ public class TestArm extends LinearOpMode {
                     arm.moveToArmHighJunction();
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+
                     }
                 }
 
@@ -141,7 +134,7 @@ public class TestArm extends LinearOpMode {
                     arm.moveToArmGroundJunction();
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+
                     }
                 }
 
@@ -150,7 +143,7 @@ public class TestArm extends LinearOpMode {
                     arm.moveToArmMidJunction();
                     if (arm.runShoulderToLevelState){
                         arm.runShoulderToLevel(arm.MED_POWER);
-                        arm.runShoulderToLevelState = false;
+
                     }
                 }
 

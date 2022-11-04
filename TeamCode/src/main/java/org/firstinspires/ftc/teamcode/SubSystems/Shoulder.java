@@ -42,7 +42,6 @@ public class Shoulder {
 
     public int shoulderPositionCount = GROUND_JUNCTION_POSITION; //Default shoulder position count
 
-    public static int baselineEncoderCount = 0; //need tested values
     public static final int PICKUP_POSITION = 0;
     public static final int GROUND_JUNCTION_POSITION = 200; //Need tested values
     public static final int LOW_JUNCTION_POSITION = 400; //need tested values
@@ -113,26 +112,26 @@ public class Shoulder {
     }
 
     //Sets shoulder position to ground junction
-    public void moveToShoulderGroundJunction() {
-        turnShoulderBrakeModeOn();
-        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION + baselineEncoderCount);
-        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION + baselineEncoderCount);
+    public void moveToShoulderPickup() {
+        turnShoulderBrakeModeOff();
+        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION);
+        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
     //Sets shoulder position to low junction
     public void moveToShoulderLowJunction() {
         turnShoulderBrakeModeOn();
-        leftShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION + baselineEncoderCount);
-        rightShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION + baselineEncoderCount);
+        leftShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
+        rightShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
     //Sets shoulder position or mid junction
     public void moveToShoulderMidJunction() {
         turnShoulderBrakeModeOn();
-        rightShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION + baselineEncoderCount);
-        leftShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
         runShoulderToLevelState = true;
 
     }
@@ -140,13 +139,14 @@ public class Shoulder {
     //Sets shoulder position to high junction
     public void moveToShoulderHighJunction() {
         turnShoulderBrakeModeOn();
-        rightShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION + baselineEncoderCount);
-        leftShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION + baselineEncoderCount);
+        rightShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
 
     public void lowerShoulder(double leftTriggerAmount) {
+        turnShoulderBrakeModeOn();
         shoulderDeltaCount = (int) (Math.pow((leftTriggerAmount * 1.25 - 0.25), 3) * SHOULDER_DELTA_COUNT_MAX);
         if (shoulderPositionCount > PICKUP_POSITION + shoulderDeltaCount){
 
@@ -154,6 +154,7 @@ public class Shoulder {
         }else{
 
             shoulderPositionCount = PICKUP_POSITION;
+            turnShoulderBrakeModeOff();
         }
         rightShoulderMotor.setTargetPosition(shoulderPositionCount);
         leftShoulderMotor.setTargetPosition(shoulderPositionCount);

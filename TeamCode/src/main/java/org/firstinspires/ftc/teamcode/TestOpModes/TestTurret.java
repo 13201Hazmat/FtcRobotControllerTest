@@ -59,10 +59,10 @@ public class TestTurret extends LinearOpMode {
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
-        GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
+        GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
-        if ( GameField.poseSetInAutonomous) {
+        if (GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
@@ -92,35 +92,44 @@ public class TestTurret extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
-                if (gamepadController.gp1GetButtonYPress()){
+                if (gamepadController.gp1GetButtonYPress()) {
                     turret.faceForward();
+                    if (turret.runTurretToLevelState) {
+                        turret.runTurretToPosition(turret.turretPower);
+                    }
                 }
 
-                if (gamepadController.gp1GetButtonBPress()){
+                if (gamepadController.gp1GetButtonBPress()) {
                     turret.faceRight();
+                    if (turret.runTurretToLevelState) {
+                        turret.runTurretToPosition(turret.turretPower);
+                    }
                 }
 
-                if (gamepadController.gp1GetButtonXPress()){
+                if (gamepadController.gp1GetButtonXPress()) {
                     turret.faceLeft();
+                    if (turret.runTurretToLevelState) {
+                        turret.runTurretToPosition(turret.turretPower);
+                    }
                 }
 
-                if (gamepadController.gp2GetRightStickX() > 0.2) {
+                if ((gamepadController.gp2GetRightStickX() >= 0.2) ||
+                        (gamepadController.gp2GetRightStickX() <= 0.2)) {
                     turret.rotateTurret(gamepadController.gp2GetRightStickX());
-                }
+                    if (turret.runTurretToLevelState) {
+                        turret.runTurretToPosition(gamepadController.gp2GetRightStickX());
+                    }
 
-                if (turret.runTurretToLevelState) {
-                    turret.runTurretToPosition(turret.turretPower);
-                }
+                    if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+                        printDebugMessages();
+                        telemetry.update();
+                    }
 
-                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
-                    printDebugMessages();
-                    telemetry.update();
                 }
 
             }
-
+            GameField.poseSetInAutonomous = false;
         }
-        GameField.poseSetInAutonomous = false;
     }
 
     /**
