@@ -48,7 +48,7 @@ public class TestHand extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap);
+        //driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
         hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
@@ -62,9 +62,9 @@ public class TestHand extends LinearOpMode {
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous) {
-            driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
+            //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
-            driveTrain.getLocalizer().setPoseEstimate(startPose);
+            //driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
         //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
@@ -89,7 +89,7 @@ public class TestHand extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+                //gamepadController.runByGamepadControl();
 
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
@@ -120,16 +120,16 @@ public class TestHand extends LinearOpMode {
             telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
-            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
             telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
             telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
 
-            telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
-            telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
+            //telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
+            //telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            //telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
+            //telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());

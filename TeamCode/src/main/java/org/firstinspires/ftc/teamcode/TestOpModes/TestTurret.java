@@ -49,9 +49,9 @@ public class TestTurret extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap);
+        //driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
+        //hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
         lights = new Lights(hardwareMap);
@@ -61,12 +61,14 @@ public class TestTurret extends LinearOpMode {
 
         GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
 
-        /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        /* Get last position after Autonomous mode ended from static class set in Autonomous
         if (GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
+
+         */
 
         //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
         GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
@@ -90,7 +92,7 @@ public class TestTurret extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+                //gamepadController.runByGamepadControl();
 
                 if (gamepadController.gp1GetButtonYPress()) {
                     turret.faceForward();
@@ -149,16 +151,16 @@ public class TestTurret extends LinearOpMode {
             telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
-            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
             telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
             telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
 
-            telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
-            telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
+            //telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
+            //telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            //telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
+            //telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
