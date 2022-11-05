@@ -116,7 +116,7 @@ public class TestTurret extends LinearOpMode {
                 }
 
                 if ((gamepadController.gp2GetRightStickX() >= 0.2) ||
-                        (gamepadController.gp2GetRightStickX() <= 0.2)) {
+                        (gamepadController.gp2GetRightStickX() <= -0.2)) {
                     turret.rotateTurret(gamepadController.gp2GetRightStickX());
                     if (turret.runTurretToLevelState) {
                         turret.runTurretToPosition(gamepadController.gp2GetRightStickX());
