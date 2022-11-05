@@ -127,15 +127,17 @@ public class Turret {
                 && (turretMotorPosition >=  FACING_BACKWARD_LEFT_POSITION )
                 && (turretMotorPosition <= FACING_BACKWARD_RIGHT_POSITION)){
             turnTurretBrakeModeOn();
-            if (turretMotorPosition - TURRET_DELTA_COUNT_MAX < FACING_BACKWARD_LEFT_POSITION ) {
+            turretMotorPosition = (int) (turretMotorPosition + joyStickValue * TURRET_DELTA_COUNT_MAX);
+            if (turretMotorPosition < FACING_BACKWARD_LEFT_POSITION ) {
                 turretMotorPosition = FACING_BACKWARD_LEFT_POSITION;
-            } else if (turretMotorPosition + TURRET_DELTA_COUNT_MAX > FACING_BACKWARD_RIGHT_POSITION ) {
-                    turretMotorPosition = FACING_BACKWARD_RIGHT_POSITION;
+                turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
+            } else if (turretMotorPosition > FACING_BACKWARD_RIGHT_POSITION ) {
+                turretMotorPosition = FACING_BACKWARD_RIGHT_POSITION;
+                turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
             } else {
-                turretMotorPosition = (int) (turretMotorPosition + joyStickValue * TURRET_DELTA_COUNT_MAX);
+                turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
             }
             turretMotor.setTargetPosition(turretMotorPosition);
-            turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
             runTurretToLevelState = true;
         }
     }

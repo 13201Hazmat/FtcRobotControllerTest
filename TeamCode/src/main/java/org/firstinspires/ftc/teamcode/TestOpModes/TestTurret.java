@@ -116,19 +116,17 @@ public class TestTurret extends LinearOpMode {
                 }
 
                 if ((gamepadController.gp2GetRightStickX() >= 0.2) ||
-                        (gamepadController.gp2GetRightStickX() <= 0.2)) {
+                        (gamepadController.gp2GetRightStickX() <= -0.2)) {
                     turret.rotateTurret(gamepadController.gp2GetRightStickX());
                     if (turret.runTurretToLevelState) {
                         turret.runTurretToPosition(gamepadController.gp2GetRightStickX());
                     }
-
-                    if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
-                        printDebugMessages();
-                        telemetry.update();
-                    }
-
                 }
 
+                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+                    printDebugMessages();
+                    telemetry.update();
+                }
             }
             GameField.poseSetInAutonomous = false;
         }
@@ -169,7 +167,10 @@ public class TestTurret extends LinearOpMode {
 
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
-            
+            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
+            telemetry.addData("Turret State : ", turret.turretMotorState);
+
+
             telemetry.addData("Game Timer : ", gameTimer.time());
         }
 
