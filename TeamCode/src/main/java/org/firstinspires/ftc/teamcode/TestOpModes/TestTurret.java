@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+//import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -35,7 +35,7 @@ public class TestTurret extends LinearOpMode {
 
     //public Vuforia Vuforia1;
 
-    public Pose2d startPose = GameField.ORIGINPOSE;
+    //public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
@@ -148,7 +148,7 @@ public class TestTurret extends LinearOpMode {
             telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
             telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
             telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            telemetry.addData("startPose : ", startPose);
+            //telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
             //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
