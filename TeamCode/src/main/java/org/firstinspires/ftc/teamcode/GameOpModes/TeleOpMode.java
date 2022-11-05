@@ -137,6 +137,8 @@ public class TeleOpMode extends LinearOpMode {
 
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
+            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
+            telemetry.addData("Turret State : ", turret.turretMotorState);
             
             telemetry.addData("Game Timer : ", gameTimer.time());
         }

@@ -30,13 +30,13 @@ public class Arm {
 
     //Initialization of ARM_MOTOR_POSITION
     public enum ARM_MOTOR_STATE {
-        PARKED,
+        PICKUP, // PICKUP_
         GROUND_JUNCTION,
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
         HIGH_JUNCTION,
-        MAX_EXTENDED
-
+        MAX_EXTENDED,
+        RANDOM
     }
 
     //Initialization of ARM_MOTOR_POSITION and ARM_STATE enums
@@ -47,13 +47,13 @@ public class Arm {
     //Constants for Arm positions
     public static final int PICKUP_POSITION = 0; //Need tested values
     public static final int GROUND_JUNCTION_POSITION = 0; //Need tested values
-    public static final int LOW_JUNCTION_POSITION = (int) (537* 1.25); //Need tested values
-    public static final int MEDIUM_JUNCTION_POSITION = (int) (537* 2.5); //Need tested values
-    public static final int HIGH_JUNCTION_POSITION = (int) (537* 3.75); //Need tested values
-    public static final int MAX_EXTENDED_POSITION = (int) (537* 5); //Need tested value
+    public static final int LOW_JUNCTION_POSITION = (int) (537* 1.25)*3; //Need tested values
+    public static final int MEDIUM_JUNCTION_POSITION = (int) (537* 2.5)*3; //Need tested values
+    public static final int HIGH_JUNCTION_POSITION = (int) (537* 3.75)*3; //Need tested values
+    public static final int MAX_EXTENDED_POSITION = (int) (537* 5)*3; //Need tested value
 
-    public static final int AUTO_RETRACTION_DELTA_POSITION = 200; //need tested values
-    public static final int ARM_DELTA_COUNT_MAX = 200; //need tested values
+    public static final int AUTO_RETRACTION_DELTA_POSITION = 50; //need tested values
+    public static final int ARM_DELTA_COUNT_MAX = 50; //need tested values
 
     //Different constants of arm speed
     public double HIGH_POWER = 1.0;
@@ -76,6 +76,7 @@ public class Arm {
     public void initArm(){
         resetArm();
         turnArmBrakeModeOff();
+        armMotorState = ARM_MOTOR_STATE.PICKUP;
         armmotor.setPositionPIDFCoefficients(5.0);
         armmotor.setTargetPosition(PICKUP_POSITION);
         armmotor.setDirection(DcMotorEx.Direction.FORWARD);

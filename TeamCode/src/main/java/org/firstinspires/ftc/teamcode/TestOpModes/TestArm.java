@@ -50,7 +50,7 @@ public class TestArm extends LinearOpMode {
         /* Create Subsystem Objects*/
         //driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
+        //hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
         lights = new Lights(hardwareMap);
@@ -94,21 +94,20 @@ public class TestArm extends LinearOpMode {
                 arm.turnArmBrakeModeOn();
 
                 //Extend the arm based on the right joystick
-                if (gamepadController.gp2GetRightStickX() > 0.2) {
-                    arm.extendArm(gamepadController.gp2GetRightStickX());
+                if (gamepadController.gp2GetLeftStickY() > 0.2) {
+                    arm.extendArm(gamepadController.gp2GetLeftStickY());
                     if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
+                        arm.runShoulderToLevel(gamepadController.gp2GetLeftStickY());
                     }
                 }
 
                 //retract the arm based on the right joystick
-                else if(gamepadController.gp2GetRightStickX() < -0.2) {
-                    arm.retractArm(gamepadController.gp2GetRightStickX());
+                else if(gamepadController.gp2GetLeftStickY() < -0.2) {
+                    arm.retractArm(gamepadController.gp2GetLeftStickY());
                     if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetRightStickX());
+                        arm.runShoulderToLevel(gamepadController.gp2GetLeftStickY());
                     }
                 }
-
 
                 //Move arm to low junction if x is pressed
                 if (gamepadController.gp2GetButtonXPress()){
