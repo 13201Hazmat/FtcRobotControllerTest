@@ -93,35 +93,46 @@ public class TestArm extends LinearOpMode {
 
                 arm.turnArmBrakeModeOn();
 
+                /*
                 //Extend the arm based on the right joystick
                 if (gamepadController.gp2GetLeftStickY() > 0.2) {
                     arm.extendArm(gamepadController.gp2GetLeftStickY());
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetLeftStickY());
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
                     }
                 }
 
                 //retract the arm based on the right joystick
                 else if(gamepadController.gp2GetLeftStickY() < -0.2) {
                     arm.retractArm(gamepadController.gp2GetLeftStickY());
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(gamepadController.gp2GetLeftStickY());
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
                     }
                 }
+                 */
+
+                if ((gamepadController.gp2GetLeftStickY() >= 0.2) ||
+                        (gamepadController.gp2GetLeftStickY() <= -0.2)) {
+                    arm.rotateArm(gamepadController.gp2GetLeftStickY());
+                    if (arm.runArmToLevelState) {
+                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
+                    }
+                }
+
 
                 //Move arm to low junction if x is pressed
                 if (gamepadController.gp2GetButtonXPress()){
                     arm.moveArmToLowJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(arm.MED_POWER);
                     }
                 }
 
                 //Moves arm to the high junction position if gamepad b is pressed
                 if (gamepadController.gp2GetButtonBPress()){
                     arm.moveArmToHighJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(arm.MED_POWER);
 
                     }
                 }
@@ -129,8 +140,8 @@ public class TestArm extends LinearOpMode {
                 //Moves arm to ground junction if gamepad a is pressed
                 if (gamepadController.gp2GetButtonAPress()){
                     arm.moveArmToPickUpWhileTurretFacingForward();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(arm.MED_POWER);
 
                     }
                 }
@@ -138,8 +149,8 @@ public class TestArm extends LinearOpMode {
                 //Moves arm to middle junction if y is pressed
                 if (gamepadController.gp2GetButtonYPress()){
                     arm.moveArmToMidJunction();
-                    if (arm.runShoulderToLevelState){
-                        arm.runShoulderToLevel(arm.MED_POWER);
+                    if (arm.runArmToLevelState){
+                        arm.runArmToLevel(arm.MED_POWER);
 
                     }
                 }
