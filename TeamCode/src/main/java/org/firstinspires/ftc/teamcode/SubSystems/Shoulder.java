@@ -40,15 +40,16 @@ public class Shoulder {
     public int shoulderDeltaCount = 0; //Need tested value
 
 
-    public int shoulderPositionCount = GROUND_JUNCTION_POSITION; //Default shoulder position count
+    public int shoulderPositionCount = GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
 
-    public static final int PICKUP_POSITION = 0;
-    public static final int GROUND_JUNCTION_POSITION = 200; //Need tested values
+    public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
+    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 200; //Need tested values
     public static final int LOW_JUNCTION_POSITION = 400; //need tested values
     public static final int MEDIUM_JUNCTION_POSITION = 600; //need tested values
     public static final int HIGH_JUNCTION_POSITION = 800; //need tested values
     public static final double MAX_RAISED = 3000; //Need tested values
 
+    public int pickupShoulderWhileDynamicTurretPosition = 0;
 
     //Different constants of shoulder speed
     public double HIGH_POWER = 1.0;
@@ -68,8 +69,8 @@ public class Shoulder {
         turnShoulderBrakeModeOff();
         leftShoulderMotor.setPositionPIDFCoefficients(5.0);
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
-        leftShoulderMotor.setTargetPosition(PICKUP_POSITION);
-        rightShoulderMotor.setTargetPosition(PICKUP_POSITION);
+        leftShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
+        rightShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
     }
@@ -112,10 +113,20 @@ public class Shoulder {
     }
 
     //Sets shoulder position to ground junction
-    public void moveToShoulderPickup() {
+    public void moveToShoulderPickupWhileFacingFoward() {
+        //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
         turnShoulderBrakeModeOff();
-        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION);
-        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
+        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
+        runShoulderToLevelState = true;
+    }
+
+    //TODO: Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
+    public void  moveShoulderToPickUpWhileDynamicTurretAngle(){
+        turnShoulderBrakeModeOn();
+        pickupShoulderWhileDynamicTurretPosition = 0; //TODO : Update with formula
+        leftShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
+        rightShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
         runShoulderToLevelState = true;
     }
 
@@ -148,12 +159,12 @@ public class Shoulder {
     public void lowerShoulder(double leftTriggerAmount) {
         turnShoulderBrakeModeOn();
         shoulderDeltaCount = (int) (Math.pow((leftTriggerAmount * 1.25 - 0.25), 3) * SHOULDER_DELTA_COUNT_MAX);
-        if (shoulderPositionCount > PICKUP_POSITION + shoulderDeltaCount){
+        if (shoulderPositionCount > PICKUP_WHILE_FACING_FORWARD_POSITION + shoulderDeltaCount){
 
             shoulderPositionCount = shoulderPositionCount - shoulderDeltaCount;
         }else{
 
-            shoulderPositionCount = PICKUP_POSITION;
+            shoulderPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION;
             turnShoulderBrakeModeOff();
         }
         rightShoulderMotor.setTargetPosition(shoulderPositionCount);

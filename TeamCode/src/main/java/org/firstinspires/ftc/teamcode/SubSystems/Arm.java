@@ -45,12 +45,14 @@ public class Arm {
 
 
     //Constants for Arm positions
-    public static final int PICKUP_POSITION = 0; //Need tested values
-    public static final int GROUND_JUNCTION_POSITION = 0; //Need tested values
+    public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
+    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
     public static final int LOW_JUNCTION_POSITION = (int) (537* 1.25)*3; //Need tested values
     public static final int MEDIUM_JUNCTION_POSITION = (int) (537* 2.5)*3; //Need tested values
     public static final int HIGH_JUNCTION_POSITION = (int) (537* 3.75)*3; //Need tested values
     public static final int MAX_EXTENDED_POSITION = (int) (537* 5)*3; //Need tested value
+
+    public int pickupArmWhileDynamicTurretPosition = 0;
 
     public static final int AUTO_RETRACTION_DELTA_POSITION = 50; //need tested values
     public static final int ARM_DELTA_COUNT_MAX = 50; //need tested values
@@ -64,7 +66,7 @@ public class Arm {
 
     public boolean runShoulderToLevelState = false;
 
-    public int armCurrentArmPositionCount = PICKUP_POSITION; //Default arm position count
+    public int armCurrentArmPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
 
     //Constructor`
     public Arm(HardwareMap hardwareMap){
@@ -78,7 +80,7 @@ public class Arm {
         turnArmBrakeModeOff();
         armMotorState = ARM_MOTOR_STATE.PICKUP;
         armmotor.setPositionPIDFCoefficients(5.0);
-        armmotor.setTargetPosition(PICKUP_POSITION);
+        armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         armmotor.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
@@ -93,40 +95,46 @@ public class Arm {
     }
 
     //Sets arm position to ground junction
-    public void moveToArmGroundJunction(){
+    public void moveArmToPickUpWhileTurretFacingForward(){
+        //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(GROUND_JUNCTION_POSITION);
+        armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         runShoulderToLevelState = true;
+    }
 
+    //TODO: Set arm position when below Low junction angle dynamically to avoid hitting side of the robot
+    public void moveArmToPickUpWhileDynamicTurretAngle(double turretAngle){
+        pickupArmWhileDynamicTurretPosition = 0; // TODO: Update with formula
+        armmotor.setTargetPosition(pickupArmWhileDynamicTurretPosition);
+        runShoulderToLevelState = true;
     }
 
     //Sets arm position to low junction
-    public void moveToArmLowJunction(){
+    public void moveArmToLowJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(LOW_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
     //Sets arm position or mid junction
-    public void moveToArmMidJunction(){
+    public void moveArmToMidJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
     //Sets arm position to high junction
-    public void moveToArmHighJunction(){
+    public void moveArmToHighJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(HIGH_JUNCTION_POSITION);
         runShoulderToLevelState = true;
     }
 
-
-
+    //TODO: Logic is wrong for retract and extend. To be fixed
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
-        if (armCurrentArmPositionCount > PICKUP_POSITION + armDeltaCount ){
+        if (armCurrentArmPositionCount > PICKUP_WHILE_FACING_FORWARD_POSITION + armDeltaCount ){
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - ARM_DELTA_COUNT_MAX;
             armmotor.setTargetPosition(armCurrentArmPositionCount);

@@ -125,7 +125,7 @@ public class TestShoulder extends LinearOpMode {
 
                 //Moves arm to ground junction if gamepad a is pressed
                 if (gamepadController.gp2GetButtonAPress()){
-                    shoulder.moveToShoulderPickup();
+                    shoulder.moveToShoulderPickupWhileFacingFoward();
                     if (shoulder.runShoulderToLevelState){
                         shoulder.runShoulderToLevel(shoulder.MED_POWER);
                     }
