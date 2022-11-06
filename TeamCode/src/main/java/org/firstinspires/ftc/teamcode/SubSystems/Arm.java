@@ -133,6 +133,7 @@ public class Arm {
     //TODO: Logic is wrong for retract and extend. To be fixed
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
+        //TODO - Convert MIN_RETRACTED to a varible value when shoulder angle < 0, use auto retraction
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
         if (armCurrentArmPositionCount > PICKUP_WHILE_FACING_FORWARD_POSITION + armDeltaCount ){
             turnArmBrakeModeOn();
@@ -144,7 +145,7 @@ public class Arm {
 
     //extends the arm for the joystick control
     public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
-        //TODO - Convert MAX_EXTENDED to a varible value when shoulder angle < 0, use auto retraction
+
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
         //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
         if (armCurrentArmPositionCount < MAX_EXTENDED_POSITION - armDeltaCount){

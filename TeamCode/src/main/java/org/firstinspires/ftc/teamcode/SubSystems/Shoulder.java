@@ -122,7 +122,7 @@ public class Shoulder {
     }
 
     //TODO: Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
-    public void  moveShoulderToPickUpWhileDynamicTurretAngle(){
+    public void  moveShoulderToPickUpWhileDynamicTurretAngle(double turretAngle){
         turnShoulderBrakeModeOn();
         pickupShoulderWhileDynamicTurretPosition = 0; //TODO : Update with formula
         leftShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
