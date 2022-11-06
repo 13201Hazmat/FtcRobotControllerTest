@@ -111,7 +111,7 @@ public class Hand {
     }
 
     public double determineWristLevelPosition(){
-        //TOBE FILLED based on Shoulder angle
+        //TODO: FILLED based on Shoulder angle
         return 0;
     }
 }

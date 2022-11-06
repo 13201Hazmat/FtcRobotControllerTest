@@ -41,6 +41,7 @@ public class Turret {
     public static final int FACING_RIGHT_POSITION = 537*7/2;
 
     public int turretMotorPosition;
+    public double turretAngleRadians, turretAngleDegrees;
 
     public double turretPower = 0.5;
 
@@ -140,6 +141,12 @@ public class Turret {
             turretMotor.setTargetPosition(turretMotorPosition);
             runTurretToLevelState = true;
         }
+    }
+
+    //TODO : Calculate turret Angle
+    public void calculateTurretAngle(){
+        turretAngleRadians = 0; //TODO : Calculate turret Angle
+        turretAngleDegrees = Math.toDegrees(turretAngleRadians);
     }
 
     public void resetTurret(){
