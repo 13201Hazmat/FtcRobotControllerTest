@@ -50,7 +50,7 @@ public class TestShoulder extends LinearOpMode {
         /* Create Subsystem Objects*/
         //driveTrain = new DriveTrain(hardwareMap);
         arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
+        //hand = new Hand(hardwareMap);
         shoulder = new Shoulder(hardwareMap);
         turret = new Turret(hardwareMap);
         lights = new Lights(hardwareMap);
@@ -111,7 +111,7 @@ public class TestShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonXPress()){
                     shoulder.moveToShoulderLowJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.LOW_POWER);
                     }
                 }
 
@@ -119,7 +119,7 @@ public class TestShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonBPress()){
                     shoulder.moveToShoulderHighJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.LOW_POWER);
                     }
                 }
 
@@ -127,7 +127,7 @@ public class TestShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonAPress()){
                     shoulder.moveToShoulderPickupWhileFacingFoward();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.LOW_POWER);
                     }
                 }
 
@@ -135,7 +135,7 @@ public class TestShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetButtonYPress()){
                     shoulder.moveToShoulderMidJunction();
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(shoulder.MED_POWER);
+                        shoulder.runShoulderToLevel(shoulder.LOW_POWER);
 
                     }
                 }
@@ -180,6 +180,7 @@ public class TestShoulder extends LinearOpMode {
             //telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
             //telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
+            telemetry.addData("Shoulder State: ", shoulder.shoulderState);
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
             telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());

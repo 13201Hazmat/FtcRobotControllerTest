@@ -29,7 +29,8 @@ public class Shoulder {
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
         HIGH_JUNCTION,
-        MAX_RAISED
+        MAX_RAISED,
+        RANDOM
     }
 
     //Initialization of <Fill>
@@ -70,8 +71,8 @@ public class Shoulder {
         turnShoulderBrakeModeOff();
         leftShoulderMotor.setPositionPIDFCoefficients(5.0);
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
-        leftShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        rightShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
+        //leftShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
+        //rightShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
     }
@@ -119,6 +120,7 @@ public class Shoulder {
         turnShoulderBrakeModeOff();
         leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
         rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
+        shoulderState = SHOULDER_STATE.PICKUP;
         runShoulderToLevelState = true;
     }
 
@@ -136,6 +138,7 @@ public class Shoulder {
         turnShoulderBrakeModeOn();
         leftShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
         rightShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
+        shoulderState = SHOULDER_STATE.LOW_JUNCTION;
         runShoulderToLevelState = true;
     }
 
@@ -144,6 +147,7 @@ public class Shoulder {
         turnShoulderBrakeModeOn();
         rightShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
         leftShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
+        shoulderState = SHOULDER_STATE.MEDIUM_JUNCTION;
         runShoulderToLevelState = true;
 
     }
@@ -153,6 +157,7 @@ public class Shoulder {
         turnShoulderBrakeModeOn();
         rightShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
         leftShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
+        shoulderState = SHOULDER_STATE.HIGH_JUNCTION;
         runShoulderToLevelState = true;
     }
 
@@ -170,6 +175,7 @@ public class Shoulder {
         }
         rightShoulderMotor.setTargetPosition(shoulderPositionCount);
         leftShoulderMotor.setTargetPosition(shoulderPositionCount);
+        shoulderState = SHOULDER_STATE.RANDOM;
         runShoulderToLevelState = true;
     }
 
@@ -181,6 +187,7 @@ public class Shoulder {
             shoulderPositionCount = shoulderPositionCount + shoulderDeltaCount;
             rightShoulderMotor.setTargetPosition(shoulderPositionCount);
             leftShoulderMotor.setTargetPosition(shoulderPositionCount);
+            shoulderState = SHOULDER_STATE.RANDOM;
             runShoulderToLevelState = true;
         }
     }

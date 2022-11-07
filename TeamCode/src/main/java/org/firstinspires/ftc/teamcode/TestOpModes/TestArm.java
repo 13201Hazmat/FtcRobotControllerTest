@@ -92,6 +92,7 @@ public class TestArm extends LinearOpMode {
             while (opModeIsActive()) {
                 //gamepadController.runByGamepadControl();
 
+
                 arm.turnArmBrakeModeOn();
 
                 /*
@@ -190,6 +191,7 @@ public class TestArm extends LinearOpMode {
 
             telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
             telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
+            telemetry.addData("Arm State: ", arm.armMotorState);
 
             //telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             //telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
