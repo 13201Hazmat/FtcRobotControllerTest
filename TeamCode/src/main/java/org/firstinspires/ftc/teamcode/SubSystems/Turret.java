@@ -4,18 +4,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Definition of TURRET Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Turret consists of one motor which rotates a circular base, of which the arm and shoulder is on<BR>
  *
  * The states are as followed: <BR>
- *     INTAKE_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing  <BR>
- *     INTAKE_SERVO_LEVEL2 for another state  = example if the intake is on or off  <BR>
+ *     TURRET_MOTOR_STATE - possible positions of the turret, consists of preset positions and random(joystick control)<BR>
  *
  * The functions are as followed: Example assumes a motor like an intake <BR>
- *     runIntakeMotor checks if the motor is not running and runs the intake  <BR>
- *     stopIntakeMotor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets intakeMotorState to INTAKE_SERVO_LEVEL1.STOPPED  <BR>
- *      startReverseIntakeMotor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING <BR>
+ *     turnTurretBrakeModeOn, turnTurretBrakeModeOff - sets the turret motor in a state of brake or active <BR>
+ *     initTurret, resetTurret - sets the motor and states<BR>
+ *     face[x] - moves the turret motor to preset positions of x, e.g. LEFT<BR>
+ *     rotateTurret - moves the turret clockwise or counterclockwise based on joystick value,
+ *          amount controlled by changing delta value <BR>
+ *     runTurretToPosition - applies power to the turret motor, moving it to target positions set by other functions <BR>
  */
 
 public class Turret {
