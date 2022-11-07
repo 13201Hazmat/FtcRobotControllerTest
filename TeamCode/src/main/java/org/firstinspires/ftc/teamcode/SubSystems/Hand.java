@@ -27,7 +27,7 @@ public class Hand {
 
 
     //Initialization of HAND_STATE and HAND_GRIP_STATE and HAND_MOTOR_POSITION enums
-    public HAND_GRIP_STATE handGripState;
+    public GRIP_STATE gripState;
     public WRIST_STATE wristState;
 
     //constants for Hand and grip position
@@ -46,7 +46,7 @@ public class Hand {
         WRIST_LEVEL,
         WRIST_DOWN
     }
-    public enum HAND_GRIP_STATE{ //state of the Hand Grip
+    public enum GRIP_STATE { //state of the Hand Grip
         OPEN,
         CLOSE
     }
@@ -69,12 +69,12 @@ public class Hand {
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip(){
-        if (handGripState != HAND_GRIP_STATE.OPEN){
+        if (gripState != GRIP_STATE.OPEN){
 
             gripServo.setPosition(openGripPos);
             intakeRightServo.setPosition(openGripPos);
             intakeLeftServo.setPosition(openGripPos);
-            handGripState = HAND_GRIP_STATE.OPEN;
+            gripState = GRIP_STATE.OPEN;
 
         }
     }
@@ -82,11 +82,11 @@ public class Hand {
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        if (handGripState != HAND_GRIP_STATE.CLOSE) {
+        if (gripState != GRIP_STATE.CLOSE) {
             gripServo.setPosition(closeGripPos);
             intakeLeftServo.setPosition(closeGripPos);
             intakeRightServo.setPosition(closeGripPos);
-            handGripState = HAND_GRIP_STATE.CLOSE;
+            gripState = GRIP_STATE.CLOSE;
 
 
         }

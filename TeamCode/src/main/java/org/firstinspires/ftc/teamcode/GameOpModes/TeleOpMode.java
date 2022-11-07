@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
@@ -31,6 +32,9 @@ public class TeleOpMode extends LinearOpMode {
     public Shoulder shoulder;
     public Turret turret;
     public Lights lights;
+
+    //Static Class for knowing system state
+    public static SystemState SystemState;
 
     //public Vuforia Vuforia1;
 

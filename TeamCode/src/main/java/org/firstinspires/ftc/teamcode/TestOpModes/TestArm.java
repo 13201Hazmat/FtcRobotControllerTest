@@ -113,7 +113,7 @@ public class TestArm extends LinearOpMode {
 
                 if ((gamepadController.gp2GetLeftStickY() >= 0.2) ||
                         (gamepadController.gp2GetLeftStickY() <= -0.2)) {
-                    arm.rotateArm(gamepadController.gp2GetLeftStickY());
+                    arm.modifyArmLength(gamepadController.gp2GetLeftStickY());
                     if (arm.runArmToLevelState) {
                         arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
                     }

@@ -39,7 +39,6 @@ public class Shoulder {
     public int SHOULDER_DELTA_COUNT_MAX = 50;
     public int shoulderDeltaCount = 0; //Need tested value
 
-
     public int shoulderPositionCount = GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
 
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
@@ -50,6 +49,8 @@ public class Shoulder {
     public static final double MAX_RAISED = 3000; //Need tested values
 
     public int pickupShoulderWhileDynamicTurretPosition = 0;
+
+    public double shoulderAngleRadians, shoulderAngleDegrees;
 
     //Different constants of shoulder speed
     public double HIGH_POWER = 1.0;
@@ -183,6 +184,13 @@ public class Shoulder {
             runShoulderToLevelState = true;
         }
     }
+
+    //TODO : Calculate Shoulder Angle
+    public void calculateShoulderAngle(){
+        shoulderAngleRadians = 0; //TODO : Calculate turret Angle
+        shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
+    }
+
 
 
 }

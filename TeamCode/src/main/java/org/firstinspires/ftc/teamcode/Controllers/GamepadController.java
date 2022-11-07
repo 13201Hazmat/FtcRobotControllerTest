@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
@@ -89,12 +90,12 @@ public class GamepadController {
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
+        runDriveControl_byRRDriveModes();
+        runTurret();
+        runShoulder();
         runArm();
         runHand();
-        runShoulder();
-        runTurret();
         runLights();
-        runDriveControl_byRRDriveModes();
     }
 
     /**
@@ -187,18 +188,29 @@ public class GamepadController {
      * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
      */
+    public void runTurret(){
+        SystemState.TurretState = turret.turretMotorState;
+    }
+
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
+    public void runShoulder(){
+        SystemState.ShoulderState = shoulder.shoulderState;
+    }
+
+
+    /**
+     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * direction in order for a stuck freight to be out of intake. <BR>
+     */
     public void runArm(){
         arm.turnArmBrakeModeOn();
 
         //Extend the arm based on the right joystick
-        if (gp2GetRightStickX() > 0.2) {
-            arm.extendArm(gp2GetRightStickX());
-            arm.runArmToLevel(gp2GetRightStickX());
-        }
-
-        //retract the arm based on the right joystick
-        if (gp2GetRightStickX() < -0.2) {
-            arm.retractArm(gp2GetRightStickX());
+        if ((gp2GetRightStickX() > 0.2) || (gp2GetRightStickX() < -0.2)) {
+            arm.modifyArmLength(gp2GetRightStickX());
             arm.runArmToLevel(gp2GetRightStickX());
         }
 
@@ -234,6 +246,7 @@ public class GamepadController {
             }
         }
 
+        SystemState.ArmState = arm.armMotorState;
     }
 
     /**
@@ -242,22 +255,8 @@ public class GamepadController {
      */
     public void runHand(){
 
-    }
-
-    /**
-     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck freight to be out of intake. <BR>
-     */
-    public void runShoulder(){
-
-    }
-
-    /**
-     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck freight to be out of intake. <BR>
-     */
-    public void runTurret(){
-
+        SystemState.HandGripState = hand.gripState;
+        SystemState.HandWristState = hand.wristState;
     }
 
     /**
@@ -267,6 +266,8 @@ public class GamepadController {
     public void runLights(){
 
     }
+
+
     //*********** KEY PAD MODIFIERS BELOW ***********
 
     //**** Gamepad buttons

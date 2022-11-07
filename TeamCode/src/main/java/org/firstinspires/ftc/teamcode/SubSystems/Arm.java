@@ -42,9 +42,6 @@ public class Arm {
     //Initialization of ARM_MOTOR_POSITION and ARM_STATE enums
     public ARM_MOTOR_STATE armMotorState;
 
-    public Turret turret;
-
-
     //Constants for Arm positions
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
@@ -101,7 +98,7 @@ public class Arm {
     public void moveArmToPickUpWhileTurretFacingForward(){
         //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
         turnArmBrakeModeOn();
-        if (turret.turretMotorState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
+        if (SystemState.TurretState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
             armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
             runArmToLevelState = true;
         }
@@ -135,7 +132,7 @@ public class Arm {
         runArmToLevelState = true;
     }
 
-    public void rotateArm(double joyStickValue){
+    public void modifyArmLength(double joyStickValue){
         armCurrentArmPositionCount = armmotor.getCurrentPosition();
         if (joyStickValue > 0.2) {
             armDeltaCount = (int) (Math.pow((joyStickValue * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX);
@@ -150,7 +147,8 @@ public class Arm {
                 && (armCurrentArmPositionCount <= MAX_EXTENDED_POSITION)){
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = (int) (armCurrentArmPositionCount + joyStickValue * ARM_DELTA_COUNT_MAX);
-            if (armCurrentArmPositionCount < PICKUP_WHILE_FACING_FORWARD_POSITION && turret.turretMotorState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
+            if (armCurrentArmPositionCount < PICKUP_WHILE_FACING_FORWARD_POSITION
+                    && SystemState.TurretState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
                 armCurrentArmPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION;
                 armMotorState = ARM_MOTOR_STATE.PICKUP;
             } else if (armCurrentArmPositionCount > MAX_EXTENDED_POSITION) {
@@ -164,38 +162,22 @@ public class Arm {
         }
     }
 
-    /*
-    //TODO: Logic is wrong for retract and extend. To be fixed
-    //retracts the arm for joystick control
-    public void retractArm(double joystickAmount){
-        //TODO - Convert MIN_RETRACTED to a varible value when shoulder angle < 0, use auto retraction
-        armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
-        if (armCurrentArmPositionCount > PICKUP_WHILE_FACING_FORWARD_POSITION + armDeltaCount ){
-            turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount - ARM_DELTA_COUNT_MAX;
-            armmotor.setTargetPosition(armCurrentArmPositionCount);
-            runArmToLevelState = true;
-        }
+    public double calculateMaxExtensionArmEncoderPositionBasedOnShoulderAngle(){
+        double maxExtensionArmEncoderPositionBasedOnShoulderAngle = 0; //TODO: Measure arm max extension in mm
+
+        //TODO: if shoulderAngle > Threshold when arm at full extension will touch the ground
+        maxExtensionArmEncoderPositionBasedOnShoulderAngle = MAX_EXTENDED_POSITION;
+
+
+
+        return maxExtensionArmEncoderPositionBasedOnShoulderAngle;
     }
 
-    //extends the arm for the joystick control
-    public void extendArm( double joystickAmount ){ //need to pass in shoulder position count for varibale max extended
-
-        armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
-        //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
-        if (armCurrentArmPositionCount < MAX_EXTENDED_POSITION - armDeltaCount){
-            turnArmBrakeModeOn();
-            armCurrentArmPositionCount = armCurrentArmPositionCount + ARM_DELTA_COUNT_MAX;
-
-        } else{
-            turnArmBrakeModeOn();
-            armCurrentArmPositionCount = MAX_EXTENDED_POSITION;
-        }
-        armmotor.setTargetPosition(armCurrentArmPositionCount);
-        runArmToLevelState = true;
+    public int convertMotorEncoderValueToArmLength(){
+        int convertedMotorEncoderValueToArmLength = 0; //TODO: From encoder value Find Max length and write proportional convertion algorithm
+        return convertedMotorEncoderValueToArmLength;
     }
 
-    */
 
     //sets the arm motor power
     public void runArmToLevel(double power){
