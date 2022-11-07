@@ -32,6 +32,7 @@ public class Turret {
         FACING_RIGHT,
         FACING_RANDOM
     }
+
     public static TURRET_MOTOR_STATE turretMotorState;
 
     public static final int FACING_FORWARD_POSITION = 0;

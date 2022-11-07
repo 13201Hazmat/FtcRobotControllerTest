@@ -2,20 +2,19 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
- * Definition of Subsystem Class <BR>
+ * Definition of Shoulder Class <BR>
  *
- * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
+ * Shoulder raises or lowers the arm(linear slides) with 2 motors<BR>
  *
  * The states are as followed: <BR>
- *     INTAKE_SERVO_LEVEL1 for one state - example if intake motor is running, stopped, or reversing  <BR>
- *     INTAKE_SERVO_LEVEL2 for another state  = example if the intake is on or off  <BR>
+ *     SHOULDER_STATE - positions of the shoulder corresponding to scoring positions, or random(trigger control)  <BR>
  *
- * The functions are as followed: Example assumes a motor like an intake <BR>
- *     runIntakeMotor checks if the motor is not running and runs the intake  <BR>
- *     stopIntakeMotor checks if the intake has stopped and if its not, it sets the intake power to 0
- *     and sets intakeMotorState to INTAKE_SERVO_LEVEL1.STOPPED  <BR>
- *      startReverseIntakeMotor checks if the motor is not reversing, and sets the  motor to FORWARD, then also
- *     sets intake motor state to REVERSING <BR>
+ * The functions are as followed: <BR>
+ *     turnShoulderBrakeModeOn, turnShoulderBrakeModeOff - sets the shoulder motors to a state of brake or active<BR>
+ *     initShoulder, resetShoulder - sets shoulder motor positions and sets states <BR>
+ *     moveToShoulder[x] - moves the shoulder to [x] preset position <BR>
+ *     raiseShoulder, lowerShoulder - raises and lowers the shoulder based on joystick control by changing delta value <BR>
+ *     getShoulderPositionCount - returns the current right shoulder motor encoder count <BR>
  */
 
 public class Shoulder {
@@ -111,7 +110,7 @@ public class Shoulder {
 
     //gets the position of the shoulder
     public int getShoulderPositionCount() {
-        return rightShoulderMotor.getCurrentPosition();
+        return rightShoulderMotor.getCurrentPosition(); //returns the encoder count of the right shoulder
     }
 
     //Sets shoulder position to ground junction
