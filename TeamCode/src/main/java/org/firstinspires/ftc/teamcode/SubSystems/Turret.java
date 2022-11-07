@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
- * Definition of Subsystem Class <BR>
+ * Definition of TURRET Class <BR>
  *
  * Example : Intake consists of system provided intake controls and adds functionality to the selection made on intake. <BR>
  *

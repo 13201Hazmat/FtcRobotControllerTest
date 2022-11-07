@@ -193,50 +193,44 @@ public class GamepadController {
         //Extend the arm based on the right joystick
         if (gp2GetRightStickX() > 0.2) {
             arm.extendArm(gp2GetRightStickX());
-            arm.runShoulderToLevel(gp2GetRightStickX());
-            arm.runShoulderToLevelState = false;
+            arm.runArmToLevel(gp2GetRightStickX());
         }
 
         //retract the arm based on the right joystick
         if (gp2GetRightStickX() < -0.2) {
             arm.retractArm(gp2GetRightStickX());
-            arm.runShoulderToLevel(gp2GetRightStickX());
-            arm.runShoulderToLevelState = false;
+            arm.runArmToLevel(gp2GetRightStickX());
         }
 
         //Move arm to low junction if x is pressed
         if (gp2GetButtonXPress()){
             arm.moveArmToLowJunction();
-            if (arm.runShoulderToLevelState){
-                arm.runShoulderToLevel(arm.MED_POWER);
-                arm.runShoulderToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
             }
         }
 
         //Moves arm to the high junction position if gamepad b is pressed
         if (gp2GetButtonBPress()){
             arm.moveArmToHighJunction();
-            if (arm.runShoulderToLevelState){
-                arm.runShoulderToLevel(arm.MED_POWER);
-                arm.runShoulderToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
             }
         }
 
         //Moves arm to ground junction if gamepad a is pressed
         if (gp2GetButtonAPress()){
             arm.moveArmToPickUpWhileTurretFacingForward();
-            if (arm.runShoulderToLevelState){
-                arm.runShoulderToLevel(arm.MED_POWER);
-                arm.runShoulderToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
             }
         }
 
         //Moves arm to middle junction if y is pressed
         if (gp2GetButtonYPress()){
             arm.moveArmToMidJunction();
-            if (arm.runShoulderToLevelState){
-                arm.runShoulderToLevel(arm.MED_POWER);
-                arm.runShoulderToLevelState = false;
+            if (arm.runArmToLevelState){
+                arm.runArmToLevel(arm.MED_POWER);
             }
         }
 

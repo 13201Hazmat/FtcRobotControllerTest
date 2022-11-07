@@ -42,6 +42,7 @@ public class Arm {
     //Initialization of ARM_MOTOR_POSITION and ARM_STATE enums
     public ARM_MOTOR_STATE armMotorState;
 
+    public Turret turret;
 
 
     //Constants for Arm positions
@@ -64,7 +65,7 @@ public class Arm {
 
     public int armDeltaCount = 0; //Need tested value
 
-    public boolean runShoulderToLevelState = false;
+    public boolean runArmToLevelState = false;
 
     public int armCurrentArmPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
 
@@ -94,42 +95,76 @@ public class Arm {
         armmotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
+
+
     //Sets arm position to ground junction
     public void moveArmToPickUpWhileTurretFacingForward(){
         //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
         turnArmBrakeModeOn();
-        armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        runShoulderToLevelState = true;
+        if (turret.turretMotorState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
+            armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
+            runArmToLevelState = true;
+        }
     }
 
     //TODO: Set arm position when below Low junction angle dynamically to avoid hitting side of the robot
     public void moveArmToPickUpWhileDynamicTurretAngle(double turretAngle){
         pickupArmWhileDynamicTurretPosition = 0; // TODO: Update with formula
         armmotor.setTargetPosition(pickupArmWhileDynamicTurretPosition);
-        runShoulderToLevelState = true;
+        runArmToLevelState = true;
     }
 
     //Sets arm position to low junction
     public void moveArmToLowJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(LOW_JUNCTION_POSITION);
-        runShoulderToLevelState = true;
+        runArmToLevelState = true;
     }
 
     //Sets arm position or mid junction
     public void moveArmToMidJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
-        runShoulderToLevelState = true;
+        runArmToLevelState = true;
     }
 
     //Sets arm position to high junction
     public void moveArmToHighJunction(){
         turnArmBrakeModeOn();
         armmotor.setTargetPosition(HIGH_JUNCTION_POSITION);
-        runShoulderToLevelState = true;
+        runArmToLevelState = true;
     }
 
+    public void rotateArm(double joyStickValue){
+        armCurrentArmPositionCount = armmotor.getCurrentPosition();
+        if (joyStickValue > 0.2) {
+            armDeltaCount = (int) (Math.pow((joyStickValue * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX);
+            //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
+        } else if (joyStickValue < -0.2) { //TODO - Convert MIN_RETRACTED to a varible value when shoulder angle < 0, use auto retraction
+            armDeltaCount = (int) (Math.pow((joyStickValue * 1.25 + 0.25), 3) * ARM_DELTA_COUNT_MAX);
+        } else {
+            armDeltaCount = 0;
+        }
+        if ((armDeltaCount !=0)
+                && (armCurrentArmPositionCount >= PICKUP_WHILE_FACING_FORWARD_POSITION)
+                && (armCurrentArmPositionCount <= MAX_EXTENDED_POSITION)){
+            turnArmBrakeModeOn();
+            armCurrentArmPositionCount = (int) (armCurrentArmPositionCount + joyStickValue * ARM_DELTA_COUNT_MAX);
+            if (armCurrentArmPositionCount < PICKUP_WHILE_FACING_FORWARD_POSITION && turret.turretMotorState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
+                armCurrentArmPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION;
+                armMotorState = ARM_MOTOR_STATE.PICKUP;
+            } else if (armCurrentArmPositionCount > MAX_EXTENDED_POSITION) {
+                armCurrentArmPositionCount = MAX_EXTENDED_POSITION;
+                armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
+            } else {
+                armMotorState = ARM_MOTOR_STATE.RANDOM;
+            }
+            armmotor.setTargetPosition(armCurrentArmPositionCount);
+            runArmToLevelState = true;
+        }
+    }
+
+    /*
     //TODO: Logic is wrong for retract and extend. To be fixed
     //retracts the arm for joystick control
     public void retractArm(double joystickAmount){
@@ -139,12 +174,12 @@ public class Arm {
             turnArmBrakeModeOn();
             armCurrentArmPositionCount = armCurrentArmPositionCount - ARM_DELTA_COUNT_MAX;
             armmotor.setTargetPosition(armCurrentArmPositionCount);
-            runShoulderToLevelState = true;
+            runArmToLevelState = true;
         }
     }
 
     //extends the arm for the joystick control
-    public void extendArm( /* getShoulderPositionCount */ double joystickAmount ){
+    public void extendArm( double joystickAmount ){ //need to pass in shoulder position count for varibale max extended
 
         armDeltaCount = (int) (Math.pow((joystickAmount * 1.25 - 0.25), 3) * ARM_DELTA_COUNT_MAX); //Function is normalized 0.2-1 to 0-1
         //maxExtended = (ROBOT_HEIGHT - 2)/Math.cos(getShoulderPositionCount * CONVERSION_FACTOR_TO_DEGREES) - F; Algorithm to not hit the ground
@@ -157,15 +192,17 @@ public class Arm {
             armCurrentArmPositionCount = MAX_EXTENDED_POSITION;
         }
         armmotor.setTargetPosition(armCurrentArmPositionCount);
-        runShoulderToLevelState = true;
+        runArmToLevelState = true;
     }
 
+    */
+
     //sets the arm motor power
-    public void runShoulderToLevel(double power){
+    public void runArmToLevel(double power){
         armmotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        if (runShoulderToLevelState == true){
+        if (runArmToLevelState == true){
             armmotor.setPower(power);
-            runShoulderToLevelState = false;
+            runArmToLevelState = false;
         } else{
             armmotor.setPower(0.0);
         }
