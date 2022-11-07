@@ -123,6 +123,8 @@ public class TestTurret extends LinearOpMode {
                     }
                 }
 
+
+
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
