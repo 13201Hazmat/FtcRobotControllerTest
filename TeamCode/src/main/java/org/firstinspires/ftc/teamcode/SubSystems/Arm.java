@@ -53,7 +53,7 @@ public class Arm {
     public int pickupArmWhileDynamicTurretPosition = 0;
 
     public static final int AUTO_RETRACTION_DELTA_POSITION = 50; //need tested values
-    public static final int ARM_DELTA_COUNT_MAX = 50; //need tested values
+    public static final int ARM_DELTA_COUNT_MAX = 250; //need tested values
 
     //Different constants of arm speed
     public double HIGH_POWER = 1.0;
