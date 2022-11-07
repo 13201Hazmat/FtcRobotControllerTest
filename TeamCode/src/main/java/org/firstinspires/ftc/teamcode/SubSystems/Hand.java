@@ -55,9 +55,10 @@ public class Hand {
 
 
     public Hand(HardwareMap hardwareMap) { //map hand servo's to each
-        //gripServo = hardwareMap.get(Servo.class, "gripServo");
-        //intakeLeftServo = hardwareMap.get(Servo.class, "intakeLeftServo");
-        //intakeRightServo = hardwareMap.get(Servo.class, "intakeRightServo");
+        gripServo = hardwareMap.get(Servo.class, "gripServo");
+        wristServo = hardwareMap.get(Servo.class, "wristServo");
+        intakeLeftServo = hardwareMap.get(Servo.class, "intakeLeftServo");
+        intakeRightServo = hardwareMap.get(Servo.class, "intakeRightServo");
         initHand();
     }
 

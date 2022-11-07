@@ -97,12 +97,12 @@ public class TestShoulder extends LinearOpMode {
                 if (gamepadController.gp2GetRightTrigger() > 0.2) {
                     shoulder.raiseShoulder(gamepadController.gp2GetRightTrigger());
                     if (shoulder.runShoulderToLevelState){
-                        shoulder.runShoulderToLevel(gamepadController.gp2GetRightTrigger());
+                        shoulder.runShoulderToLevel(Math.pow(gamepadController.gp2GetRightTrigger()*1.25-0.25,3));
                     }
                 } else if(gamepadController.gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
                     shoulder.lowerShoulder(gamepadController.gp2GetLeftTrigger());
                     if (shoulder.runShoulderToLevelState) {
-                        shoulder.runShoulderToLevel(gamepadController.gp2GetLeftTrigger());
+                        shoulder.runShoulderToLevel(Math.pow(gamepadController.gp2GetLeftTrigger()*1.25-0.25,3));
                     }
                 }
 

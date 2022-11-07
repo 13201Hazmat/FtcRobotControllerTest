@@ -121,39 +121,39 @@ public class GamepadController {
                             -limitStick(gp1GetLeftStickX()));
                 }*/
                 driveTrain.gamepadInput = new Vector2d(
-                        -gp1TurboMode(gp1GetLeftStickY()),
-                        -gp1TurboMode(gp1GetLeftStickX()));
+                        gp1TurboMode(gp1GetLeftStickY()),
+                        gp1TurboMode(gp1GetLeftStickX()));
 
-            } else {
+            } /*else {
                 driveTrain.gamepadInput = new Vector2d(
                         -gp2TurboMode(gp2GetLeftStickY()),
                         -gp2TurboMode(gp2GetLeftStickX()));
                 //-limitStick(gp2GetLeftStickY()),
                 //-limitStick(gp2GetLeftStickX()));
-            }
+            }*/
         }
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
 
-            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
+            //if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
                 driveTrain.gamepadInput = new Vector2d(
                         gp1TurboMode(gp1GetLeftStickX()),
                         -gp1TurboMode(gp1GetLeftStickY())
                 ).rotated(-driveTrain.poseEstimate.getHeading());
-            }
+            //}
 
-            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
+            /*if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
                 driveTrain.gamepadInput = new Vector2d(
                         -gp1TurboMode(gp1GetLeftStickX()),
                         gp1TurboMode(gp1GetLeftStickY())
                 ).rotated(-driveTrain.poseEstimate.getHeading());
-            }
+            }*/
         }
         if (Math.abs(gp1GetRightStickX())>0.1) {
-            driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
-        } else {
+            driveTrain.gamepadInputTurn = gp1TurboMode(gp1GetRightStickX());
+        } /*else {
             driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
-        }
+        }*/
 
         //TCode to implement slight left / right turn. Uncomment to use
         /*if (!gp1GetStart()) {
@@ -174,11 +174,11 @@ public class GamepadController {
             }
         }*/
 
-        if (gp1GetDpad_leftPress()){
+        /*if (gp1GetDpad_leftPress()){
             driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
         } else if (gp1GetDpad_rightPress()){
             driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
-        }
+        }*/
 
         driveTrain.driveTrainPointFieldModes();
 

@@ -32,21 +32,23 @@ public class Shoulder {
         RANDOM
     }
 
+    public Turret turret;
+
     //Initialization of <Fill>
     public SHOULDER_STATE shoulderState;
 
     public boolean runShoulderToLevelState = false;
-    public int SHOULDER_DELTA_COUNT_MAX = 50;
+    public int SHOULDER_DELTA_COUNT_MAX = 20;
     public int shoulderDeltaCount = 0; //Need tested value
 
     public int shoulderPositionCount = GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
 
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 200; //Need tested values
+    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
     public static final int LOW_JUNCTION_POSITION = 400; //need tested values
-    public static final int MEDIUM_JUNCTION_POSITION = 600; //need tested values
-    public static final int HIGH_JUNCTION_POSITION = 800; //need tested values
-    public static final double MAX_RAISED = 3000; //Need tested values
+    public static final int MEDIUM_JUNCTION_POSITION = 500; //need tested values
+    public static final int HIGH_JUNCTION_POSITION = 700; //need tested values
+    public static final double MAX_RAISED = 900; //Need tested values
 
     public int pickupShoulderWhileDynamicTurretPosition = 0;
 
@@ -56,6 +58,7 @@ public class Shoulder {
     public double HIGH_POWER = 1.0;
     public double MED_POWER = 0.5;
     public double LOW_POWER = 0.2;
+
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
@@ -72,8 +75,8 @@ public class Shoulder {
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
         //leftShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         //rightShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        leftShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        rightShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        leftShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
     public void resetShoulder(){
@@ -117,6 +120,7 @@ public class Shoulder {
     public void moveToShoulderPickupWhileFacingFoward() {
         //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
         turnShoulderBrakeModeOff();
+
         leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
         rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
         shoulderState = SHOULDER_STATE.PICKUP;

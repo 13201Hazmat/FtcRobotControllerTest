@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -52,8 +53,8 @@ public class Arm {
 
     public int pickupArmWhileDynamicTurretPosition = 0;
 
-    public static final int AUTO_RETRACTION_DELTA_POSITION = 50; //need tested values
-    public static final int ARM_DELTA_COUNT_MAX = 250; //need tested values
+    public static final int AUTO_RETRACTION_DELTA_POSITION = 200; //need tested values
+    public static final int ARM_DELTA_COUNT_MAX = 200; //need tested values
 
     //Different constants of arm speed
     public double HIGH_POWER = 1.0;
@@ -79,7 +80,7 @@ public class Arm {
         armMotorState = ARM_MOTOR_STATE.PICKUP;
         armmotor.setPositionPIDFCoefficients(5.0);
         armmotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        armmotor.setDirection(DcMotorEx.Direction.FORWARD);
+        armmotor.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     //Turns on the brake for arm motor
