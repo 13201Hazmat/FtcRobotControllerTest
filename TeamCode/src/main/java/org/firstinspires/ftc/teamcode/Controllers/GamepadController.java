@@ -171,11 +171,14 @@ public class GamepadController {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger() * 1.25 - 0.25, 3));
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
+            //TODO : Add code to pull Arm back to min with/without WRIST DOWN, when below ShoulderThresold
         }
 
         //Move arm based on Left Stick on Gamepad 2
         if ((gp2GetLeftStickY() >= 0.2) || (gp2GetLeftStickY() <= -0.2)) {
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
+            //TODO : When Arm is retracted / extended, Add code to decrease / increase shoulderAngle, when below shoulderThnrshold
+            //
         }
 
         //Move arm to low junction if Gamepad 2 X is pressed

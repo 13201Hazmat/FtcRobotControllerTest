@@ -23,7 +23,7 @@ public class Shoulder {
 
     //Initialization of <Fill>
     public enum SHOULDER_STATE {
-        PICKUP, //PARKED, MIN_POSITION,
+        PICKUP, //PARKED, MIN_POSITION
         GROUND_JUNCTION,
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
@@ -41,13 +41,14 @@ public class Shoulder {
     public int SHOULDER_DELTA_COUNT_MAX = 100;
     public int shoulderDeltaCount = 0; //Need tested value
 
-
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
+    public static final int PICKUP_WHILE_NOT_FACING_FORWARD_POSITION = 100;
+    public static final int PICKUP_WRIST_DOWN_WHILE_NOT_FACING_FORWARD_POSITION = 200;
     public static final int LOW_JUNCTION_POSITION = 300; //need tested values
     public static final int MEDIUM_JUNCTION_POSITION = 500; //need tested values
     public static final int HIGH_JUNCTION_POSITION = 700; //need tested values
-    public static final int MAX_RAISED = 900; //Need tested values
+    public static final int MAX_RAISED_POSITION = 900; //Need tested values
 
     public int shoulderCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
     public int shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
@@ -109,9 +110,13 @@ public class Shoulder {
     }
 
     //TODO: Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
-    public void  moveShoulderToPickUpWhileDynamicTurretAngle(double turretAngle){
+    public void  moveShoulderToPickUpWhileDynamicTurretAngle(){
         turnShoulderBrakeModeOn();
-        pickupShoulderWhileDynamicTurretPosition = 0; //TODO : Update with formula
+        if (SystemState.HandWristState == Hand.WRIST_STATE.WRIST_DOWN) {
+            pickupShoulderWhileDynamicTurretPosition = PICKUP_WRIST_DOWN_WHILE_NOT_FACING_FORWARD_POSITION;
+        } else {
+            pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_NOT_FACING_FORWARD_POSITION;
+        }
         leftShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
         rightShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
         runShoulderToLevelState = true;
@@ -149,9 +154,9 @@ public class Shoulder {
     public void lowerShoulder(double stepSizeFactor) {
         shoulderDeltaCount = (int) stepSizeFactor * SHOULDER_DELTA_COUNT_MAX;
         if (shoulderDeltaCount !=0) {
-            shoulderCurrentPosition = (leftShoulderMotor.getCurrentPosition()
-                    + rightShoulderMotor.getCurrentPosition())/2;
+            shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
             shoulderNewPosition = shoulderCurrentPosition - shoulderDeltaCount;
+            //TODO : Wrap condition for Turret state facing forward
             if (shoulderNewPosition > PICKUP_WHILE_FACING_FORWARD_POSITION) {
                 shoulderState = SHOULDER_STATE.RANDOM;
                 turnShoulderBrakeModeOn();
@@ -160,6 +165,7 @@ public class Shoulder {
                 shoulderState = SHOULDER_STATE.PICKUP;
                 turnShoulderBrakeModeOff();
             }
+            //TODO : Set shoulder min position to be PICKUP_WHILE_NOT_FACING_FORWARD_POSITION if any other Turret position
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 rightShoulderMotor.setTargetPosition(shoulderNewPosition);
                 leftShoulderMotor.setTargetPosition(shoulderNewPosition);
@@ -174,10 +180,10 @@ public class Shoulder {
             shoulderCurrentPosition = (leftShoulderMotor.getCurrentPosition()
                     + rightShoulderMotor.getCurrentPosition())/2;
             shoulderNewPosition = shoulderCurrentPosition + shoulderDeltaCount;
-            if (shoulderNewPosition < MAX_RAISED) {
+            if (shoulderNewPosition < MAX_RAISED_POSITION) {
                 shoulderState = SHOULDER_STATE.RANDOM;
             } else {
-                shoulderNewPosition = MAX_RAISED;
+                shoulderNewPosition = MAX_RAISED_POSITION;
                 shoulderState = SHOULDER_STATE.MAX_RAISED;
             }
             if (shoulderNewPosition != shoulderCurrentPosition) {
