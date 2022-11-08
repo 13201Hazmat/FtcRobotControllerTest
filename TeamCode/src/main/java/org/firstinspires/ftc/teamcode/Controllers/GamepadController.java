@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Controllers;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
@@ -92,8 +91,7 @@ public class GamepadController {
     public void runByGamepadControl(){
         runDriveControl_byRRDriveModes();
         runTurret();
-        runShoulder();
-        runArm();
+        runShoulderArmCombo();
         runHand();
         runLights();
     }
@@ -110,76 +108,22 @@ public class GamepadController {
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
             if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
-                /*if (elevator.getElevatorState() != Elevator.ELEVATOR_STATE.LEVEL_0) {
-                    driveTrain.gamepadInput = new Vector2d(
-                            -gp1TurboMode(gp1GetLeftStickY()),
-                            -gp1TurboMode(gp1GetLeftStickX()));
-                } else {
-                    // Avoid using Turbo when elevator is at Level 0
-                    driveTrain.gamepadInput = new Vector2d(
-                            -limitStick(gp1GetLeftStickY()),
-                            -limitStick(gp1GetLeftStickX()));
-                }*/
                 driveTrain.gamepadInput = new Vector2d(
                         gp1TurboMode(gp1GetLeftStickY()),
                         gp1TurboMode(gp1GetLeftStickX()));
 
-            } /*else {
-                driveTrain.gamepadInput = new Vector2d(
-                        -gp2TurboMode(gp2GetLeftStickY()),
-                        -gp2TurboMode(gp2GetLeftStickX()));
-                //-limitStick(gp2GetLeftStickY()),
-                //-limitStick(gp2GetLeftStickX()));
-            }*/
+            }
         }
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
-
-            //if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
-                driveTrain.gamepadInput = new Vector2d(
-                        gp1TurboMode(gp1GetLeftStickX()),
-                        -gp1TurboMode(gp1GetLeftStickY())
-                ).rotated(-driveTrain.poseEstimate.getHeading());
-            //}
-
-            /*if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
-                driveTrain.gamepadInput = new Vector2d(
-                        -gp1TurboMode(gp1GetLeftStickX()),
-                        gp1TurboMode(gp1GetLeftStickY())
-                ).rotated(-driveTrain.poseEstimate.getHeading());
-            }*/
+            driveTrain.gamepadInput = new Vector2d(
+                    gp1TurboMode(gp1GetLeftStickX()),
+                    -gp1TurboMode(gp1GetLeftStickY())
+            ).rotated(-driveTrain.poseEstimate.getHeading());
         }
         if (Math.abs(gp1GetRightStickX())>0.1) {
             driveTrain.gamepadInputTurn = gp1TurboMode(gp1GetRightStickX());
-        } /*else {
-            driveTrain.gamepadInputTurn = -limitStick(gp2GetRightStickX());
-        }*/
-
-        //TCode to implement slight left / right turn. Uncomment to use
-        /*if (!gp1GetStart()) {
-            if (gp1GetLeftBumper()) {
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
-                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
-                } else {
-                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
-                }
-            }
-        } else {
-            if (gp1GetLeftBumper()) {
-                if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) {
-                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
-                } else {
-                    driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
-                }
-            }
-        }*/
-
-        /*if (gp1GetDpad_leftPress()){
-            driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_LEFT;
-        } else if (gp1GetDpad_rightPress()){
-            driveTrain.augmentedControl = DriveTrain.AugmentedControl.TURN_DELTA_RIGHT;
-        }*/
-
+        }
         driveTrain.driveTrainPointFieldModes();
 
     }
@@ -189,6 +133,31 @@ public class GamepadController {
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runTurret(){
+
+        //Move turret based on Right Stick on Gamepad 2
+        if ((gp2GetRightStickX() >= 0.2) || (gp2GetRightStickX() <= -0.2)) {
+            turret.rotateTurret(Math.pow(gp2GetRightStickX() * 1.25 - 0.25, 3));
+        }
+
+        //Move turret to face forward
+        if (gp1GetButtonYPress()) {
+            turret.faceForward();
+        }
+
+        //Move turret to face right
+        if (gp1GetButtonBPress()) {
+            turret.faceRight();
+        }
+
+        //Move turret to face left
+        if (gp1GetButtonXPress()) {
+            turret.faceLeft();
+        }
+
+        if (turret.runTurretToLevelState) {
+            turret.runTurretToPosition(turret.TURRET_POWER);
+        }
+
         SystemState.TurretState = turret.turretMotorState;
     }
 
@@ -196,56 +165,53 @@ public class GamepadController {
      * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
      */
-    public void runShoulder(){
-        SystemState.ShoulderState = shoulder.shoulderState;
-    }
-
-
-    /**
-     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck freight to be out of intake. <BR>
-     */
-    public void runArm(){
-        arm.turnArmBrakeModeOn();
-
-        //Extend the arm based on the right joystick
-        if ((gp2GetRightStickX() > 0.2) || (gp2GetRightStickX() < -0.2)) {
-            arm.modifyArmLength(gp2GetRightStickX());
-            arm.runArmToLevel(gp2GetRightStickX());
+    public void runShoulderArmCombo(){
+        //Extend the shoulder based on the Gamepad 2 left and right trigger
+        if (gp2GetRightTrigger() > 0.2) {
+            shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger() * 1.25 - 0.25, 3));
+        } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
+            shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
         }
 
-        //Move arm to low junction if x is pressed
+        //Move arm based on Left Stick on Gamepad 2
+        if ((gp2GetLeftStickY() >= 0.2) || (gp2GetLeftStickY() <= -0.2)) {
+            arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
+        }
+
+        //Move arm to low junction if Gamepad 2 X is pressed
         if (gp2GetButtonXPress()){
+            shoulder.moveToShoulderLowJunction();
             arm.moveArmToLowJunction();
-            if (arm.runArmToLevelState){
-                arm.runArmToLevel(arm.MED_POWER);
-            }
         }
 
-        //Moves arm to the high junction position if gamepad b is pressed
+        //Moves arm to the high junction if Gamepad 2 B is pressed
         if (gp2GetButtonBPress()){
+            shoulder.moveToShoulderHighJunction();
             arm.moveArmToHighJunction();
-            if (arm.runArmToLevelState){
-                arm.runArmToLevel(arm.MED_POWER);
-            }
         }
 
-        //Moves arm to ground junction if gamepad a is pressed
+        //Moves arm to pickup / ground junction if Gamepad 2 A is pressed
         if (gp2GetButtonAPress()){
+            shoulder.moveToShoulderPickupWhileFacingFoward();
             arm.moveArmToPickUpWhileTurretFacingForward();
-            if (arm.runArmToLevelState){
-                arm.runArmToLevel(arm.MED_POWER);
-            }
         }
 
-        //Moves arm to middle junction if y is pressed
+        //Moves arm to middle junction if Gamepad 2 Y is pressed
         if (gp2GetButtonYPress()){
+            shoulder.moveToShoulderMidJunction();
             arm.moveArmToMidJunction();
-            if (arm.runArmToLevelState){
-                arm.runArmToLevel(arm.MED_POWER);
-            }
         }
 
+        //Run Shoulder motors if position is changed
+        if (shoulder.runShoulderToLevelState){
+            shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER);
+        }
+        SystemState.ShoulderState = shoulder.shoulderState;
+
+        // Run Arm motor if position is changed
+        if (arm.runArmToLevelState) {
+            arm.runArmToLevel(arm.ARM_POWER);
+        }
         SystemState.ArmState = arm.armMotorState;
     }
 

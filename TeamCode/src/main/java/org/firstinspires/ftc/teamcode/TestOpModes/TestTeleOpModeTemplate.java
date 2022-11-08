@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -60,8 +59,6 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
-        GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
-
         /* Get last position after Autonomous mode ended from static class set in Autonomous
         if ( GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
@@ -117,32 +114,42 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+            /*
 
             telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
             telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
+            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
-            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
 
-            telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
-            telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
+            telemetry.addData("Arm State: ", arm.armMotorState);
+            telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
+            telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
 
+            telemetry.addData("Wrist State : ", hand.wristState);
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
+            telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
             telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
             telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
+            telemetry.addData("Shoulder State: ", shoulder.shoulderState);
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());
+            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getCurrentPosition());
             telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
 
+            telemetry.addData("Turret State : ", turret.turretMotorState);
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
-            
+            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
+
+             */
+
+
             telemetry.addData("Game Timer : ", gameTimer.time());
         }
 

@@ -19,8 +19,8 @@ public class TestVision extends LinearOpMode {
         vision = new Vision(hardwareMap, activeWebcam); //create instance of vision object
         vision.activateVuforiaTensorFlow();
         while (opModeIsActive() && !isStopRequested()) {
-            GameField.VISION_IDENTIFIED_TARGET detectedLabel = vision.runVuforiaTensorFlow();
-            telemetry.addData("Vision Objected Detected: ", detectedLabel);
+            GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = vision.runVuforiaTensorFlow();
+            telemetry.addData("Vision Objected Detected: ", visionIdentifiedTarget);
             telemetry.update();//display identified label
         }
         vision.deactivateVuforiaTensorFlow();

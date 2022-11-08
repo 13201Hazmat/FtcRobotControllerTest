@@ -41,10 +41,12 @@ public class Turret {
     public static final int FACING_LEFT_POSITION = -675;
     public static final int FACING_RIGHT_POSITION = 675;
 
-    public int turretMotorPosition;
+    public int turretCurrentPosition = FACING_FORWARD_POSITION;
+    public int turretNewPosition = FACING_FORWARD_POSITION;
+
     public double turretAngleRadians, turretAngleDegrees;
 
-    public double turretPower = 0.7;
+    public static final double TURRET_POWER = 0.7;
 
     //value declarations
     public boolean runTurretToLevelState = false;
@@ -58,6 +60,7 @@ public class Turret {
 
     //turret initialization
     public void initTurret(){
+        turretMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         resetTurret();
         //set motor direction opposite for rotation
         turretMotor.setDirection(DcMotorEx.Direction.FORWARD);
@@ -83,18 +86,16 @@ public class Turret {
     }
     //commented out, as use not needed yet
 
-    public void faceBackwardLeft() {
-        turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
-        turretMotor.setTargetPosition(FACING_BACKWARD_LEFT_POSITION);
+    public void faceBackward(){
+        turretCurrentPosition = turretMotor.getCurrentPosition();
+        if (turretCurrentPosition <0) {
+            turretMotor.setTargetPosition(FACING_BACKWARD_LEFT_POSITION);
+            turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
+        } else {
+            turretMotor.setTargetPosition(FACING_BACKWARD_RIGHT_POSITION);
+            turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
+        }
         runTurretToLevelState = true;
-        //assign value after testing
-    }
-
-    public void faceBackwardRight() {
-        turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
-        turretMotor.setTargetPosition(FACING_BACKWARD_RIGHT_POSITION);
-        runTurretToLevelState = true;
-        //assign value after testing
     }
 
     public void faceLeft() {
@@ -114,33 +115,27 @@ public class Turret {
      * Rotate Turret
      * assign to gamepad value once done
      * convert turret position value to degrees
-     * @param joyStickValue
+     * @param stepSizeFactor
      */
-    public void rotateTurret(double joyStickValue){
-        turretMotorPosition = turretMotor.getCurrentPosition();
-        if (joyStickValue > 0.2) {
-            turretDeltaCount = (int) (Math.pow((joyStickValue * 1.25 - 0.25), 3) * TURRET_DELTA_COUNT_MAX);
-        } else if (joyStickValue < -0.2) {
-            turretDeltaCount = (int) (Math.pow((joyStickValue * 1.25 + 0.25), 3) * TURRET_DELTA_COUNT_MAX);
-        } else {
-            turretDeltaCount = 0;
-        }
-        if ((turretDeltaCount !=0)
-                && (turretMotorPosition >=  FACING_BACKWARD_LEFT_POSITION )
-                && (turretMotorPosition <= FACING_BACKWARD_RIGHT_POSITION)){
-            turnTurretBrakeModeOn();
-            turretMotorPosition = (int) (turretMotorPosition + joyStickValue * TURRET_DELTA_COUNT_MAX);
-            if (turretMotorPosition < FACING_BACKWARD_LEFT_POSITION ) {
-                turretMotorPosition = FACING_BACKWARD_LEFT_POSITION;
+    public void rotateTurret(double stepSizeFactor){
+        turretDeltaCount = (int) stepSizeFactor * TURRET_DELTA_COUNT_MAX;
+
+        if (turretDeltaCount !=0) {
+            turretCurrentPosition = turretMotor.getCurrentPosition();
+            turretNewPosition = turretCurrentPosition + turretDeltaCount;
+            if (turretNewPosition < FACING_BACKWARD_LEFT_POSITION ) {
+                turretNewPosition = FACING_BACKWARD_LEFT_POSITION;
                 turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
-            } else if (turretMotorPosition > FACING_BACKWARD_RIGHT_POSITION ) {
-                turretMotorPosition = FACING_BACKWARD_RIGHT_POSITION;
+            } else if (turretNewPosition > FACING_BACKWARD_RIGHT_POSITION ) {
+                turretNewPosition = FACING_BACKWARD_RIGHT_POSITION;
                 turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
             } else {
                 turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
             }
-            turretMotor.setTargetPosition(turretMotorPosition);
-            runTurretToLevelState = true;
+            if (turretNewPosition != turretCurrentPosition) {
+                turretMotor.setTargetPosition(turretNewPosition);
+                runTurretToLevelState = true;
+            }
         }
     }
 

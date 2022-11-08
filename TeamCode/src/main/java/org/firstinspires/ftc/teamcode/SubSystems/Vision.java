@@ -34,11 +34,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
@@ -164,7 +162,7 @@ public class Vision {
 
     private TFObjectDetector tfod;
     private List<Recognition> recognitions;
-    public GameField.VISION_IDENTIFIED_TARGET targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
+    public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
 
     /**
      * Initialize the Vuforia localization engine.
@@ -265,24 +263,21 @@ public class Vision {
                         switch(detectedLabel){
                             case "1 Bolt":
                             case "6 Purple":
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
                                 break;
                             case "2 Bulb":
                             case "5 Yellow":
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
                                 break;
                             case "3 Panel":
                             case "4 Green":
-                                targetLevelDetected = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
                                 break;
                         }
-                        }
-                        }
                     }
-
-
-        //}
-        return targetLevelDetected;
+            }
+        }
+        return visionIdentifiedTarget;
     }
 
     /**

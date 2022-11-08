@@ -59,8 +59,6 @@ public class TestTurret extends LinearOpMode {
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
-        GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
-
         /* Get last position after Autonomous mode ended from static class set in Autonomous
         if (GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
@@ -94,36 +92,37 @@ public class TestTurret extends LinearOpMode {
             while (opModeIsActive()) {
                 //gamepadController.runByGamepadControl();
 
-                if (gamepadController.gp1GetButtonYPress()) {
-                    turret.faceForward();
-                    if (turret.runTurretToLevelState) {
-                        turret.runTurretToPosition(turret.turretPower);
-                    }
-                }
+                //Keep Arm fixed when testing shoulder
+                arm.turnArmBrakeModeOn();
 
-                if (gamepadController.gp1GetButtonBPress()) {
-                    turret.faceRight();
-                    if (turret.runTurretToLevelState) {
-                        turret.runTurretToPosition(turret.turretPower);
-                    }
-                }
-
-                if (gamepadController.gp1GetButtonXPress()) {
-                    turret.faceLeft();
-                    if (turret.runTurretToLevelState) {
-                        turret.runTurretToPosition(turret.turretPower);
-                    }
-                }
-
+                //Move turret based on Right Stick on Gamepad 2
                 if ((gamepadController.gp2GetRightStickX() >= 0.2) ||
                         (gamepadController.gp2GetRightStickX() <= -0.2)) {
-                    turret.rotateTurret(gamepadController.gp2GetRightStickX());
-                    if (turret.runTurretToLevelState) {
-                        turret.runTurretToPosition(gamepadController.gp2GetRightStickX());
-                    }
+                    turret.rotateTurret(Math.pow(gamepadController.gp2GetRightStickX()*1.25 - 0.25, 3));
                 }
 
+                //Move turret to face forward
+                if (gamepadController.gp1GetButtonYPress()) {
+                    turret.faceForward();
+                }
 
+                //Move turret to face right
+                if (gamepadController.gp1GetButtonBPress()) {
+                    turret.faceRight();
+                }
+
+                //Move turret to face left
+                if (gamepadController.gp1GetButtonXPress()) {
+                    turret.faceLeft();
+                }
+
+                if (gamepadController.gp1GetButtonAPress()){
+                    turret.faceBackward();
+                }
+
+                if (turret.runTurretToLevelState) {
+                    turret.runTurretToPosition(turret.TURRET_POWER);
+                }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -144,36 +143,11 @@ public class TestTurret extends LinearOpMode {
         telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
-
-            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
-
-            //****** Drive debug ******
-            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-
-            telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
-            telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
-
-            //telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
-            //telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            //telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            //telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
-
-            telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
-            telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
-
+            telemetry.addData("Turret State : ", turret.turretMotorState);
+            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
-            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
-            telemetry.addData("Turret State : ", turret.turretMotorState);
-
-
-            telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addData("Turret Brake Mode : ", turret.turretMotor.getZeroPowerBehavior());
         }
 
         telemetry.update();

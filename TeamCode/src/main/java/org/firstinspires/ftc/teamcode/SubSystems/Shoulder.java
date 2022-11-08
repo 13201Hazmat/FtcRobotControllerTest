@@ -38,27 +38,26 @@ public class Shoulder {
     public SHOULDER_STATE shoulderState;
 
     public boolean runShoulderToLevelState = false;
-    public int SHOULDER_DELTA_COUNT_MAX = 20;
+    public int SHOULDER_DELTA_COUNT_MAX = 100;
     public int shoulderDeltaCount = 0; //Need tested value
 
-    public int shoulderPositionCount = GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
 
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
-    public static final int LOW_JUNCTION_POSITION = 400; //need tested values
+    public static final int LOW_JUNCTION_POSITION = 300; //need tested values
     public static final int MEDIUM_JUNCTION_POSITION = 500; //need tested values
     public static final int HIGH_JUNCTION_POSITION = 700; //need tested values
-    public static final double MAX_RAISED = 900; //Need tested values
+    public static final int MAX_RAISED = 900; //Need tested values
+
+    public int shoulderCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+    public int shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
 
     public int pickupShoulderWhileDynamicTurretPosition = 0;
 
     public double shoulderAngleRadians, shoulderAngleDegrees;
 
     //Different constants of shoulder speed
-    public double HIGH_POWER = 1.0;
-    public double MED_POWER = 0.5;
-    public double LOW_POWER = 0.2;
-
+    public static final double SHOULDER_POWER = 0.5;
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
@@ -69,12 +68,12 @@ public class Shoulder {
 
     //Method is able to <Fill>
     public void initShoulder(){
+        leftShoulderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightShoulderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         resetShoulder();
         turnShoulderBrakeModeOff();
         leftShoulderMotor.setPositionPIDFCoefficients(5.0);
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
-        //leftShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        //rightShoulderMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
     }
@@ -88,19 +87,6 @@ public class Shoulder {
 
     }
 
-    public void runShoulderToLevel(double power){
-        rightShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        leftShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        if (runShoulderToLevelState == true){
-            leftShoulderMotor.setPower(power);
-            rightShoulderMotor.setPower(power);
-            runShoulderToLevelState = false;
-        } else{
-            leftShoulderMotor.setPower(0.0);
-            rightShoulderMotor.setPower(0.0);
-        }
-    }
-
     public void turnShoulderBrakeModeOn() {
         leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -109,11 +95,6 @@ public class Shoulder {
     public void turnShoulderBrakeModeOff() {
         leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-    }
-
-    //gets the position of the shoulder
-    public int getShoulderPositionCount() {
-        return rightShoulderMotor.getCurrentPosition(); //returns the encoder count of the right shoulder
     }
 
     //Sets shoulder position to ground junction
@@ -165,33 +146,59 @@ public class Shoulder {
     }
 
 
-    public void lowerShoulder(double leftTriggerAmount) {
-        turnShoulderBrakeModeOn();
-        shoulderDeltaCount = (int) (Math.pow((leftTriggerAmount * 1.25 - 0.25), 3) * SHOULDER_DELTA_COUNT_MAX);
-        if (shoulderPositionCount > PICKUP_WHILE_FACING_FORWARD_POSITION + shoulderDeltaCount){
-
-            shoulderPositionCount = shoulderPositionCount - shoulderDeltaCount;
-        }else{
-
-            shoulderPositionCount = PICKUP_WHILE_FACING_FORWARD_POSITION;
-            turnShoulderBrakeModeOff();
+    public void lowerShoulder(double stepSizeFactor) {
+        shoulderDeltaCount = (int) stepSizeFactor * SHOULDER_DELTA_COUNT_MAX;
+        if (shoulderDeltaCount !=0) {
+            shoulderCurrentPosition = (leftShoulderMotor.getCurrentPosition()
+                    + rightShoulderMotor.getCurrentPosition())/2;
+            shoulderNewPosition = shoulderCurrentPosition - shoulderDeltaCount;
+            if (shoulderNewPosition > PICKUP_WHILE_FACING_FORWARD_POSITION) {
+                shoulderState = SHOULDER_STATE.RANDOM;
+                turnShoulderBrakeModeOn();
+            } else {
+                shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+                shoulderState = SHOULDER_STATE.PICKUP;
+                turnShoulderBrakeModeOff();
+            }
+            if (shoulderNewPosition != shoulderCurrentPosition) {
+                rightShoulderMotor.setTargetPosition(shoulderNewPosition);
+                leftShoulderMotor.setTargetPosition(shoulderNewPosition);
+                runShoulderToLevelState = true;
+            }
         }
-        rightShoulderMotor.setTargetPosition(shoulderPositionCount);
-        leftShoulderMotor.setTargetPosition(shoulderPositionCount);
-        shoulderState = SHOULDER_STATE.RANDOM;
-        runShoulderToLevelState = true;
     }
 
-    public void raiseShoulder(double rightTriggerAmount) {
-        shoulderDeltaCount = (int) (Math.pow((rightTriggerAmount * 1.25 - 0.25), 3) * SHOULDER_DELTA_COUNT_MAX);
+    public void raiseShoulder(double stepSizeFactor) {
+        shoulderDeltaCount = (int) stepSizeFactor * SHOULDER_DELTA_COUNT_MAX;
+        if (shoulderDeltaCount !=0) {
+            shoulderCurrentPosition = (leftShoulderMotor.getCurrentPosition()
+                    + rightShoulderMotor.getCurrentPosition())/2;
+            shoulderNewPosition = shoulderCurrentPosition + shoulderDeltaCount;
+            if (shoulderNewPosition < MAX_RAISED) {
+                shoulderState = SHOULDER_STATE.RANDOM;
+            } else {
+                shoulderNewPosition = MAX_RAISED;
+                shoulderState = SHOULDER_STATE.MAX_RAISED;
+            }
+            if (shoulderNewPosition != shoulderCurrentPosition) {
+                turnShoulderBrakeModeOn();
+                rightShoulderMotor.setTargetPosition(shoulderNewPosition);
+                leftShoulderMotor.setTargetPosition(shoulderNewPosition);
+                runShoulderToLevelState = true;
+            }
+        }
+    }
 
-        if (shoulderPositionCount < MAX_RAISED){
-            turnShoulderBrakeModeOn();
-            shoulderPositionCount = shoulderPositionCount + shoulderDeltaCount;
-            rightShoulderMotor.setTargetPosition(shoulderPositionCount);
-            leftShoulderMotor.setTargetPosition(shoulderPositionCount);
-            shoulderState = SHOULDER_STATE.RANDOM;
-            runShoulderToLevelState = true;
+    public void runShoulderToLevel(double power){
+        rightShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        leftShoulderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        if (runShoulderToLevelState == true){
+            leftShoulderMotor.setPower(power);
+            rightShoulderMotor.setPower(power);
+            runShoulderToLevelState = false;
+        } else{
+            leftShoulderMotor.setPower(0.0);
+            rightShoulderMotor.setPower(0.0);
         }
     }
 

@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
-import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
@@ -59,8 +58,6 @@ public class TestArm extends LinearOpMode {
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
-        GameField.playingAlliance= GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
-
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous) {
             //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
@@ -92,71 +89,42 @@ public class TestArm extends LinearOpMode {
             while (opModeIsActive()) {
                 //gamepadController.runByGamepadControl();
 
+                //Keep shoulder Brake on for Arm testing
+                shoulder.turnShoulderBrakeModeOn();
 
-                arm.turnArmBrakeModeOn();
-
-                /*
-                //Extend the arm based on the right joystick
-                if (gamepadController.gp2GetLeftStickY() > 0.2) {
-                    arm.extendArm(gamepadController.gp2GetLeftStickY());
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
-                    }
-                }
-
-                //retract the arm based on the right joystick
-                else if(gamepadController.gp2GetLeftStickY() < -0.2) {
-                    arm.retractArm(gamepadController.gp2GetLeftStickY());
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
-                    }
-                }
-                 */
-
+                //Move arm based on Left Stick on Gamepad 2
                 if ((gamepadController.gp2GetLeftStickY() >= 0.2) ||
                         (gamepadController.gp2GetLeftStickY() <= -0.2)) {
-                    arm.modifyArmLength(gamepadController.gp2GetLeftStickY());
-                    if (arm.runArmToLevelState) {
-                        arm.runArmToLevel(gamepadController.gp2GetLeftStickY());
-                    }
+                    arm.modifyArmLength(Math.pow(-gamepadController.gp2GetLeftStickY() * 1.25 - 0.25, 3));
                 }
 
-
-                //Move arm to low junction if x is pressed
+                //Move arm to low junction if Gamepad 2 X is pressed
                 if (gamepadController.gp2GetButtonXPress()){
                     arm.moveArmToLowJunction();
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(arm.MED_POWER);
-                    }
                 }
 
-                //Moves arm to the high junction position if gamepad b is pressed
+                //Moves arm to the high junction if Gamepad 2 B is pressed
                 if (gamepadController.gp2GetButtonBPress()){
                     arm.moveArmToHighJunction();
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(arm.MED_POWER);
-
-                    }
                 }
 
-                //Moves arm to ground junction if gamepad a is pressed
+                //Moves arm to pickup / ground junction if Gamepad 2 B is pressed
                 if (gamepadController.gp2GetButtonAPress()){
                     arm.moveArmToPickUpWhileTurretFacingForward();
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(arm.MED_POWER);
-
-                    }
                 }
 
-                //Moves arm to middle junction if y is pressed
+                //Moves arm to middle junction if Gamepad 2 Y is pressed
                 if (gamepadController.gp2GetButtonYPress()){
                     arm.moveArmToMidJunction();
-                    if (arm.runArmToLevelState){
-                        arm.runArmToLevel(arm.MED_POWER);
-
-                    }
                 }
 
+                // Run Arm motor if position is changed
+                if (arm.runArmToLevelState) {
+                    arm.runArmToLevel(arm.ARM_POWER);
+                }
+
+                //Keep shoulder Brake on for Arm testing
+                shoulder.turnShoulderBrakeModeOn();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -179,34 +147,15 @@ public class TestArm extends LinearOpMode {
         telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
-
-            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
-            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
-
-            //****** Drive debug ******
-            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-
-            telemetry.addData("Arm Motor Position: ", arm.getArmPositionCount());
-            telemetry.addData("Arm Motor Power:", arm.armmotor.getPower());
             telemetry.addData("Arm State: ", arm.armMotorState);
-
-            //telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
-            //telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            //telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            //telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
-
-            telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
-            telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
-
-            telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
-            telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
-            
-            telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addData("Arm Delta Count : ", arm.armDeltaCount);
+            telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
+            telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
+            telemetry.addData("Arm Brake Mode:", arm.armMotor.getZeroPowerBehavior());
+            telemetry.addData("Left Shoulder Position:", shoulder.leftShoulderMotor.getCurrentPosition());
+            telemetry.addData("Left Shoulder Brake Mode:", shoulder.leftShoulderMotor.getZeroPowerBehavior());
+            telemetry.addData("Right Shoulder Position:", shoulder.rightShoulderMotor.getCurrentPosition());
+            telemetry.addData("Right Shoulder Brake Mode:", shoulder.rightShoulderMotor.getZeroPowerBehavior());
         }
 
         telemetry.update();
