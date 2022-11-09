@@ -29,16 +29,22 @@ public class Hand {
     //Initialization of HAND_STATE and HAND_GRIP_STATE and HAND_MOTOR_POSITION enums
     public GRIP_STATE gripState;
     public WRIST_STATE wristState;
+    public Shoulder shoulder;
 
     //constants for Hand and grip position
     int openGripPos = 1; //value of Grip to open
     int closeGripPos = 0; //value of Grip to close
 
     public boolean runHandToLevelState = false;
-    public static final double WRIST_UP_POSITION = 180;//get position from robot
-    public static final double WRIST_DOWN_POSITION = -180;//get position from robot
+    public static final double WRIST_UP_POSITION = 537/2;//get position from robot
+    public static final double WRIST_DOWN_POSITION = -537/2;//get position from robot
     public static final double WRIST_DEFAULT_LEVEL_POSITION = 0;//get position from robot
     public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
+    public static double ARM_MIN_POSITION = 0; //arm resting position
+    public static double ARM_MAX_POSITION = 3000; //arm fully extended position
+    public static double radianCount = 537/4; //radian in encoder count
+    public static double wristLevelPos = 0; //position for wrist to be parallel to ground
+    public static double shoulderLevelPos = 0; //position of shoulder derived
 
     //Hand - wrist, grip enum declaration
     public enum WRIST_STATE {
@@ -112,7 +118,9 @@ public class Hand {
     }
 
     public double determineWristLevelPosition(){
-        //TODO: FILLED based on Shoulder angle
-        return 0;
+        shoulderLevelPos = shoulder.calculateShoulderAngle();
+        wristLevelPos = shoulderLevelPos - radianCount;
+        wristServo.setPosition(wristLevelPos);
+        return wristLevelPos;
     }
 }
