@@ -139,10 +139,9 @@ public class Turret {
         }
     }
 
-    //TODO : Calculate turret Angle
     public void calculateTurretAngle(){
-        turretAngleRadians = 0; //TODO : Calculate turret Angle
-        turretAngleDegrees = Math.toDegrees(turretAngleRadians);
+        turretAngleDegrees = 180/(FACING_RIGHT_POSITION) * turretMotor.getCurrentPosition();
+        turretAngleRadians = Math.toRadians(turretAngleDegrees);
     }
 
     public void resetTurret(){
