@@ -11,6 +11,7 @@ public class SystemState {
     public static Shoulder.SHOULDER_STATE ShoulderState = Shoulder.SHOULDER_STATE.PICKUP;
     public static Turret.TURRET_MOTOR_STATE TurretState = Turret.TURRET_MOTOR_STATE.FACING_FORWARD;
 
+
     public static double ShoulderAngleRadians = 0;
     public static double TurretAngleRadians = 0;
     public static double ArmExtension = 0;

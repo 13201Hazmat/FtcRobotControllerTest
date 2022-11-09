@@ -37,6 +37,7 @@ public class Shoulder {
     //Initialization of <Fill>
     public SHOULDER_STATE shoulderState;
 
+
     public boolean runShoulderToLevelState = false;
     public int SHOULDER_DELTA_COUNT_MAX = 100;
     public int shoulderDeltaCount = 0; //Need tested value
@@ -160,6 +161,10 @@ public class Shoulder {
             if (shoulderNewPosition > PICKUP_WHILE_FACING_FORWARD_POSITION) {
                 shoulderState = SHOULDER_STATE.RANDOM;
                 turnShoulderBrakeModeOn();
+
+                if (Math.abs(SystemState.TurretAngleRadians) > Math.PI/4) && (Math.abs(SystemState.TurretAngleRadians) < Math.PI/2){ //avoiding the wheel
+                    pickupShoulderWhileDynamicTurretPosition = 100;//raised above wheel position;
+                }
             } else {
                 shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
                 shoulderState = SHOULDER_STATE.PICKUP;

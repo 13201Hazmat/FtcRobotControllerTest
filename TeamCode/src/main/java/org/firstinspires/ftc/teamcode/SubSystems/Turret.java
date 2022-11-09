@@ -44,7 +44,8 @@ public class Turret {
     public int turretCurrentPosition = FACING_FORWARD_POSITION;
     public int turretNewPosition = FACING_FORWARD_POSITION;
 
-    public double turretAngleRadians, turretAngleDegrees;
+    public static double turretAngleRadians;
+    public double turretAngleDegrees;
 
     public static final double TURRET_POWER = 0.7;
 
@@ -142,6 +143,7 @@ public class Turret {
     public void calculateTurretAngle(){
         turretAngleDegrees = 180/(FACING_RIGHT_POSITION) * turretMotor.getCurrentPosition();
         turretAngleRadians = Math.toRadians(turretAngleDegrees);
+        SystemState.TurretAngleRadians = turretAngleRadians;
     }
 
     public void resetTurret(){
