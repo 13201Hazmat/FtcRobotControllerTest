@@ -50,7 +50,7 @@ public class Turret {
 
     //value declarations
     public boolean runTurretToLevelState = false;
-    public static int TURRET_DELTA_COUNT_MAX = 100; //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public static int TURRET_DELTA_COUNT_MAX = 50; //movement value of turret given clockwise or counterclockwise rotation(changeable)
     public int turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret

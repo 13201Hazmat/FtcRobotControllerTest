@@ -54,14 +54,14 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
+    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4.5, 0, 0);
-    //public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-
-    public static double LATERAL_MULTIPLIER = 1;//1.22;//1;
+    public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -74,10 +74,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
-    private BNO055IMU imu;
+    public BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
@@ -120,10 +120,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        //Using Expansion hub IMU as it is fixed on the chassis. It is place facing downwards.
-        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Z);
+        // TODO : ftcwires action. Set the IMU axis based on which direction the Rev logo is pointing
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_Z);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -152,8 +151,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
-
-        // TODO: if desired, use setLocalizer() to change the localization method
+        // if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
@@ -323,18 +321,4 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
-
-    //Method to get Battery Voltage
-    public double getBatteryVoltage(HardwareMap hardwareMap) {
-        double result = Double.POSITIVE_INFINITY;
-        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
-            double voltage = sensor.getVoltage();
-            if (voltage > 0) {
-                result = Math.min(result, voltage);
-            }
-        }
-        return result;
-    }
-
-
 }

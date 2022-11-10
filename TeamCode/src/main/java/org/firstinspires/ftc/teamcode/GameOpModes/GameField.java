@@ -21,7 +21,14 @@ public class GameField {
         MINIMUM,
         MAXIMUM
     }
-    public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.MINIMUM;
+    public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.MAXIMUM;
+
+    //Define and declare Playing Alliance
+    public enum PLAYING_ALLIANCE{
+        RED_ALLIANCE,
+        BLUE_ALLIANCE,
+    }
+    public static PLAYING_ALLIANCE playingAlliance = PLAYING_ALLIANCE.BLUE_ALLIANCE;
 
     //Static fields to pass Pos from Autonomous to TeleOp
     public static boolean poseSetInAutonomous = false;

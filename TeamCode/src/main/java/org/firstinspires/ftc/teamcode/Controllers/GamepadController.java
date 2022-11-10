@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Controllers;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
@@ -102,30 +103,39 @@ public class GamepadController {
     // RR Drive Train
     public void runDriveControl_byRRDriveModes() {
 
-        driveTrain.poseEstimate = driveTrain.getPoseEstimate();
+        //driveTrain.poseEstimate = driveTrain.getPoseEstimate();
 
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
-            if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
+            //if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
                 driveTrain.gamepadInput = new Vector2d(
                         gp1TurboMode(gp1GetLeftStickY()),
                         gp1TurboMode(gp1GetLeftStickX()));
 
-            }
+            //}
         }
+        driveTrain.gamepadInputTurn = gp1TurboMode(gp1GetRightStickX());
 
-        if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
-            driveTrain.gamepadInput = new Vector2d(
-                    gp1TurboMode(gp1GetLeftStickX()),
-                    -gp1TurboMode(gp1GetLeftStickY())
-            ).rotated(-driveTrain.poseEstimate.getHeading());
-        }
-        if (Math.abs(gp1GetRightStickX())>0.1) {
-            driveTrain.gamepadInputTurn = gp1TurboMode(gp1GetRightStickX());
-        }
         driveTrain.driveTrainPointFieldModes();
 
+        /*if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
+
+            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.RED_ALLIANCE) { // Red Alliance
+                driveTrain.gamepadInput = new Vector2d(
+                        gp1TurboMode(gp1GetLeftStickX()),
+                        -gp1TurboMode(gp1GetLeftStickY())
+                ).rotated(-driveTrain.poseEstimate.getHeading());
+            };
+
+            if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
+                driveTrain.gamepadInput = new Vector2d(
+                        -gp1TurboMode(gp1GetLeftStickX()),
+                        gp1TurboMode(gp1GetLeftStickY())
+                ).rotated(-driveTrain.poseEstimate.getHeading());
+            };
+            driveTrain.driveTrainFieldCentric();
+        }*/
     }
 
     /**
@@ -348,7 +358,6 @@ public class GamepadController {
     public double gp2GetRightStickX() {
         return hzGamepad2.right_stick_x;
     }
-
     public double gp1GetRightStickY() {
         return hzGamepad1.right_stick_y;
     }
@@ -362,6 +371,7 @@ public class GamepadController {
      * For Hazmat Freight Frenzy Right Trigger pressed means turbo mode on.
      *
      * @return gpGamepad1.right_trigger
+     * @return gpGamepad2.right_trigger
      */
     public double gp1GetRightTrigger() {
         return hzGamepad1.right_trigger;
@@ -372,7 +382,7 @@ public class GamepadController {
 
     /**
      * gp1 right trigger press cubic value when pressed
-     * @return gp1GetRightTriggerPress
+     * @return
      */
     public boolean gp1GetRightTriggerPress() {
         boolean isPressedRightTrigger = false;
@@ -400,6 +410,7 @@ public class GamepadController {
      * Methods to get the value of gamepad Left Trigger
      *
      * @return gpGamepad1.left_trigger
+     * @return gpGamepad2.left_trigger
      */
     public double gp1GetLeftTrigger() {
         return hzGamepad1.left_trigger;

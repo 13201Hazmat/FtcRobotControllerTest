@@ -1,21 +1,19 @@
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.playingAlliance;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
-import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
+import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
-import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
@@ -24,8 +22,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TeleOp", group = "00-Teleop")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "Test DriveTrain", group = "00-Teleop")
+public class TestDriveTrain extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -35,12 +33,9 @@ public class TeleOpMode extends LinearOpMode {
     public Turret turret;
     public Lights lights;
 
-    //Static Class for knowing system state
-    public static SystemState SystemState;
-
     //public Vuforia Vuforia1;
 
-    public Pose2d startPose = GameField.ORIGINPOSE;
+    //public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
@@ -63,12 +58,14 @@ public class TeleOpMode extends LinearOpMode {
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
 
-        /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        /* Get last position after Autonomous mode ended from static class set in Autonomous
         if ( GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
+
+         */
 
         //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
         GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
@@ -92,8 +89,8 @@ public class TeleOpMode extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
-
+                //gamepadController.runByGamepadControl();
+                gamepadController.runDriveControl_byRRDriveModes();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -117,14 +114,29 @@ public class TeleOpMode extends LinearOpMode {
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
 
+
+            telemetry.addData("GameField.playingAlliance : ", GameField.playingAlliance);
             telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
             telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            telemetry.addData("startPose : ", startPose);
+            //telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("LeftStickY",gamepadController.gp1TurboMode(gamepadController.gp1GetLeftStickY()));
+            telemetry.addData("LeftStickX",gamepadController.gp1TurboMode(gamepadController.gp1GetLeftStickX()));
+            telemetry.addData("rightStickX",gamepadController.gp1TurboMode(gamepadController.gp1GetRightStickX()));
+            telemetry.addData("leftFront Power :", driveTrain.leftFront.getPower());
+            telemetry.addData("leftFront Encoder :", driveTrain.leftFront.getCurrentPosition());
+            telemetry.addData("rightFront Power :", driveTrain.rightFront.getPower());
+            telemetry.addData("rightFront Encoder :", driveTrain.rightFront.getCurrentPosition());
+            telemetry.addData("leftRear Power :", driveTrain.leftRear.getPower());
+            telemetry.addData("leftRear Encoder :", driveTrain.leftRear.getCurrentPosition());
+            telemetry.addData("rightRear Power :", driveTrain.rightRear.getPower());
+            telemetry.addData("rightRear Encoder :", driveTrain.rightRear.getCurrentPosition());
 
+
+            /*
             telemetry.addData("Arm State: ", arm.armMotorState);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
@@ -146,7 +158,10 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
             telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
-            
+
+             */
+
+
             telemetry.addData("Game Timer : ", gameTimer.time());
         }
 
