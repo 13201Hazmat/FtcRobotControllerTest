@@ -108,14 +108,11 @@ public class GamepadController {
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
-            //if (Math.abs(gp1GetLeftStickX())>0.1 || Math.abs(gp1GetLeftStickY())>0.1) {
-                driveTrain.gamepadInput = new Vector2d(
-                        gp1TurboMode(gp1GetLeftStickY()),
-                        gp1TurboMode(gp1GetLeftStickX()));
-
-            //}
+            driveTrain.gamepadInput = new Vector2d(
+                    -gp1TurboMode(gp1GetLeftStickY()),
+                    -gp1TurboMode(gp1GetLeftStickX()));
         }
-        driveTrain.gamepadInputTurn = gp1TurboMode(gp1GetRightStickX());
+        driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
 
         driveTrain.driveTrainPointFieldModes();
 
@@ -198,7 +195,7 @@ public class GamepadController {
         }
 
         //Moves arm to the high junction if Gamepad 2 B is pressed
-        if (gp2GetButtonBPress()){
+        if (!gp2GetStart() && gp2GetButtonBPress()){
             shoulder.moveToShoulderHighJunction();
             arm.moveArmToHighJunction();
         }
