@@ -162,11 +162,12 @@ public class Shoulder {
                 shoulderState = SHOULDER_STATE.RANDOM;
                 turnShoulderBrakeModeOn();
 
-                if (Math.abs(SystemState.TurretAngleRadians) > Math.PI/4) && (Math.abs(SystemState.TurretAngleRadians) < Math.PI/2){ //avoiding the wheel
-                    pickupShoulderWhileDynamicTurretPosition = 100;//raised above wheel position;
+                if (Math.abs(SystemState.TurretAngleRadians) > Math.PI / 18) { //avoiding the wheel(10 degrees)
+                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_NOT_FACING_FORWARD_POSITION;//raised above wheel position;
+                } else {
+                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //going back to max down when its not near the wheel
                 }
-            } else {
-                shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+
                 shoulderState = SHOULDER_STATE.PICKUP;
                 turnShoulderBrakeModeOff();
             }

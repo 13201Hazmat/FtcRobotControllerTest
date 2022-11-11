@@ -49,6 +49,7 @@ public class Arm {
     public static final int MAX_EXTENDED_POSITION = (int) 4500;
     public int armCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
     public int armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+    public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
 
     public int pickupArmWhileDynamicTurretPosition = 0;
 
@@ -56,6 +57,7 @@ public class Arm {
 
     //Different constants of arm speed
     public static final double ARM_POWER = 0.5;
+
 
     public int armDeltaCount = 0; //Need tested value
 
@@ -162,9 +164,9 @@ public class Arm {
         return maxExtensionArmEncoderPositionBasedOnShoulderAngle;
     }
 
-    public int convertMotorEncoderValueToArmLength(){
-        int convertedMotorEncoderValueToArmLength = 0; //TODO: From encoder value Find Max length and write proportional convertion algorithm
-        return convertedMotorEncoderValueToArmLength;
+    public void convertMotorEncoderValueToArmLength(){
+        int convertedMotorEncoderValueToArmLength = (int) (armMotor.getCurrentPosition() * ENCODER_TO_LENGTH); //TODO: From encoder value Find Max length and write proportional convertion algorithm
+        SystemState.ArmExtension = convertedMotorEncoderValueToArmLength;
     }
 
 

@@ -162,7 +162,9 @@ public class GamepadController {
         }
 
         if (turret.runTurretToLevelState) {
-            turret.runTurretToPosition(turret.TURRET_POWER);
+            arm.convertMotorEncoderValueToArmLength();
+            //Lowers the power based on the extension length of the arm
+            turret.runTurretToPosition(turret.TURRET_POWER - (SystemState.ArmExtension * SystemState.ARM_EXTENSION_POWER_MULTIPLIER));
         }
 
         SystemState.TurretState = turret.turretMotorState;
