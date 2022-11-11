@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -49,6 +48,10 @@ public class Arm {
     public static final int MAX_EXTENDED_POSITION = (int) 4500;
     public int armCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
     public int armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+    public static final double cone2Position = 1000;
+    public static final double cone3Position = 1200;
+    public static final double cone4Position = 1300;
+    public static final double cone5Position = 1400;
 
     public int pickupArmWhileDynamicTurretPosition = 0;
 
@@ -60,6 +63,8 @@ public class Arm {
     public int armDeltaCount = 0; //Need tested value
 
     public boolean runArmToLevelState = false;
+
+
 
     //Constructor`
     public Arm(HardwareMap hardwareMap){
@@ -184,6 +189,16 @@ public class Arm {
         DcMotorEx.RunMode runMode = armMotor.getMode();
         armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(runMode);
+    }
+
+    //declaring cone pickup positions, original array for setting array to default
+    public double[] pickupPosOriginal = {PICKUP_WHILE_FACING_FORWARD_POSITION, cone2Position, cone3Position, cone4Position, cone5Position};
+    public double[] pickupPos = {PICKUP_WHILE_FACING_FORWARD_POSITION, cone2Position, cone3Position, cone4Position, cone5Position};
+    //function for picking cones from stack
+    public void conePickup(int position){
+        position = (int) pickupPos[0];
+        armMotor.setTargetPosition(position);
+        delete pickupPos[0];// TODO find out how to delete later
     }
 }
 

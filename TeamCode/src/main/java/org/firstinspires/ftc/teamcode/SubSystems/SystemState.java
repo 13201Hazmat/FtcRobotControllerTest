@@ -14,4 +14,5 @@ public class SystemState {
     public static double ShoulderAngleRadians = 0;
     public static double TurretAngleRadians = 0;
     public static double ArmExtension = 0;
+
 }
