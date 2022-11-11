@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 @TeleOp(name = "Vision Test OpMode", group = "Concept")
 public class TestVision extends LinearOpMode {
 
-    public HardwareMap hardwareMap;
     public Vision vision;
     public Vision.ACTIVE_WEBCAM activeWebcam = Vision.ACTIVE_WEBCAM.WEBCAM1;
 
@@ -18,6 +17,7 @@ public class TestVision extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         vision = new Vision(hardwareMap, activeWebcam); //create instance of vision object
         vision.activateVuforiaTensorFlow();
+        waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = vision.runVuforiaTensorFlow();
             telemetry.addData("Vision Objected Detected: ", visionIdentifiedTarget);

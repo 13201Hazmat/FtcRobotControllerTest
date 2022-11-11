@@ -171,7 +171,7 @@ public class Vision {
         activeWebcam = ACTIVE_WEBCAM.WEBCAM1;
 
         if (activeWebcam == ACTIVE_WEBCAM.WEBCAM1){
-            webcamName = hardwareMap.get(WebcamName.class, "Webcam1");
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         } /*else { //TODO: Uncomment if using 2 cameras;
             webcamName = hardwareMap.get(WebcamName.class, "Webcam2");
         }
@@ -207,13 +207,15 @@ public class Vision {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320; //320;
+        tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
-        visionState = VISION_STATE.TFOD_INIT;
+        // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
+        // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
 
     }
 
@@ -239,7 +241,7 @@ public class Vision {
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
             //tfod.setZoom(1.75, 16.0/9.0);
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.5, 16.0/9.0);
             recognitions = tfod.getUpdatedRecognitions();
         }
     }
