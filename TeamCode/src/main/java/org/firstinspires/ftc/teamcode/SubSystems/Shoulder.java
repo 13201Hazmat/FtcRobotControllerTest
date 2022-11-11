@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
 /**
  * Definition of Shoulder Class <BR>
  *
@@ -33,6 +36,7 @@ public class Shoulder {
     }
 
     public Turret turret;
+    public DigitalChannel digitalTouch;  // Hardware Device Object
 
     //Initialization of <Fill>
     public SHOULDER_STATE shoulderState;
@@ -65,6 +69,11 @@ public class Shoulder {
     public Shoulder(HardwareMap hardwareMap){
         leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
         rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
+        // get a reference to our digitalTouch object.
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "shoulder_touch");
+
+        // set the digital channel to input.
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
         initShoulder();
     }
 
@@ -80,14 +89,6 @@ public class Shoulder {
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
-    public void resetShoulder(){
-        DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
-        leftShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftShoulderMotor.setMode(runMode);
-        rightShoulderMotor.setMode(runMode);
-
-    }
 
     public void turnShoulderBrakeModeOn() {
         leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -218,6 +219,25 @@ public class Shoulder {
     public void calculateShoulderAngle(){
         shoulderAngleRadians = 0; //TODO : Calculate turret Angle
         shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
+    }
+
+    public void resetShoulder(){
+        DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
+        leftShoulderMotor.setMode(runMode);
+        rightShoulderMotor.setMode(runMode);
+
+        //uses the limit switch to reset position
+        if (digitalTouch.getState() == true) {
+            turnShoulderBrakeModeOn();
+            rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } else {
+            rightShoulderMotor.setTargetPosition(rightShoulderMotor.getCurrentPosition() - 10);
+            leftShoulderMotor.setTargetPosition(rightShoulderMotor.getCurrentPosition() - 10);
+            runShoulderToLevel(0.1); //need tested value
+
+        }
+
     }
 
 
