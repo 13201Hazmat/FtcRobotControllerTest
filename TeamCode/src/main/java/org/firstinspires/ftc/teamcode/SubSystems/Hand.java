@@ -35,8 +35,10 @@ public class Hand {
     int closeGripPos = 0; //value of Grip to close
 
     public boolean runHandToLevelState = false;
-    public static final double WRIST_UP_POSITION = 537/2;//get position from robot
+    public static final double WRIST_UP_MAX_POSITION = 0.7;
+    public static final double WRIST_UP_POSITION = 0.6;
     public static final double WRIST_DOWN_POSITION = -537/2;//get position from robot
+    public static final double WRIST_DOWN_MIN_POSITION = 0.43;
     public static final double WRIST_DEFAULT_LEVEL_POSITION = 0;//get position from robot
     public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
     public static double ARM_MIN_POSITION = 0; //arm resting position
