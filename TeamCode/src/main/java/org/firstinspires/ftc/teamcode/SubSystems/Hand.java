@@ -22,8 +22,7 @@ public class Hand {
     //Initialization of <hand servo's>
     public Servo wristServo;
     public Servo gripServo;
-    public Servo intakeLeftServo;
-    public Servo intakeRightServo;
+
 
 
     //Initialization of HAND_STATE and HAND_GRIP_STATE and HAND_MOTOR_POSITION enums
@@ -63,8 +62,6 @@ public class Hand {
     public Hand(HardwareMap hardwareMap) { //map hand servo's to each
         gripServo = hardwareMap.get(Servo.class, "gripServo");
         wristServo = hardwareMap.get(Servo.class, "wristServo");
-        intakeLeftServo = hardwareMap.get(Servo.class, "intakeLeftServo");
-        intakeRightServo = hardwareMap.get(Servo.class, "intakeRightServo");
         initHand();
     }
 
@@ -77,12 +74,8 @@ public class Hand {
      */
     public void openGrip(){
         if (gripState != GRIP_STATE.OPEN){
-
             gripServo.setPosition(openGripPos);
-            intakeRightServo.setPosition(openGripPos);
-            intakeLeftServo.setPosition(openGripPos);
             gripState = GRIP_STATE.OPEN;
-
         }
     }
     /**
@@ -91,11 +84,7 @@ public class Hand {
     public void closeGrip(){
         if (gripState != GRIP_STATE.CLOSE) {
             gripServo.setPosition(closeGripPos);
-            intakeLeftServo.setPosition(closeGripPos);
-            intakeRightServo.setPosition(closeGripPos);
             gripState = GRIP_STATE.CLOSE;
-
-
         }
     }
 
