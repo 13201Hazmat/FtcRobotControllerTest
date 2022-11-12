@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import java.util.ArrayList;
 
 /**
  * Definition of Arm Class <BR>
@@ -61,6 +62,7 @@ public class Arm {
     public static final double ARM_POWER = 0.5;
 
     public int armDeltaCount = 0; //Need tested value
+    public static double AutonomousArmPower = 2;//need tested value
 
     public boolean runArmToLevelState = false;
 
@@ -192,13 +194,13 @@ public class Arm {
     }
 
     //declaring cone pickup positions, original array for setting array to default
-    public double[] pickupPosOriginal = {PICKUP_WHILE_FACING_FORWARD_POSITION, cone2Position, cone3Position, cone4Position, cone5Position};
     public double[] pickupPos = {PICKUP_WHILE_FACING_FORWARD_POSITION, cone2Position, cone3Position, cone4Position, cone5Position};
+
     //function for picking cones from stack
     public void conePickup(int position){
-        position = (int) pickupPos[0];
         armMotor.setTargetPosition(position);
-        delete pickupPos[0];// TODO find out how to delete later
+        runArmToLevel(AutonomousArmPower);
+        runArmToLevelState = true;
     }
 }
 
