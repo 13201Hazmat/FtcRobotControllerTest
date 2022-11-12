@@ -217,14 +217,19 @@ public class Shoulder {
 
     //TODO : Calculate Shoulder Angle
     public void calculateShoulderAngle(){
-        shoulderAngleRadians = 0; //TODO : Calculate turret Angle
+        shoulderAngleRadians = rightShoulderMotor.getCurrentPosition() * Math.PI/537.7; //TODO : Calculate turret Angle
         shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
     }
 
     public void resetShoulder(){
         DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
+        rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftShoulderMotor.setMode(runMode);
         rightShoulderMotor.setMode(runMode);
+    }
+
+    public void manualResetShoulder(double joystickValue){
 
         //uses the limit switch to reset position
         if (digitalTouch.getState() == true) {
@@ -232,8 +237,8 @@ public class Shoulder {
             rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         } else {
-            rightShoulderMotor.setTargetPosition(rightShoulderMotor.getCurrentPosition() - 10);
-            leftShoulderMotor.setTargetPosition(rightShoulderMotor.getCurrentPosition() - 10);
+            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
+            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
             runShoulderToLevel(0.1); //need tested value
 
         }

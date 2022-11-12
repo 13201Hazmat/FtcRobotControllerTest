@@ -193,14 +193,18 @@ public class Arm {
     //Resets the arm
     public void resetArm(){
         DcMotorEx.RunMode runMode = armMotor.getMode();
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(runMode);
 
+    }
+
+    public void manualResetArm(double joystickValue){
         //uses the limit switch to reset position
         if (digitalTouch.getState() == true) {
             turnArmBrakeModeOn();
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         } else {
-            armMotor.setTargetPosition(armMotor.getCurrentPosition() - 10);
+            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - joystickValue * 50));
             runArmToLevel(0.1); //need tested value
 
         }

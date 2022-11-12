@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 /**
+ *
  * Definition of TURRET Class <BR>
  *
  * Turret consists of one motor which rotates a circular base, of which the arm and shoulder is on<BR>
@@ -23,6 +26,8 @@ public class Turret {
 
     //TurretMotor declarations
     public DcMotorEx turretMotor;
+    public TouchSensor leftMagneticSensor, centerMagneticSensor;
+
 
     public enum TURRET_MOTOR_STATE {
         FACING_FORWARD,
@@ -56,6 +61,9 @@ public class Turret {
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretmotor");
+        leftMagneticSensor = hardwareMap.get(TouchSensor.class, "magneticleft");
+        centerMagneticSensor = hardwareMap.get(TouchSensor.class, "magneticcenter");
+
         initTurret();
     }
 
@@ -146,19 +154,45 @@ public class Turret {
         SystemState.TurretAngleRadians = turretAngleRadians;
     }
 
-    public void resetTurret(){
+    public void resetTurret() {
         DcMotorEx.RunMode runMode = turretMotor.getMode();
         turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(runMode);
         runTurretToLevelState = false;
+    }
+
+    public void rotateAutonomous(){
+        //TODO add elapsed timer
+        //uses 2 magnet sensors goes from left one to the center one
+        if (leftMagneticSensor.isPressed() && !centerMagneticSensor.isPressed()){
+            while(!centerMagneticSensor.isPressed()){
+                turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + 10));
+            }
+        } else if (leftMagneticSensor.isPressed() && centerMagneticSensor.isPressed()){
+            turnTurretBrakeModeOff();
+            turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        }
+    }
+
+    public void manualResetTurret(double joystickValue){
+        // If the Magnetic Limit Swtch is pressed, stop the motor
+        if (leftMagneticSensor.isPressed() && centerMagneticSensor.isPressed()) {
+            turnTurretBrakeModeOff();
+            turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        } else { // Otherwise, run the motor
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + joystickValue * 50));
+            runTurretToPosition(0.1);
+        }
 
     }
+
+
     public void runTurretToPosition(double power){//receive value from testing
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        if (runTurretToLevelState == true){
+        if (runTurretToLevelState == true) {
             turretMotor.setPower(power);
             runTurretToLevelState = false;
-        } else{
+        } else {
             turretMotor.setPower(0.0);
         }
     }
