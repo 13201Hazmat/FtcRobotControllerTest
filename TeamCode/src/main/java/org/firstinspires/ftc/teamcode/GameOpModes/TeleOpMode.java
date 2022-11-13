@@ -94,14 +94,11 @@ public class TeleOpMode extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
-
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
-
             }
-
         }
         GameField.poseSetInAutonomous = false;
     }
@@ -133,8 +130,6 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
 
             telemetry.addData("Shoulder State: ", shoulder.shoulderState);
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());

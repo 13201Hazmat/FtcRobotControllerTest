@@ -88,15 +88,40 @@ public class TestHand extends LinearOpMode {
 
             while (opModeIsActive()) {
                 //gamepadController.runByGamepadControl();
+                if (gamepadController.gp2GetDpad_upPress() || gamepadController.gp1GetDpad_upPress()) {
+                    if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN) {
+                        hand.moveWristLevel();
+                    } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+                        hand.moveWristUp();
+                    }
+                }
 
+                if (gamepadController.gp2GetDpad_downPress() || gamepadController.gp1GetDpad_downPress()) {
+                    if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
+                        hand.moveWristLevel();
+                    } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+                        hand.moveWristDown();
+                    }
+                }
+
+                if (gamepadController.gp2GetRightBumperPress() || gamepadController.gp1GetRightBumperPress()) {
+                    hand.toggleGrip();
+                }
+
+                //Test code to caliberate
+                if ( gamepadController.gp2GetStart() && gamepadController.gp2GetRightBumperPress()) {
+                    hand.wristServo.setPosition(hand.wristServo.getPosition() + 0.01);
+                }
+
+                if (gamepadController.gp2GetLeftBumperPress()) {
+                    hand.wristServo.setPosition(hand.wristServo.getPosition() - 0.01);
+                }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
-
             }
-
         }
         GameField.poseSetInAutonomous = false;
     }
@@ -115,8 +140,7 @@ public class TestHand extends LinearOpMode {
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("Left Intake Servo Power : ", hand.intakeLeftServo.getPosition());
-            telemetry.addData("Right Intake Servo Power : ", hand.intakeRightServo.getPosition());
+            telemetry.addData("wristLevelPos", hand.wristLevelPos);
         }
 
         telemetry.update();

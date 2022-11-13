@@ -23,43 +23,43 @@ public class Hand {
     public Servo wristServo;
     public Servo gripServo;
 
-
-
     //Initialization of HAND_STATE and HAND_GRIP_STATE and HAND_MOTOR_POSITION enums
-    public GRIP_STATE gripState;
-    public WRIST_STATE wristState;
-    public Shoulder shoulder;
-
-    //constants for Hand and grip position
-    int openGripPos = 1; //value of Grip to open
-    int closeGripPos = 0; //value of Grip to close
-
-    public boolean runHandToLevelState = false;
-    public static final double WRIST_UP_MAX_POSITION = 0.7;
-    public static final double WRIST_UP_POSITION = 0.6;
-    public static final double WRIST_DOWN_POSITION = -537/2;//get position from robot
-    public static final double WRIST_DOWN_MIN_POSITION = 0.43;
-    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0;//get position from robot
-    public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
-    public static double ARM_MIN_POSITION = 0; //arm resting position
-    public static double ARM_MAX_POSITION = 3000; //arm fully extended position
-    public static double radianCount = 537/4; //radian in encoder count
-    public static double wristLevelPos = 0; //position for wrist to be parallel to ground
-    public static double shoulderLevelPos = 0; //position of shoulder derived
-
-    //Hand - wrist, grip enum declaration
-    public enum WRIST_STATE {
-        WRIST_UP,
-        WRIST_LEVEL,
-        WRIST_DOWN
-    }
     public enum GRIP_STATE { //state of the Hand Grip
         OPEN,
         CLOSE
     }
+    public GRIP_STATE gripState = GRIP_STATE.CLOSE;
 
+    //Hand - wrist, grip state declaration
+    public enum WRIST_STATE {
+        WRIST_UP_MAX,
+        WRIST_UP,
+        WRIST_LEVEL,
+        WRIST_DOWN
+    }
+    public WRIST_STATE wristState = WRIST_STATE.WRIST_UP_MAX;
 
+    //constants for Hand and grip position
+    public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
+    public static final double CLOSE_GRIP_POS = 0.26; //value of Grip to close
+    public static final double CLOSE_GRIP_FULL_POSITION = 0.2;
 
+    public static final double WRIST_UP_MAX_POSITION = 0.72;
+    public static final double WRIST_DEFAULT_UP_POSITION = 0.65;
+    public static final double WRIST_DOWN_POSITION = 0.5;//get position from robot
+    public static final double WRIST_DOWN_MIN_POSITION = 0.43;
+    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;//get position from robot
+    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.62;
+    public static final double WRIST_LOW_LEVEL_POSITION = 0.56;
+    public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.52;
+    public static final double WRIST_HIGH_LEVEL_POSITION = 0.48;
+
+    public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
+    public double wristUpPosition = WRIST_PICKUP_LEVEL_POSITION;
+
+    public static double radianCount = 537/4; //radian in encoder count
+    public static double wristLevelPos = 0; //position for wrist to be parallel to ground
+    public static double shoulderLevelPos = 0; //position of shoulder derived
 
     public Hand(HardwareMap hardwareMap) { //map hand servo's to each
         gripServo = hardwareMap.get(Servo.class, "gripServo");
@@ -68,50 +68,81 @@ public class Hand {
     }
 
     //initialize arm
-    public void initHand(){
-        wristServo.setPosition((int) WRIST_DEFAULT_LEVEL_POSITION);
+    public void initHand() {
+        moveWristUpMax();
+        closeGrip();
     }
+
     /**
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip(){
-        if (gripState != GRIP_STATE.OPEN){
-            gripServo.setPosition(openGripPos);
-            gripState = GRIP_STATE.OPEN;
-        }
+        gripServo.setPosition(OPEN_GRIP_POS);
+        gripState = GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        if (gripState != GRIP_STATE.CLOSE) {
-            gripServo.setPosition(closeGripPos);
-            gripState = GRIP_STATE.CLOSE;
+        gripServo.setPosition(CLOSE_GRIP_POS);
+        gripState = GRIP_STATE.CLOSE;
+    }
+
+    public void toggleGrip(){
+        if (gripState == GRIP_STATE.CLOSE) {
+            openGrip();
+        } else {
+            closeGrip();
         }
     }
 
     //rotates wrist to level position
     public void moveWristLevel(){
-        wristLevelPosition = determineWristLevelPosition();
+        determineWristLevelPosition();
         wristServo.setPosition(wristLevelPosition);
         wristState = WRIST_STATE.WRIST_LEVEL;
     }
+
+    //rotates hand up given controller input
+    public void moveWristUpMax(){
+        wristServo.setPosition(WRIST_UP_MAX_POSITION);
+        wristState = WRIST_STATE.WRIST_UP_MAX;
+    }
+
     //rotates hand up given controller input
     public void moveWristUp(){
-        wristServo.setPosition((int) WRIST_UP_POSITION);
+        determineWristLevelPosition();
+        wristServo.setPosition(wristUpPosition);
         wristState = WRIST_STATE.WRIST_UP;
     }
 
     //rotates hand down given controller input
     public void moveWristDown(){
-        wristServo.setPosition((int) WRIST_DOWN_POSITION);
+        wristServo.setPosition(WRIST_DOWN_POSITION);
         wristState = WRIST_STATE.WRIST_DOWN;
     }
 
-    public double determineWristLevelPosition(){
-        shoulderLevelPos = shoulder.calculateShoulderAngle();
-        wristLevelPos = shoulderLevelPos - radianCount;
-        wristServo.setPosition(wristLevelPos);
-        return wristLevelPos;
+    public void determineWristLevelPosition(){
+        //wristLevelPos = SystemState.ShoulderAngleRadians - radianCount; //TODO: Test Logic
+        switch (SystemState.ShoulderState) {
+            case PICKUP:
+            case GROUND_JUNCTION:
+                wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION;
+                wristUpPosition = WRIST_PICKUP_LEVEL_POSITION + 0.05;
+                break;
+            case LOW_JUNCTION:
+                wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
+                wristUpPosition = WRIST_LOW_LEVEL_POSITION + 0.05;
+                break;
+            case RANDOM:
+            case MEDIUM_JUNCTION:
+                wristLevelPosition = WRIST_MEDIUM_LEVEL_POSITION;
+                wristUpPosition = WRIST_MEDIUM_LEVEL_POSITION + 0.05;
+                break;
+            case HIGH_JUNCTION:
+                wristLevelPosition = WRIST_HIGH_LEVEL_POSITION;
+                wristUpPosition = WRIST_HIGH_LEVEL_POSITION + 0.05;
+                break;
+        }
     }
 }

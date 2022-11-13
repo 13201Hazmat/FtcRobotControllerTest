@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class Arm {
     //Initialization of armmotor
     public DcMotorEx armMotor;
-    public DigitalChannel digitalTouch;  // Hardware Device Object
+    public DigitalChannel armTouchSensor;  // Hardware Device Object
 
     //Arm states
     public enum ARM_MOTOR_STATE {
@@ -38,15 +38,14 @@ public class Arm {
         MAX_EXTENDED,
         RANDOM
     }
-    public ARM_MOTOR_STATE armMotorState;
-
+    public ARM_MOTOR_STATE armMotorState = ARM_MOTOR_STATE.PICKUP;
 
     //Constants for Arm Standard positions
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int LOW_JUNCTION_POSITION = (int) 100;
-    public static final int MEDIUM_JUNCTION_POSITION = (int) 200;
-    public static final int HIGH_JUNCTION_POSITION = (int) 1000;
+    public static final int LOW_JUNCTION_POSITION = (int) 0;
+    public static final int MEDIUM_JUNCTION_POSITION = (int) 450;
+    public static final int HIGH_JUNCTION_POSITION = (int) 1749;
     public static final int MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
     public static final int MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
     public static final int MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
@@ -68,23 +67,20 @@ public class Arm {
     //Different constants of arm speed
     public static final double ARM_POWER = 0.5;
 
-
     public int armDeltaCount = 0; //Need tested value
     public static double AutonomousArmPower = 2;//need tested value
 
     public boolean runArmToLevelState = false;
 
-
-
     //Constructor`
     public Arm(HardwareMap hardwareMap){
-        armMotor = hardwareMap.get(DcMotorEx.class, "armmotor");
+        armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
 
         // get a reference to our digitalTouch object.
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "arm_touch");
+        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
 
         // set the digital channel to input.
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        armTouchSensor.setMode(DigitalChannel.Mode.INPUT);
         initArm();
     }
 
@@ -94,9 +90,10 @@ public class Arm {
         turnArmBrakeModeOff();
         armMotorState = ARM_MOTOR_STATE.PICKUP;
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        armMotor.setPositionPIDFCoefficients(5.0); //TODO: Adjust so that it does not shake when raised
+        armMotor.setPositionPIDFCoefficients(5.0);
         armMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-        armMotor.setDirection(DcMotorEx.Direction.REVERSE); //TODO: Check direction of robot
+        armMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        moveArmToPickUpWhileTurretFacingForward();
     }
 
     //Turns on the brake for arm motor
@@ -108,8 +105,6 @@ public class Arm {
     public void turnArmBrakeModeOff() {
         armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
-
-
 
     //Sets arm position to ground junction
     public void moveArmToPickUpWhileTurretFacingForward(){
@@ -178,8 +173,6 @@ public class Arm {
         //TODO: if shoulderAngle > Threshold when arm at full extension will touch the ground
         maxExtensionArmEncoderPositionBasedOnShoulderAngle = MAX_EXTENDED_POSITION;
 
-
-
         return maxExtensionArmEncoderPositionBasedOnShoulderAngle;
     }
 
@@ -187,7 +180,6 @@ public class Arm {
         int convertedMotorEncoderValueToArmLength = (int) (armMotor.getCurrentPosition() * ENCODER_TO_LENGTH); //TODO: From encoder value Find Max length and write proportional convertion algorithm
         SystemState.ArmExtension = convertedMotorEncoderValueToArmLength;
     }
-
 
     //sets the arm motor power
     public void runArmToLevel(double power){
@@ -203,22 +195,20 @@ public class Arm {
     //Resets the arm
     public void resetArm(){
         DcMotorEx.RunMode runMode = armMotor.getMode();
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(runMode);
 
     }
 
     public void manualResetArm(double joystickValue){
         //uses the limit switch to reset position
-        if (digitalTouch.getState() == true) {
+        if (armTouchSensor.getState() == true) {
             turnArmBrakeModeOn();
-            armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         } else {
             armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - joystickValue * 50));
-            runArmToLevel(0.1); //need tested value
-
+            runArmToLevel(0.1); //TODO: need tested value
         }
-
     }
 
     //declaring cone pickup positions, original array for setting array to default

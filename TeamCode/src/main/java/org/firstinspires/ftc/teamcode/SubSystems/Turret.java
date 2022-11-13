@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 /**
@@ -26,8 +26,7 @@ public class Turret {
 
     //TurretMotor declarations
     public DcMotorEx turretMotor;
-    public TouchSensor leftMagneticSensor, centerMagneticSensor;
-
+    public DigitalChannel turretLeftMagneticSensor, turretCenterMagneticSensor, turretRightMagneticSensor;
 
     public enum TURRET_MOTOR_STATE {
         FACING_FORWARD,
@@ -38,7 +37,7 @@ public class Turret {
         FACING_RANDOM
     }
 
-    public static TURRET_MOTOR_STATE turretMotorState;
+    public static TURRET_MOTOR_STATE turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
 
     public static final int FACING_FORWARD_POSITION = 0;
     public static final int FACING_BACKWARD_LEFT_POSITION = -1350;
@@ -60,10 +59,13 @@ public class Turret {
     public int turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
-        turretMotor = hardwareMap.get(DcMotorEx.class, "turretmotor");
-        leftMagneticSensor = hardwareMap.get(TouchSensor.class, "magneticleft");
-        centerMagneticSensor = hardwareMap.get(TouchSensor.class, "magneticcenter");
-
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
+        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
+        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
+        turretLeftMagneticSensor.setMode(DigitalChannel.Mode.INPUT);
+        turretCenterMagneticSensor.setMode(DigitalChannel.Mode.INPUT);
+        turretLeftMagneticSensor.setMode(DigitalChannel.Mode.INPUT);
         initTurret();
     }
 
@@ -164,11 +166,11 @@ public class Turret {
     public void rotateAutonomous(){
         //TODO add elapsed timer
         //uses 2 magnet sensors goes from left one to the center one
-        if (leftMagneticSensor.isPressed() && !centerMagneticSensor.isPressed()){
-            while(!centerMagneticSensor.isPressed()){
+        if (turretLeftMagneticSensor.getState() && !turretCenterMagneticSensor.getState()){
+            while(!turretCenterMagneticSensor.getState()){
                 turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + 10));
             }
-        } else if (leftMagneticSensor.isPressed() && centerMagneticSensor.isPressed()){
+        } else if (turretLeftMagneticSensor.getState() && turretCenterMagneticSensor.getState()){
             turnTurretBrakeModeOff();
             turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -176,7 +178,7 @@ public class Turret {
 
     public void manualResetTurret(double joystickValue){
         // If the Magnetic Limit Swtch is pressed, stop the motor
-        if (leftMagneticSensor.isPressed() && centerMagneticSensor.isPressed()) {
+        if (turretLeftMagneticSensor.getState() && turretCenterMagneticSensor.getState()) {
             turnTurretBrakeModeOff();
             turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         } else { // Otherwise, run the motor

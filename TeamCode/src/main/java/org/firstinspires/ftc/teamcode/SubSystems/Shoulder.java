@@ -36,10 +36,10 @@ public class Shoulder {
     }
 
     public Turret turret;
-    public DigitalChannel digitalTouch;  // Hardware Device Object
+    public DigitalChannel shoulderTouchSensor;  // Hardware Device Object
 
     //Initialization of <Fill>
-    public SHOULDER_STATE shoulderState;
+    public SHOULDER_STATE shoulderState = SHOULDER_STATE.PICKUP;
 
 
     public boolean runShoulderToLevelState = false;
@@ -50,9 +50,9 @@ public class Shoulder {
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
     public static final int PICKUP_WHILE_NOT_FACING_FORWARD_POSITION = 100;
     public static final int PICKUP_WRIST_DOWN_WHILE_NOT_FACING_FORWARD_POSITION = 200;
-    public static final int LOW_JUNCTION_POSITION = 300; //need tested values
-    public static final int MEDIUM_JUNCTION_POSITION = 500; //need tested values
-    public static final int HIGH_JUNCTION_POSITION = 700; //need tested values
+    public static final int LOW_JUNCTION_POSITION = 380; //need tested values
+    public static final int MEDIUM_JUNCTION_POSITION = 650; //need tested values
+    public static final int HIGH_JUNCTION_POSITION = 808; //need tested values
     public static final int MAX_RAISED_POSITION = 900; //Need tested values
 
     public int shoulderCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
@@ -67,13 +67,13 @@ public class Shoulder {
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
-        leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
-        rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
+        leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshMotor");
+        rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshMotor");
         // get a reference to our digitalTouch object.
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "shoulder_touch");
+        shoulderTouchSensor = hardwareMap.get(DigitalChannel.class, "shTouch");
 
         // set the digital channel to input.
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        shoulderTouchSensor.setMode(DigitalChannel.Mode.INPUT);
         initShoulder();
     }
 
@@ -87,6 +87,7 @@ public class Shoulder {
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        moveToShoulderPickupWhileFacingFoward();
     }
 
 
@@ -232,7 +233,7 @@ public class Shoulder {
     public void manualResetShoulder(double joystickValue){
 
         //uses the limit switch to reset position
-        if (digitalTouch.getState() == true) {
+        if (shoulderTouchSensor.getState() == true) {
             turnShoulderBrakeModeOn();
             rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -244,7 +245,4 @@ public class Shoulder {
         }
 
     }
-
-
-
 }

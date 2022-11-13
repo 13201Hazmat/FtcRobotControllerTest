@@ -252,6 +252,29 @@ public class GamepadController {
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runHand(){
+        if (gp2GetDpad_upPress() || gp1GetDpad_upPress()) {
+            if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN) {
+                hand.moveWristLevel();
+            } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+                hand.moveWristUp();
+            }
+        }
+
+        if (gp2GetDpad_downPress() || gp1GetDpad_downPress()) {
+            if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
+                hand.moveWristLevel();
+            } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+                hand.moveWristDown();
+            }
+        }
+
+        if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+            hand.moveWristLevel();
+        }
+
+        if (gp2GetRightBumperPress() || gp1GetRightBumperPress()) {
+            hand.toggleGrip();
+        }
 
         SystemState.HandGripState = hand.gripState;
         SystemState.HandWristState = hand.wristState;
