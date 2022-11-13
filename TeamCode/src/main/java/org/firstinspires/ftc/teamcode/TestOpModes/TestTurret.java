@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TestTurret", group = "00-Teleop")
+@TeleOp(name = "TestTurret", group = "Testing")
 public class TestTurret extends LinearOpMode {
 
     public GamepadController gamepadController;
