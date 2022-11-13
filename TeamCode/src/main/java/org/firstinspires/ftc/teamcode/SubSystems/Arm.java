@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -43,10 +41,14 @@ public class Arm {
     //Constants for Arm Standard positions
     public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
     public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int LOW_JUNCTION_POSITION = (int) 1000;
-    public static final int MEDIUM_JUNCTION_POSITION = (int) 2000;
-    public static final int HIGH_JUNCTION_POSITION = (int) 3000;
-    public static final int MAX_EXTENDED_POSITION = (int) 4500;
+    public static final int LOW_JUNCTION_POSITION = (int) 100;
+    public static final int MEDIUM_JUNCTION_POSITION = (int) 200;
+    public static final int HIGH_JUNCTION_POSITION = (int) 1000;
+    public static final int MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
+    public static final int MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
+    public static final int MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
+    public static final int MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_2_SLIDES;
+
     public int armCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
     public int armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
 

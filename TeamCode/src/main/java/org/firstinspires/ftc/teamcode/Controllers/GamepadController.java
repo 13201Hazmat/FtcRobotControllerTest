@@ -112,7 +112,7 @@ public class GamepadController {
                     -gp1TurboMode(gp1GetLeftStickY()),
                     -gp1TurboMode(gp1GetLeftStickX()));
         }
-        driveTrain.gamepadInputTurn = -gp1TurboMode(gp1GetRightStickX());
+        driveTrain.gamepadInputTurn = gp1TurboMode(-gp1GetRightStickX());
 
         driveTrain.driveTrainPointFieldModes();
 

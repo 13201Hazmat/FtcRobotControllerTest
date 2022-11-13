@@ -164,10 +164,11 @@ public class Vision {
     private List<Recognition> recognitions;
     public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
 
+    ACTIVE_WEBCAM activeWebcam;
     /**
      * Initialize the Vuforia localization engine.
      */
-    public Vision(HardwareMap hardwareMap, ACTIVE_WEBCAM activeWebcam) {
+    public Vision(HardwareMap hardwareMap) {
         activeWebcam = ACTIVE_WEBCAM.WEBCAM1;
 
         if (activeWebcam == ACTIVE_WEBCAM.WEBCAM1){
