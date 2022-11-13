@@ -161,8 +161,17 @@ public class GamepadController {
             turret.faceLeft();
         }
 
+        //manual reset for the turret
+        if (gp2GetStart()){
+            if (gp2GetRightStickX() != 0){
+                turret.manualResetTurret(gp2GetRightStickX());
+            }
+        }
+
         if (turret.runTurretToLevelState) {
-            turret.runTurretToPosition(turret.TURRET_POWER);
+            arm.convertMotorEncoderValueToArmLength();
+            //Lowers the power based on the extension length of the arm
+            turret.runTurretToPosition(turret.TURRET_POWER - (SystemState.ArmExtension * SystemState.ARM_EXTENSION_POWER_MULTIPLIER));
         }
 
         SystemState.TurretState = turret.turretMotorState;
@@ -218,12 +227,25 @@ public class GamepadController {
         }
         SystemState.ShoulderState = shoulder.shoulderState;
 
+        //manual reset for the arm
+        if (gp2GetStart()){
+            if (gp2GetLeftStickY() < 0){
+                arm.manualResetArm(gp2GetLeftStickY());
+            }else if (gp2GetLeftTrigger() > 0){ //manual reset for shoulder
+                shoulder.manualResetShoulder(gp2GetLeftTrigger());
+            }
+        }
+
+        //manual reset for shoulder
+
+
         // Run Arm motor if position is changed
         if (arm.runArmToLevelState) {
             arm.runArmToLevel(arm.ARM_POWER);
         }
         SystemState.ArmState = arm.armMotorState;
     }
+
 
     /**
      * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite

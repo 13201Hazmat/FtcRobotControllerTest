@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
 /**
  * Definition of Shoulder Class <BR>
  *
@@ -33,9 +36,11 @@ public class Shoulder {
     }
 
     public Turret turret;
+    public DigitalChannel digitalTouch;  // Hardware Device Object
 
     //Initialization of <Fill>
     public SHOULDER_STATE shoulderState;
+
 
     public boolean runShoulderToLevelState = false;
     public int SHOULDER_DELTA_COUNT_MAX = 100;
@@ -64,6 +69,11 @@ public class Shoulder {
     public Shoulder(HardwareMap hardwareMap){
         leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshmotor");
         rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshmotor");
+        // get a reference to our digitalTouch object.
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "shoulder_touch");
+
+        // set the digital channel to input.
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
         initShoulder();
     }
 
@@ -79,14 +89,6 @@ public class Shoulder {
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
-    public void resetShoulder(){
-        DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
-        leftShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightShoulderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftShoulderMotor.setMode(runMode);
-        rightShoulderMotor.setMode(runMode);
-
-    }
 
     public void turnShoulderBrakeModeOn() {
         leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -160,8 +162,13 @@ public class Shoulder {
             if (shoulderNewPosition > PICKUP_WHILE_FACING_FORWARD_POSITION) {
                 shoulderState = SHOULDER_STATE.RANDOM;
                 turnShoulderBrakeModeOn();
-            } else {
-                shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+
+                if (Math.abs(SystemState.TurretAngleRadians) > Math.PI / 18) { //avoiding the wheel(10 degrees)
+                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_NOT_FACING_FORWARD_POSITION;//raised above wheel position;
+                } else {
+                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //going back to max down when its not near the wheel
+                }
+
                 shoulderState = SHOULDER_STATE.PICKUP;
                 turnShoulderBrakeModeOff();
             }
@@ -210,8 +217,32 @@ public class Shoulder {
 
     //TODO : Calculate Shoulder Angle
     public void calculateShoulderAngle(){
-        shoulderAngleRadians = 0; //TODO : Calculate turret Angle
+        shoulderAngleRadians = rightShoulderMotor.getCurrentPosition() * Math.PI/537.7; //TODO : Calculate turret Angle
         shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
+    }
+
+    public void resetShoulder(){
+        DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
+        rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftShoulderMotor.setMode(runMode);
+        rightShoulderMotor.setMode(runMode);
+    }
+
+    public void manualResetShoulder(double joystickValue){
+
+        //uses the limit switch to reset position
+        if (digitalTouch.getState() == true) {
+            turnShoulderBrakeModeOn();
+            rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } else {
+            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
+            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
+            runShoulderToLevel(0.1); //need tested value
+
+        }
+
     }
 
 
