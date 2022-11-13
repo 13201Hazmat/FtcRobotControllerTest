@@ -54,6 +54,11 @@ public class Arm {
 
     public int armCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
     public int armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+
+    public static final double CONE_2_POSITION = 1000;
+    public static final double CONE_3_POSITION = 1200;
+    public static final double CONE_4_POSITION = 1300;
+    public static final double CONE_5_POSITION = 1400;
     public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
 
     public int pickupArmWhileDynamicTurretPosition = 0;
@@ -65,8 +70,11 @@ public class Arm {
 
 
     public int armDeltaCount = 0; //Need tested value
+    public static double AutonomousArmPower = 2;//need tested value
 
     public boolean runArmToLevelState = false;
+
+
 
     //Constructor`
     public Arm(HardwareMap hardwareMap){
@@ -211,6 +219,22 @@ public class Arm {
 
         }
 
+    }
+
+    //declaring cone pickup positions, original array for setting array to default
+    public double[] pickupPos = {
+            PICKUP_WHILE_FACING_FORWARD_POSITION,
+            CONE_2_POSITION,
+            CONE_3_POSITION,
+            CONE_4_POSITION,
+            CONE_5_POSITION
+    };
+
+    //function for picking cones from stack
+    public void pickupCone(double position){
+        armMotor.setTargetPosition((int) position);
+        runArmToLevel(AutonomousArmPower);
+        runArmToLevelState = true;
     }
 }
 
