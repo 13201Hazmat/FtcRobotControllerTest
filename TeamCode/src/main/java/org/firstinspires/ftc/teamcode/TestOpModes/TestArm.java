@@ -110,12 +110,12 @@ public class TestArm extends LinearOpMode {
 
                 //Moves arm to pickup / ground junction if Gamepad 2 B is pressed
                 if (gamepadController.gp2GetButtonAPress()){
-                    arm.moveArmToPickUpWhileTurretFacingForward();
+                    arm.moveArmToPickUp();
                 }
 
                 //Moves arm to middle junction if Gamepad 2 Y is pressed
                 if (gamepadController.gp2GetButtonYPress()){
-                    arm.moveArmToMidJunction();
+                    arm.moveArmToMediumJunction();
                 }
 
                 // Run Arm motor if position is changed

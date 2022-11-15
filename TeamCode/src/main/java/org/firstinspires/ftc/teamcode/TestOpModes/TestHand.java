@@ -140,7 +140,7 @@ public class TestHand extends LinearOpMode {
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("wristLevelPos", hand.wristLevelPos);
+            telemetry.addData("wristLevelPosition", hand.wristLevelPosition);
         }
 
         telemetry.update();

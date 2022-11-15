@@ -44,22 +44,18 @@ public class Hand {
     public static final double CLOSE_GRIP_POS = 0.26; //value of Grip to close
     public static final double CLOSE_GRIP_FULL_POSITION = 0.2;
 
-    public static final double WRIST_UP_MAX_POSITION = 0.72;
-    public static final double WRIST_DEFAULT_UP_POSITION = 0.65;
-    public static final double WRIST_DOWN_POSITION = 0.5;//get position from robot
+    public static final double WRIST_DOWN_POSITION = 0.5;
     public static final double WRIST_DOWN_MIN_POSITION = 0.43;
-    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;//get position from robot
     public static final double WRIST_PICKUP_LEVEL_POSITION = 0.62;
     public static final double WRIST_LOW_LEVEL_POSITION = 0.56;
+    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;
     public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.52;
     public static final double WRIST_HIGH_LEVEL_POSITION = 0.48;
+    public static final double WRIST_DEFAULT_UP_POSITION = 0.65;
+    public static final double WRIST_UP_MAX_POSITION = 0.72;
 
     public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
     public double wristUpPosition = WRIST_PICKUP_LEVEL_POSITION;
-
-    public static double radianCount = 537/4; //radian in encoder count
-    public static double wristLevelPos = 0; //position for wrist to be parallel to ground
-    public static double shoulderLevelPos = 0; //position of shoulder derived
 
     public Hand(HardwareMap hardwareMap) { //map hand servo's to each
         gripServo = hardwareMap.get(Servo.class, "gripServo");

@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Definition of Arm Class <BR>
@@ -30,6 +33,7 @@ public class Arm {
 
     //Arm states
     public enum ARM_MOTOR_STATE {
+        MIN_RETRACTED,
         PICKUP,
         GROUND_JUNCTION,
         LOW_JUNCTION,
@@ -41,18 +45,20 @@ public class Arm {
     public ARM_MOTOR_STATE armMotorState = ARM_MOTOR_STATE.PICKUP;
 
     //Constants for Arm Standard positions
-    public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int LOW_JUNCTION_POSITION = (int) 0;
-    public static final int MEDIUM_JUNCTION_POSITION = (int) 450;
-    public static final int HIGH_JUNCTION_POSITION = (int) 1749;
-    public static final int MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
-    public static final int MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
-    public static final int MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
-    public static final int MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_2_SLIDES;
+    public static final double MIN_RETRACTED_POSITION = 0;
+    public static final double PICKUP_POSITION = 0;
+    public static final double GROUND_JUNCTION_POSITION = 0;
+    public static final double LOW_JUNCTION_POSITION = (int) 0;
+    public static final double MEDIUM_JUNCTION_POSITION = (int) 450;
+    public static final double HIGH_JUNCTION_POSITION = (int) 1749;
+    public static final double MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
+    public static final double MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
+    public static final double MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
+    public static final double MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_2_SLIDES;
+    public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_2_SLIDES;
 
-    public int armCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default arm position count
-    public int armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+    public double armCurrentPosition = PICKUP_POSITION; //Default arm position count
+    public double armNewPosition = PICKUP_POSITION;
 
     public static final double CONE_2_POSITION = 1000;
     public static final double CONE_3_POSITION = 1200;
@@ -60,14 +66,12 @@ public class Arm {
     public static final double CONE_5_POSITION = 1400;
     public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
 
-    public int pickupArmWhileDynamicTurretPosition = 0;
-
-    public static final int ARM_DELTA_COUNT_MAX = 200; //need tested values
+    public static final double ARM_DELTA_COUNT_MAX = 200; //need tested values
 
     //Different constants of arm speed
     public static final double ARM_POWER = 0.5;
 
-    public int armDeltaCount = 0; //Need tested value
+    public double armDeltaCount = 0; //Need tested value
     public static double AutonomousArmPower = 2;//need tested value
 
     public boolean runArmToLevelState = false;
@@ -86,14 +90,14 @@ public class Arm {
 
     //Method is able to initialize the arm
     public void initArm(){
-        resetArm();
+        resetArmMode();
         turnArmBrakeModeOff();
         armMotorState = ARM_MOTOR_STATE.PICKUP;
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         armMotor.setPositionPIDFCoefficients(5.0);
-        armMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
+        armMotor.setTargetPosition((int)PICKUP_POSITION);
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        moveArmToPickUpWhileTurretFacingForward();
+        moveArmToPickUp();
     }
 
     //Turns on the brake for arm motor
@@ -107,61 +111,61 @@ public class Arm {
     }
 
     //Sets arm position to ground junction
-    public void moveArmToPickUpWhileTurretFacingForward(){
-        //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
+    public void moveArmToPickUp(){
         turnArmBrakeModeOn();
-        if (SystemState.TurretState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD) {
-            armMotor.setTargetPosition(PICKUP_WHILE_FACING_FORWARD_POSITION);
-            runArmToLevelState = true;
-        }
-    }
-
-    //TODO: Set arm position when below Low junction angle dynamically to avoid hitting side of the robot
-    public void moveArmToPickUpWhileDynamicTurretAngle(double turretAngle){
-        pickupArmWhileDynamicTurretPosition = 0; // TODO: Update with formula
-        armMotor.setTargetPosition(pickupArmWhileDynamicTurretPosition);
+        armMotor.setTargetPosition((int)PICKUP_POSITION);
+        armMotorState = ARM_MOTOR_STATE.PICKUP;
         runArmToLevelState = true;
     }
 
     //Sets arm position to low junction
     public void moveArmToLowJunction(){
         turnArmBrakeModeOn();
-        armMotor.setTargetPosition(LOW_JUNCTION_POSITION);
+        armMotor.setTargetPosition((int)LOW_JUNCTION_POSITION);
+        armMotorState = ARM_MOTOR_STATE.LOW_JUNCTION;
         runArmToLevelState = true;
     }
 
     //Sets arm position or mid junction
-    public void moveArmToMidJunction(){
+    public void moveArmToMediumJunction(){
         turnArmBrakeModeOn();
-        armMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
+        armMotor.setTargetPosition((int)MEDIUM_JUNCTION_POSITION);
+        armMotorState = ARM_MOTOR_STATE.MEDIUM_JUNCTION;
         runArmToLevelState = true;
     }
 
     //Sets arm position to high junction
     public void moveArmToHighJunction(){
         turnArmBrakeModeOn();
-        armMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
+        armMotor.setTargetPosition((int)HIGH_JUNCTION_POSITION);
+        armMotorState = ARM_MOTOR_STATE.HIGH_JUNCTION;
+        runArmToLevelState = true;
+    }
+
+    public void moveArmToDynamicMaxExtended(){
+        turnArmBrakeModeOn();
+        armMotor.setTargetPosition((int) dynamicMaxExtendedPosition);
+        armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
         runArmToLevelState = true;
     }
 
     public void modifyArmLength(double stepSizeFactor){
-        armDeltaCount = (int) stepSizeFactor * ARM_DELTA_COUNT_MAX;
+        armDeltaCount = stepSizeFactor * ARM_DELTA_COUNT_MAX;
         if (armDeltaCount !=0) {
             armCurrentPosition = armMotor.getCurrentPosition();
-            armNewPosition = (int) (armCurrentPosition + armDeltaCount);
-            if (armNewPosition < PICKUP_WHILE_FACING_FORWARD_POSITION
-                    /*&& SystemState.TurretState == Turret.TURRET_MOTOR_STATE.FACING_FORWARD TODO*/) {
-                armNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
+            armNewPosition = (armCurrentPosition + armDeltaCount);
+            if (armNewPosition < PICKUP_POSITION) {
+                armNewPosition = PICKUP_POSITION;
                 armMotorState = ARM_MOTOR_STATE.PICKUP;
-            } else if (armNewPosition > MAX_EXTENDED_POSITION) {
-                armNewPosition = MAX_EXTENDED_POSITION;
+            } else if (armNewPosition > dynamicMaxExtendedPosition) {
+                armNewPosition = dynamicMaxExtendedPosition;
                 armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
             } else {
                 armMotorState = ARM_MOTOR_STATE.RANDOM;
             }
             if (armNewPosition != armCurrentPosition) {
                 turnArmBrakeModeOn();
-                armMotor.setTargetPosition(armNewPosition);
+                armMotor.setTargetPosition((int)armNewPosition);
                 runArmToLevelState = true;
             }
         }
@@ -171,7 +175,7 @@ public class Arm {
         double maxExtensionArmEncoderPositionBasedOnShoulderAngle = 0; //TODO: Measure arm max extension in mm
 
         //TODO: if shoulderAngle > Threshold when arm at full extension will touch the ground
-        maxExtensionArmEncoderPositionBasedOnShoulderAngle = MAX_EXTENDED_POSITION;
+        maxExtensionArmEncoderPositionBasedOnShoulderAngle = dynamicMaxExtendedPosition;
 
         return maxExtensionArmEncoderPositionBasedOnShoulderAngle;
     }
@@ -193,27 +197,36 @@ public class Arm {
     }
 
     //Resets the arm
-    public void resetArm(){
+    public void resetArmMode(){
         DcMotorEx.RunMode runMode = armMotor.getMode();
         armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(runMode);
-
     }
 
-    public void manualResetArm(double joystickValue){
+    public void manualResetArm(){
         //uses the limit switch to reset position
-        if (armTouchSensor.getState() == true) {
-            turnArmBrakeModeOn();
+        /*if (armTouchSensor.getState() == true) {
             armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            turnArmBrakeModeOn();
+            armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
         } else {
-            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - joystickValue * 50));
-            runArmToLevel(0.1); //TODO: need tested value
+            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - 50));
+            runArmToLevel(0.2); //TODO: need tested value
+        }*/
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (armTouchSensor.getState() == true && timer.time() < 3000) {
+            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - 50));
+            runArmToLevel(0.2);
         }
+        armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        turnArmBrakeModeOn();
+        armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
     }
 
     //declaring cone pickup positions, original array for setting array to default
-    public double[] pickupPos = {
-            PICKUP_WHILE_FACING_FORWARD_POSITION,
+    public double[] pickupAutoPosition = {
+            PICKUP_POSITION,
             CONE_2_POSITION,
             CONE_3_POSITION,
             CONE_4_POSITION,

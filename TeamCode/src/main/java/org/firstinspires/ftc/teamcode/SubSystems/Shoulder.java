@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Definition of Shoulder Class <BR>
@@ -27,6 +30,7 @@ public class Shoulder {
     //Initialization of <Fill>
     public enum SHOULDER_STATE {
         PICKUP, //PARKED, MIN_POSITION
+        PICKUP_WRIST_DOWN,
         GROUND_JUNCTION,
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
@@ -34,31 +38,29 @@ public class Shoulder {
         MAX_RAISED,
         RANDOM
     }
+    public SHOULDER_STATE shoulderState = SHOULDER_STATE.PICKUP;
 
     public Turret turret;
     public DigitalChannel shoulderTouchSensor;  // Hardware Device Object
 
-    //Initialization of <Fill>
-    public SHOULDER_STATE shoulderState = SHOULDER_STATE.PICKUP;
-
-
     public boolean runShoulderToLevelState = false;
-    public int SHOULDER_DELTA_COUNT_MAX = 100;
-    public int shoulderDeltaCount = 0; //Need tested value
+    public boolean shoulderBelowThreshold = true;
+    public double SHOULDER_DELTA_COUNT_MAX = 100;
+    public double shoulderDeltaCount = 0; //Need tested value
 
-    public static final int PICKUP_WHILE_FACING_FORWARD_POSITION = 0;
-    public static final int GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION = 0; //Need tested values
-    public static final int PICKUP_WHILE_NOT_FACING_FORWARD_POSITION = 100;
-    public static final int PICKUP_WRIST_DOWN_WHILE_NOT_FACING_FORWARD_POSITION = 200;
-    public static final int LOW_JUNCTION_POSITION = 380; //need tested values
-    public static final int MEDIUM_JUNCTION_POSITION = 650; //need tested values
-    public static final int HIGH_JUNCTION_POSITION = 808; //need tested values
-    public static final int MAX_RAISED_POSITION = 900; //Need tested values
+    public static final double PICKUP_POSITION = 0;
+    public static final double GROUND_JUNCTION_POSITION = 0; //Need tested values
+    public static final double PICKUP_WRIST_DOWN_POSITION = 200;
+    public static final double THRESHOLD_POSITION = 350;
+    public static final double LOW_JUNCTION_POSITION = 380; //need tested values
+    public static final double MEDIUM_JUNCTION_POSITION = 650; //need tested values
+    public static final double HIGH_JUNCTION_POSITION = 808; //need tested values
+    public static final double MAX_RAISED_POSITION = 900; //Need tested values
 
-    public int shoulderCurrentPosition = PICKUP_WHILE_FACING_FORWARD_POSITION;
-    public int shoulderNewPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //Default shoulder position count
+    public double dynamicMinPosition = PICKUP_POSITION;
 
-    public int pickupShoulderWhileDynamicTurretPosition = 0;
+    public double shoulderCurrentPosition = PICKUP_POSITION;
+    public double shoulderNewPosition = PICKUP_POSITION; //Default shoulder position count
 
     public double shoulderAngleRadians, shoulderAngleDegrees;
 
@@ -81,15 +83,14 @@ public class Shoulder {
     public void initShoulder(){
         leftShoulderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightShoulderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        resetShoulder();
+        resetShoulderMode();
         turnShoulderBrakeModeOff();
         leftShoulderMotor.setPositionPIDFCoefficients(5.0);
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        moveToShoulderPickupWhileFacingFoward();
+        moveShoulderToPickup();
     }
-
 
     public void turnShoulderBrakeModeOn() {
         leftShoulderMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -102,43 +103,37 @@ public class Shoulder {
     }
 
     //Sets shoulder position to ground junction
-    public void moveToShoulderPickupWhileFacingFoward() {
-        //TODO : This should be used only when the Turret is facing forward (to avoid arm hitting the sides of the robot)
+    public void moveShoulderToPickup() {
         turnShoulderBrakeModeOff();
-
-        leftShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
-        rightShoulderMotor.setTargetPosition(GROUND_JUNCTION_WHILE_FACING_FORWARD_POSITION);
+        leftShoulderMotor.setTargetPosition((int)PICKUP_POSITION);
+        rightShoulderMotor.setTargetPosition((int)PICKUP_POSITION);
         shoulderState = SHOULDER_STATE.PICKUP;
         runShoulderToLevelState = true;
     }
 
     //TODO: Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
-    public void  moveShoulderToPickUpWhileDynamicTurretAngle(){
+    public void  moveShoulderToPickUpWristDown(){
         turnShoulderBrakeModeOn();
-        if (SystemState.HandWristState == Hand.WRIST_STATE.WRIST_DOWN) {
-            pickupShoulderWhileDynamicTurretPosition = PICKUP_WRIST_DOWN_WHILE_NOT_FACING_FORWARD_POSITION;
-        } else {
-            pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_NOT_FACING_FORWARD_POSITION;
-        }
-        leftShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
-        rightShoulderMotor.setTargetPosition(pickupShoulderWhileDynamicTurretPosition);
+        leftShoulderMotor.setTargetPosition((int)PICKUP_WRIST_DOWN_POSITION);
+        rightShoulderMotor.setTargetPosition((int)PICKUP_WRIST_DOWN_POSITION);
+        shoulderState = SHOULDER_STATE.PICKUP_WRIST_DOWN;
         runShoulderToLevelState = true;
     }
 
     //Sets shoulder position to low junction
     public void moveToShoulderLowJunction() {
         turnShoulderBrakeModeOn();
-        leftShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
-        rightShoulderMotor.setTargetPosition(LOW_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition((int)LOW_JUNCTION_POSITION);
+        rightShoulderMotor.setTargetPosition((int)LOW_JUNCTION_POSITION);
         shoulderState = SHOULDER_STATE.LOW_JUNCTION;
         runShoulderToLevelState = true;
     }
 
     //Sets shoulder position or mid junction
-    public void moveToShoulderMidJunction() {
+    public void moveToShoulderMediumJunction() {
         turnShoulderBrakeModeOn();
-        rightShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
-        leftShoulderMotor.setTargetPosition(MEDIUM_JUNCTION_POSITION);
+        rightShoulderMotor.setTargetPosition((int)MEDIUM_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition((int)MEDIUM_JUNCTION_POSITION);
         shoulderState = SHOULDER_STATE.MEDIUM_JUNCTION;
         runShoulderToLevelState = true;
 
@@ -147,36 +142,36 @@ public class Shoulder {
     //Sets shoulder position to high junction
     public void moveToShoulderHighJunction() {
         turnShoulderBrakeModeOn();
-        rightShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
-        leftShoulderMotor.setTargetPosition(HIGH_JUNCTION_POSITION);
+        rightShoulderMotor.setTargetPosition((int)HIGH_JUNCTION_POSITION);
+        leftShoulderMotor.setTargetPosition((int)HIGH_JUNCTION_POSITION);
         shoulderState = SHOULDER_STATE.HIGH_JUNCTION;
         runShoulderToLevelState = true;
     }
 
+    public void moveShoulderToDynamicMinExtended(){
+        turnShoulderBrakeModeOn();
+        rightShoulderMotor.setTargetPosition((int)dynamicMinPosition);
+        leftShoulderMotor.setTargetPosition((int)dynamicMinPosition);
+        shoulderState = SHOULDER_STATE.RANDOM;
+        runShoulderToLevelState = true;
+    }
 
     public void lowerShoulder(double stepSizeFactor) {
         shoulderDeltaCount = (int) stepSizeFactor * SHOULDER_DELTA_COUNT_MAX;
         if (shoulderDeltaCount !=0) {
             shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
             shoulderNewPosition = shoulderCurrentPosition - shoulderDeltaCount;
-            //TODO : Wrap condition for Turret state facing forward
-            if (shoulderNewPosition > PICKUP_WHILE_FACING_FORWARD_POSITION) {
+            if (shoulderNewPosition > PICKUP_POSITION) {
                 shoulderState = SHOULDER_STATE.RANDOM;
                 turnShoulderBrakeModeOn();
-
-                if (Math.abs(SystemState.TurretAngleRadians) > Math.PI / 18) { //avoiding the wheel(10 degrees)
-                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_NOT_FACING_FORWARD_POSITION;//raised above wheel position;
-                } else {
-                    pickupShoulderWhileDynamicTurretPosition = PICKUP_WHILE_FACING_FORWARD_POSITION; //going back to max down when its not near the wheel
-                }
-
+            } else {
+                shoulderNewPosition = PICKUP_POSITION;
                 shoulderState = SHOULDER_STATE.PICKUP;
                 turnShoulderBrakeModeOff();
             }
-            //TODO : Set shoulder min position to be PICKUP_WHILE_NOT_FACING_FORWARD_POSITION if any other Turret position
             if (shoulderNewPosition != shoulderCurrentPosition) {
-                rightShoulderMotor.setTargetPosition(shoulderNewPosition);
-                leftShoulderMotor.setTargetPosition(shoulderNewPosition);
+                rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
+                leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 runShoulderToLevelState = true;
             }
         }
@@ -196,8 +191,8 @@ public class Shoulder {
             }
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 turnShoulderBrakeModeOn();
-                rightShoulderMotor.setTargetPosition(shoulderNewPosition);
-                leftShoulderMotor.setTargetPosition(shoulderNewPosition);
+                rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
+                leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 runShoulderToLevelState = true;
             }
         }
@@ -222,7 +217,7 @@ public class Shoulder {
         shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
     }
 
-    public void resetShoulder(){
+    public void resetShoulderMode(){
         DcMotorEx.RunMode runMode = leftShoulderMotor.getMode();
         rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -230,19 +225,31 @@ public class Shoulder {
         rightShoulderMotor.setMode(runMode);
     }
 
-    public void manualResetShoulder(double joystickValue){
-
+    public void manualResetShoulder(){
         //uses the limit switch to reset position
-        if (shoulderTouchSensor.getState() == true) {
+        /*if (shoulderTouchSensor.getState() == true) {
             turnShoulderBrakeModeOn();
             rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            shoulderState = SHOULDER_STATE.PICKUP;
         } else {
-            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
-            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - joystickValue * 50));
-            runShoulderToLevel(0.1); //need tested value
-
+            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            runShoulderToLevel(0.2); //need tested value
+        }*/
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while ((shoulderTouchSensor.getState() == true) && timer.time() < 3000) {
+            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            runShoulderToLevel(0.2);
         }
-
+        turnShoulderBrakeModeOn();
+        rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shoulderState = SHOULDER_STATE.PICKUP;
     }
+
+
+
 }

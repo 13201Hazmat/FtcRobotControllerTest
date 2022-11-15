@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 /**
  *
  * Definition of TURRET Class <BR>
@@ -39,14 +42,14 @@ public class Turret {
 
     public static TURRET_MOTOR_STATE turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
 
-    public static final int FACING_FORWARD_POSITION = 0;
-    public static final int FACING_BACKWARD_LEFT_POSITION = -1350;
-    public static final int FACING_BACKWARD_RIGHT_POSITION = 1350;
-    public static final int FACING_LEFT_POSITION = -675;
-    public static final int FACING_RIGHT_POSITION = 675;
+    public static final double FACING_FORWARD_POSITION = 0;
+    public static final double FACING_BACKWARD_LEFT_POSITION = -1350;
+    public static final double FACING_BACKWARD_RIGHT_POSITION = 1350;
+    public static final double FACING_LEFT_POSITION = -675;
+    public static final double FACING_RIGHT_POSITION = 675;
 
-    public int turretCurrentPosition = FACING_FORWARD_POSITION;
-    public int turretNewPosition = FACING_FORWARD_POSITION;
+    public double turretCurrentPosition = FACING_FORWARD_POSITION;
+    public double turretNewPosition = FACING_FORWARD_POSITION;
 
     public static double turretAngleRadians;
     public double turretAngleDegrees;
@@ -55,8 +58,8 @@ public class Turret {
 
     //value declarations
     public boolean runTurretToLevelState = false;
-    public static int TURRET_DELTA_COUNT_MAX = 50; //movement value of turret given clockwise or counterclockwise rotation(changeable)
-    public int turretDeltaCount = 0;
+    public static double TURRET_DELTA_COUNT_MAX = 50; //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public double turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
@@ -72,7 +75,7 @@ public class Turret {
     //turret initialization
     public void initTurret(){
         turretMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        resetTurret();
+        resetTurretMode();
         //set motor direction opposite for rotation
         turretMotor.setDirection(DcMotorEx.Direction.FORWARD);
         turnTurretBrakeModeOn();
@@ -91,7 +94,7 @@ public class Turret {
 
     public void faceForward() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
-        turretMotor.setTargetPosition(FACING_FORWARD_POSITION);
+        turretMotor.setTargetPosition((int)FACING_FORWARD_POSITION);
         runTurretToLevelState = true;
         //assign value after testing
     }
@@ -100,10 +103,10 @@ public class Turret {
     public void faceBackward(){
         turretCurrentPosition = turretMotor.getCurrentPosition();
         if (turretCurrentPosition <0) {
-            turretMotor.setTargetPosition(FACING_BACKWARD_LEFT_POSITION);
+            turretMotor.setTargetPosition((int)FACING_BACKWARD_LEFT_POSITION);
             turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
         } else {
-            turretMotor.setTargetPosition(FACING_BACKWARD_RIGHT_POSITION);
+            turretMotor.setTargetPosition((int)FACING_BACKWARD_RIGHT_POSITION);
             turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
         }
         runTurretToLevelState = true;
@@ -111,13 +114,13 @@ public class Turret {
 
     public void faceLeft() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_LEFT;
-        turretMotor.setTargetPosition(FACING_LEFT_POSITION);
+        turretMotor.setTargetPosition((int)FACING_LEFT_POSITION);
         runTurretToLevelState = true;
         //assign value after testing
     }
     public void faceRight() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_RIGHT;
-        turretMotor.setTargetPosition(FACING_RIGHT_POSITION);
+        turretMotor.setTargetPosition((int)FACING_RIGHT_POSITION);
         runTurretToLevelState = true;
         //assign value after testing
     }
@@ -144,7 +147,7 @@ public class Turret {
                 turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
             }
             if (turretNewPosition != turretCurrentPosition) {
-                turretMotor.setTargetPosition(turretNewPosition);
+                turretMotor.setTargetPosition((int)turretNewPosition);
                 runTurretToLevelState = true;
             }
         }
@@ -156,7 +159,7 @@ public class Turret {
         SystemState.TurretAngleRadians = turretAngleRadians;
     }
 
-    public void resetTurret() {
+    public void resetTurretMode() {
         DcMotorEx.RunMode runMode = turretMotor.getMode();
         turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(runMode);
@@ -176,19 +179,6 @@ public class Turret {
         }
     }
 
-    public void manualResetTurret(double joystickValue){
-        // If the Magnetic Limit Swtch is pressed, stop the motor
-        if (turretLeftMagneticSensor.getState() && turretCenterMagneticSensor.getState()) {
-            turnTurretBrakeModeOff();
-            turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        } else { // Otherwise, run the motor
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + joystickValue * 50));
-            runTurretToPosition(0.1);
-        }
-
-    }
-
-
     public void runTurretToPosition(double power){//receive value from testing
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runTurretToLevelState == true) {
@@ -199,4 +189,29 @@ public class Turret {
         }
     }
 
+    public void manualResetTurret(double directionFactor){
+        // If the Magnetic Limit Swtch is pressed, stop the motor
+        /*if (turretCenterMagneticSensor.getState()) {
+            turnTurretBrakeModeOff();
+            resetTurretMode();
+        } else { // Otherwise, run the motor
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + stepSizeFactor * 50));
+            runTurretToPosition(0.2);
+        }*/
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        int direction = 1;
+        if (directionFactor < 0) {
+            direction = -1;
+        } else {
+            direction = 1;
+        }
+        while (!turretCenterMagneticSensor.getState() && timer.time() < 2000) {
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 50));
+            runTurretToPosition(0.2);
+        }
+        turnTurretBrakeModeOff();
+        resetTurretMode();
+        turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
+    }
 }
