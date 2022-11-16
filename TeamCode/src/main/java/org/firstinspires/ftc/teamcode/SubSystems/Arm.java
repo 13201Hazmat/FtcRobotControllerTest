@@ -66,7 +66,7 @@ public class Arm {
     public static final double CONE_5_POSITION = 1400;
     public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
 
-    public static final double ARM_DELTA_COUNT_MAX = 200; //need tested values
+    public static final double ARM_DELTA_COUNT_MAX = 200;//200 //need tested values
 
     //Different constants of arm speed
     public static final double ARM_POWER = 0.5;

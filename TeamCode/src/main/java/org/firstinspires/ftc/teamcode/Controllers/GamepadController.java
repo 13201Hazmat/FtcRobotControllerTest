@@ -199,6 +199,8 @@ public class GamepadController {
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
         }
 
+
+
         //Move arm to low junction if Gamepad 2 X is pressed
         if (gp2GetButtonXPress()){
             shoulder.moveToShoulderLowJunction();
@@ -226,6 +228,7 @@ public class GamepadController {
         double shoulderToArmFactor = ((shoulder.THRESHOLD_POSITION - shoulder.PICKUP_POSITION)/
                 ((arm.MAX_EXTENDED_POSITION - arm.PICKUP_POSITION)));
 
+        /*
         if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
             arm.dynamicMaxExtendedPosition = (int) (shoulder.leftShoulderMotor.getCurrentPosition()/shoulderToArmFactor);
         }
@@ -236,7 +239,8 @@ public class GamepadController {
 
         if (arm.armMotor.getCurrentPosition() > arm.PICKUP_POSITION) {
             shoulder.dynamicMinPosition = (int) arm.armMotor.getCurrentPosition() * shoulderToArmFactor;
-        }
+     }
+         */
 
         if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
             shoulder.moveShoulderToDynamicMinExtended();

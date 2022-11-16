@@ -41,7 +41,7 @@ public class Hand {
 
     //constants for Hand and grip position
     public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
-    public static final double CLOSE_GRIP_POS = 0.26; //value of Grip to close
+    public static final double CLOSE_GRIP_POS = 0.1; //value of Grip to close
     public static final double CLOSE_GRIP_FULL_POSITION = 0.2;
 
     public static final double WRIST_DOWN_POSITION = 0.5;

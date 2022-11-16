@@ -45,7 +45,7 @@ public class Shoulder {
 
     public boolean runShoulderToLevelState = false;
     public boolean shoulderBelowThreshold = true;
-    public double SHOULDER_DELTA_COUNT_MAX = 100;
+    public double SHOULDER_DELTA_COUNT_MAX = 20;
     public double shoulderDeltaCount = 0; //Need tested value
 
     public static final double PICKUP_POSITION = 0;
@@ -65,7 +65,7 @@ public class Shoulder {
     public double shoulderAngleRadians, shoulderAngleDegrees;
 
     //Different constants of shoulder speed
-    public static final double SHOULDER_POWER = 0.5;
+    public static final double SHOULDER_POWER = 0.3;
 
     //Constructor
     public Shoulder(HardwareMap hardwareMap){
