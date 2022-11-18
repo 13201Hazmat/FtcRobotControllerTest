@@ -121,7 +121,7 @@ public class TestShoulder extends LinearOpMode {
 
                 //Run Shoulder motors if position is changed
                 if (shoulder.runShoulderToLevelState){
-                    shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER);
+                    shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER_UP);
                 }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {

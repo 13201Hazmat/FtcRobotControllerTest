@@ -36,6 +36,7 @@ public class Arm {
         MIN_RETRACTED,
         PICKUP,
         GROUND_JUNCTION,
+        PICKUP_WRIST_DOWN_POSITION,
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
         HIGH_JUNCTION,
@@ -48,6 +49,7 @@ public class Arm {
     public static final double MIN_RETRACTED_POSITION = 0;
     public static final double PICKUP_POSITION = 0;
     public static final double GROUND_JUNCTION_POSITION = 0;
+    public static final double PICKUP_WRIST_DOWN_POSITION = 200;
     public static final double LOW_JUNCTION_POSITION = (int) 0;
     public static final double MEDIUM_JUNCTION_POSITION = (int) 450;
     public static final double HIGH_JUNCTION_POSITION = (int) 1749;
@@ -69,7 +71,13 @@ public class Arm {
     public static final double ARM_DELTA_COUNT_MAX = 200;//200 //need tested values
 
     //Different constants of arm speed
-    public static final double ARM_POWER = 0.5;
+    public static final double ARM_POWER_EXTEND = 0.4;
+    public static final double ARM_POWER_RETRACT = 0.7;
+    public enum ARM_MOVEMENT_DIRECTION {
+        EXTEND,
+        RETRACT
+    }
+    public ARM_MOVEMENT_DIRECTION armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
 
     public double armDeltaCount = 0; //Need tested value
     public static double AutonomousArmPower = 2;//need tested value
@@ -91,13 +99,11 @@ public class Arm {
     //Method is able to initialize the arm
     public void initArm(){
         resetArmMode();
-        turnArmBrakeModeOff();
-        armMotorState = ARM_MOTOR_STATE.PICKUP;
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         armMotor.setPositionPIDFCoefficients(5.0);
-        armMotor.setTargetPosition((int)PICKUP_POSITION);
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        moveArmToPickUp();
+        turnArmBrakeModeOn();
+        moveArmToMinRetracted();
     }
 
     //Turns on the brake for arm motor
@@ -106,21 +112,60 @@ public class Arm {
     }
 
     //Turns brake for arm motor off
-    public void turnArmBrakeModeOff() {
+    /*public void turnArmBrakeModeOff() {
         armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+    }*/
+
+    public void moveArmToMinRetracted(){
+        turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < MIN_RETRACTED_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
+        armMotor.setTargetPosition((int)MIN_RETRACTED_POSITION);
+        armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
+        runArmToLevelState = true;
     }
 
     //Sets arm position to ground junction
     public void moveArmToPickUp(){
         turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < PICKUP_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
         armMotor.setTargetPosition((int)PICKUP_POSITION);
         armMotorState = ARM_MOTOR_STATE.PICKUP;
+        runArmToLevelState = true;
+    }
+
+    //Sets arm position to ground junction
+    public void moveArmToPickUpWristDown(){
+        turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < PICKUP_WRIST_DOWN_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
+        armMotor.setTargetPosition((int)PICKUP_WRIST_DOWN_POSITION);
+        armMotorState = ARM_MOTOR_STATE.PICKUP_WRIST_DOWN_POSITION;
         runArmToLevelState = true;
     }
 
     //Sets arm position to low junction
     public void moveArmToLowJunction(){
         turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < LOW_JUNCTION_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
         armMotor.setTargetPosition((int)LOW_JUNCTION_POSITION);
         armMotorState = ARM_MOTOR_STATE.LOW_JUNCTION;
         runArmToLevelState = true;
@@ -129,6 +174,12 @@ public class Arm {
     //Sets arm position or mid junction
     public void moveArmToMediumJunction(){
         turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < MEDIUM_JUNCTION_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
         armMotor.setTargetPosition((int)MEDIUM_JUNCTION_POSITION);
         armMotorState = ARM_MOTOR_STATE.MEDIUM_JUNCTION;
         runArmToLevelState = true;
@@ -137,6 +188,12 @@ public class Arm {
     //Sets arm position to high junction
     public void moveArmToHighJunction(){
         turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < HIGH_JUNCTION_POSITION ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
         armMotor.setTargetPosition((int)HIGH_JUNCTION_POSITION);
         armMotorState = ARM_MOTOR_STATE.HIGH_JUNCTION;
         runArmToLevelState = true;
@@ -144,6 +201,12 @@ public class Arm {
 
     public void moveArmToDynamicMaxExtended(){
         turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < dynamicMaxExtendedPosition ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
         armMotor.setTargetPosition((int) dynamicMaxExtendedPosition);
         armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
         runArmToLevelState = true;
@@ -162,6 +225,12 @@ public class Arm {
                 armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
             } else {
                 armMotorState = ARM_MOTOR_STATE.RANDOM;
+            }
+            armCurrentPosition = armMotor.getCurrentPosition();
+            if (armCurrentPosition < armNewPosition ) {
+                armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+            } else {
+                armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
             }
             if (armNewPosition != armCurrentPosition) {
                 turnArmBrakeModeOn();

@@ -120,7 +120,7 @@ public class TestArm extends LinearOpMode {
 
                 // Run Arm motor if position is changed
                 if (arm.runArmToLevelState) {
-                    arm.runArmToLevel(arm.ARM_POWER);
+                    arm.runArmToLevel(arm.ARM_POWER_EXTEND);
                 }
 
                 //Keep shoulder Brake on for Arm testing

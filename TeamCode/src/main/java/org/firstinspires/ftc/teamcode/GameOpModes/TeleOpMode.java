@@ -121,27 +121,37 @@ public class TeleOpMode extends LinearOpMode {
             //****** Drive debug ******
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("=============","");
 
             telemetry.addData("Arm State: ", arm.armMotorState);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
+            telemetry.addData("=============","");
 
             telemetry.addData("Wrist State : ", hand.wristState);
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            telemetry.addData("=============","");
 
             telemetry.addData("Shoulder State: ", shoulder.shoulderState);
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
             telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getCurrentPosition());
             telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
+            telemetry.addData("Shoulder Movement Direction : ",shoulder.shoulderMovementDirection);
+            telemetry.addData("Shoulder Current Position : ",shoulder.shoulderCurrentPosition);
+            telemetry.addData("Shoulder New Position : ",shoulder.shoulderNewPosition);
+            telemetry.addData("Shoulder comboMotion : ",gamepadController.comboMotion);
+
+            telemetry.addData("=============","");
 
             telemetry.addData("Turret State : ", turret.turretMotorState);
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
             telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
-            
+            telemetry.addData("=============","");
+
             telemetry.addData("Game Timer : ", gameTimer.time());
         }
 

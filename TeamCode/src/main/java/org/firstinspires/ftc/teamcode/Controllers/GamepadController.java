@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import static android.os.SystemClock.sleep;
+
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
@@ -178,86 +181,113 @@ public class GamepadController {
         SystemState.TurretState = turret.turretMotorState;
     }
 
+    public boolean comboMotion = false;
     /**
      * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runShoulderArmCombo(){
+
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
+
+        //Move arm to low junction if Gamepad 2 X is pressed
+        if (gp2GetButtonXPress()){
+            comboMotion = true;
+            arm.moveArmToLowJunction();
+            shoulder.moveToShoulderLowJunction();
+        }
+
+        //Moves arm to the high junction if Gamepad 2 B is pressed
+        if (!gp2GetStart() && gp2GetButtonBPress()){
+            comboMotion = true;
+            arm.moveArmToHighJunction();
+            shoulder.moveToShoulderHighJunction();
+        }
+
+        //Moves arm to pickup / ground junction if Gamepad 2 A is pressed
+        if (gp2GetButtonAPress()){
+            comboMotion = true;
+            arm.moveArmToPickUp();
+            shoulder.moveShoulderToPickup();
+        }
+
+        //Moves arm to middle junction if Gamepad 2 Y is pressed
+        if (gp2GetButtonYPress()){
+            comboMotion = true;
+            arm.moveArmToMediumJunction();
+            shoulder.moveToShoulderMediumJunction();
+        }
+
+        // To protect Arm from hitting the ground
+        double shoulderToArmFactor = ((shoulder.THRESHOLD_POSITION - shoulder.PICKUP_POSITION)/
+                ((arm.MAX_EXTENDED_POSITION - arm.PICKUP_POSITION)));
+
         //Extend the shoulder based on the Gamepad 2 left and right trigger
         if (gp2GetRightTrigger() > 0.2) {
-            shoulder.raiseShoulder(Math.pow(-gp2GetRightTrigger() * 1.25 - 0.25, 3));
+            shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger() * 1.25 - 0.25, 3));
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
-            shoulder.lowerShoulder(Math.pow(-gp2GetLeftTrigger() * 1.25 - 0.25, 3));
+            shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
+            // if shoulder is pulled below THRESHOLD, change the max length of arm such that it does not touch the ground
+            if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
+                arm.dynamicMaxExtendedPosition = (int) (shoulder.leftShoulderMotor.getCurrentPosition()/shoulderToArmFactor);
+                if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
+                    arm.moveArmToDynamicMaxExtended();
+                }
+            }
         }
 
         //Move arm based on Left Stick on Gamepad 2
         if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
-            //TODO : When Arm is retracted / extended, Add code to decrease / increase shoulderAngle, when below shoulderThnrshold
-            //
+            //if arm is extended when shoulder is below threshold, change the shoulder min position to make sure shoulder is pulled up  to keep the arm below ground
+            if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
+                if (arm.armMotor.getCurrentPosition() > arm.PICKUP_POSITION) {
+                    shoulder.dynamicMinPosition = (int) arm.armMotor.getCurrentPosition() * shoulderToArmFactor;
+                    if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
+                        shoulder.moveShoulderToDynamicMinExtended();
+                    }
+                }
+            }
         } else if (gp2GetLeftStickY() <= -0.2) { // Retract arm
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
         }
 
+        // Run Arm motor if position is changed
+        if (arm.runArmToLevelState) {
 
-
-        //Move arm to low junction if Gamepad 2 X is pressed
-        if (gp2GetButtonXPress()){
-            shoulder.moveToShoulderLowJunction();
-            arm.moveArmToLowJunction();
+            if (arm.armMovementDirection == Arm.ARM_MOVEMENT_DIRECTION.EXTEND) {
+                arm.runArmToLevel(arm.ARM_POWER_EXTEND);
+            } else {
+                arm.runArmToLevel(arm.ARM_POWER_RETRACT);
+            }
+            if (comboMotion && (shoulder.shoulderMovementDirection == Shoulder.SHOULDER_MOVEMENT_DIRECTION.DOWN)) {
+                timer.reset();
+                while (timer.time() < 3000){
+                    runDriveControl_byRRDriveModes();
+                    runTurret();
+                };
+            }
         }
+        SystemState.ArmState = arm.armMotorState;
 
-        //Moves arm to the high junction if Gamepad 2 B is pressed
-        if (!gp2GetStart() && gp2GetButtonBPress()){
-            shoulder.moveToShoulderHighJunction();
-            arm.moveArmToHighJunction();
-        }
-
-        //Moves arm to pickup / ground junction if Gamepad 2 A is pressed
-        if (gp2GetButtonAPress()){
-            shoulder.moveShoulderToPickup();
-            arm.moveArmToPickUp();
-        }
-
-        //Moves arm to middle junction if Gamepad 2 Y is pressed
-        if (gp2GetButtonYPress()){
-            shoulder.moveToShoulderMediumJunction();
-            arm.moveArmToMediumJunction();
-        }
-
-        double shoulderToArmFactor = ((shoulder.THRESHOLD_POSITION - shoulder.PICKUP_POSITION)/
-                ((arm.MAX_EXTENDED_POSITION - arm.PICKUP_POSITION)));
-
-        /*
-        if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
-            arm.dynamicMaxExtendedPosition = (int) (shoulder.leftShoulderMotor.getCurrentPosition()/shoulderToArmFactor);
-        }
-
-        if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
-            arm.moveArmToDynamicMaxExtended();
-        }
-
-        if (arm.armMotor.getCurrentPosition() > arm.PICKUP_POSITION) {
-            shoulder.dynamicMinPosition = (int) arm.armMotor.getCurrentPosition() * shoulderToArmFactor;
-     }
-         */
-
-        if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
+        /*if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
             shoulder.moveShoulderToDynamicMinExtended();
-        }
+        }*/
+
 
         //Run Shoulder motors if position is changed
         if (shoulder.runShoulderToLevelState){
-            shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER);
+            if (shoulder.shoulderMovementDirection == Shoulder.SHOULDER_MOVEMENT_DIRECTION.UP) {
+                shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER_UP);
+            } else {
+                shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER_DOWN);
+            }
         }
         SystemState.ShoulderState = shoulder.shoulderState;
 
 
-        // Run Arm motor if position is changed
-        if (arm.runArmToLevelState) {
-            arm.runArmToLevel(arm.ARM_POWER);
-        }
-        SystemState.ArmState = arm.armMotorState;
+
 
         //manual reset for the arm
         if (gp2GetStart()) {
@@ -293,26 +323,28 @@ public class GamepadController {
         if (gp2GetDpad_downPress() || gp1GetDpad_downPress()) {
             if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
                 hand.moveWristLevel();
-            } /*else if ((hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL)
+            } else if ((hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL)
                 && (shoulder.shoulderState == Shoulder.SHOULDER_STATE.PICKUP)) {
+                arm.moveArmToPickUpWristDown();
+                shoulder.moveShoulderToPickUpWristDown();
 
-                hand.moveWristDown();
-                TODO : DONT UNCOMMENT THIS TILL PROTECTION IS SET FOR
-                 ARM TO BE HIGH WHEN WRIST IS POINTING DOWN OR IT WILL BREAK THE WRIST
-            }*/
+                //hand.moveWristDown();
+                /*TODO : DONT UNCOMMENT THIS TILL PROTECTION IS SET FOR
+                 ARM TO BE HIGH WHEN WRIST IS POINTING DOWN OR IT WILL BREAK THE WRIST*/
+            }
         }
 
         if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
             hand.moveWristLevel();
-        }
+        }//works
 
         if (hand.wristState == Hand.WRIST_STATE.WRIST_UP) {
             hand.moveWristUp();
-        }
+        }//works
 
         if (gp2GetRightBumperPress() || gp1GetRightBumperPress()) {
             hand.toggleGrip();
-        }
+        }//works
 
         SystemState.HandGripState = hand.gripState;
         SystemState.HandWristState = hand.wristState;
