@@ -229,26 +229,26 @@ public class GamepadController {
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
             // if shoulder is pulled below THRESHOLD, change the max length of arm such that it does not touch the ground
-            if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
+            /*if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
                 arm.dynamicMaxExtendedPosition = (int) (shoulder.leftShoulderMotor.getCurrentPosition()/shoulderToArmFactor);
                 if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
                     arm.moveArmToDynamicMaxExtended();
                 }
-            }
+            }*/
         }
 
         //Move arm based on Left Stick on Gamepad 2
         if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
             //if arm is extended when shoulder is below threshold, change the shoulder min position to make sure shoulder is pulled up  to keep the arm below ground
-            if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
+            /*if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
                 if (arm.armMotor.getCurrentPosition() > arm.PICKUP_POSITION) {
                     shoulder.dynamicMinPosition = (int) arm.armMotor.getCurrentPosition() * shoulderToArmFactor;
                     if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
                         shoulder.moveShoulderToDynamicMinExtended();
                     }
                 }
-            }
+            }*/
         } else if (gp2GetLeftStickY() <= -0.2) { // Retract arm
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
         }
