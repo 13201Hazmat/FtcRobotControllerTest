@@ -51,34 +51,15 @@ public class TeleOpMode extends LinearOpMode {
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
-
-        /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
-        shoulder = new Shoulder(hardwareMap);
-        turret = new Turret(hardwareMap);
-        lights = new Lights(hardwareMap);
-
-        /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
-
-        /* Get last position after Autonomous mode ended from static class set in Autonomous */
-        if ( GameField.poseSetInAutonomous) {
-            driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
-        } else {
-            driveTrain.getLocalizer().setPoseEstimate(startPose);
-        }
-
-        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
-
-
         /* Set Initial State of any subsystem when TeleOp is to be started*/
+        initSubsystems();
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
         gameTimer.reset();
+
+        telemetry.addLine("Start Pressed");
+        telemetry.update();
 
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
@@ -103,6 +84,64 @@ public class TeleOpMode extends LinearOpMode {
         GameField.poseSetInAutonomous = false;
     }
 
+    public void initSubsystems(){
+        telemetry.setAutoClear(false);
+
+        //Init Pressed
+        telemetry.addLine("Robot Init Pressed");
+        telemetry.addLine("==================");
+        telemetry.update();
+
+        /* Create Subsystem Objects*/
+        driveTrain = new DriveTrain(hardwareMap);
+        telemetry.addLine("DriveTrain Initialized");
+        telemetry.update();
+
+        hand = new Hand(hardwareMap);
+        telemetry.addLine("Hand Initialized");
+        telemetry.update();
+
+        arm = new Arm(hardwareMap);
+        telemetry.addLine("Arm Initialized, Pulled in completely");
+        telemetry.addData("  - Arm Touch Sensor State", arm.armTouchSensor.getState());
+        telemetry.update();
+
+        shoulder = new Shoulder(hardwareMap);
+        telemetry.addLine("Shoulder Initialized, Pushed down completely");
+        telemetry.addData("  - Should Touch Sensor State: ", shoulder.shoulderTouchSensor.getState());
+        telemetry.update();
+
+        turret = new Turret(hardwareMap);
+        telemetry.addLine("Turret Initialized, Set to middle");
+        telemetry.addData("  - Turret Left Mag Sensor State: ", turret.turretLeftMagneticSensor.getState());
+        telemetry.addData("  - Turret Center Mag Sensor State: ", turret.turretCenterMagneticSensor.getState());
+        telemetry.addData("  - Turret Right Mag Sensor State: ", turret.turretRightMagneticSensor.getState());
+        telemetry.update();
+
+        lights = new Lights(hardwareMap);
+        telemetry.addLine("Lights Initialized");
+        telemetry.update();
+
+        /* Create Controllers */
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
+        telemetry.addLine("Gamepad Initialized");
+        telemetry.update();
+
+        /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        if ( GameField.poseSetInAutonomous) {
+            driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
+        } else {
+            driveTrain.getLocalizer().setPoseEstimate(startPose);
+        }
+
+        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+
+        telemetry.addLine("+++++++++++++++++++++++");
+        telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
+        telemetry.update();
+    }
+
     /**
      * Method to add debug messages. Update as telemetry.addData.
      * Use public attributes or methods if needs to be called here.
@@ -114,27 +153,30 @@ public class TeleOpMode extends LinearOpMode {
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
 
-            telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            telemetry.addData("startPose : ", startPose);
+            telemetry.addData("Game Timer : ", gameTimer.time());
+            //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
+            //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            //telemetry.addData("startPose : ", startPose);
 
             //****** Drive debug ******
-            telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
-            telemetry.addData("=============","");
+            //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
+            //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addLine("=============");
 
             telemetry.addData("Arm State: ", arm.armMotorState);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
-            telemetry.addData("=============","");
+            telemetry.addData("Arm Touch Sensor State", arm.armTouchSensor.getState());
+            telemetry.addLine("=============");
 
             telemetry.addData("Wrist State : ", hand.wristState);
             telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
             telemetry.addData("Grip State : ", hand.gripState);
             telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
-            telemetry.addData("=============","");
+            telemetry.addLine("=============");
 
             telemetry.addData("Shoulder State: ", shoulder.shoulderState);
+            telemetry.addData("Should Touch Sensor State: ", shoulder.shoulderTouchSensor.getState());
             telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
             telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
             telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getCurrentPosition());
@@ -143,19 +185,17 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Shoulder Current Position : ",shoulder.shoulderCurrentPosition);
             telemetry.addData("Shoulder New Position : ",shoulder.shoulderNewPosition);
             telemetry.addData("Shoulder comboMotion : ",gamepadController.comboMotion);
-
-            telemetry.addData("=============","");
+            telemetry.addLine("=============");
 
             telemetry.addData("Turret State : ", turret.turretMotorState);
+            telemetry.addData("Turret Left Mag Sensor State: ", turret.turretLeftMagneticSensor.getState());
+            telemetry.addData("Turret Center Mag Sensor State: ", turret.turretCenterMagneticSensor.getState());
+            telemetry.addData("Turret Right Mag Sensor State: ", turret.turretRightMagneticSensor.getState());
             telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
             telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
             telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
-            telemetry.addData("=============","");
-
-            telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addLine("=============");
         }
-
         telemetry.update();
-
     }
 }

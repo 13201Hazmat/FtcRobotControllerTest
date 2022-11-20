@@ -42,17 +42,17 @@ public class Hand {
     //constants for Hand and grip position
     public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
     public static final double CLOSE_GRIP_POS = 0.1; //value of Grip to close
-    public static final double CLOSE_GRIP_FULL_POSITION = 0.2;
+    public static final double CLOSE_GRIP_FULL_POSITION = 0.00;
 
     public static final double WRIST_DOWN_POSITION = 0.5;
     public static final double WRIST_DOWN_MIN_POSITION = 0.43;
-    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.62;
+    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.61;
     public static final double WRIST_LOW_LEVEL_POSITION = 0.56;
     public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;
     public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.52;
     public static final double WRIST_HIGH_LEVEL_POSITION = 0.48;
-    public static final double WRIST_DEFAULT_UP_POSITION = 0.65;
-    public static final double WRIST_UP_MAX_POSITION = 0.72;
+    public static final double WRIST_DEFAULT_UP_POSITION = 0.66;
+    public static final double WRIST_UP_MAX_POSITION = 0.70;
 
     public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
     public double wristUpPosition = WRIST_PICKUP_LEVEL_POSITION;

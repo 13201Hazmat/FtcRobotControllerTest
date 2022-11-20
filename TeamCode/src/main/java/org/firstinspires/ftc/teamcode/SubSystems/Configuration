@@ -9,19 +9,19 @@ Expansion Hub Motor Port 3        rightFront = hardwareMap.get(DcMotorEx.class, 
 
 Expansion Hub I2C Bus 0           imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-Control Hub Motor Port 1          armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
-Control Hub Digital Port 2        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
+Control Hub Motor Port 0          armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
+Control Hub Digital Port 3        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
 
 Control Hub Servo 1               gripServo = hardwareMap.get(Servo.class, "gripServo");
 Control Hub Servo 0               wristServo = hardwareMap.get(Servo.class, "wristServo");
 
 Control Hub Motor Port 2          leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshMotor");
 Control Hub Motor Port 3          rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshMotor");
-Control Hub Digital Port 0        shoulderTouchSensor = hardwareMap.get(DigitalChannel.class, "shTouch");
+Control Hub Digital Port 1        shoulderTouchSensor = hardwareMap.get(DigitalChannel.class, "shTouch");
 
-Control Hub Motor Port 0          turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-Expansion Hub Digital Port 0        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
-Expansion Hub Digital Port 2        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
-Expansion Hub Digital Port 4        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
+Control Hub Motor Port 1          turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+Expansion Hub Digital Port 1        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
+Expansion Hub Digital Port 3        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
+Expansion Hub Digital Port 5        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
 
 Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");

@@ -88,7 +88,7 @@ public class TestHand extends LinearOpMode {
 
             while (opModeIsActive()) {
                 //gamepadController.runByGamepadControl();
-                if (gamepadController.gp2GetDpad_upPress() || gamepadController.gp1GetDpad_upPress()) {
+                if (gamepadController.gp2GetDpad_upPress() /*|| gamepadController.gp1GetDpad_upPress()*/) {
                     if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN) {
                         hand.moveWristLevel();
                     } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
@@ -96,7 +96,7 @@ public class TestHand extends LinearOpMode {
                     }
                 }
 
-                if (gamepadController.gp2GetDpad_downPress() || gamepadController.gp1GetDpad_downPress()) {
+                if (gamepadController.gp2GetDpad_downPress() /*|| gamepadController.gp1GetDpad_downPress()*/) {
                     if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
                         hand.moveWristLevel();
                     } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
@@ -104,18 +104,27 @@ public class TestHand extends LinearOpMode {
                     }
                 }
 
-                if (gamepadController.gp2GetRightBumperPress() || gamepadController.gp1GetRightBumperPress()) {
+                if (gamepadController.gp2GetRightBumperPress() /*|| gamepadController.gp1GetRightBumperPress()*/) {
                     hand.toggleGrip();
                 }
 
                 //Test code to caliberate
-                if ( gamepadController.gp2GetStart() && gamepadController.gp2GetRightBumperPress()) {
+                if ( /*gamepadController.gp2GetStart() &&*/ gamepadController.gp1GetRightBumperPress()) {
                     hand.wristServo.setPosition(hand.wristServo.getPosition() + 0.01);
                 }
 
-                if (gamepadController.gp2GetLeftBumperPress()) {
+                if (gamepadController.gp1GetLeftBumperPress()) {
                     hand.wristServo.setPosition(hand.wristServo.getPosition() - 0.01);
                 }
+
+                if (gamepadController.gp1GetDpad_upPress()){
+                    hand.gripServo.setPosition(hand.gripServo.getPosition() + 0.01);
+                }
+
+                if (gamepadController.gp1GetDpad_downPress()){
+                    hand.gripServo.setPosition(hand.gripServo.getPosition() - 0.01);
+                }
+
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();

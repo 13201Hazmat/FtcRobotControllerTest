@@ -57,8 +57,8 @@ public class Arm {
     public static final double MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
     public static final double MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
     public static final double MAX_EXTENDED_POSITION_5_SLIDES = (int) 7000;//Impossible value
-    public static final double MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_4_SLIDES;
-    public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_4_SLIDES;
+    public static final double MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_3_SLIDES;
+    public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_3_SLIDES;
 
     public double armCurrentPosition = PICKUP_POSITION; //Default arm position count
     public double armNewPosition = PICKUP_POSITION;
@@ -99,13 +99,13 @@ public class Arm {
 
     //Method is able to initialize the arm
     public void initArm(){
-        manualResetArm();
+
         resetArmMode();
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         armMotor.setPositionPIDFCoefficients(5.0);
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
         turnArmBrakeModeOn();
-        moveArmToMinRetracted();
+        manualResetArm();
     }
 
     //Turns on the brake for arm motor
@@ -275,20 +275,12 @@ public class Arm {
     }
 
     public void manualResetArm(){
-        //uses the limit switch to reset position
-        /*if (armTouchSensor.getState() == true) {
-            armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            turnArmBrakeModeOn();
-            armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
-        } else {
-            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - 50));
-            runArmToLevel(0.2); //TODO: need tested value
-        }*/
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (armTouchSensor.getState() == true && timer.time() < 3000) {
-            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - 50));
-            runArmToLevel(0.2);
+        while (armTouchSensor.getState() == true && timer.time() < 5000) {
+            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - ARM_DELTA_COUNT_MAX));
+            runArmToLevelState = true;
+            runArmToLevel(ARM_POWER_RETRACT);
         }
         resetArmMode();
         //armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);

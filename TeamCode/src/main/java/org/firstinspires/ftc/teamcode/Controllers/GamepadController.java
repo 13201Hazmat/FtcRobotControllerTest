@@ -286,9 +286,6 @@ public class GamepadController {
         }
         SystemState.ShoulderState = shoulder.shoulderState;
 
-
-
-
         //manual reset for the arm
         if (gp2GetStart()) {
             if (gp2GetLeftStickY() < 0) {
