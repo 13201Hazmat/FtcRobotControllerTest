@@ -51,7 +51,7 @@ public class Turret {
     public double turretCurrentPosition = FACING_FORWARD_POSITION;
     public double turretNewPosition = FACING_FORWARD_POSITION;
 
-    public static double turretAngleRadians;
+    public double turretAngleRadians;
     public double turretAngleDegrees;
 
     public static final double TURRET_POWER = 0.7;
