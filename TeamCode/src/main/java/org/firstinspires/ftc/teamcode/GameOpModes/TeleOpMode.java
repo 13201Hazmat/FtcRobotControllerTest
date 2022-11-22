@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.playingAlliance;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -51,7 +49,7 @@ public class TeleOpMode extends LinearOpMode {
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
-        /* Set Initial State of any subsystem when TeleOp is to be started*/
+        /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
 
         /* Wait for Start or Stop Button to be pressed */
@@ -74,6 +72,10 @@ public class TeleOpMode extends LinearOpMode {
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
+
+                if (gameTimer.time() > 80000 && gameTimer.time() < 90000) {
+                    lights.setPatternEndGame();
+                }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();

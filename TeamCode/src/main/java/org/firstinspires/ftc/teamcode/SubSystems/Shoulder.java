@@ -27,6 +27,10 @@ public class Shoulder {
     //Initialization of <Fill>
     public DcMotorEx rightShoulderMotor, leftShoulderMotor;
 
+    //Shoulder Motor : 5203 Series Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 24mm Length 8mm REX Shaft, 312 RPM, 3.3 - 5V Encoder)
+    //Gearing : 1:5
+    public static final double SHOULDER_MOTOR_ENCODER_TICKS = 537.7 * 5;
+
     //Initialization of <Fill>
     public enum SHOULDER_STATE {
         PICKUP, //PARKED, MIN_POSITION
@@ -46,16 +50,16 @@ public class Shoulder {
 
     public boolean runShoulderToLevelState = false;
     public boolean shoulderBelowThreshold = true;
-    public double SHOULDER_DELTA_COUNT_MAX = 60;
+    public double SHOULDER_DELTA_COUNT_MAX = 50;
     public double shoulderDeltaCount = 0; //Need tested value
 
     public static final double PICKUP_POSITION = 0;
-    public static final double GROUND_JUNCTION_POSITION = 0; //Need tested values
-    public static final double PICKUP_WRIST_DOWN_POSITION = 100;
+    public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION; //Need tested values
+    public static final double PICKUP_WRIST_DOWN_POSITION = 250;
     public static final double THRESHOLD_POSITION = 200;
-    public static final double LOW_JUNCTION_POSITION = 380; //need tested values
-    public static final double MEDIUM_JUNCTION_POSITION = 650; //need tested values
-    public static final double HIGH_JUNCTION_POSITION = 808; //need tested values
+    public static final double LOW_JUNCTION_POSITION = 336; //need tested values
+    public static final double MEDIUM_JUNCTION_POSITION = 610; //need tested values
+    public static final double HIGH_JUNCTION_POSITION = 760; //need tested values
     public static final double MAX_RAISED_POSITION = 900; //Need tested values
 
     public double dynamicMinPosition = PICKUP_POSITION;
@@ -97,7 +101,7 @@ public class Shoulder {
         rightShoulderMotor.setPositionPIDFCoefficients(5.0);
         leftShoulderMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightShoulderMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        moveShoulderToPickup();
+        manualResetShoulder();
     }
 
     public void turnShoulderBrakeModeOn() {
@@ -202,6 +206,21 @@ public class Shoulder {
         runShoulderToLevelState = true;
     }
 
+    public void moveShoulderToAngle(double shoulderAnglePosition){
+        turnShoulderBrakeModeOn();
+        shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
+        shoulderNewPosition = shoulderAnglePosition;
+        if (shoulderCurrentPosition < dynamicMinPosition) {
+            shoulderMovementDirection = SHOULDER_MOVEMENT_DIRECTION.UP;
+        } else {
+            shoulderMovementDirection = SHOULDER_MOVEMENT_DIRECTION.DOWN;
+        }
+        rightShoulderMotor.setTargetPosition((int)shoulderAnglePosition);
+        leftShoulderMotor.setTargetPosition((int)shoulderAnglePosition);
+        shoulderState = SHOULDER_STATE.RANDOM;
+        runShoulderToLevelState = true;
+    }
+
     public void lowerShoulder(double stepSizeFactor) {
         shoulderDeltaCount = (int) stepSizeFactor * SHOULDER_DELTA_COUNT_MAX;
         shoulderMovementDirection = SHOULDER_MOVEMENT_DIRECTION.DOWN;
@@ -274,30 +293,16 @@ public class Shoulder {
     }
 
     public void manualResetShoulder(){
-        //uses the limit switch to reset position
-        /*if (shoulderTouchSensor.getState() == true) {
-            turnShoulderBrakeModeOn();
-            rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            shoulderState = SHOULDER_STATE.PICKUP;
-        } else {
-            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
-            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
-            runShoulderToLevel(0.2); //need tested value
-        }*/
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while ((shoulderTouchSensor.getState() == true) && timer.time() < 3000) {
+        while ((shoulderTouchSensor.getState()) && timer.time() < 3000) {
             rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
             leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            runShoulderToLevelState = true;
             runShoulderToLevel(0.2);
         }
         turnShoulderBrakeModeOn();
-        rightShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resetShoulderMode();
         shoulderState = SHOULDER_STATE.PICKUP;
     }
-
-
-
 }

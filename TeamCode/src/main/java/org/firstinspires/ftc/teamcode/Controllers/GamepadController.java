@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
+import org.firstinspires.ftc.teamcode.AadiGeometry.AadiVector;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
@@ -95,8 +97,8 @@ public class GamepadController {
         runDriveControl_byRRDriveModes();
         runTurret();
         runShoulderArmCombo();
+        runRecordAndReplay();
         runHand();
-        runLights();
     }
 
     /**
@@ -228,7 +230,7 @@ public class GamepadController {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger() * 1.25 - 0.25, 3));
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
-            // if shoulder is pulled below THRESHOLD, change the max length of arm such that it does not touch the ground
+            // TODO: if shoulder is pulled below THRESHOLD, change the max length of arm such that it does not touch the ground
             /*if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
                 arm.dynamicMaxExtendedPosition = (int) (shoulder.leftShoulderMotor.getCurrentPosition()/shoulderToArmFactor);
                 if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
@@ -240,7 +242,7 @@ public class GamepadController {
         //Move arm based on Left Stick on Gamepad 2
         if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
-            //if arm is extended when shoulder is below threshold, change the shoulder min position to make sure shoulder is pulled up  to keep the arm below ground
+            //TODO: if arm is extended when shoulder is below threshold, change the shoulder min position to make sure shoulder is pulled up  to keep the arm below ground
             /*if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.THRESHOLD_POSITION) {
                 if (arm.armMotor.getCurrentPosition() > arm.PICKUP_POSITION) {
                     shoulder.dynamicMinPosition = (int) arm.armMotor.getCurrentPosition() * shoulderToArmFactor;
@@ -299,8 +301,24 @@ public class GamepadController {
                 shoulder.manualResetShoulder();
             }
         }
+    }
 
+    public void runRecordAndReplay(){
+        //TODO
+        // gamepad1.lefttrigger + X Y A B = Record AadiPose
+        //gamepad1.leftbumper + X Y A B = Replay AadiPose
+    }
 
+    //Move subsysetms to a specific AadiPose
+    public void moveToAadiPose(AadiPose aadiPose){
+        arm.moveArmToLength(aadiPose.getArmLength(aadiPose));
+        shoulder.moveShoulderToAngle(aadiPose.getShoulderAngle(aadiPose));
+        if (aadiPose.getWristAngle(aadiPose) == AadiVector.WRIST_ANGLE.LEVEL) {
+            hand.moveWristLevel(aadiPose.getShoulderAngle(aadiPose));
+        } else {
+            hand.moveWristUp(aadiPose.getShoulderAngle(aadiPose));
+        }
+        turret.moveTurretToAngle(aadiPose.getTurretAngle(aadiPose));
     }
 
 
@@ -311,15 +329,20 @@ public class GamepadController {
     public void runHand(){
         if (gp2GetDpad_upPress() || gp1GetDpad_upPress()) {
             if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN) {
-                hand.moveWristLevel();
+                //hand.moveWristLevel(shoulder.shoulderCurrentPosition);
+                hand.wristState = Hand.WRIST_STATE.WRIST_LEVEL;
+
             } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
-                hand.moveWristUp();
+                //hand.moveWristUp(shoulder.shoulderCurrentPosition);
+                hand.wristState = Hand.WRIST_STATE.WRIST_UP;
+
             }
         }
 
         if (gp2GetDpad_downPress() || gp1GetDpad_downPress()) {
             if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
-                hand.moveWristLevel();
+                //hand.moveWristLevel(shoulder.shoulderCurrentPosition);
+                hand.wristState = Hand.WRIST_STATE.WRIST_LEVEL;
             } else if ((hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL)
                 && (shoulder.shoulderState == Shoulder.SHOULDER_STATE.PICKUP)) {
                 arm.moveArmToPickUpWristDown();
@@ -332,11 +355,11 @@ public class GamepadController {
         }
 
         if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
-            hand.moveWristLevel();
+            hand.moveWristLevel(shoulder.shoulderCurrentPosition);
         }//works
 
         if (hand.wristState == Hand.WRIST_STATE.WRIST_UP) {
-            hand.moveWristUp();
+            hand.moveWristUp(shoulder.shoulderCurrentPosition);
         }//works
 
         if (gp2GetRightBumperPress() || gp1GetRightBumperPress()) {
@@ -348,17 +371,8 @@ public class GamepadController {
     }
 
     public void runResetArmShoulderTurretHand(){
-
+    // TODO
     }
-
-    /**
-     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
-     * direction in order for a stuck freight to be out of intake. <BR>
-     */
-    public void runLights(){
-
-    }
-
 
     //*********** KEY PAD MODIFIERS BELOW ***********
 

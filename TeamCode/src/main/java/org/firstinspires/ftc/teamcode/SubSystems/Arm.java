@@ -29,6 +29,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Arm {
     //Initialization of armmotor
     public DcMotorEx armMotor;
+
+    //Arm Motor : 5203 Series Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 24mm Length 8mm REX Shaft, 312 RPM, 3.3 - 5V Encoder)
+    public static final double ARM_MOTOR_ENCODER_TICKS = 537.7;
+
     public DigitalChannel armTouchSensor;  // Hardware Device Object
 
     //Arm states
@@ -47,16 +51,15 @@ public class Arm {
 
     //Constants for Arm Standard positions
     public static final double MIN_RETRACTED_POSITION = 0;
-    public static final double PICKUP_POSITION = 0;
-    public static final double GROUND_JUNCTION_POSITION = 0;
+    public static final double PICKUP_POSITION = 466;
+    public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION;
     public static final double PICKUP_WRIST_DOWN_POSITION = 200;
     public static final double LOW_JUNCTION_POSITION = (int) 0;
     public static final double MEDIUM_JUNCTION_POSITION = (int) 450;
-    public static final double HIGH_JUNCTION_POSITION = (int) 1749;
+    public static final double HIGH_JUNCTION_POSITION = (int) 1460;
     public static final double MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
     public static final double MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
     public static final double MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
-    public static final double MAX_EXTENDED_POSITION_5_SLIDES = (int) 7000;//Impossible value
     public static final double MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_3_SLIDES;
     public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_3_SLIDES;
 
@@ -99,7 +102,6 @@ public class Arm {
 
     //Method is able to initialize the arm
     public void initArm(){
-
         resetArmMode();
         armMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         armMotor.setPositionPIDFCoefficients(5.0);
@@ -242,6 +244,19 @@ public class Arm {
         }
     }
 
+    public void moveArmToLength(double armLength){
+        turnArmBrakeModeOn();
+        armCurrentPosition = armMotor.getCurrentPosition();
+        if (armCurrentPosition < dynamicMaxExtendedPosition ) {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
+        }
+        armMotor.setTargetPosition((int) armLength);
+        armMotorState = ARM_MOTOR_STATE.RANDOM;
+        runArmToLevelState = true;
+    }
+
     public double calculateMaxExtensionArmEncoderPositionBasedOnShoulderAngle(){
         double maxExtensionArmEncoderPositionBasedOnShoulderAngle = 0; //TODO: Measure arm max extension in mm
 
@@ -277,32 +292,16 @@ public class Arm {
     public void manualResetArm(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (armTouchSensor.getState() == true && timer.time() < 5000) {
+        while (armTouchSensor.getState() && timer.time() < 5000) {
             armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - ARM_DELTA_COUNT_MAX));
             runArmToLevelState = true;
             runArmToLevel(ARM_POWER_RETRACT);
         }
         resetArmMode();
-        //armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         turnArmBrakeModeOn();
         armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
     }
 
-    //declaring cone pickup positions, original array for setting array to default
-    public double[] pickupAutoPosition = {
-            PICKUP_POSITION,
-            CONE_2_POSITION,
-            CONE_3_POSITION,
-            CONE_4_POSITION,
-            CONE_5_POSITION
-    };
-
-    //function for picking cones from stack
-    public void pickupCone(double position){
-        armMotor.setTargetPosition((int) position);
-        runArmToLevel(AutonomousArmPower);
-        runArmToLevelState = true;
-    }
 }
 
 

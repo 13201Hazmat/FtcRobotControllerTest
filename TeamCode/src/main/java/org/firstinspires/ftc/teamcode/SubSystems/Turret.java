@@ -29,6 +29,11 @@ public class Turret {
 
     //TurretMotor declarations
     public DcMotorEx turretMotor;
+
+    //Turret Motor : 5203 Series Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 24mm Length 8mm REX Shaft, 312 RPM, 3.3 - 5V Encoder)
+    //Gearing : 1:5
+    public static final double TURRET_MOTOR_ENCODER_TICKS = 537.7 * 5;
+
     public DigitalChannel turretLeftMagneticSensor, turretCenterMagneticSensor, turretRightMagneticSensor;
 
     public enum TURRET_MOTOR_STATE {
@@ -125,6 +130,12 @@ public class Turret {
         //assign value after testing
     }
 
+    public void moveTurretToAngle(double turretAnglePosition){
+        turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
+        turretMotor.setTargetPosition((int)turretAnglePosition);
+        runTurretToLevelState = true;
+    }
+
     /**
      * Rotate Turret
      * assign to gamepad value once done
@@ -190,14 +201,6 @@ public class Turret {
     }
 
     public void manualResetTurret(double directionFactor){
-        // If the Magnetic Limit Swtch is pressed, stop the motor
-        /*if (turretCenterMagneticSensor.getState()) {
-            turnTurretBrakeModeOff();
-            resetTurretMode();
-        } else { // Otherwise, run the motor
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + stepSizeFactor * 50));
-            runTurretToPosition(0.2);
-        }*/
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
         int direction = 1;
@@ -206,7 +209,7 @@ public class Turret {
         } else {
             direction = 1;
         }
-        while (!turretCenterMagneticSensor.getState() && timer.time() < 2000) {
+        while (turretCenterMagneticSensor.getState() && timer.time() < 2000) {
             turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 50));
             runTurretToPosition(0.2);
         }
