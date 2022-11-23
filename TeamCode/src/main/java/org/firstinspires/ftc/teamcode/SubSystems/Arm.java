@@ -51,7 +51,7 @@ public class Arm {
 
     //Constants for Arm Standard positions
     public static final double MIN_RETRACTED_POSITION = 0;
-    public static final double PICKUP_POSITION = 466;
+    public static final double PICKUP_POSITION = 480;//466;
     public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION;
     public static final double PICKUP_WRIST_DOWN_POSITION = 200;
     public static final double LOW_JUNCTION_POSITION = (int) 0;

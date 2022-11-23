@@ -198,6 +198,7 @@ public class GamepadController {
             comboMotion = true;
             arm.moveArmToLowJunction();
             shoulder.moveToShoulderLowJunction();
+            hand.moveWristLevel(shoulder.shoulderCurrentPosition);
         }
 
         //Moves arm to the high junction if Gamepad 2 B is pressed
