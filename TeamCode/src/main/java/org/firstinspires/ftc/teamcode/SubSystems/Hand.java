@@ -129,7 +129,7 @@ public class Hand {
                 wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
                 break;
             case RANDOM:
-                wristLevelPosition = WRIST_HIGH_LEVEL_POSITION + shoulderPosition/SystemState.SHOULDER_RISK_ANGLE_FACTOR;
+                wristLevelPosition = WRIST_HIGH_LEVEL_POSITION + shoulderPosition/SystemState.SHOULDER_WRIST_ANGLE_FACTOR;
             case MEDIUM_JUNCTION:
                 wristLevelPosition = WRIST_MEDIUM_LEVEL_POSITION;
                 break;

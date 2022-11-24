@@ -36,7 +36,7 @@ public class Arm {
     public DigitalChannel armTouchSensor;  // Hardware Device Object
 
     //Arm states
-    public enum ARM_MOTOR_STATE {
+    public enum ARM_STATE {
         MIN_RETRACTED,
         PICKUP,
         GROUND_JUNCTION,
@@ -47,7 +47,7 @@ public class Arm {
         MAX_EXTENDED,
         RANDOM
     }
-    public ARM_MOTOR_STATE armMotorState = ARM_MOTOR_STATE.PICKUP;
+    public ARM_STATE armState = ARM_STATE.PICKUP;
 
     //Constants for Arm Standard positions
     public static final double MIN_RETRACTED_POSITION = 0;
@@ -129,7 +129,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)MIN_RETRACTED_POSITION);
-        armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
+        armState = ARM_STATE.MIN_RETRACTED;
         runArmToLevelState = true;
     }
 
@@ -143,7 +143,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)PICKUP_POSITION);
-        armMotorState = ARM_MOTOR_STATE.PICKUP;
+        armState = ARM_STATE.PICKUP;
         runArmToLevelState = true;
     }
 
@@ -157,7 +157,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)PICKUP_WRIST_DOWN_POSITION);
-        armMotorState = ARM_MOTOR_STATE.PICKUP_WRIST_DOWN_POSITION;
+        armState = ARM_STATE.PICKUP_WRIST_DOWN_POSITION;
         runArmToLevelState = true;
     }
 
@@ -171,7 +171,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)LOW_JUNCTION_POSITION);
-        armMotorState = ARM_MOTOR_STATE.LOW_JUNCTION;
+        armState = ARM_STATE.LOW_JUNCTION;
         runArmToLevelState = true;
     }
 
@@ -185,7 +185,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)MEDIUM_JUNCTION_POSITION);
-        armMotorState = ARM_MOTOR_STATE.MEDIUM_JUNCTION;
+        armState = ARM_STATE.MEDIUM_JUNCTION;
         runArmToLevelState = true;
     }
 
@@ -199,7 +199,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int)HIGH_JUNCTION_POSITION);
-        armMotorState = ARM_MOTOR_STATE.HIGH_JUNCTION;
+        armState = ARM_STATE.HIGH_JUNCTION;
         runArmToLevelState = true;
     }
 
@@ -212,7 +212,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int) dynamicMaxExtendedPosition);
-        armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
+        armState = ARM_STATE.MAX_EXTENDED;
         runArmToLevelState = true;
     }
 
@@ -223,12 +223,12 @@ public class Arm {
             armNewPosition = (armCurrentPosition + armDeltaCount);
             if (armNewPosition < PICKUP_POSITION) {
                 armNewPosition = PICKUP_POSITION;
-                armMotorState = ARM_MOTOR_STATE.PICKUP;
+                armState = ARM_STATE.PICKUP;
             } else if (armNewPosition > dynamicMaxExtendedPosition) {
                 armNewPosition = dynamicMaxExtendedPosition;
-                armMotorState = ARM_MOTOR_STATE.MAX_EXTENDED;
+                armState = ARM_STATE.MAX_EXTENDED;
             } else {
-                armMotorState = ARM_MOTOR_STATE.RANDOM;
+                armState = ARM_STATE.RANDOM;
             }
             armCurrentPosition = armMotor.getCurrentPosition();
             if (armCurrentPosition < armNewPosition ) {
@@ -253,7 +253,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int) armLength);
-        armMotorState = ARM_MOTOR_STATE.RANDOM;
+        armState = ARM_STATE.RANDOM;
         runArmToLevelState = true;
     }
 
@@ -299,7 +299,7 @@ public class Arm {
         }
         resetArmMode();
         turnArmBrakeModeOn();
-        armMotorState = ARM_MOTOR_STATE.MIN_RETRACTED;
+        armState = ARM_STATE.MIN_RETRACTED;
     }
 
 }

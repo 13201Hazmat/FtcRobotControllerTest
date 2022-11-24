@@ -165,7 +165,7 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
 
-            telemetry.addData("Arm State: ", arm.armMotorState);
+            telemetry.addData("Arm State: ", arm.armState);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
             telemetry.addData("Arm Touch Sensor State", arm.armTouchSensor.getState());
