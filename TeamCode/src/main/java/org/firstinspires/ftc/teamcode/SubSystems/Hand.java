@@ -46,10 +46,10 @@ public class Hand {
 
     public static final double WRIST_DOWN_POSITION = 0.5;
     public static final double WRIST_DOWN_MIN_POSITION = 0.43;
-    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.61;
+    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.60;
     public static final double WRIST_LOW_LEVEL_POSITION = 0.56;
     public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;
-    public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.52;
+    public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.51;
     public static final double WRIST_HIGH_LEVEL_POSITION = 0.48;
     public static final double WRIST_DEFAULT_UP_POSITION = 0.66;
     public static final double WRIST_UP_MAX_POSITION = 0.70;
@@ -129,7 +129,7 @@ public class Hand {
                 wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
                 break;
             case RANDOM:
-            case DYNAMIC_MINIMUM:
+            case DYNAMIC_PICKUP_MINIMUM:
             case MAX_RAISED:
                 wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
                         / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);

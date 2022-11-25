@@ -217,13 +217,13 @@ public class GamepadController {
             shoulder.moveToShoulderHighJunction();
         }
 
-        //Extend the shoulder based on the Gamepad 2 left and right trigger
+        //Move the shoulder angle based on the Gamepad 2 left and right trigger
         if (gp2GetRightTrigger() > 0.2) {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger()  * 1.25 - 0.25, 3));
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
-            if (shoulder.shoulderNewPosition < Shoulder.THRESHOLD_POSITION) {
-                arm.armState = Arm.ARM_STATE.RANDOM;
+            if (shoulder.shoulderNewPosition < Shoulder.PICKUP_POSITION_ARM_MAX_EXTENDED) {
+                //arm.armState = Arm.ARM_STATE.RANDOM;
                 arm.dynamicMaxExtendedPosition = (int) (Arm.PICKUP_POSITION +
                         (shoulder.shoulderNewPosition - Shoulder.PICKUP_POSITION)
                                 / SystemState.SHOULDER_ARM_PICKUP_FACTOR);
@@ -233,21 +233,80 @@ public class GamepadController {
             }
         }
 
+        //**********************
         //Move arm based on Left Stick on Gamepad 2
-        if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
-            arm.modifyArmLength(Math.pow(-gp2GetLeftStickY()  * 1.25 - 0.25, 3));
-            if (shoulder.leftShoulderMotor.getCurrentPosition() < Shoulder.THRESHOLD_POSITION) {
-                if (arm.armNewPosition > Arm.PICKUP_POSITION) {
-                    shoulder.shoulderState = Shoulder.SHOULDER_STATE.RANDOM;
-                    shoulder.dynamicMinPosition = (int) (Shoulder.PICKUP_POSITION +
-                            (arm.armNewPosition - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_PICKUP_FACTOR);
-                    if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
-                        shoulder.moveShoulderToDynamicMinExtended();
+        if (shoulder.shoulderState == Shoulder.SHOULDER_STATE.RANDOM || shoulder.shoulderState == Shoulder.SHOULDER_STATE.MAX_RAISED) {
+            if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
+                arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
+                //Protect Arm from hitting the ground
+                if (shoulder.leftShoulderMotor.getCurrentPosition() < Shoulder.PICKUP_POSITION_ARM_MAX_EXTENDED) {
+                    if (arm.armNewPosition > Arm.PICKUP_POSITION) {
+                        //shoulder.shoulderState = Shoulder.SHOULDER_STATE.RANDOM;
+                        shoulder.dynamicMinPosition = (int) (Shoulder.PICKUP_POSITION +
+                                (arm.armNewPosition - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_PICKUP_FACTOR);
+                        if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
+                            shoulder.moveShoulderToDynamicMinExtended();
+                        }
                     }
                 }
+            } else if (gp2GetLeftStickY() <= -0.2) { // Retract arm
+                arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
             }
-        } else if (gp2GetLeftStickY() <= -0.2) { // Retract arm
-            arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
+        }
+        //*********************
+
+        double armLevel = Arm.PICKUP_POSITION;
+        double shoulderLevel = Shoulder.PICKUP_POSITION;
+        double shoulderDynamic = shoulderLevel;
+        double shoulderArmFactor = SystemState.SHOULDER_ARM_PICKUP_FACTOR;
+        Shoulder.SHOULDER_STATE newShoulderState = Shoulder.SHOULDER_STATE.PICKUP;
+
+        if (shoulder.shoulderState != Shoulder.SHOULDER_STATE.RANDOM) {
+            if (gp2GetLeftStickY() >= 0.2)  { // Extend Arm
+                    arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 - 0.25, 3));
+            } else if (gp2GetLeftStickY() <= -0.2) { // Retract arm
+                arm.modifyArmLength(Math.pow(-gp2GetLeftStickY() * 1.25 + 0.25, 3));
+            }
+            switch(shoulder.shoulderState) {
+                case PICKUP:
+                case DYNAMIC_PICKUP_MINIMUM:
+                case GROUND_JUNCTION:
+                    armLevel = Arm.PICKUP_POSITION;
+                    shoulderLevel = Shoulder.PICKUP_POSITION;
+                    shoulderArmFactor = SystemState.SHOULDER_ARM_PICKUP_FACTOR;
+                    newShoulderState = Shoulder.SHOULDER_STATE.DYNAMIC_PICKUP_MINIMUM;
+                    break;
+                case PICKUP_WRIST_DOWN:
+                    armLevel = Arm.PICKUP_WRIST_DOWN_POSITION;
+                    shoulderLevel = Shoulder.PICKUP_WRIST_DOWN_POSITION;
+                    shoulderArmFactor = SystemState.SHOULDER_ARM_PICKUP_WRIST_DOWN_FACTOR;
+                    newShoulderState = Shoulder.SHOULDER_STATE.DYNAMIC_PICKUP_WRIST_DOWN;
+                    break;
+                case LOW_JUNCTION:
+                case DYNAMIC_LOW_JUNCTION:
+                    armLevel = Arm.LOW_JUNCTION_POSITION;
+                    shoulderLevel = Shoulder.LOW_JUNCTION_POSITION;
+                    shoulderArmFactor = SystemState.SHOULDER_ARM_LOW_JUNCTION_FACTOR;
+                    newShoulderState = Shoulder.SHOULDER_STATE.DYNAMIC_LOW_JUNCTION;
+                    break;
+                case MEDIUM_JUNCTION:
+                case DYNAMIC_MEDIUM_JUNCTION:
+                    armLevel = Arm.MEDIUM_JUNCTION_POSITION;
+                    shoulderLevel = Shoulder.MEDIUM_JUNCTION_POSITION;
+                    shoulderArmFactor = SystemState.SHOULDER_ARM_MEDIUM_JUNCTION_FACTOR;
+                    newShoulderState = Shoulder.SHOULDER_STATE.DYNAMIC_MEDIUM_JUNCTION;
+                    break;
+                case HIGH_JUNCTION:
+                case DYNAMIC_HIGH_JUNCTION:
+                    armLevel = Arm.HIGH_JUNCTION_POSITION;
+                    shoulderLevel = Shoulder.HIGH_JUNCTION_POSITION;
+                    shoulderArmFactor = SystemState.SHOULDER_ARM_HIGH_JUNCTION_FACTOR;
+                    newShoulderState = Shoulder.SHOULDER_STATE.DYNAMIC_HIGH_JUNCTION;
+                    break;
+            }
+            shoulderDynamic = shoulderLevel + (arm.armNewPosition - armLevel) * shoulderArmFactor;
+            shoulder.moveShoulderToAngle(shoulderDynamic);
+            shoulder.shoulderState = newShoulderState;
         }
 
         if (gp2GetDpad_upPress() || gp1GetDpad_upPress()) {
