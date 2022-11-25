@@ -223,9 +223,10 @@ public class GamepadController {
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
             if (shoulder.shoulderNewPosition < Shoulder.THRESHOLD_POSITION) {
+                arm.armState = Arm.ARM_STATE.RANDOM;
                 arm.dynamicMaxExtendedPosition = (int) (Arm.PICKUP_POSITION +
                         (shoulder.shoulderNewPosition - Shoulder.PICKUP_POSITION)
-                                / SystemState.SHOULDER_ARM_FACTOR);
+                                / SystemState.SHOULDER_ARM_PICKUP_FACTOR);
                 if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
                     arm.moveArmToDynamicMaxExtended();
                 }
@@ -237,8 +238,9 @@ public class GamepadController {
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY()  * 1.25 - 0.25, 3));
             if (shoulder.leftShoulderMotor.getCurrentPosition() < Shoulder.THRESHOLD_POSITION) {
                 if (arm.armNewPosition > Arm.PICKUP_POSITION) {
+                    shoulder.shoulderState = Shoulder.SHOULDER_STATE.RANDOM;
                     shoulder.dynamicMinPosition = (int) (Shoulder.PICKUP_POSITION +
-                            (arm.armNewPosition - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_FACTOR);
+                            (arm.armNewPosition - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_PICKUP_FACTOR);
                     if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
                         shoulder.moveShoulderToDynamicMinExtended();
                     }
@@ -317,6 +319,11 @@ public class GamepadController {
 
         if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
             //hand.moveWristUp(shoulder.shoulderCurrentPosition);
+            hand.moveWristUp(shoulder.leftShoulderMotor.getCurrentPosition());
+        }
+
+        if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN &&
+                shoulder.shoulderState != Shoulder.SHOULDER_STATE.PICKUP_WRIST_DOWN) {
             hand.moveWristUp(shoulder.leftShoulderMotor.getCurrentPosition());
         }
 

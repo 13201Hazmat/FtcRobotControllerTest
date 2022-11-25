@@ -222,9 +222,9 @@ public class Arm {
         if (armDeltaCount !=0) {
             armCurrentPosition = armMotor.getCurrentPosition();
             armNewPosition = (armCurrentPosition + armDeltaCount);
-            if (armNewPosition < PICKUP_POSITION) {
-                armNewPosition = PICKUP_POSITION;
-                armState = ARM_STATE.PICKUP;
+            if (armNewPosition < MIN_RETRACTED_POSITION) {
+                armNewPosition = MIN_RETRACTED_POSITION;
+                armState = ARM_STATE.MIN_RETRACTED;
             } else if (armNewPosition > MAX_EXTENDED_POSITION) {
                 armNewPosition = MAX_EXTENDED_POSITION;
                 armState = ARM_STATE.MAX_EXTENDED;
@@ -258,18 +258,9 @@ public class Arm {
         runArmToLevelState = true;
     }
 
-    public double calculateMaxExtensionArmEncoderPositionBasedOnShoulderAngle(){
-        double maxExtensionArmEncoderPositionBasedOnShoulderAngle = 0; //TODO: Measure arm max extension in mm
-
-        //TODO: if shoulderAngle > Threshold when arm at full extension will touch the ground
-        maxExtensionArmEncoderPositionBasedOnShoulderAngle = dynamicMaxExtendedPosition;
-
-        return maxExtensionArmEncoderPositionBasedOnShoulderAngle;
-    }
-
     public void convertMotorEncoderValueToArmLength(){
         int convertedMotorEncoderValueToArmLength = (int) (armMotor.getCurrentPosition() * ENCODER_TO_LENGTH); //TODO: From encoder value Find Max length and write proportional convertion algorithm
-        SystemState.ArmExtension = convertedMotorEncoderValueToArmLength;
+        SystemState.ArmExtensionMM = convertedMotorEncoderValueToArmLength;
     }
 
     //sets the arm motor power

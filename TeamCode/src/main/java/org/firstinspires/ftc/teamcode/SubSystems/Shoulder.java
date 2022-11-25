@@ -58,8 +58,11 @@ public class Shoulder {
     public static final double PICKUP_WRIST_DOWN_POSITION = 80;
     public static final double THRESHOLD_POSITION = 225;
     public static final double LOW_JUNCTION_POSITION = 336; //need tested values
+    public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 336;
     public static final double MEDIUM_JUNCTION_POSITION = 610; //need tested values
+    public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 610; //need tested values
     public static final double HIGH_JUNCTION_POSITION = 760; //need tested values
+    public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 760; //need tested values
     public static final double MAX_RAISED_POSITION = 900; //Need tested values
 
     public double dynamicMinPosition = PICKUP_POSITION;
