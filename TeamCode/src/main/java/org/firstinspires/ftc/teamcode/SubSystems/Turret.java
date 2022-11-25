@@ -63,7 +63,7 @@ public class Turret {
 
     //value declarations
     public boolean runTurretToLevelState = false;
-    public static double TURRET_DELTA_COUNT_MAX = 75; //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public static double TURRET_DELTA_COUNT_MAX = 100; //movement value of turret given clockwise or counterclockwise rotation(changeable)
     public double turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
@@ -79,12 +79,12 @@ public class Turret {
 
     //turret initialization
     public void initTurret(){
-        turretMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         resetTurretMode();
-        //set motor direction opposite for rotation
+        turretMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        turretMotor.setPositionPIDFCoefficients(5.0);
         turretMotor.setDirection(DcMotorEx.Direction.FORWARD);
         turnTurretBrakeModeOn();
-        faceForward();
+        manualResetTurret(1);
     }
 
     //Turns on the brake for arm motor
@@ -209,10 +209,10 @@ public class Turret {
         } else {
             direction = 1;
         }
-        while (turretCenterMagneticSensor.getState() && timer.time() < 2000) {
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 25));
+        while (turretCenterMagneticSensor.getState() && timer.time() < 7000) {
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 50));
             runTurretToLevelState = true;
-            runTurretToPosition(0.2);
+            runTurretToPosition(0.5);
         }
         turnTurretBrakeModeOff();
         resetTurretMode();
