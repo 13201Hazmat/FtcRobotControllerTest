@@ -210,7 +210,8 @@ public class Turret {
             direction = 1;
         }
         while (turretCenterMagneticSensor.getState() && timer.time() < 2000) {
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 50));
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + direction * 25));
+            runTurretToLevelState = true;
             runTurretToPosition(0.2);
         }
         turnTurretBrakeModeOff();
