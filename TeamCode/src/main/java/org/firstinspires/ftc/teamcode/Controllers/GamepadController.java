@@ -222,9 +222,9 @@ public class GamepadController {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger()  * 1.25 - 0.25, 3));
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
-            if (shoulder.leftShoulderMotor.getCurrentPosition() < Shoulder.THRESHOLD_POSITION) {
+            if (shoulder.shoulderNewPosition < Shoulder.THRESHOLD_POSITION) {
                 arm.dynamicMaxExtendedPosition = (int) (Arm.PICKUP_POSITION +
-                        (shoulder.leftShoulderMotor.getCurrentPosition() - Shoulder.PICKUP_POSITION)
+                        (shoulder.shoulderNewPosition - Shoulder.PICKUP_POSITION)
                                 / SystemState.SHOULDER_ARM_FACTOR);
                 if (arm.armMotor.getCurrentPosition() > arm.dynamicMaxExtendedPosition) {
                     arm.moveArmToDynamicMaxExtended();
@@ -236,9 +236,9 @@ public class GamepadController {
         if (gp2GetLeftStickY() >= 0.2) {//Extend Arm, since left_Stick_y is negative when pushed forward
             arm.modifyArmLength(Math.pow(-gp2GetLeftStickY()  * 1.25 - 0.25, 3));
             if (shoulder.leftShoulderMotor.getCurrentPosition() < Shoulder.THRESHOLD_POSITION) {
-                if (arm.armMotor.getCurrentPosition() > Arm.PICKUP_POSITION) {
+                if (arm.armNewPosition > Arm.PICKUP_POSITION) {
                     shoulder.dynamicMinPosition = (int) (Shoulder.PICKUP_POSITION +
-                            (arm.armMotor.getCurrentPosition() - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_FACTOR);
+                            (arm.armNewPosition - Arm.PICKUP_POSITION) * SystemState.SHOULDER_ARM_FACTOR);
                     if (shoulder.leftShoulderMotor.getCurrentPosition() < shoulder.dynamicMinPosition) {
                         shoulder.moveShoulderToDynamicMinExtended();
                     }
