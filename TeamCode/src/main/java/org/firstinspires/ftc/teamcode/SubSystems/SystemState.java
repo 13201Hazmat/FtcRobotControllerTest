@@ -23,11 +23,12 @@ public class SystemState {
     public static final double SHOULDER_ANGLE_TO_RADIANS_RATIO = Shoulder.SHOULDER_MOTOR_ENCODER_TICKS/Math.PI ;
     public static final double TURRET_ANGLE_TO_RADIANS_RATIO = Turret.TURRET_MOTOR_ENCODER_TICKS/Math.PI;
 
+    public static final double SHOULDER_PICKUP_POSITION = Shoulder.PICKUP_POSITION;
     public static final double SHOULDER_WRIST_ANGLE_FACTOR = (Shoulder.HIGH_JUNCTION_POSITION - Shoulder.PICKUP_POSITION)/
             (Hand.WRIST_HIGH_LEVEL_POSITION - Hand.WRIST_PICKUP_LEVEL_POSITION);
 
     // To protect Arm from hitting the ground
-    double SHOULDER_ARM_FACTOR = ((Shoulder.THRESHOLD_POSITION - Shoulder.PICKUP_POSITION)/
+    public static final double SHOULDER_ARM_FACTOR = ((Shoulder.THRESHOLD_POSITION - Shoulder.PICKUP_POSITION)/
             ((Arm.MAX_EXTENDED_POSITION - Arm.PICKUP_POSITION)));
 
     public static final AadiVector MIN_RETRACTED_AADI_VECTOR

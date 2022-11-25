@@ -129,7 +129,11 @@ public class Hand {
                 wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
                 break;
             case RANDOM:
-                wristLevelPosition = WRIST_HIGH_LEVEL_POSITION + shoulderPosition/SystemState.SHOULDER_WRIST_ANGLE_FACTOR;
+            case DYNAMIC_MINIMUM:
+            case MAX_RAISED:
+                wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
+                        / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
+                break;
             case MEDIUM_JUNCTION:
                 wristLevelPosition = WRIST_MEDIUM_LEVEL_POSITION;
                 break;
@@ -137,6 +141,6 @@ public class Hand {
                 wristLevelPosition = WRIST_HIGH_LEVEL_POSITION;
                 break;
         }
-        wristUpPosition = wristLevelPosition + 0.05;
+        wristUpPosition = wristLevelPosition + 0.06;
     }
 }

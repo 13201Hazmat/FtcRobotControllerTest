@@ -44,6 +44,7 @@ public class Arm {
         LOW_JUNCTION,
         MEDIUM_JUNCTION,
         HIGH_JUNCTION,
+        DYNAMIC_MAXIMUM,
         MAX_EXTENDED,
         RANDOM
     }
@@ -212,7 +213,7 @@ public class Arm {
             armMovementDirection = ARM_MOVEMENT_DIRECTION.RETRACT;
         }
         armMotor.setTargetPosition((int) dynamicMaxExtendedPosition);
-        armState = ARM_STATE.MAX_EXTENDED;
+        armState = ARM_STATE.DYNAMIC_MAXIMUM;
         runArmToLevelState = true;
     }
 
@@ -224,8 +225,8 @@ public class Arm {
             if (armNewPosition < PICKUP_POSITION) {
                 armNewPosition = PICKUP_POSITION;
                 armState = ARM_STATE.PICKUP;
-            } else if (armNewPosition > dynamicMaxExtendedPosition) {
-                armNewPosition = dynamicMaxExtendedPosition;
+            } else if (armNewPosition > MAX_EXTENDED_POSITION) {
+                armNewPosition = MAX_EXTENDED_POSITION;
                 armState = ARM_STATE.MAX_EXTENDED;
             } else {
                 armState = ARM_STATE.RANDOM;

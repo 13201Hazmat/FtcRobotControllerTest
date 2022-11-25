@@ -186,7 +186,6 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Shoulder Movement Direction : ",shoulder.shoulderMovementDirection);
             telemetry.addData("Shoulder Current Position : ",shoulder.shoulderCurrentPosition);
             telemetry.addData("Shoulder New Position : ",shoulder.shoulderNewPosition);
-            telemetry.addData("Shoulder comboMotion : ",gamepadController.comboMotion);
             telemetry.addLine("=============");
 
             telemetry.addData("Turret State : ", turret.turretMotorState);
