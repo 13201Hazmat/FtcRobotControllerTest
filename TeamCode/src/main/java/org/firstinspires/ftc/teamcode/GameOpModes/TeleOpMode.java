@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.playingAlliance;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -51,7 +49,7 @@ public class TeleOpMode extends LinearOpMode {
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
-        /* Set Initial State of any subsystem when TeleOp is to be started*/
+        /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
 
         /* Wait for Start or Stop Button to be pressed */
@@ -74,6 +72,10 @@ public class TeleOpMode extends LinearOpMode {
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
+
+                if (gameTimer.time() > 80000 && gameTimer.time() < 90000) {
+                    lights.setPatternEndGame();
+                }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -163,7 +165,7 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
 
-            telemetry.addData("Arm State: ", arm.armMotorState);
+            telemetry.addData("Arm State: ", arm.armState);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
             telemetry.addData("Arm Touch Sensor State", arm.armTouchSensor.getState());
@@ -184,7 +186,6 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Shoulder Movement Direction : ",shoulder.shoulderMovementDirection);
             telemetry.addData("Shoulder Current Position : ",shoulder.shoulderCurrentPosition);
             telemetry.addData("Shoulder New Position : ",shoulder.shoulderNewPosition);
-            telemetry.addData("Shoulder comboMotion : ",gamepadController.comboMotion);
             telemetry.addLine("=============");
 
             telemetry.addData("Turret State : ", turret.turretMotorState);

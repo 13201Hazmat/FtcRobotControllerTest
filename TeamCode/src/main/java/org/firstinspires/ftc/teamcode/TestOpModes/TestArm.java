@@ -147,7 +147,7 @@ public class TestArm extends LinearOpMode {
         telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
-            telemetry.addData("Arm State: ", arm.armMotorState);
+            telemetry.addData("Arm State: ", arm.armState);
             telemetry.addData("Arm Delta Count : ", arm.armDeltaCount);
             telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());

@@ -90,15 +90,15 @@ public class TestHand extends LinearOpMode {
                 //gamepadController.runByGamepadControl();
                 if (gamepadController.gp2GetDpad_upPress() /*|| gamepadController.gp1GetDpad_upPress()*/) {
                     if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN) {
-                        hand.moveWristLevel();
+                        hand.moveWristLevel(Shoulder.PICKUP_POSITION);
                     } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
-                        hand.moveWristUp();
+                        hand.moveWristUp(Shoulder.PICKUP_POSITION);
                     }
                 }
 
                 if (gamepadController.gp2GetDpad_downPress() /*|| gamepadController.gp1GetDpad_downPress()*/) {
                     if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
-                        hand.moveWristLevel();
+                        hand.moveWristLevel(Shoulder.PICKUP_POSITION);
                     } else if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
                         hand.moveWristDown();
                     }

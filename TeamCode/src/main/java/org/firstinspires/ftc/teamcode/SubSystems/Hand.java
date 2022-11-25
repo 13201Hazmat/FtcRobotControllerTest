@@ -41,7 +41,7 @@ public class Hand {
 
     //constants for Hand and grip position
     public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
-    public static final double CLOSE_GRIP_POS = 0.1; //value of Grip to close
+    public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
     public static final double CLOSE_GRIP_FULL_POSITION = 0.00;
 
     public static final double WRIST_DOWN_POSITION = 0.5;
@@ -93,8 +93,8 @@ public class Hand {
     }
 
     //rotates wrist to level position
-    public void moveWristLevel(){
-        determineWristLevelPosition();
+    public void moveWristLevel(double shoulderLevelPosition){
+        determineWristLevelPosition(shoulderLevelPosition);
         wristServo.setPosition(wristLevelPosition);
         wristState = WRIST_STATE.WRIST_LEVEL;
     }
@@ -106,8 +106,8 @@ public class Hand {
     }
 
     //rotates hand up given controller input
-    public void moveWristUp(){
-        determineWristLevelPosition();
+    public void moveWristUp(double shoulderLevelPosition){
+        determineWristLevelPosition(shoulderLevelPosition);
         wristServo.setPosition(wristUpPosition);
         wristState = WRIST_STATE.WRIST_UP;
     }
@@ -118,27 +118,29 @@ public class Hand {
         wristState = WRIST_STATE.WRIST_DOWN;
     }
 
-    public void determineWristLevelPosition(){
+    public void determineWristLevelPosition(double shoulderPosition){
         //wristLevelPos = SystemState.ShoulderAngleRadians - radianCount; //TODO: Test Logic
         switch (SystemState.ShoulderState) {
             case PICKUP:
             case GROUND_JUNCTION:
                 wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION;
-                wristUpPosition = WRIST_PICKUP_LEVEL_POSITION + 0.05;
                 break;
             case LOW_JUNCTION:
                 wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
-                wristUpPosition = WRIST_LOW_LEVEL_POSITION + 0.05;
                 break;
             case RANDOM:
+            case DYNAMIC_MINIMUM:
+            case MAX_RAISED:
+                wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
+                        / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
+                break;
             case MEDIUM_JUNCTION:
                 wristLevelPosition = WRIST_MEDIUM_LEVEL_POSITION;
-                wristUpPosition = WRIST_MEDIUM_LEVEL_POSITION + 0.05;
                 break;
             case HIGH_JUNCTION:
                 wristLevelPosition = WRIST_HIGH_LEVEL_POSITION;
-                wristUpPosition = WRIST_HIGH_LEVEL_POSITION + 0.05;
                 break;
         }
+        wristUpPosition = wristLevelPosition + 0.06;
     }
 }

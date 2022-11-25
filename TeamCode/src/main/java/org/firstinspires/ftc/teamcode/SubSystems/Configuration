@@ -9,19 +9,27 @@ Expansion Hub Motor Port 3        rightFront = hardwareMap.get(DcMotorEx.class, 
 
 Expansion Hub I2C Bus 0           imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+Arm:
 Control Hub Motor Port 0          armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
 Control Hub Digital Port 3        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
 
+Hand:
 Control Hub Servo 1               gripServo = hardwareMap.get(Servo.class, "gripServo");
 Control Hub Servo 0               wristServo = hardwareMap.get(Servo.class, "wristServo");
 
+Shoulder:
 Control Hub Motor Port 2          leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshMotor");
 Control Hub Motor Port 3          rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshMotor");
 Control Hub Digital Port 1        shoulderTouchSensor = hardwareMap.get(DigitalChannel.class, "shTouch");
 
+Turret:
 Control Hub Motor Port 1          turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
 Expansion Hub Digital Port 1        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
 Expansion Hub Digital Port 3        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
 Expansion Hub Digital Port 5        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
 
+Webcam
 Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+Lights
+Expansion Hub Servo Port 3        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
