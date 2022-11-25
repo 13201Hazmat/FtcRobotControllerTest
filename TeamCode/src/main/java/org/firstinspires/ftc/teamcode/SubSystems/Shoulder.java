@@ -34,12 +34,16 @@ public class Shoulder {
     //Initialization of <Fill>
     public enum SHOULDER_STATE {
         PICKUP, //PARKED, MIN_POSITION
-        PICKUP_WRIST_DOWN,
-        DYNAMIC_MINIMUM,
+        DYNAMIC_PICKUP_MINIMUM,
         GROUND_JUNCTION,
+        PICKUP_WRIST_DOWN,
+        DYNAMIC_PICKUP_WRIST_DOWN,
         LOW_JUNCTION,
+        DYNAMIC_LOW_JUNCTION,
         MEDIUM_JUNCTION,
+        DYNAMIC_MEDIUM_JUNCTION,
         HIGH_JUNCTION,
+        DYNAMIC_HIGH_JUNCTION,
         MAX_RAISED,
         RANDOM
     }
@@ -54,15 +58,16 @@ public class Shoulder {
     public double shoulderDeltaCount = 0; //Need tested value
 
     public static final double PICKUP_POSITION = 0;
+    public static final double PICKUP_POSITION_ARM_MAX_EXTENDED = 150;
     public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION; //Need tested values
     public static final double PICKUP_WRIST_DOWN_POSITION = 80;
-    public static final double THRESHOLD_POSITION = 225;
+    public static final double PICKUP_WRIST_DOWN_POSITION_ARM_MAX_EXTENDED = 100;
     public static final double LOW_JUNCTION_POSITION = 336; //need tested values
-    public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 336;
+    public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 337;
     public static final double MEDIUM_JUNCTION_POSITION = 610; //need tested values
-    public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 610; //need tested values
+    public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 440; //430 //need tested values
     public static final double HIGH_JUNCTION_POSITION = 760; //need tested values
-    public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 760; //need tested values
+    public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 591; //561 1//need tested values
     public static final double MAX_RAISED_POSITION = 900; //Need tested values
 
     public double dynamicMinPosition = PICKUP_POSITION;
@@ -119,7 +124,7 @@ public class Shoulder {
 
     //Sets shoulder position to ground junction
     public void moveShoulderToPickup() {
-        turnShoulderBrakeModeOn();
+        turnShoulderBrakeModeOn(); //TODO : See if Brake Mode needs to turn off for pickup
         shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
         shoulderNewPosition = PICKUP_POSITION;
         leftShoulderMotor.setTargetPosition((int)PICKUP_POSITION);
@@ -129,7 +134,7 @@ public class Shoulder {
         runShoulderToLevelState = true;
     }
 
-    //TODO: Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
+    //Set Shoulder position when below Low junction angle dynamically to avoid hitting side of the robot
     public void  moveShoulderToPickUpWristDown(){
         turnShoulderBrakeModeOn();
         shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
@@ -205,7 +210,7 @@ public class Shoulder {
         }
         rightShoulderMotor.setTargetPosition((int)dynamicMinPosition);
         leftShoulderMotor.setTargetPosition((int)dynamicMinPosition);
-        shoulderState = SHOULDER_STATE.DYNAMIC_MINIMUM;
+        shoulderState = SHOULDER_STATE.DYNAMIC_PICKUP_MINIMUM;
         runShoulderToLevelState = true;
     }
 
@@ -236,7 +241,7 @@ public class Shoulder {
             } else {
                 shoulderNewPosition = PICKUP_POSITION;
                 shoulderState = SHOULDER_STATE.PICKUP;
-                turnShoulderBrakeModeOff();
+                turnShoulderBrakeModeOn(); //TODO : See if Brake Mode needs to turn off for pickup
             }
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
