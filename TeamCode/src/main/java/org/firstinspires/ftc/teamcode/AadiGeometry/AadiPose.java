@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.AadiGeometry;
 
+import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 public class AadiPose extends AadiVector{
     private double turretAngle;
 
-    public AadiPose(double armLength, double shoulderAngle, AadiVector.WRIST_ANGLE wristAngle, double turretAngle){
-        super(armLength,shoulderAngle, wristAngle );
+    public AadiPose(double armLength, double shoulderAngle, Hand.WRIST_STATE wristState, double turretAngle){
+        super(armLength,shoulderAngle, wristState );
         setTurretAngle(turretAngle);
     }
 
@@ -14,11 +15,11 @@ public class AadiPose extends AadiVector{
         this.turretAngle = turretAngle;
     }
 
-    public AadiVector getAadiVector(AadiPose aadiPose) {
-        return new AadiVector(aadiPose.getArmLength(aadiPose),aadiPose.getShoulderAngle(aadiPose), aadiPose.getWristAngle(aadiPose) );
+    public AadiVector getAadiVector() {
+        return new AadiVector(getArmLength(),getShoulderAngle(), getWristState() );
     }
 
-    public double getTurretAngle(AadiPose aadiPose) {
+    public double getTurretAngle() {
         return turretAngle;
     }
 

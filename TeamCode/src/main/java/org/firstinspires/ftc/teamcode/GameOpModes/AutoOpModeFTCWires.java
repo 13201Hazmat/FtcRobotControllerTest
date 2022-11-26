@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * FTC WIRES Autonomous Example
  */
 @Autonomous(name = "FTC Wires Autonomous", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Disabled
 public class AutoOpModeFTCWires extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
@@ -91,11 +93,6 @@ public class AutoOpModeFTCWires extends LinearOpMode{
                 dropConePose0 = new Pose2d(-12, 12, Math.toRadians(225)); //Choose the pose to move to the stack of cones
                 dropConePose1 = new Pose2d(-11, 12, Math.toRadians(225)); //Choose the pose to move to the stack of cones
                 dropConePose2 = new Pose2d(-10, 12, Math.toRadians(225)); //Choose the pose to move to the stack of cones
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, 11, Math.toRadians(180)); break; // Location 3
-                }
                 break;
             case BLUE_RIGHT:
                 initPose = new Pose2d(-54, -36, Math.toRadians(0));//Starting pose
@@ -104,11 +101,6 @@ public class AutoOpModeFTCWires extends LinearOpMode{
                 dropConePose0 = new Pose2d(-12, -12, Math.toRadians(135)); //Choose the pose to move to the stack of cones
                 dropConePose1 = new Pose2d(-11, -12, Math.toRadians(135)); //Choose the pose to move to the stack of cones
                 dropConePose2 = new Pose2d(-10, -12, Math.toRadians(135)); //Choose the pose to move to the stack of cones
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -11, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(180)); break; // Location 3
-                }
                 break;
             case RED_LEFT:
                 initPose = new Pose2d(54, -36, Math.toRadians(180));//Starting pose
@@ -117,11 +109,6 @@ public class AutoOpModeFTCWires extends LinearOpMode{
                 dropConePose0 = new Pose2d(12, -12, Math.toRadians(45)); //Choose the pose to move to the stack of cones
                 dropConePose1 = new Pose2d(11, -12, Math.toRadians(45)); //Choose the pose to move to the stack of cones
                 dropConePose2 = new Pose2d(10, -15, Math.toRadians(45)); //Choose the pose to move to the stack of cones
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -11, Math.toRadians(0)); break; // Location 3
-                }
                 break;
             case RED_RIGHT:
                 initPose = new Pose2d(54, 36, Math.toRadians(180)); //Starting pose
@@ -130,11 +117,6 @@ public class AutoOpModeFTCWires extends LinearOpMode{
                 dropConePose0 = new Pose2d(12, 12, Math.toRadians(315)); //Choose the pose to move to the stack of cones
                 dropConePose1 = new Pose2d(11, 12, Math.toRadians(315)); //Choose the pose to move to the stack of cones
                 dropConePose2 = new Pose2d(10, 12, Math.toRadians(315)); //Choose the pose to move to the stack of cones
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, 11, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(0)); break; // Location 3
-                }
                 break;
         }
 
@@ -171,6 +153,60 @@ public class AutoOpModeFTCWires extends LinearOpMode{
 
     //Build parking trajectory based on target detected by vision
     public void buildParking(){
+        switch (startPosition) {
+            case BLUE_LEFT:
+                switch (vision.visionIdentifiedTarget) {
+                    case LOCATION1:
+                        parkPose = new Pose2d(-12, 60, Math.toRadians(180));
+                        break; // Location 1
+                    case LOCATION2:
+                        parkPose = new Pose2d(-12, 36, Math.toRadians(180));
+                        break; // Location 2
+                    case LOCATION3:
+                        parkPose = new Pose2d(-12, 11, Math.toRadians(180));
+                        break; // Location 3
+                }
+                break;
+            case BLUE_RIGHT:
+                switch (vision.visionIdentifiedTarget) {
+                    case LOCATION1:
+                        parkPose = new Pose2d(-12, -11, Math.toRadians(180));
+                        break; // Location 1
+                    case LOCATION2:
+                        parkPose = new Pose2d(-12, -36, Math.toRadians(180));
+                        break; // Location 2
+                    case LOCATION3:
+                        parkPose = new Pose2d(-12, -60, Math.toRadians(180));
+                        break; // Location 3
+                }
+                break;
+            case RED_LEFT:
+                switch (vision.visionIdentifiedTarget) {
+                    case LOCATION1:
+                        parkPose = new Pose2d(12, -60, Math.toRadians(0));
+                        break; // Location 1
+                    case LOCATION2:
+                        parkPose = new Pose2d(12, -36, Math.toRadians(0));
+                        break; // Location 2
+                    case LOCATION3:
+                        parkPose = new Pose2d(12, -11, Math.toRadians(0));
+                        break; // Location 3
+                }
+                break;
+            case RED_RIGHT:
+                switch (vision.visionIdentifiedTarget) {
+                    case LOCATION1:
+                        parkPose = new Pose2d(12, 11, Math.toRadians(0));
+                        break; // Location 1
+                    case LOCATION2:
+                        parkPose = new Pose2d(12, 36, Math.toRadians(0));
+                        break; // Location 2
+                    case LOCATION3:
+                        parkPose = new Pose2d(12, 60, Math.toRadians(0));
+                        break; // Location 3
+                }
+                break;
+        }
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
                 .build();

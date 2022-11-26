@@ -1,28 +1,30 @@
 package org.firstinspires.ftc.teamcode.AadiGeometry;
 
+import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 public class AadiVector {
     private double armLength; // Arm Length in Encoder value
     private double shoulderAngle; //Shoulder Angle in Encoder value
-    public enum WRIST_ANGLE {
+    /*public enum WRIST_ANGLE {
         UP,
         LEVEL
     }
-    private WRIST_ANGLE wristAngle = WRIST_ANGLE.UP;
+    private WRIST_ANGLE wristAngle = WRIST_ANGLE.UP;*/
+    public Hand.WRIST_STATE wristState;
 
-    public AadiVector(double armLength, double shoulderAngle, WRIST_ANGLE wristAngle){
+    public AadiVector(double armLength, double shoulderAngle, Hand.WRIST_STATE wristState){
         this.armLength = armLength;
         this.shoulderAngle = shoulderAngle;
-        this.wristAngle = wristAngle;
+        this.wristState = wristState;
     }
 
     public void setArmLength(double armLength) {
         this.armLength = armLength;
     }
 
-    public double getArmLength(AadiVector aadiVector){
-        return aadiVector.armLength;
+    public double getArmLength(){
+        return armLength;
     }
 
     public double armLengthToMM(double armLength){
@@ -37,8 +39,8 @@ public class AadiVector {
         this.shoulderAngle = shoulderAngle;
     }
 
-    public double getShoulderAngle(AadiVector aadiVector){
-        return aadiVector.shoulderAngle;
+    public double getShoulderAngle(){
+        return shoulderAngle;
     }
 
     public double shoulderAngleToRadians(double shoulderAngle){
@@ -49,12 +51,12 @@ public class AadiVector {
         return shoulderRadians * SystemState.SHOULDER_ANGLE_TO_RADIANS_RATIO;
     }
 
-    public WRIST_ANGLE getWristAngle(AadiVector aadiVector){
-        return aadiVector.wristAngle;
+    public Hand.WRIST_STATE getWristState(){
+        return wristState;
     }
 
-    public void setWristAngle(WRIST_ANGLE wristAngle){
-        this.wristAngle = wristAngle;
+    public void setWristState(Hand.WRIST_STATE wristState){
+        this.wristState = wristState;
     }
 
 }

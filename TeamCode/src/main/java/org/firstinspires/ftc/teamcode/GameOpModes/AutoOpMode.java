@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -110,7 +111,6 @@ public class AutoOpMode extends LinearOpMode{
     //Initialize Arm/Shoulder/Turret Positions (AadiPoses)
     AadiPose initAadiPose;
     AadiPose[] pickConeAadiPose = new AadiPose[6];
-    AadiPose midAadiPose;
     AadiPose[] dropConeAadiPose = new AadiPose[6];
     AadiPose endAadiPose;
 
@@ -121,109 +121,86 @@ public class AutoOpMode extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 initPose = new Pose2d(-54, 36, Math.toRadians(0)); //Starting pose
-                initAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
+                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                midAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[0] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                endAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, 11, Math.toRadians(180)); break; // Location 3
-                }
+                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700); // Preloaded Cone drop position
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 break;
 
             case BLUE_RIGHT:
                 initPose = new Pose2d(-54, -36, Math.toRadians(0));//Starting pose
-                initAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
+                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                midAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[0] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                endAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -11, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(180)); break; // Location 3
-                }
+                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700); // Preloaded Cone drop position
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 break;
 
             case RED_LEFT:
                 initPose = new Pose2d(54, -36, Math.toRadians(180));//Starting pose
-                initAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
+                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                midAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[0] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                endAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -11, Math.toRadians(0)); break; // Location 3
-                }
+                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700); // Preloaded Cone drop position
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, -675);
+                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
+                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 break;
 
             case RED_RIGHT:
                 initPose = new Pose2d(54, 36, Math.toRadians(180)); //Starting pose
-                initAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
+                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                midAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[0] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[1] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[2] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[3] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[4] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                pickConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                dropConeAadiPose[5] = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                endAadiPose = new AadiPose(0,0, AadiVector.WRIST_ANGLE.UP, 0);
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, 11, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(0)); break; // Location 3
-                }
+                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700); // Preloaded Cone drop position
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, 675);
+                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
+                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 break;
         }
 
         //Drop Preloaded Cone, Pick 5 cones and park
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
+                .addDisplacementMarker(() -> {moveToAadiPose(initAadiPose);})
                 .lineToLinearHeading(midWayPose)
                 //turn turret and pick, then drop cone
                 .addDisplacementMarker(() -> {
                     dropCone(dropConeAadiPose[0]); //Drop preloaded Cone
                     for (coneCount = 1; coneCount <=5; coneCount++) {
                         pickCone(pickConeAadiPose[coneCount]);
-                        moveToAadiPose(midAadiPose);
                         dropCone(dropConeAadiPose[coneCount]);
                     }
                     moveToAadiPose(endAadiPose);
@@ -233,6 +210,37 @@ public class AutoOpMode extends LinearOpMode{
 
     //Build parking trajectory based on target detected by vision
     public void buildParking(){
+        switch (startPosition) {
+            case BLUE_LEFT:
+                switch(vision.visionIdentifiedTarget){
+                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, 11, Math.toRadians(180)); break; // Location 3
+                }
+                break;
+            case BLUE_RIGHT:
+                switch(vision.visionIdentifiedTarget){
+                    case LOCATION1: parkPose = new Pose2d(-12, -11, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(180)); break; // Location 3
+                }
+                break;
+            case RED_LEFT:
+                switch(vision.visionIdentifiedTarget){
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -11, Math.toRadians(0)); break; // Location 3
+                }
+                break;
+            case RED_RIGHT:
+                switch(vision.visionIdentifiedTarget){
+                    case LOCATION1: parkPose = new Pose2d(12, 11, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(0)); break; // Location 3
+                }
+                break;
+        }
+
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
                 .build();
@@ -249,20 +257,44 @@ public class AutoOpMode extends LinearOpMode{
         driveTrain.followTrajectorySequence(trajectoryParking);
     }
 
+    ElapsedTime pickTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     //Write a method which is able to pick the cone from the stack depending on your subsystems
     public void pickCone(AadiPose pickConeAadiPose) {
-        /*TODO: Add code to pick Cone 1 from stack*/
         hand.openGrip();
-        moveToAadiPose(pickConeAadiPose);
+        pickTimer.reset();
+        gamepadController.moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+        while (pickTimer.time() < 1000) {
+            gamepadController.runArmShoulderWristToLevel();
+        };
+        pickTimer.reset();
+        turret.moveTurretToAngle(pickConeAadiPose.getTurretAngle());
+        while (pickTimer.time() < 1000) {
+            gamepadController.runTurret();
+        };
+        gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector());
+        gamepadController.runArmShoulderWristToLevel();
         hand.closeGrip();
-        liftArmAfterPickCone(pickConeAadiPose);
+        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition + 20);
         telemetry.addData("Picked Cone: Stack", coneCount);
         telemetry.update();
     }
 
+    ElapsedTime dropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     //Write a method which is able to drop the cone depending on your subsystems
     public void dropCone(AadiPose dropConeAadiPose){
-        /*TODO: Add code to drop cone on junction*/
+        dropTimer.reset();
+        gamepadController.moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+        while (pickTimer.time() < 1000) {
+            gamepadController.runArmShoulderWristToLevel();
+        };
+        pickTimer.reset();
+        turret.moveTurretToAngle(dropConeAadiPose.getTurretAngle());
+        while (pickTimer.time() < 1000) {
+            gamepadController.runTurret();
+        };
+        gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector());
+        gamepadController.runArmShoulderWristToLevel();
+        hand.openGrip();
         if (coneCount == 0) {
             telemetry.addData("Dropped Cone", "Pre-loaded");
         } else {
@@ -273,26 +305,14 @@ public class AutoOpMode extends LinearOpMode{
 
     //Move subsysetms to a specific AadiPose
     public void moveToAadiPose(AadiPose aadiPose){
-        arm.moveArmToLength(aadiPose.getArmLength(aadiPose));
-        shoulder.moveShoulderToAngle(aadiPose.getShoulderAngle(aadiPose));
-        if (aadiPose.getWristAngle(aadiPose) == AadiVector.WRIST_ANGLE.LEVEL) {
-            hand.moveWristLevel(aadiPose.getShoulderAngle(aadiPose));
+        arm.moveArmToLength(aadiPose.getArmLength());
+        shoulder.moveShoulderToAngle(aadiPose.getShoulderAngle());
+        if (aadiPose.getWristState() == Hand.WRIST_STATE.WRIST_LEVEL) {
+            hand.moveWristLevel(aadiPose.getShoulderAngle());
         } else {
-            hand.moveWristUp(aadiPose.getShoulderAngle(aadiPose));
+            hand.moveWristUp(aadiPose.getShoulderAngle());
         }
-        turret.moveTurretToAngle(aadiPose.getTurretAngle(aadiPose));
-    }
-
-    //Lift Arm to clear cone from Stack before moving to next position TODO
-    public void liftArmAfterPickCone(AadiPose aadiPose){
-        //Lift arm to move cone above stack
-    }
-
-    public AadiPose createAadiPoseFromWorld(double armMM, double shoulderRadians, AadiVector.WRIST_ANGLE wristAngle, double turretRadians) {
-        return new AadiPose(AadiPose.armMMtoLength(armMM),
-                AadiPose.shoulderRadiansToAngle(shoulderRadians),
-                wristAngle,
-                AadiPose.turretRadiansToAngle(turretRadians));
+        turret.moveTurretToAngle(aadiPose.getTurretAngle());
     }
 
     public void parkingComplete(){
