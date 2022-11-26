@@ -415,6 +415,7 @@ public class GamepadController {
         }
     }
 
+    //Positions to be used for Record and Replay functionality, initialized to neutral positions.
     public AadiPose recordAndReplayA = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
     public AadiPose recordAndReplayB = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
     public AadiPose recordAndReplayX = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
@@ -422,8 +423,8 @@ public class GamepadController {
 
     public void runRecordAndReplay(){
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        //Record if Left Trigger and  XYAB button is pressed
 
+        //Record last Pose if Left Trigger and  XYAB button is pressed
         if(gp1GetLeftTriggerPersistent() && gp1GetButtonXPress()) {
             recordAndReplayX = new AadiPose(
                     arm.armCurrentPosition,
@@ -461,7 +462,7 @@ public class GamepadController {
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayX.getTurretAngle());
-            while (timer.time() < 500) {
+            while (timer.time() < 1000) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayX.getAadiVector());
@@ -475,7 +476,7 @@ public class GamepadController {
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayY.getTurretAngle());
-            while (timer.time() < 500) {
+            while (timer.time() < 1000) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayY.getAadiVector());
@@ -489,7 +490,7 @@ public class GamepadController {
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayA.getTurretAngle());
-            while (timer.time() < 500) {
+            while (timer.time() < 1000) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayA.getAadiVector());
@@ -503,7 +504,7 @@ public class GamepadController {
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayB.getTurretAngle());
-            while (timer.time() < 500) {
+            while (timer.time() < 1000) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayB.getAadiVector());
@@ -521,7 +522,6 @@ public class GamepadController {
             hand.moveWristUp(aadiPose.getShoulderAngle());
         }
         turret.moveTurretToAngle(aadiPose.getTurretAngle());
-
     }
 
     //Move subsysetms to a specific AadiPose
