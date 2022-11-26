@@ -200,7 +200,7 @@ public class Shoulder {
     }
 
     public void moveShoulderToDynamicMinExtended(){
-        turnShoulderBrakeModeOn();
+        turnShoulderBrakeModeOff();
         shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
         shoulderNewPosition = dynamicMinPosition;
         if (shoulderCurrentPosition < dynamicMinPosition) {
@@ -241,7 +241,7 @@ public class Shoulder {
             } else {
                 shoulderNewPosition = PICKUP_POSITION;
                 shoulderState = SHOULDER_STATE.PICKUP;
-                turnShoulderBrakeModeOn(); //TODO : See if Brake Mode needs to turn off for pickup
+                turnShoulderBrakeModeOff();
             }
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
