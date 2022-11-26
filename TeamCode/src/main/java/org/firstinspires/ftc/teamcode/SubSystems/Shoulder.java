@@ -124,7 +124,7 @@ public class Shoulder {
 
     //Sets shoulder position to ground junction
     public void moveShoulderToPickup() {
-        turnShoulderBrakeModeOn(); //TODO : See if Brake Mode needs to turn off for pickup
+        turnShoulderBrakeModeOff(); //TODO : See if Brake Mode needs to turn off for pickup
         shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
         shoulderNewPosition = PICKUP_POSITION;
         leftShoulderMotor.setTargetPosition((int)PICKUP_POSITION);

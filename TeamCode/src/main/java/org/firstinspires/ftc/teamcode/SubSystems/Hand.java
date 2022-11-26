@@ -120,7 +120,7 @@ public class Hand {
 
     public void determineWristLevelPosition(double shoulderPosition){
         //wristLevelPos = SystemState.ShoulderAngleRadians - radianCount; //TODO: Test Logic
-        switch (SystemState.ShoulderState) {
+        /*switch (SystemState.ShoulderState) {
             case PICKUP:
             case GROUND_JUNCTION:
                 wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION;
@@ -140,7 +140,9 @@ public class Hand {
             case HIGH_JUNCTION:
                 wristLevelPosition = WRIST_HIGH_LEVEL_POSITION;
                 break;
-        }
+        }*/
+        wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
+                / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
         wristUpPosition = wristLevelPosition + 0.06;
     }
 }

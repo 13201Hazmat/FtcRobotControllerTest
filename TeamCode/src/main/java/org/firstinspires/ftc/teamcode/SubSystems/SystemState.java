@@ -22,26 +22,29 @@ public class SystemState {
     public static final double SHOULDER_ANGLE_TO_RADIANS_RATIO = Shoulder.SHOULDER_MOTOR_ENCODER_TICKS/Math.PI ;
     public static final double TURRET_ANGLE_TO_RADIANS_RATIO = Turret.TURRET_MOTOR_ENCODER_TICKS/Math.PI;
 
+    public static final AadiVector NEUTRAL_VECTOR
+            = new AadiVector(Arm.MIN_RETRACTED_POSITION, Shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP);
+
     public static final AadiVector MIN_RETRACTED_AADI_VECTOR
-            = new AadiVector(Arm.MIN_RETRACTED_POSITION, Shoulder.PICKUP_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.MIN_RETRACTED_POSITION, Shoulder.PICKUP_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector PICKUP_AADI_VECTOR
-            = new AadiVector(Arm.PICKUP_POSITION, Shoulder.PICKUP_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.PICKUP_POSITION, Shoulder.PICKUP_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector GROUND_JUNCTION_AADI_VECTOR
-            = new AadiVector(Arm.GROUND_JUNCTION_POSITION, Shoulder.GROUND_JUNCTION_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.GROUND_JUNCTION_POSITION, Shoulder.GROUND_JUNCTION_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector PICKUP_WRIST_DOWN_AADI_VECTOR
-            = new AadiVector(Arm.PICKUP_POSITION, Shoulder.PICKUP_WRIST_DOWN_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.PICKUP_POSITION, Shoulder.PICKUP_WRIST_DOWN_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector LOW_JUNCTION_AADI_VECTOR
-            = new AadiVector(Arm.LOW_JUNCTION_POSITION,Shoulder.LOW_JUNCTION_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.LOW_JUNCTION_POSITION,Shoulder.LOW_JUNCTION_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector MEDIUM_JUNCTION_AADI_VECTOR
-            = new AadiVector(Arm.MEDIUM_JUNCTION_POSITION,Shoulder.MEDIUM_JUNCTION_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.MEDIUM_JUNCTION_POSITION,Shoulder.MEDIUM_JUNCTION_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final AadiVector HIGH_JUNCTION_AADI_VECTOR
-            = new AadiVector(Arm.HIGH_JUNCTION_POSITION, Shoulder.HIGH_JUNCTION_POSITION, AadiVector.WRIST_ANGLE.UP);
+            = new AadiVector(Arm.HIGH_JUNCTION_POSITION, Shoulder.HIGH_JUNCTION_POSITION, Hand.WRIST_STATE.WRIST_UP);
 
     public static final double SHOULDER_PICKUP_POSITION = Shoulder.PICKUP_POSITION;
     public static final double SHOULDER_WRIST_ANGLE_FACTOR = (Shoulder.HIGH_JUNCTION_POSITION - Shoulder.PICKUP_POSITION)/

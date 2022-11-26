@@ -48,8 +48,8 @@ public class Turret {
     public static TURRET_MOTOR_STATE turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
 
     public static final double FACING_FORWARD_POSITION = 0;
-    public static final double FACING_BACKWARD_LEFT_POSITION = -1350;
-    public static final double FACING_BACKWARD_RIGHT_POSITION = 1350;
+    public static final double FACING_BACKWARD_LEFT_POSITION = -1350-1350; //-360 deg
+    public static final double FACING_BACKWARD_RIGHT_POSITION = 1350+1350; //+360 deg
     public static final double FACING_LEFT_POSITION = -675;
     public static final double FACING_RIGHT_POSITION = 675;
 
@@ -59,11 +59,11 @@ public class Turret {
     public double turretAngleRadians;
     public double turretAngleDegrees;
 
-    public static final double TURRET_POWER = 0.7;
+    public static final double TURRET_POWER = 0.6;
 
     //value declarations
     public boolean runTurretToLevelState = false;
-    public static double TURRET_DELTA_COUNT_MAX = 100; //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public static double TURRET_DELTA_COUNT_MAX = 50; //movement value of turret given clockwise or counterclockwise rotation(changeable)
     public double turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
