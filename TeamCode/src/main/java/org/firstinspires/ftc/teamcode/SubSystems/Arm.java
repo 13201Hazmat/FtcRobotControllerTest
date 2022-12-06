@@ -52,14 +52,14 @@ public class Arm {
 
     //Constants for Arm Standard positions
     public static final double MIN_RETRACTED_POSITION = 0;
-    public static final double PICKUP_POSITION = 480;//466;
+    public static final double PICKUP_POSITION = 550;
     public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION;
     public static final double PICKUP_WRIST_DOWN_POSITION = 200;
     public static final double LOW_JUNCTION_POSITION = (int) 0;
     public static final double MEDIUM_JUNCTION_POSITION = (int) 450;
-    public static final double HIGH_JUNCTION_POSITION = (int) 1460;
+    public static final double HIGH_JUNCTION_POSITION = (int) 1555;
     public static final double MAX_EXTENDED_POSITION_2_SLIDES = (int) 2250;
-    public static final double MAX_EXTENDED_POSITION_3_SLIDES = (int) 3375;
+    public static final double MAX_EXTENDED_POSITION_3_SLIDES = (int) 3250;//3375;
     public static final double MAX_EXTENDED_POSITION_4_SLIDES = (int) 4500;
     public static final double MAX_EXTENDED_POSITION = MAX_EXTENDED_POSITION_3_SLIDES;
     public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_3_SLIDES;
@@ -73,7 +73,8 @@ public class Arm {
     public static final double CONE_5_POSITION = 1400;
     public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
 
-    public static final double ARM_DELTA_COUNT_MAX = 200;//200 //need tested values
+    public static final double ARM_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
+    public static final double ARM_DELTA_COUNT_RESET = 50;
 
     //Different constants of arm speed
     public static final double ARM_POWER_EXTEND = 0.8;
@@ -272,6 +273,12 @@ public class Arm {
         } else{
             armMotor.setPower(0.0);
         }
+        /*if ((armState == ARM_STATE.MIN_RETRACTED) && (armTouchSensor.getState())){
+            manualResetArm();
+        } Overheating arm? TODO */
+        if (!armTouchSensor.getState()) {
+            resetArmMode();
+        }
     }
 
     //Resets the arm
@@ -285,7 +292,7 @@ public class Arm {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
         while (armTouchSensor.getState() && timer.time() < 5000) {
-            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - ARM_DELTA_COUNT_MAX));
+            armMotor.setTargetPosition((int) (armMotor.getCurrentPosition() - ARM_DELTA_COUNT_RESET));
             runArmToLevelState = true;
             runArmToLevel(ARM_POWER_RETRACT);
         }

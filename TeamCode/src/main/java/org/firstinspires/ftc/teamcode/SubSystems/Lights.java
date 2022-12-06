@@ -40,50 +40,65 @@ public class Lights {
     }
 
     public void setPatternDemo(){
-        blinkinLedDriver.setPattern(patternDemo);
-        currentPattern = patternDemo;
+        if (currentPattern != patternDemo) {
+            blinkinLedDriver.setPattern(patternDemo);
+            currentPattern = patternDemo;
+        }
     }
 
     public void setPatternElementLoaded(){
-        blinkinLedDriver.setPattern(patternCloseGrip);
-        currentPattern = patternCloseGrip;
+        if (currentPattern != patternCloseGrip) {
+            blinkinLedDriver.setPattern(patternCloseGrip);
+            currentPattern = patternCloseGrip;
+        }
     }
 
     public void setPatternEndGame(){
-        blinkinLedDriver.setPattern(patternEndGame);
-        currentPattern = patternEndGame;
+        if (currentPattern != patternEndGame) {
+            blinkinLedDriver.setPattern(patternEndGame);
+            currentPattern = patternEndGame;
+        }
     }
 
     public void setPatternDefault(){
-        blinkinLedDriver.setPattern(patternDefault);
-        currentPattern = patternDefault;
+        if (currentPattern != patternDefault) {
+            blinkinLedDriver.setPattern(patternDefault);
+            currentPattern = patternDefault;
+        }
     }
 
     public void setPatternBlack(){
-        blinkinLedDriver.setPattern(patternBlack);
-        currentPattern = patternBlack;
+        if (currentPattern != patternBlack) {
+            blinkinLedDriver.setPattern(patternBlack);
+            currentPattern = patternBlack;
+        }
     }
 
     public void setPatternWhite(){
-        blinkinLedDriver.setPattern(patternWhite);
-        currentPattern = patternWhite;
+        if (currentPattern != patternWhite) {
+            blinkinLedDriver.setPattern(patternWhite);
+            currentPattern = patternWhite;
+        }
     }
 
     public void setPatternRed(){
-        blinkinLedDriver.setPattern(patternRed);
-        currentPattern = patternRed;
+        if (currentPattern != patternRed) {
+            blinkinLedDriver.setPattern(patternRed);
+            currentPattern = patternRed;
+        }
     }
 
     public void setPatternYellow(){
-        blinkinLedDriver.setPattern(patternYellow);
-        currentPattern = patternYellow;
+        if (currentPattern != patternYellow) {
+            blinkinLedDriver.setPattern(patternYellow);
+            currentPattern = patternYellow;
+        }
     }
 
     public void setPatternGreen(){
-        blinkinLedDriver.setPattern(patternGreen);
-        currentPattern = patternGreen;
+        if (currentPattern != patternGreen) {
+            blinkinLedDriver.setPattern(patternGreen);
+            currentPattern = patternGreen;
+        }
     }
-
-
-
 }

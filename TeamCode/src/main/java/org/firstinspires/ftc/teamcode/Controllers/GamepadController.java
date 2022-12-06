@@ -138,17 +138,23 @@ public class GamepadController {
 
 
     double turretPowerReductionFactorBasedOnArmLength = 0;
+    double turretDeceleration = 0.25;
     /**
-     * runArm sets the differnt intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
+     * runArm sets the different intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
      */
     public void runTurret(){
         //Move turret based on Right Stick on Gamepad 2
-        if (gp2GetRightStickX() >= 0.2)  {
-            turret.rotateTurret(Math.pow(gp2GetRightStickX() * 1.25 - 0.25, 3));
-        } else if (gp2GetRightStickX() <= -0.2) {
-            turret.rotateTurret(Math.pow(gp2GetRightStickX() * 1.25 + 0.25, 3));
+        if (gp2GetLeftBumper()) {
+            turret.rotateTurret(Math.pow(gp2GetRightStickX(), 3));
+        } else {
+            turret.rotateTurret(Math.pow(gp2GetRightStickX(), 3) * turretDeceleration);
         }
+        /*if (gp2GetRightStickX() >= 0.2)  {
+            turret.rotateTurret(Math.pow(gp2GetRightStickX() * 1.25 - 0.25, 3)*0.5);
+        } else if (gp2GetRightStickX() <= -0.2) {
+            turret.rotateTurret(Math.pow(gp2GetRightStickX() * 1.25 + 0.25, 3)*0.5);
+        }*/
 
         if  (!(gp1GetLeftTriggerPersistent() || gp1GetLeftBumper())) {
             //Move turret to face forward
@@ -354,6 +360,7 @@ public class GamepadController {
                 shoulder.manualResetShoulder();
             }
         }
+
         SystemState.ArmState = arm.armState;
         SystemState.HandGripState = hand.gripState;
         SystemState.HandWristState = hand.wristState;
@@ -456,7 +463,7 @@ public class GamepadController {
 
         if (gp1GetLeftBumper() && gp1GetButtonXPress()) {
             timer.reset();
-            moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+            moveToNeutralHigh();
             while (timer.time() < 1000) {
                 runArmShoulderWristToLevel();
             };
@@ -465,12 +472,12 @@ public class GamepadController {
             while (timer.time() < 1000) {
                 runTurret();
             };
-            moveToAadiVector(recordAndReplayX.getAadiVector());
+            moveToAadiVector(recordAndReplayX.getAadiVector(), recordAndReplayX.getWristState());
             runArmShoulderWristToLevel();
         }
         if (gp1GetLeftBumper() && gp1GetButtonYPress()) {
             timer.reset();
-            moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+            moveToNeutralHigh();
             while (timer.time() < 1000) {
                 runArmShoulderWristToLevel();
             };
@@ -479,12 +486,12 @@ public class GamepadController {
             while (timer.time() < 1000) {
                 runTurret();
             };
-            moveToAadiVector(recordAndReplayY.getAadiVector());
+            moveToAadiVector(recordAndReplayY.getAadiVector(), recordAndReplayY.getWristState());
             runArmShoulderWristToLevel();
         }
         if (gp1GetLeftBumper() && gp1GetButtonAPress()) {
             timer.reset();
-            moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+            moveToNeutralHigh();
             while (timer.time() < 1000) {
                 runArmShoulderWristToLevel();
             };
@@ -493,12 +500,12 @@ public class GamepadController {
             while (timer.time() < 1000) {
                 runTurret();
             };
-            moveToAadiVector(recordAndReplayA.getAadiVector());
+            moveToAadiVector(recordAndReplayA.getAadiVector(), recordAndReplayA.getWristState());
             runArmShoulderWristToLevel();
         }
         if (gp1GetLeftBumper() && gp1GetButtonBPress()) {
             timer.reset();
-            moveToAadiVector(SystemState.NEUTRAL_VECTOR);
+            moveToNeutralHigh();
             while (timer.time() < 1000) {
                 runArmShoulderWristToLevel();
             };
@@ -507,7 +514,7 @@ public class GamepadController {
             while (timer.time() < 1000) {
                 runTurret();
             };
-            moveToAadiVector(recordAndReplayB.getAadiVector());
+            moveToAadiVector(recordAndReplayB.getAadiVector(), recordAndReplayB.getWristState());
             runArmShoulderWristToLevel();
         }
     }
@@ -525,15 +532,28 @@ public class GamepadController {
     }
 
     //Move subsysetms to a specific AadiPose
-    public void moveToAadiVector(AadiVector aadiVector){
+    public void moveToAadiVector(AadiVector aadiVector, Hand.WRIST_STATE wristState){
         arm.moveArmToLength(aadiVector.getArmLength());
         shoulder.moveShoulderToAngle(aadiVector.getShoulderAngle());
-        if (aadiVector.getWristState() == Hand.WRIST_STATE.WRIST_LEVEL) {
+        if (wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
             hand.moveWristLevel(aadiVector.getShoulderAngle());
         } else {
             hand.moveWristUp(aadiVector.getShoulderAngle());
         }
     }
+
+    public void moveToNeutralHigh(){
+        arm.moveArmToMinRetracted();
+        shoulder.moveToShoulderMaxRaised();
+        hand.moveWristUp(shoulder.MAX_RAISED_POSITION);
+    }
+
+    public void moveToNeutralLow(){
+        hand.moveWristUp(shoulder.PICKUP_POSITION);
+        arm.moveArmToMinRetracted();
+        shoulder.moveShoulderToPickup();
+    }
+
 
 
     //*********** KEY PAD MODIFIERS BELOW ***********

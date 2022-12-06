@@ -44,18 +44,15 @@ public class Hand {
     public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
     public static final double CLOSE_GRIP_FULL_POSITION = 0.00;
 
-    public static final double WRIST_DOWN_POSITION = 0.5;
-    public static final double WRIST_DOWN_MIN_POSITION = 0.43;
-    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.60;
-    public static final double WRIST_LOW_LEVEL_POSITION = 0.56;
-    public static final double WRIST_DEFAULT_LEVEL_POSITION = 0.58;
-    public static final double WRIST_MEDIUM_LEVEL_POSITION = 0.51;
-    public static final double WRIST_HIGH_LEVEL_POSITION = 0.48;
-    public static final double WRIST_DEFAULT_UP_POSITION = 0.66;
-    public static final double WRIST_UP_MAX_POSITION = 0.70;
+    public static final double WRIST_DOWN_POSITION = 0.50;
+    public static final double WRIST_PICKUP_LEVEL_POSITION = 0.60; //0.60;
+    public static final double WRIST_HIGH_LEVEL_POSITION = 0.48; //0.48;
+    public static final double WRIST_UP_MAX_POSITION = 0.70; //0.70;
+    public double WRIST_DELTA_FOR_HIGH = 0.06;
 
-    public double wristLevelPosition = WRIST_DEFAULT_LEVEL_POSITION;
-    public double wristUpPosition = WRIST_PICKUP_LEVEL_POSITION;
+    public double wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION;
+
+    public double wristUpPosition = WRIST_PICKUP_LEVEL_POSITION + WRIST_DELTA_FOR_HIGH;
 
     public Hand(HardwareMap hardwareMap) { //map hand servo's to each
         gripServo = hardwareMap.get(Servo.class, "gripServo");
@@ -119,30 +116,8 @@ public class Hand {
     }
 
     public void determineWristLevelPosition(double shoulderPosition){
-        //wristLevelPos = SystemState.ShoulderAngleRadians - radianCount; //TODO: Test Logic
-        /*switch (SystemState.ShoulderState) {
-            case PICKUP:
-            case GROUND_JUNCTION:
-                wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION;
-                break;
-            case LOW_JUNCTION:
-                wristLevelPosition = WRIST_LOW_LEVEL_POSITION;
-                break;
-            case RANDOM:
-            case DYNAMIC_PICKUP_MINIMUM:
-            case MAX_RAISED:
-                wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
-                        / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
-                break;
-            case MEDIUM_JUNCTION:
-                wristLevelPosition = WRIST_MEDIUM_LEVEL_POSITION;
-                break;
-            case HIGH_JUNCTION:
-                wristLevelPosition = WRIST_HIGH_LEVEL_POSITION;
-                break;
-        }*/
         wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((shoulderPosition - SystemState.SHOULDER_PICKUP_POSITION)
                 / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
-        wristUpPosition = wristLevelPosition + 0.06;
+        wristUpPosition = wristLevelPosition + WRIST_DELTA_FOR_HIGH;
     }
 }

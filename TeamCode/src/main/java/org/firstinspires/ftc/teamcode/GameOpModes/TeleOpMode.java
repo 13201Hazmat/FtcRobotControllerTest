@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "TeleOp", group = "00-Teleop")
+@TeleOp(name = "Hazmat TeleOp", group = "00-Teleop")
 public class TeleOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -36,8 +36,6 @@ public class TeleOpMode extends LinearOpMode {
     //Static Class for knowing system state
     public static SystemState SystemState;
 
-    //public Vuforia Vuforia1;
-
     public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
@@ -49,6 +47,8 @@ public class TeleOpMode extends LinearOpMode {
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MINIMUM;
+
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
 
@@ -153,7 +153,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
         telemetry.addData("Robot ready to start","");
 
-        if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+        if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
 
             telemetry.addData("Game Timer : ", gameTimer.time());
             //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
@@ -165,36 +165,50 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
 
-            telemetry.addData("Arm State: ", arm.armState);
-            telemetry.addData("Arm Motor Position: ", arm.armMotor.getCurrentPosition());
-            telemetry.addData("Arm Motor Power:", arm.armMotor.getPower());
-            telemetry.addData("Arm Touch Sensor State", arm.armTouchSensor.getState());
+            telemetry.addData("Arm State", arm.armState);
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Arm Motor Position", arm.armMotor.getCurrentPosition());
+                telemetry.addData("Arm Motor Power", arm.armMotor.getPower());
+                telemetry.addData("Arm Motor is busy", arm.armMotor.isBusy());
+                telemetry.addData("Arm Touch Sensor State", arm.armTouchSensor.getState());
+            }
             telemetry.addLine("=============");
 
-            telemetry.addData("Wrist State : ", hand.wristState);
-            telemetry.addData("Wrist Servo Position : ", hand.wristServo.getPosition());
-            telemetry.addData("Grip State : ", hand.gripState);
-            telemetry.addData("Grips Servo Position : ", hand.gripServo.getPosition());
+            telemetry.addData("Wrist State", hand.wristState);
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Wrist Servo Position", "%.2f", hand.wristServo.getPosition());
+            }
+            telemetry.addData("Grip State", hand.gripState);
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Grips Servo Position", "%.2f", hand.gripServo.getPosition());
+            }
             telemetry.addLine("=============");
 
-            telemetry.addData("Shoulder State: ", shoulder.shoulderState);
-            telemetry.addData("Should Touch Sensor State: ", shoulder.shoulderTouchSensor.getState());
-            telemetry.addData("Left Motor Shoulder Position : ", shoulder.leftShoulderMotor.getCurrentPosition());
-            telemetry.addData("Left Motor Shoulder Power: ", shoulder.leftShoulderMotor.getPower());
-            telemetry.addData("Right Motor Shoulder Position : ", shoulder.rightShoulderMotor.getCurrentPosition());
-            telemetry.addData("Right Motor Shoulder Power : ", shoulder.rightShoulderMotor.getPower());
-            telemetry.addData("Shoulder Movement Direction : ",shoulder.shoulderMovementDirection);
-            telemetry.addData("Shoulder Current Position : ",shoulder.shoulderCurrentPosition);
-            telemetry.addData("Shoulder New Position : ",shoulder.shoulderNewPosition);
+            telemetry.addData("Shoulder State", shoulder.shoulderState);
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Should Touch Sensor State", shoulder.shoulderTouchSensor.getState());
+                telemetry.addData("Left Motor Shoulder Position", shoulder.leftShoulderMotor.getCurrentPosition());
+                telemetry.addData("Left Motor Shoulder Power", "%.2f", shoulder.leftShoulderMotor.getPower());
+                telemetry.addData("Left Motor Shoulder is busy", shoulder.leftShoulderMotor.isBusy());
+                telemetry.addData("Right Motor Shoulder Position", shoulder.rightShoulderMotor.getCurrentPosition());
+                telemetry.addData("Right Motor Shoulder Power", "%.2f", shoulder.rightShoulderMotor.getPower());
+                telemetry.addData("Right Motor Shoulder is busy", shoulder.rightShoulderMotor.isBusy());
+            }
+            telemetry.addData("Shoulder Movement Direction",shoulder.shoulderMovementDirection);
+            telemetry.addData("Shoulder Current Position",shoulder.shoulderCurrentPosition);
+            telemetry.addData("Shoulder New Position",shoulder.shoulderNewPosition);
             telemetry.addLine("=============");
 
-            telemetry.addData("Turret State : ", turret.turretMotorState);
-            telemetry.addData("Turret Left Mag Sensor State: ", turret.turretLeftMagneticSensor.getState());
-            telemetry.addData("Turret Center Mag Sensor State: ", turret.turretCenterMagneticSensor.getState());
-            telemetry.addData("Turret Right Mag Sensor State: ", turret.turretRightMagneticSensor.getState());
-            telemetry.addData("Turret Motor Position : ", turret.turretMotor.getCurrentPosition());
-            telemetry.addData("Turret Motor Power : ", turret.turretMotor.getPower());
-            telemetry.addData("Turret Delta Count : ", turret.turretDeltaCount);
+            telemetry.addData("Turret State", turret.turretMotorState);
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Turret Left Mag Sensor State", turret.turretLeftMagneticSensor.getState());
+                telemetry.addData("Turret Center Mag Sensor State", turret.turretCenterMagneticSensor.getState());
+                telemetry.addData("Turret Right Mag Sensor State", turret.turretRightMagneticSensor.getState());
+                telemetry.addData("Turret Motor Position", turret.turretMotor.getCurrentPosition());
+                telemetry.addData("Turret Motor Power", "%.2f", turret.turretMotor.getPower());
+                telemetry.addData("Turret Motor is busy", turret.turretMotor.isBusy());
+            }
+            telemetry.addData("Turret Delta Count", turret.turretDeltaCount);
             telemetry.addLine("=============");
         }
         telemetry.update();

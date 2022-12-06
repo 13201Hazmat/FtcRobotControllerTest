@@ -144,6 +144,9 @@ public class Vision {
      *  2: Panel,
      */
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    //private static final String TFOD_MODEL_ASSET  = "/sdcard/FIRST/tflitemodels/FreightFrenzy_BCDM.tflite";
+    //private static final String TFOD_MODEL_ASSET  = "FreightFrenzy_BCDM.tflite";
+
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
 
@@ -151,14 +154,15 @@ public class Vision {
             "1 Bolt",
             "2 Bulb",
             "3 Panel",
-            "4 Green",
-            "5 Yellow",
-            "6 Purple"
+            /*"Green",
+            "Yellow",
+            "Purple",*/
     };
 
 
 
     public String detectedLabel = "None";
+    public double detectionConfidence;
 
     private TFObjectDetector tfod;
     private List<Recognition> recognitions;
@@ -208,7 +212,7 @@ public class Vision {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.75f;
+        tfodParameters.minResultConfidence = 0.70f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
@@ -242,7 +246,7 @@ public class Vision {
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
             //tfod.setZoom(1.75, 16.0/9.0);
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(1.3, 16.0/9.0);
             recognitions = tfod.getUpdatedRecognitions();
         }
     }
@@ -263,17 +267,18 @@ public class Vision {
                     for (Recognition recognition : recognitions) {
                         // check label to see which target zone to go after.
                         detectedLabel = recognition.getLabel();
+                        detectionConfidence = recognition.getConfidence();
                         switch(detectedLabel){
                             case "1 Bolt":
-                            case "6 Purple":
+                            //case "Green":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
                                 break;
                             case "2 Bulb":
-                            case "5 Yellow":
+                            //case "Yellow":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
                                 break;
                             case "3 Panel":
-                            case "4 Green":
+                            //case "Purple":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
                                 break;
                         }

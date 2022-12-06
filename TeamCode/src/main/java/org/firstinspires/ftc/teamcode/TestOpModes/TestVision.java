@@ -20,6 +20,9 @@ public class TestVision extends LinearOpMode {
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = vision.runVuforiaTensorFlow();
+            telemetry.addData("Detected Label", vision.detectedLabel);
+            telemetry.addData("Detection Confidence", "%.2f", vision.detectionConfidence);
+
             telemetry.addData("Vision Objected Detected: ", visionIdentifiedTarget);
             telemetry.update();//display identified label
         }

@@ -29,7 +29,10 @@ public class Shoulder {
 
     //Shoulder Motor : 5203 Series Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 24mm Length 8mm REX Shaft, 312 RPM, 3.3 - 5V Encoder)
     //Gearing : 1:5
-    public static final double SHOULDER_MOTOR_ENCODER_TICKS = 537.7 * 5;
+    //public static final double SHOULDER_MOTOR_ENCODER_TICKS = 537.7 * 5;
+    //Shoulder Motor : 5203 Series Yellow Jacket Planetary Gear Motor (26.9:1 Ratio, 24mm Length 8mm REX Shaft, 223 RPM, 3.3 - 5V Encoder)
+    public static final double SHOULDER_MOTOR_ENCODER_TICKS = 751.8 * 5;
+
 
     //Initialization of <Fill>
     public enum SHOULDER_STATE {
@@ -54,21 +57,22 @@ public class Shoulder {
 
     public boolean runShoulderToLevelState = false;
     public boolean shoulderBelowThreshold = true;
-    public double SHOULDER_DELTA_COUNT_MAX = 50;
+    public double SHOULDER_DELTA_COUNT_MAX = 70; //50;
+    public double SHOULDER_DELTA_COUNT_RESET = 70;
     public double shoulderDeltaCount = 0; //Need tested value
 
     public static final double PICKUP_POSITION = 0;
-    public static final double PICKUP_POSITION_ARM_MAX_EXTENDED = 150;
-    public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION; //Need tested values
-    public static final double PICKUP_WRIST_DOWN_POSITION = 80;
-    public static final double PICKUP_WRIST_DOWN_POSITION_ARM_MAX_EXTENDED = 100;
-    public static final double LOW_JUNCTION_POSITION = 336; //need tested values
-    public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 337;
-    public static final double MEDIUM_JUNCTION_POSITION = 610; //need tested values
-    public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 440; //430 //need tested values
-    public static final double HIGH_JUNCTION_POSITION = 760; //need tested values
-    public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 591; //561 1//need tested values
-    public static final double MAX_RAISED_POSITION = 900; //Need tested values
+    public static final double PICKUP_POSITION_ARM_MAX_EXTENDED = 210; //150;
+    public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION;
+    public static final double PICKUP_WRIST_DOWN_POSITION = 115; //80;
+    public static final double PICKUP_WRIST_DOWN_POSITION_ARM_MAX_EXTENDED = 140; //100;
+    public static final double LOW_JUNCTION_POSITION = 325;//480; //336;
+    public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 470; //337;
+    public static final double MEDIUM_JUNCTION_POSITION = 730;//864; //610;
+    public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 615;//626;//440;
+    public static final double HIGH_JUNCTION_POSITION = 900;//1060; //760;
+    public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 760;//820; //591;
+    public static final double MAX_RAISED_POSITION = 960; //900;
 
     public double dynamicMinPosition = PICKUP_POSITION;
 
@@ -214,6 +218,21 @@ public class Shoulder {
         runShoulderToLevelState = true;
     }
 
+    public void moveToShoulderMaxRaised(){
+        turnShoulderBrakeModeOn();
+        shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
+        shoulderNewPosition = MAX_RAISED_POSITION;
+        if (shoulderCurrentPosition < MAX_RAISED_POSITION) {
+            shoulderMovementDirection = SHOULDER_MOVEMENT_DIRECTION.UP;
+        } else {
+            shoulderMovementDirection = SHOULDER_MOVEMENT_DIRECTION.DOWN;
+        }
+        rightShoulderMotor.setTargetPosition((int)MAX_RAISED_POSITION);
+        leftShoulderMotor.setTargetPosition((int)MAX_RAISED_POSITION);
+        shoulderState = SHOULDER_STATE.MAX_RAISED;
+        runShoulderToLevelState = true;
+    }
+
     public void moveShoulderToAngle(double shoulderAnglePosition){
         turnShoulderBrakeModeOn();
         shoulderCurrentPosition = leftShoulderMotor.getCurrentPosition();
@@ -284,11 +303,17 @@ public class Shoulder {
             leftShoulderMotor.setPower(0.0);
             rightShoulderMotor.setPower(0.0);
         }
+        /*if ((shoulderState == SHOULDER_STATE.PICKUP) && (shoulderTouchSensor.getState())) {
+            manualResetShoulder();
+        } Overheating motor? TODO*/
+        if (!(shoulderTouchSensor.getState())){
+            resetShoulderMode();
+        }
+
     }
 
-    //TODO : Calculate Shoulder Angle
     public void calculateShoulderAngle(){
-        shoulderAngleRadians = rightShoulderMotor.getCurrentPosition() * Math.PI/537.7; //TODO : Calculate turret Angle
+        shoulderAngleRadians = rightShoulderMotor.getCurrentPosition() * Math.PI/SHOULDER_MOTOR_ENCODER_TICKS;
         shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
     }
 
@@ -304,8 +329,8 @@ public class Shoulder {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
         while ((shoulderTouchSensor.getState()) && timer.time() < 3000) {
-            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
-            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - 50));
+            rightShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - SHOULDER_DELTA_COUNT_RESET));
+            leftShoulderMotor.setTargetPosition((int) (rightShoulderMotor.getCurrentPosition() - SHOULDER_DELTA_COUNT_RESET));
             runShoulderToLevelState = true;
             runShoulderToLevel(0.2);
         }

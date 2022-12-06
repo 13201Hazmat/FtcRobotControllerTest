@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,7 +23,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Autonomous", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Autonomous(name = "Hazmat Autonomous", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
 public class AutoOpMode extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
@@ -33,6 +35,20 @@ public class AutoOpMode extends LinearOpMode{
     }
     public static START_POSITION startPosition;
 
+    public enum AUTO_OPTION{
+        FULL_AUTO,
+        DROP_PRELOAD_AND_PARK,
+        ONLY_PARK
+    }
+    public static AUTO_OPTION autoOption;
+
+    public enum DROP_CONE_POSITION {
+        FRONT_HIGH,
+        BACK_MEDIUM,
+        BACK_HIGH
+    }
+    public static DROP_CONE_POSITION dropConePosition;
+
     public Vision vision;
     public DriveTrain driveTrain;
     public Hand hand;
@@ -42,7 +58,7 @@ public class AutoOpMode extends LinearOpMode{
     public Lights lights;
     public GamepadController gamepadController;
 
-    public ElapsedTime gameTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -65,9 +81,10 @@ public class AutoOpMode extends LinearOpMode{
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
             vision.runVuforiaTensorFlow();
             telemetry.clearAll();
-            telemetry.addData("Start FTC Wires (ftcwires.org) Autonomous Mode adopted for Team","TEAM NUMBER");
+            telemetry.addLine("Start Hazmat Autonomous Mode");
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("AutoOption Selected", autoOption);
             telemetry.addData("Vision identified Parking Location", vision.visionIdentifiedTarget);
             telemetry.update();
         }
@@ -109,10 +126,11 @@ public class AutoOpMode extends LinearOpMode{
     Pose2d parkPose;
 
     //Initialize Arm/Shoulder/Turret Positions (AadiPoses)
-    AadiPose initAadiPose;
+    //AadiPose initAadiPose;
     AadiPose[] pickConeAadiPose = new AadiPose[6];
-    AadiPose[] dropConeAadiPose = new AadiPose[6];
-    AadiPose endAadiPose;
+    AadiPose dropConeAadiPose;
+    AadiPose dropConeFrontHigh, dropConeBackMedium, dropConeBackHigh;
+    //AadiPose endAadiPose;
 
     int coneCount = 0;
 
@@ -121,90 +139,70 @@ public class AutoOpMode extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 initPose = new Pose2d(-54, 36, Math.toRadians(0)); //Starting pose
-                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
+                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
+                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
                 break;
 
             case BLUE_RIGHT:
                 initPose = new Pose2d(-54, -36, Math.toRadians(0));//Starting pose
-                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
+                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, 1700);;
+                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, 1850);
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
                 break;
 
             case RED_LEFT:
                 initPose = new Pose2d(54, -36, Math.toRadians(180));//Starting pose
-                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, -675);
-                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1700);
-                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                break;
+                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
+                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
+                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, -675);
 
             case RED_RIGHT:
                 initPose = new Pose2d(54, 36, Math.toRadians(180)); //Starting pose
-                initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                dropConeAadiPose[0] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700); // Preloaded Cone drop position
-                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[1] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[2] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[3] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[4] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_UP, 675);
-                dropConeAadiPose[5] = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1700);
-                endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
+                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
+                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, 1700);;
+                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, 1850);
+                pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[2] = new AadiPose(300,210, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[3] = new AadiPose(300,140, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[4] = new AadiPose(300,70, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, 675);
+                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
                 break;
         }
 
         //Drop Preloaded Cone, Pick 5 cones and park
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
-                .addDisplacementMarker(() -> {moveToAadiPose(initAadiPose);})
-                .lineToLinearHeading(midWayPose)
-                //turn turret and pick, then drop cone
-                .addDisplacementMarker(() -> {
-                    dropCone(dropConeAadiPose[0]); //Drop preloaded Cone
-                    for (coneCount = 1; coneCount <=5; coneCount++) {
-                        pickCone(pickConeAadiPose[coneCount]);
-                        dropCone(dropConeAadiPose[coneCount]);
-                    }
-                    moveToAadiPose(endAadiPose);
+                .addTemporalMarker(0.3,() -> {
+                    gamepadController.moveToNeutralHigh();
+                    turret.rotateAutonomousPreset();
                 })
+                .lineToLinearHeading(midWayPose)
                 .build();
     }
 
@@ -243,58 +241,83 @@ public class AutoOpMode extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
+                .addDisplacementMarker(() -> {
+                    turret.rotateAutonomousMagSensor();
+                    turret.runTurretToLevelState = true;
+                    turret.runTurretToPosition(turret.TURRET_RESET_POWER);
+                    turret.resetTurretMode();
+                })
                 .build();
     }
 
     //Run Auto trajectory and parking trajectory
     public void runAutoAndParking(){
         telemetry.setAutoClear(false);
-        telemetry.addData("Running FTC Wires (ftcwires.org) Autonomous Mode adopted for Team:","TEAM NUMBER");
-        telemetry.addData("---------------------------------------","");
+        telemetry.addLine("Hazmat Autonomous Mode");
+        telemetry.addLine("----------------------------------");
+        telemetry.addData("Selected Starting Position",startPosition);
+        telemetry.addData("Selected Auto Option", autoOption);
+        if (autoOption != AUTO_OPTION.ONLY_PARK) {
+            telemetry.addData("Selected dropConePosition", dropConePosition);
+        }
         telemetry.update();
+        switch (dropConePosition) {
+            case FRONT_HIGH: dropConeAadiPose = dropConeFrontHigh; break;
+            case BACK_MEDIUM: dropConeAadiPose = dropConeBackMedium; break;
+            case BACK_HIGH: dropConeAadiPose = dropConeBackHigh; break;
+        }
         //Run the trajectory built for Auto and Parking
         driveTrain.followTrajectorySequence(trajectoryAuto);
-        driveTrain.followTrajectorySequence(trajectoryParking);
+        gamepadController.moveToNeutralHigh();
+        safeWait(1000);
+        //turn turret and pick, then drop cone
+        if (autoOption !=AUTO_OPTION.ONLY_PARK) {
+            dropCone(dropConeAadiPose); //Drop preloaded Cone
+            safeWait(1000);
+            if (autoOption == AUTO_OPTION.FULL_AUTO) {
+                for (coneCount = 1; coneCount <= 5; coneCount++) {
+                    pickCone(pickConeAadiPose[coneCount]);
+                    safeWait(1000);
+                    dropCone(dropConeAadiPose);
+                    safeWait(1000);
+                }
+            }
+        }
+        turret.faceForward();
+        gamepadController.moveToNeutralLow();
+        safeWait(2000);
+        //driveTrain.followTrajectorySequence(trajectoryParking);
     }
 
-    ElapsedTime pickTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     //Write a method which is able to pick the cone from the stack depending on your subsystems
     public void pickCone(AadiPose pickConeAadiPose) {
         hand.openGrip();
-        pickTimer.reset();
-        gamepadController.moveToAadiVector(SystemState.NEUTRAL_VECTOR);
-        while (pickTimer.time() < 1000) {
-            gamepadController.runArmShoulderWristToLevel();
-        };
-        pickTimer.reset();
+        gamepadController.moveToNeutralHigh();
+        safeWait(2000);
         turret.moveTurretToAngle(pickConeAadiPose.getTurretAngle());
-        while (pickTimer.time() < 1000) {
-            gamepadController.runTurret();
-        };
-        gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector());
+        safeWait(2000);
+        gamepadController.moveToNeutralLow();
+        safeWait(2000);
+        gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector(), pickConeAadiPose.getWristState());
         gamepadController.runArmShoulderWristToLevel();
+        safeWait(2000);
         hand.closeGrip();
-        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition + 20);
+        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition + 100);
+        safeWait(1000);
         telemetry.addData("Picked Cone: Stack", coneCount);
         telemetry.update();
     }
 
-    ElapsedTime dropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     //Write a method which is able to drop the cone depending on your subsystems
     public void dropCone(AadiPose dropConeAadiPose){
-        dropTimer.reset();
-        gamepadController.moveToAadiVector(SystemState.NEUTRAL_VECTOR);
-        while (pickTimer.time() < 1000) {
-            gamepadController.runArmShoulderWristToLevel();
-        };
-        pickTimer.reset();
+        gamepadController.moveToNeutralHigh();
+        safeWait(2000);
         turret.moveTurretToAngle(dropConeAadiPose.getTurretAngle());
-        while (pickTimer.time() < 1000) {
-            gamepadController.runTurret();
-        };
-        gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector());
+        safeWait(2000);
+        gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector(), dropConeAadiPose.getWristState());
         gamepadController.runArmShoulderWristToLevel();
-        hand.openGrip();
+
+        safeWait(2000);hand.openGrip();
         if (coneCount == 0) {
             telemetry.addData("Dropped Cone", "Pre-loaded");
         } else {
@@ -351,6 +374,56 @@ public class AutoOpMode extends LinearOpMode{
             }
             telemetry.update();
         }
+
+        while(!isStopRequested()){
+            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team","TEAM NUMBER");
+            telemetry.addData("---------------------------------------","");
+            telemetry.addData("Selected Starting Position",startPosition);
+            telemetry.addLine("Select Auto Options");
+            telemetry.addData("    Full Autonomous           ","X");
+            telemetry.addData("    Drop Preloaded and Park   ","Y");
+            telemetry.addData("    Only Park                 ","B");
+            if(gamepadController.gp1GetButtonXPress()){
+                autoOption = AUTO_OPTION.FULL_AUTO;
+                break;
+            }
+            if(gamepadController.gp1GetButtonYPress()){
+                autoOption = AUTO_OPTION.DROP_PRELOAD_AND_PARK;
+                break;
+            }
+            if(gamepadController.gp1GetButtonBPress()){
+                autoOption = AUTO_OPTION.ONLY_PARK;
+                break;
+            }
+            telemetry.update();
+        }
+
+        while(!isStopRequested()){
+            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team","TEAM NUMBER");
+            telemetry.addData("---------------------------------------","");
+            telemetry.addData("Selected Starting Position",startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            if (autoOption != AUTO_OPTION.ONLY_PARK) {
+                telemetry.addLine("Select dropCone Postition");
+                telemetry.addData("    Front High           ", "X");
+                telemetry.addData("    Back Medium          ", "A");
+                telemetry.addData("    Back High            ", "B");
+                if (gamepadController.gp1GetButtonXPress()) {
+                    dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
+                    break;
+                }
+                if (gamepadController.gp1GetButtonYPress()) {
+                    dropConePosition = DROP_CONE_POSITION.BACK_MEDIUM;
+                    break;
+                }
+                if (gamepadController.gp1GetButtonBPress()) {
+                    dropConePosition = DROP_CONE_POSITION.BACK_HIGH;
+                    break;
+                }
+                telemetry.update();
+            }
+        }
+
         telemetry.clearAll();
     }
 
@@ -392,6 +465,10 @@ public class AutoOpMode extends LinearOpMode{
         telemetry.addLine("Lights Initialized");
         telemetry.update();
 
+        vision = new Vision(hardwareMap);
+        telemetry.addLine("Vision Initialized");
+        telemetry.update();
+
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
         telemetry.addLine("Gamepad Initialized");
@@ -405,5 +482,12 @@ public class AutoOpMode extends LinearOpMode{
         telemetry.update();
     }
 
+    public void safeWait(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!isStopRequested() && timer.time() < time) {
+            driveTrain.update();
+        }
+    }
 
 }
