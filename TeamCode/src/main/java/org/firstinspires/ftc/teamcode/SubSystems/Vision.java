@@ -143,20 +143,18 @@ public class Vision {
      *  1: Bulb,
      *  2: Panel,
      */
-    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    //private static final String TFOD_MODEL_ASSET  = "/sdcard/FIRST/tflitemodels/FreightFrenzy_BCDM.tflite";
-    //private static final String TFOD_MODEL_ASSET  = "FreightFrenzy_BCDM.tflite";
-
+    //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "HazmatPowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
 
     private static final String[] LABELS = {
-            "1 Bolt",
+            /*"1 Bolt",
             "2 Bulb",
-            "3 Panel",
-            /*"Green",
+            "3 Panel",*/
+            "Green",
             "Yellow",
-            "Purple",*/
+            "Purple"
     };
 
 
@@ -269,16 +267,16 @@ public class Vision {
                         detectedLabel = recognition.getLabel();
                         detectionConfidence = recognition.getConfidence();
                         switch(detectedLabel){
-                            case "1 Bolt":
-                            //case "Green":
+                            //case "1 Bolt":
+                            case "Green":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
                                 break;
-                            case "2 Bulb":
-                            //case "Yellow":
+                            //case "2 Bulb":
+                            case "Yellow":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
                                 break;
-                            case "3 Panel":
-                            //case "Purple":
+                            //case "3 Panel":
+                            case "Purple":
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
                                 break;
                         }

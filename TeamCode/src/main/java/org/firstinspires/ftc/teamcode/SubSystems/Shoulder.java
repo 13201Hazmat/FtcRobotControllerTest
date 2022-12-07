@@ -70,9 +70,9 @@ public class Shoulder {
     public static final double LOW_JUNCTION_POSITION_ARM_MAX_EXTENDED = 470; //337;
     public static final double MEDIUM_JUNCTION_POSITION = 730;//864; //610;
     public static final double MEDIUM_JUNCTION_POSITION_ARM_MAX_EXTENDED = 615;//626;//440;
-    public static final double HIGH_JUNCTION_POSITION = 900;//1060; //760;
+    public static final double HIGH_JUNCTION_POSITION = 1000;//950;//1060; //760;
     public static final double HIGH_JUNCTION_POSITION_ARM_MAX_EXTENDED = 760;//820; //591;
-    public static final double MAX_RAISED_POSITION = 960; //900;
+    public static final double MAX_RAISED_POSITION = 1100; //900;
 
     public double dynamicMinPosition = PICKUP_POSITION;
 

@@ -56,6 +56,7 @@ public class Turret {
     public static final double FACING_BACKWARD_RIGHT_POSITION = 1350; //+180 deg
     public static final double FACING_LEFT_POSITION = -675;
     public static final double FACING_RIGHT_POSITION = 675;
+    public static final double NINETY_DEGREE_DELTA = 675;
 
     public static final double QUARTER_TURN = 675/2;
 
@@ -70,7 +71,7 @@ public class Turret {
 
     //value declarations
     public boolean runTurretToLevelState = false;
-    public static double TURRET_DELTA_COUNT_MAX = 150; //movement value of turret given clockwise or counterclockwise rotation(changeable)
+    public static double TURRET_DELTA_COUNT_MAX = 300; //movement value of turret given clockwise or counterclockwise rotation(changeable)
     public double turretDeltaCount = 0;
 
     public Turret(HardwareMap hardwareMap) { //map turretmotor to turret
@@ -140,6 +141,39 @@ public class Turret {
     public void moveTurretToAngle(double turretAnglePosition){
         turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
         turretMotor.setTargetPosition((int)turretAnglePosition);
+        runTurretToLevelState = true;
+    }
+
+    public void moveTurretPlus90(){
+        if ((turretMotor.getCurrentPosition() + NINETY_DEGREE_DELTA) < MAX_RIGHT_POSITION ) {
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + NINETY_DEGREE_DELTA));
+            turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
+        } else {
+            turretMotor.setTargetPosition((int)MAX_RIGHT_POSITION);
+            turretMotorState = TURRET_MOTOR_STATE.MAX_RIGHT;
+        }
+
+        runTurretToLevelState = true;
+    }
+    public void moveTurretMinus90(){
+        if ((turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA) > MAX_LEFT_POSITION ) {
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA));
+            turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
+        } else {
+            turretMotor.setTargetPosition((int)MAX_LEFT_POSITION);
+            turretMotorState = TURRET_MOTOR_STATE.MAX_LEFT;
+        }
+        runTurretToLevelState = true;
+    }
+
+    public void moveTurretMinus45(){
+        if ((turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA) > MAX_LEFT_POSITION ) {
+            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA/2));
+            turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
+        } else {
+            turretMotor.setTargetPosition((int)MAX_LEFT_POSITION);
+            turretMotorState = TURRET_MOTOR_STATE.MAX_LEFT;
+        }
         runTurretToLevelState = true;
     }
 

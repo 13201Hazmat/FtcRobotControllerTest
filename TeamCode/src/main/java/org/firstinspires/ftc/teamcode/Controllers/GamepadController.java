@@ -138,7 +138,7 @@ public class GamepadController {
 
 
     double turretPowerReductionFactorBasedOnArmLength = 0;
-    double turretDeceleration = 0.25;
+    double turretDeceleration = 0.125;
     /**
      * runArm sets the different intake controls, if intake should take in freight(Dpad_downPress) or the intake should run the opposite
      * direction in order for a stuck freight to be out of intake. <BR>
@@ -159,29 +159,39 @@ public class GamepadController {
         if  (!(gp1GetLeftTriggerPersistent() || gp1GetLeftBumper())) {
             //Move turret to face forward
             if (gp1GetButtonYPress()) {
-                turret.faceForward();
+                //turret.faceForward();
+                turret.moveTurretPlus90();
+                turret.moveTurretPlus90();
             }
 
             //Move turret to face right
-            if (gp1GetButtonBPress()) {
-                turret.faceRight();
+            if (!gp1GetStart() && gp1GetButtonBPress()) {
+                //turret.faceRight();
+                turret.moveTurretPlus90();
             }
 
             //Move turret to face left
             if (gp1GetButtonXPress()) {
-                turret.faceLeft();
+                //turret.faceLeft();
+                turret.moveTurretMinus90();
             }
 
-            if (gp1GetButtonAPress()) {
-                turret.faceBackward();
+            if (!gp1GetStart() && gp1GetButtonAPress()) {
+                //turret.faceBackward();
+                turret.moveTurretMinus90();
+                turret.moveTurretMinus90();
             }
         }
 
-        //manual reset for the turret
+        //manual reset for the turret using magnetic sensor
         if (gp2GetStart()){
             if (gp2GetRightStickX() != 0){
                 turret.manualResetTurret(gp2GetRightStickX());
             }
+        }
+
+        if (gp1GetStart() && (gp1GetLeftBumper())) {
+            turret.resetTurretMode();
         }
 
         if (turret.runTurretToLevelState) {
@@ -546,12 +556,19 @@ public class GamepadController {
         arm.moveArmToMinRetracted();
         shoulder.moveToShoulderMaxRaised();
         hand.moveWristUp(shoulder.MAX_RAISED_POSITION);
+        runArmShoulderWristToLevel();
     }
 
     public void moveToNeutralLow(){
         hand.moveWristUp(shoulder.PICKUP_POSITION);
         arm.moveArmToMinRetracted();
         shoulder.moveShoulderToPickup();
+        runArmShoulderWristToLevel();
+    }
+
+    public void moveTurretMinus45(){
+        turret.moveTurretMinus45();
+        runTurret();
     }
 
 

@@ -47,7 +47,7 @@ public class AutoOpMode extends LinearOpMode{
         BACK_MEDIUM,
         BACK_HIGH
     }
-    public static DROP_CONE_POSITION dropConePosition;
+    public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
 
     public Vision vision;
     public DriveTrain driveTrain;
@@ -266,6 +266,9 @@ public class AutoOpMode extends LinearOpMode{
             case BACK_MEDIUM: dropConeAadiPose = dropConeBackMedium; break;
             case BACK_HIGH: dropConeAadiPose = dropConeBackHigh; break;
         }
+        turret.moveTurretMinus45();
+        safeWait(500);
+        turret.resetTurretMode();
         //Run the trajectory built for Auto and Parking
         driveTrain.followTrajectorySequence(trajectoryAuto);
         gamepadController.moveToNeutralHigh();
@@ -421,6 +424,8 @@ public class AutoOpMode extends LinearOpMode{
                     break;
                 }
                 telemetry.update();
+            } else {
+                break;
             }
         }
 
