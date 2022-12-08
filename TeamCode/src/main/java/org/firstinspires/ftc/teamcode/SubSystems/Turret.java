@@ -58,7 +58,7 @@ public class Turret {
     public static final double FACING_RIGHT_POSITION = 675;
     public static final double NINETY_DEGREE_DELTA = 675;
 
-    public static final double QUARTER_TURN = 675/2;
+    public static final double FORTY_FIVE_DEGREE_DELTA = NINETY_DEGREE_DELTA/2;
 
     public double turretCurrentPosition = FACING_FORWARD_POSITION;
     public double turretNewPosition = FACING_FORWARD_POSITION;
@@ -212,9 +212,9 @@ public class Turret {
     }
 
     public void resetTurretMode() {
-        DcMotorEx.RunMode runMode = turretMotor.getMode();
+        //DcMotorEx.RunMode runMode = turretMotor.getMode();
         turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        turretMotor.setMode(runMode);
+        //turretMotor.setMode(runMode);
         runTurretToLevelState = false;
     }
 
@@ -231,13 +231,19 @@ public class Turret {
     }
 
 
-    public void rotateAutonomousPreset(){
+    public void rotateAutoInitTurnAndReset(){
         //TODO add elapsed timer
         //uses 2 magnet sensors goes from left one to the center one
-        turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - QUARTER_TURN));
+        turretMotor.setTargetPosition((int) (/*turretMotor.getCurrentPosition()*/ - FORTY_FIVE_DEGREE_DELTA));
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(TURRET_RESET_POWER);
         resetTurretMode();
+    }
+
+    public void rotateAutoTurnToAngle(double turretAnglePosition) {
+        turretMotor.setTargetPosition((int) turretAnglePosition);
+        turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        turretMotor.setPower(TURRET_POWER);
     }
 
 

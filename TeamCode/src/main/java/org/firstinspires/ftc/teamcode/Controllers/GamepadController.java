@@ -539,6 +539,8 @@ public class GamepadController {
             hand.moveWristUp(aadiPose.getShoulderAngle());
         }
         turret.moveTurretToAngle(aadiPose.getTurretAngle());
+        runTurret();
+        runArmShoulderWristToLevel();
     }
 
     //Move subsysetms to a specific AadiPose
@@ -550,25 +552,32 @@ public class GamepadController {
         } else {
             hand.moveWristUp(aadiVector.getShoulderAngle());
         }
+        runArmShoulderWristToLevel();
     }
 
     public void moveToNeutralHigh(){
         arm.moveArmToMinRetracted();
         shoulder.moveToShoulderMaxRaised();
-        hand.moveWristUp(shoulder.MAX_RAISED_POSITION);
+        //hand.moveWristUp(shoulder.MAX_RAISED_POSITION);
         runArmShoulderWristToLevel();
     }
 
     public void moveToNeutralLow(){
         hand.moveWristUp(shoulder.PICKUP_POSITION);
         arm.moveArmToMinRetracted();
-        shoulder.moveShoulderToPickup();
+        //shoulder.moveShoulderToPickup();
         runArmShoulderWristToLevel();
     }
 
     public void moveTurretMinus45(){
         turret.moveTurretMinus45();
         runTurret();
+    }
+
+    public void raiseShoulderToClearStack(){
+        shoulder.shoulderCurrentPosition += 50;
+        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition);
+        runArmShoulderWristToLevel();
     }
 
 

@@ -47,6 +47,8 @@ public class AutoOpMode220712 extends LinearOpMode{
     }
     public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
 
+    public int pickAndDropConeCount = 1;
+
     public Vision vision;
     public DriveTrain driveTrain;
     public Hand hand;
@@ -136,7 +138,7 @@ public class AutoOpMode220712 extends LinearOpMode{
     public void buildAuto() {
         switch (startPosition) {
             case BLUE_LEFT:
-                initPose = new Pose2d(-54, 36, Math.toRadians(0)); //Starting pose
+                initPose = new Pose2d(-60, 36, Math.toRadians(0)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(0, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
 
@@ -153,7 +155,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
 
             case BLUE_RIGHT:
-                initPose = new Pose2d(-54, -36, Math.toRadians(0));//Starting pose
+                initPose = new Pose2d(-60, -36, Math.toRadians(0));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
@@ -168,9 +170,9 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
 
             case RED_LEFT:
-                initPose = new Pose2d(54, -36, Math.toRadians(180));//Starting pose
+                initPose = new Pose2d(60, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(0, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
+                midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
@@ -181,7 +183,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, -675);
 
             case RED_RIGHT:
-                initPose = new Pose2d(54, 36, Math.toRadians(180)); //Starting pose
+                initPose = new Pose2d(60, 36, Math.toRadians(180)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
@@ -196,12 +198,11 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
         }
 
-        //Drop Preloaded Cone, Pick 5 cones and park
+        //Move forward to midWayPose, rotate turret to 0 and reset turret
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
-                /*.addTemporalMarker(0.3,() -> {
-                    gamepadController.moveToNeutralHigh();
-                    turret.rotateAutonomousPreset();
-                })*/
+                .addTemporalMarker(0.1,() -> {
+                    turret.rotateAutoInitTurnAndReset();
+                })
                 .lineToLinearHeading(midWayPose)
                 .build();
     }
@@ -241,12 +242,6 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
-                /*.addDisplacementMarker(() -> {
-                    turret.rotateAutonomousMagSensor();
-                    turret.runTurretToLevelState = true;
-                    turret.runTurretToPosition(turret.TURRET_RESET_POWER);
-                    turret.resetTurretMode();
-                })*/
                 .build();
     }
 
@@ -260,71 +255,92 @@ public class AutoOpMode220712 extends LinearOpMode{
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             telemetry.addData("Selected dropConePosition", dropConePosition);
         }
+        if (autoOption == AUTO_OPTION.FULL_AUTO) {
+            telemetry.addData("Selected number of pickAndDropCone", pickAndDropConeCount);
+        }
         telemetry.update();
+
         switch (dropConePosition) {
             case FRONT_HIGH: dropConeAadiPose = dropConeFrontHigh; break;
             case BACK_MEDIUM: dropConeAadiPose = dropConeBackMedium; break;
             case BACK_HIGH: dropConeAadiPose = dropConeBackHigh; break;
         }
 
-        gamepadController.moveTurretMinus45();
-        safeWait(1000);
-        turret.resetTurretMode();
-        safeWait(500);
-        gamepadController.moveToNeutralHigh();
+        //Starting AadiPose - Arm max retracted, shoulder at Intake, turret facing +45degrees, camera to the front
 
-        //Run the trajectory built for Auto and Parking
+        //Move forward to midWayPose, rotate turret to 0 and reset turret.
         driveTrain.followTrajectorySequence(trajectoryAuto);
 
-        safeWait(2000);
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             dropCone(dropConeAadiPose); //Drop preloaded Cone
-            safeWait(1000);
+
             if (autoOption == AUTO_OPTION.FULL_AUTO) {
                 for (coneCount = 1; coneCount <= 5; coneCount++) {
                     pickCone(pickConeAadiPose[coneCount]);
-                    safeWait(1000);
                     dropCone(dropConeAadiPose);
-                    safeWait(1000);
                 }
             }
         }
-        turret.faceBackward();
+        turret.rotateAutoTurnToAngle(0);
+        safeWait(1000);
+        driveTrain.followTrajectorySequence(trajectoryParking);
         gamepadController.moveToNeutralLow();
         safeWait(2000);
-        driveTrain.followTrajectorySequence(trajectoryParking);
     }
 
     //Write a method which is able to pick the cone from the stack depending on your subsystems
     public void pickCone(AadiPose pickConeAadiPose) {
+        //Open Grip and rotate to pickConeAadiPose
         hand.openGrip();
-        gamepadController.moveToNeutralHigh();
+        turret.rotateAutoTurnToAngle(pickConeAadiPose.getTurretAngle());
         safeWait(2000);
-        turret.moveTurretToAngle(pickConeAadiPose.getTurretAngle());
-        safeWait(2000);
-        gamepadController.moveToNeutralLow();
-        safeWait(2000);
+
+        //gamepadController.moveToNeutralLow();
+        //safeWait(2000);
+
+        //Move Arm to pickCone Pose
         gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector(), pickConeAadiPose.getWristState());
-        gamepadController.runArmShoulderWristToLevel();
         safeWait(2000);
+
+        //Close grip
         hand.closeGrip();
-        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition + 100);
         safeWait(1000);
+
+        //Raise shoulder to clear from stack and wrist up
+        gamepadController.raiseShoulderToClearStack();
+        safeWait(1000);
+        hand.moveWristUp(shoulder.shoulderCurrentPosition);
+        safeWait(1000);
+
         telemetry.addData("Picked Cone: Stack", coneCount);
         telemetry.update();
     }
 
     //Write a method which is able to drop the cone depending on your subsystems
     public void dropCone(AadiPose dropConeAadiPose){
+        //Raise arm to Neutral High and wrist up
         gamepadController.moveToNeutralHigh();
-        safeWait(2000);
-        turret.moveTurretToAngle(dropConeAadiPose.getTurretAngle());
-        safeWait(2000);
+        safeWait(1000);
+        hand.moveWristUp(shoulder.shoulderCurrentPosition);
+
+        //Rotate turret to dropConePose
+        turret.rotateAutoTurnToAngle(dropConeAadiPose.getTurretAngle());
+        safeWait(1000);
+
+        //Move Arm to dropCone Post, wrist level
         gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector(), dropConeAadiPose.getWristState());
         gamepadController.runArmShoulderWristToLevel();
+        safeWait(2000);
 
-        safeWait(2000);hand.openGrip();
+        //Open grip to drop Cone
+        hand.openGrip();
+        safeWait(1000);
+
+        //Move arm to neutral high, wrist level
+        gamepadController.moveToNeutralHigh();
+        safeWait(1000);
+
         if (coneCount == 0) {
             telemetry.addData("Dropped Cone", "Pre-loaded");
         } else {
@@ -359,10 +375,10 @@ public class AutoOpMode220712 extends LinearOpMode{
             telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team:","TEAM NUMBER");
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X)");
-            telemetry.addData("    Blue Right ", "(Y)");
-            telemetry.addData("    Red Left    ", "(B)");
-            telemetry.addData("    Red Right  ", "(A)");
+            telemetry.addData("    Blue Left   ", "(X / Square)");
+            telemetry.addData("    Blue Right ", "(Y / Triangle)");
+            telemetry.addData("    Red Left    ", "(B / Cross)");
+            telemetry.addData("    Red Right  ", "(A / Circle)");
             if(gamepadController.gp1GetButtonXPress()){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
@@ -387,9 +403,9 @@ public class AutoOpMode220712 extends LinearOpMode{
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position",startPosition);
             telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Full Autonomous           ","X");
-            telemetry.addData("    Drop Preloaded and Park   ","Y");
-            telemetry.addData("    Only Park                 ","B");
+            telemetry.addData("    Full Autonomous           ","X / Square");
+            telemetry.addData("    Drop Preloaded and Park   ","Y / Triangle");
+            telemetry.addData("    Only Park                 ","B / Circle");
             if(gamepadController.gp1GetButtonXPress()){
                 autoOption = AUTO_OPTION.FULL_AUTO;
                 break;
@@ -405,16 +421,16 @@ public class AutoOpMode220712 extends LinearOpMode{
             telemetry.update();
         }
 
-        while(!isStopRequested()){
-            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team","TEAM NUMBER");
-            telemetry.addData("---------------------------------------","");
-            telemetry.addData("Selected Starting Position",startPosition);
-            telemetry.addData("Selected Auto Option", autoOption);
-            if (autoOption != AUTO_OPTION.ONLY_PARK) {
+        if (autoOption != AUTO_OPTION.ONLY_PARK) {
+            while (!isStopRequested()) {
+                telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team", "TEAM NUMBER");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
                 telemetry.addLine("Select dropCone Postition");
-                telemetry.addData("    Front High           ", "X");
-                telemetry.addData("    Back Medium          ", "A");
-                telemetry.addData("    Back High            ", "B");
+                telemetry.addData("    Front High           ", "X / Square");
+                telemetry.addData("    Back Medium          ", "A / Cross");
+                telemetry.addData("    Back High            ", "B / Circle");
                 if (gamepadController.gp1GetButtonXPress()) {
                     dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
                     break;
@@ -428,8 +444,42 @@ public class AutoOpMode220712 extends LinearOpMode{
                     break;
                 }
                 telemetry.update();
-            } else {
-                break;
+            }
+        }
+
+        if (autoOption == AUTO_OPTION.FULL_AUTO) {
+            while (!isStopRequested()) {
+                telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous Mode adopted for Team", "TEAM NUMBER");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addData("Selected dropCone Position", dropConePosition);
+
+                telemetry.addLine("Select number of cones to pick and drop");
+                telemetry.addLine("Use dpad up to increase and dpad down to reduce");
+                telemetry.addLine("Once final, press X / Square to finalize");
+
+                telemetry.addData("    pickAndDropConeCount", pickAndDropConeCount);
+
+                if (gamepadController.gp1GetDpad_upPress()) {
+                    pickAndDropConeCount += 1;
+                    if (pickAndDropConeCount > 5) {
+                        pickAndDropConeCount = 5;
+                    }
+                }
+                if (gamepadController.gp1GetDpad_downPress()) {
+                    pickAndDropConeCount -= 1;
+                    if (pickAndDropConeCount < 1) {
+                        pickAndDropConeCount = 1;
+                    }
+                }
+
+                if (gamepadController.gp1GetButtonXPress()) {
+                    telemetry.addData("Selected number of pickAndDropCones", pickAndDropConeCount);
+                    break;
+                }
+
+                telemetry.update();
             }
         }
 
