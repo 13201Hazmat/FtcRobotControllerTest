@@ -138,9 +138,9 @@ public class AutoOpMode220712 extends LinearOpMode{
     public void buildAuto() {
         switch (startPosition) {
             case BLUE_LEFT:
-                initPose = new Pose2d(-60, 36, Math.toRadians(0)); //Starting pose
+                initPose = new Pose2d(-72, 36, Math.toRadians(0)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(0, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
+                midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
 
                 //midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
@@ -155,7 +155,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
 
             case BLUE_RIGHT:
-                initPose = new Pose2d(-60, -36, Math.toRadians(0));//Starting pose
+                initPose = new Pose2d(-72, -36, Math.toRadians(0));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
@@ -170,7 +170,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
 
             case RED_LEFT:
-                initPose = new Pose2d(60, -36, Math.toRadians(180));//Starting pose
+                initPose = new Pose2d(72, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
@@ -183,7 +183,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 pickConeAadiPose[5] = new AadiPose(300,0, Hand.WRIST_STATE.WRIST_LEVEL, -675);
 
             case RED_RIGHT:
-                initPose = new Pose2d(60, 36, Math.toRadians(180)); //Starting pose
+                initPose = new Pose2d(72, 36, Math.toRadians(180)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
@@ -200,8 +200,8 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
-                .addTemporalMarker(0.1,() -> {
-                    turret.rotateAutoInitTurnAndReset();
+                .addTemporalMarker(0.3 ,() -> {
+                    turret.rotateAutoInitTurn();
                 })
                 .lineToLinearHeading(midWayPose)
                 .build();
@@ -212,9 +212,9 @@ public class AutoOpMode220712 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(0, 56, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(0, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(0, 11, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, 56, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, 11, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case BLUE_RIGHT:
@@ -226,9 +226,9 @@ public class AutoOpMode220712 extends LinearOpMode{
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(0, -40, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(0, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(0, -11, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, -40, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -11, Math.toRadians(180)); break; // Location 3
                 }
                 break;
             case RED_RIGHT:
@@ -242,6 +242,7 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
+                .back(10)
                 .build();
     }
 
@@ -270,13 +271,14 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret.
         driveTrain.followTrajectorySequence(trajectoryAuto);
+        turret.resetTurretMode();
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             dropCone(dropConeAadiPose); //Drop preloaded Cone
 
             if (autoOption == AUTO_OPTION.FULL_AUTO) {
-                for (coneCount = 1; coneCount <= 5; coneCount++) {
+                for (coneCount = 1; coneCount <= pickAndDropConeCount; coneCount++) {
                     pickCone(pickConeAadiPose[coneCount]);
                     dropCone(dropConeAadiPose);
                 }
@@ -377,8 +379,8 @@ public class AutoOpMode220712 extends LinearOpMode{
             telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
             telemetry.addData("    Blue Left   ", "(X / Square)");
             telemetry.addData("    Blue Right ", "(Y / Triangle)");
-            telemetry.addData("    Red Left    ", "(B / Cross)");
-            telemetry.addData("    Red Right  ", "(A / Circle)");
+            telemetry.addData("    Red Left    ", "(A / Cross)");
+            telemetry.addData("    Red Right  ", "(B / Circle)");
             if(gamepadController.gp1GetButtonXPress()){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
@@ -387,11 +389,11 @@ public class AutoOpMode220712 extends LinearOpMode{
                 startPosition = START_POSITION.BLUE_RIGHT;
                 break;
             }
-            if(gamepadController.gp1GetButtonBPress()){
+            if(gamepadController.gp1GetButtonAPress()){
                 startPosition = START_POSITION.RED_LEFT;
                 break;
             }
-            if(gamepadController.gp1GetButtonAPress()){
+            if(gamepadController.gp1GetButtonBPress()){
                 startPosition = START_POSITION.RED_RIGHT;
                 break;
             }
@@ -456,8 +458,8 @@ public class AutoOpMode220712 extends LinearOpMode{
                 telemetry.addData("Selected dropCone Position", dropConePosition);
 
                 telemetry.addLine("Select number of cones to pick and drop");
-                telemetry.addLine("Use dpad up to increase and dpad down to reduce");
-                telemetry.addLine("Once final, press X / Square to finalize");
+                telemetry.addLine("(Use dpad up to increase and dpad down to reduce)");
+                telemetry.addLine("(Once final, press X / Square to finalize)");
 
                 telemetry.addData("    pickAndDropConeCount", pickAndDropConeCount);
 

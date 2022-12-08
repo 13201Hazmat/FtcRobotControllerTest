@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -108,6 +110,7 @@ public class Turret {
     public void faceForward() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
         turretMotor.setTargetPosition((int)FACING_FORWARD_POSITION);
+        turretCurrentPosition = FACING_FORWARD_POSITION;
         runTurretToLevelState = true;
         //assign value after testing
     }
@@ -117,9 +120,11 @@ public class Turret {
         turretCurrentPosition = turretMotor.getCurrentPosition();
         if (turretCurrentPosition <0) {
             turretMotor.setTargetPosition((int)FACING_BACKWARD_LEFT_POSITION);
+            turretCurrentPosition = FACING_BACKWARD_LEFT_POSITION;
             turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_LEFT;
         } else {
             turretMotor.setTargetPosition((int)FACING_BACKWARD_RIGHT_POSITION);
+            turretCurrentPosition = FACING_BACKWARD_RIGHT_POSITION;
             turretMotorState = TURRET_MOTOR_STATE.FACING_BACKWARD_RIGHT;
         }
         runTurretToLevelState = true;
@@ -128,12 +133,14 @@ public class Turret {
     public void faceLeft() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_LEFT;
         turretMotor.setTargetPosition((int)FACING_LEFT_POSITION);
+        turretCurrentPosition = FACING_LEFT_POSITION;
         runTurretToLevelState = true;
         //assign value after testing
     }
     public void faceRight() {
         turretMotorState = TURRET_MOTOR_STATE.FACING_RIGHT;
         turretMotor.setTargetPosition((int)FACING_RIGHT_POSITION);
+        turretCurrentPosition = FACING_RIGHT_POSITION;
         runTurretToLevelState = true;
         //assign value after testing
     }
@@ -141,14 +148,17 @@ public class Turret {
     public void moveTurretToAngle(double turretAnglePosition){
         turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
         turretMotor.setTargetPosition((int)turretAnglePosition);
+        turretCurrentPosition = turretAnglePosition;
         runTurretToLevelState = true;
     }
 
     public void moveTurretPlus90(){
         if ((turretMotor.getCurrentPosition() + NINETY_DEGREE_DELTA) < MAX_RIGHT_POSITION ) {
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() + NINETY_DEGREE_DELTA));
+            turretCurrentPosition = turretMotor.getCurrentPosition() + NINETY_DEGREE_DELTA;
+            turretMotor.setTargetPosition((int) (turretCurrentPosition));
             turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
         } else {
+            turretCurrentPosition = MAX_RIGHT_POSITION;
             turretMotor.setTargetPosition((int)MAX_RIGHT_POSITION);
             turretMotorState = TURRET_MOTOR_STATE.MAX_RIGHT;
         }
@@ -157,9 +167,11 @@ public class Turret {
     }
     public void moveTurretMinus90(){
         if ((turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA) > MAX_LEFT_POSITION ) {
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA));
+            turretCurrentPosition = turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA;
+            turretMotor.setTargetPosition((int) (turretCurrentPosition));
             turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
         } else {
+            turretCurrentPosition = MAX_LEFT_POSITION;
             turretMotor.setTargetPosition((int)MAX_LEFT_POSITION);
             turretMotorState = TURRET_MOTOR_STATE.MAX_LEFT;
         }
@@ -167,10 +179,12 @@ public class Turret {
     }
 
     public void moveTurretMinus45(){
-        if ((turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA) > MAX_LEFT_POSITION ) {
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - NINETY_DEGREE_DELTA/2));
+        if ((turretMotor.getCurrentPosition() -FORTY_FIVE_DEGREE_DELTA ) > MAX_LEFT_POSITION ) {
+            turretCurrentPosition = turretMotor.getCurrentPosition() - FORTY_FIVE_DEGREE_DELTA;
+            turretMotor.setTargetPosition((int) (turretCurrentPosition));
             turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
         } else {
+            turretCurrentPosition = MAX_LEFT_POSITION;
             turretMotor.setTargetPosition((int)MAX_LEFT_POSITION);
             turretMotorState = TURRET_MOTOR_STATE.MAX_LEFT;
         }
@@ -199,7 +213,8 @@ public class Turret {
                 turretMotorState = TURRET_MOTOR_STATE.FACING_RANDOM;
             }
             if (turretNewPosition != turretCurrentPosition) {
-                turretMotor.setTargetPosition((int)turretNewPosition);
+                turretCurrentPosition = turretNewPosition;
+                turretMotor.setTargetPosition((int)turretCurrentPosition);
                 runTurretToLevelState = true;
             }
         }
@@ -215,6 +230,7 @@ public class Turret {
         //DcMotorEx.RunMode runMode = turretMotor.getMode();
         turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         //turretMotor.setMode(runMode);
+        turretCurrentPosition = 0;
         runTurretToLevelState = false;
     }
 
@@ -222,28 +238,31 @@ public class Turret {
         //TODO add elapsed timer
         //uses 2 magnet sensors goes from left one to the center one
         while(!turretCenterMagneticSensor.getState()){
-            turretMotor.setTargetPosition((int) (turretMotor.getCurrentPosition() - 20));
+            turretCurrentPosition = turretMotor.getCurrentPosition();
+            turretMotor.setTargetPosition((int) ( turretCurrentPosition- 20));
             runTurretToLevelState = true;
             runTurretToPosition(TURRET_RESET_POWER);
         }
         resetTurretMode();
+        turretCurrentPosition = 0;
         turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
     }
 
 
-    public void rotateAutoInitTurnAndReset(){
+    public void rotateAutoInitTurn(){
         //TODO add elapsed timer
         //uses 2 magnet sensors goes from left one to the center one
-        turretMotor.setTargetPosition((int) (/*turretMotor.getCurrentPosition()*/ - FORTY_FIVE_DEGREE_DELTA));
+        turretMotor.setTargetPosition((int) (- FORTY_FIVE_DEGREE_DELTA));
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        turretMotor.setPower(TURRET_RESET_POWER);
-        resetTurretMode();
+        turretMotor.setPower(TURRET_POWER);
+        turretCurrentPosition =  - FORTY_FIVE_DEGREE_DELTA;
     }
 
     public void rotateAutoTurnToAngle(double turretAnglePosition) {
         turretMotor.setTargetPosition((int) turretAnglePosition);
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(TURRET_POWER);
+        turretCurrentPosition = turretAnglePosition;
     }
 
 
@@ -273,6 +292,7 @@ public class Turret {
         }
         turnTurretBrakeModeOff();
         resetTurretMode();
+        turretCurrentPosition = 0;
         turretMotorState = TURRET_MOTOR_STATE.FACING_FORWARD;
     }
 }

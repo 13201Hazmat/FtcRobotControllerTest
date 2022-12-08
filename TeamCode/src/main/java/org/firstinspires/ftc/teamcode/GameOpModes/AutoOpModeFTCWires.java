@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * FTC WIRES Autonomous Example
  */
 @Autonomous(name = "FTC Wires Autonomous", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Disabled
 public class AutoOpModeFTCWires extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
