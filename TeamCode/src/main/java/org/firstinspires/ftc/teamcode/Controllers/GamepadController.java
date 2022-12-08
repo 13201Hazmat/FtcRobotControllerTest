@@ -575,7 +575,7 @@ public class GamepadController {
     }
 
     public void raiseShoulderToClearStack(){
-        shoulder.shoulderCurrentPosition += 50;
+        shoulder.shoulderCurrentPosition += 150;
         shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition);
         runArmShoulderWristToLevel();
     }
