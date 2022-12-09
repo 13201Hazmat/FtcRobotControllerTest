@@ -47,7 +47,7 @@ public class TeleOpMode extends LinearOpMode {
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
-        GameField.debugLevel = GameField.DEBUG_LEVEL.MINIMUM;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
@@ -166,7 +166,8 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addLine("=============");
 
             telemetry.addData("Arm State", arm.armState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            //telemetry.addData("Arm Motor Position", arm.armMotor.getCurrentPosition());
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Arm Motor Position", arm.armMotor.getCurrentPosition());
                 telemetry.addData("Arm Motor Power", arm.armMotor.getPower());
                 telemetry.addData("Arm Motor is busy", arm.armMotor.isBusy());
@@ -185,7 +186,7 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addLine("=============");
 
             telemetry.addData("Shoulder State", shoulder.shoulderState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Should Touch Sensor State", shoulder.shoulderTouchSensor.getState());
                 telemetry.addData("Left Motor Shoulder Position", shoulder.leftShoulderMotor.getCurrentPosition());
                 telemetry.addData("Left Motor Shoulder Power", "%.2f", shoulder.leftShoulderMotor.getPower());
@@ -200,7 +201,7 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addLine("=============");
 
             telemetry.addData("Turret State", turret.turretMotorState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Turret Left Mag Sensor State", turret.turretLeftMagneticSensor.getState());
                 telemetry.addData("Turret Center Mag Sensor State", turret.turretCenterMagneticSensor.getState());
                 telemetry.addData("Turret Right Mag Sensor State", turret.turretRightMagneticSensor.getState());

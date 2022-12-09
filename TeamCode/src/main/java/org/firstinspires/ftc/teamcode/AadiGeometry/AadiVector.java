@@ -6,11 +6,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 public class AadiVector {
     private double armLength; // Arm Length in Encoder value
     private double shoulderAngle; //Shoulder Angle in Encoder value
-    /*public enum WRIST_ANGLE {
-        UP,
-        LEVEL
-    }
-    private WRIST_ANGLE wristAngle = WRIST_ANGLE.UP;*/
     public Hand.WRIST_STATE wristState;
 
     public AadiVector(double armLength, double shoulderAngle, Hand.WRIST_STATE wristState){

@@ -38,8 +38,9 @@ public class DriveConstants {
     /*public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));*
      */
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(1, 0, 0.01, 13.1);
+    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(2, 0, 0.01, 13.270676300716438);
     /*
      * These are physical constants that can be determined from your robot (including the track
      * width; it will be tune empirically later although a rough estimate is important). Users are
@@ -50,7 +51,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.6; //14.25; // in
+    public static double TRACK_WIDTH = 16.37;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -90,11 +91,10 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 44.6142864083819;//52.48291908330528;
-    public static double MAX_ACCEL = 44.6142864083819;//52.48291908330528;
-    public static double MAX_ANG_VEL = Math.toRadians(258.21297930801427);//Math.toRadians(211.0210357894737);
-    public static double MAX_ANG_ACCEL = Math.toRadians(258.21297930801427);//Math.toRadians(211.0210357894737);
-
+    public static double MAX_VEL = 0.9 * 62.17967076779256;
+    public static double MAX_ACCEL = 0.9 * 62.17967076779256;
+    public static double MAX_ANG_VEL = 0.9* Math.toRadians(214.78926857142858);
+    public static double MAX_ANG_ACCEL = 0.9* Math.toRadians(214.78926857142858);
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

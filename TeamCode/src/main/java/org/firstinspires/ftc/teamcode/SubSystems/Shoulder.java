@@ -230,6 +230,7 @@ public class Shoulder {
         rightShoulderMotor.setTargetPosition((int)MAX_RAISED_POSITION);
         leftShoulderMotor.setTargetPosition((int)MAX_RAISED_POSITION);
         shoulderState = SHOULDER_STATE.MAX_RAISED;
+        shoulderCurrentPosition = MAX_RAISED_POSITION;
         runShoulderToLevelState = true;
     }
 
@@ -245,6 +246,7 @@ public class Shoulder {
         rightShoulderMotor.setTargetPosition((int)shoulderAnglePosition);
         leftShoulderMotor.setTargetPosition((int)shoulderAnglePosition);
         shoulderState = SHOULDER_STATE.RANDOM;
+        shoulderCurrentPosition = shoulderAnglePosition;
         runShoulderToLevelState = true;
     }
 
@@ -265,6 +267,7 @@ public class Shoulder {
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
+                shoulderCurrentPosition = shoulderNewPosition;
                 runShoulderToLevelState = true;
             }
         }
@@ -286,6 +289,7 @@ public class Shoulder {
                 turnShoulderBrakeModeOn();
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
+                shoulderCurrentPosition = shoulderNewPosition;
                 runShoulderToLevelState = true;
             }
         }
@@ -323,6 +327,7 @@ public class Shoulder {
         leftShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftShoulderMotor.setMode(runMode);
         rightShoulderMotor.setMode(runMode);
+        shoulderCurrentPosition = 0;
     }
 
     public void manualResetShoulder(){
@@ -336,6 +341,7 @@ public class Shoulder {
         }
         turnShoulderBrakeModeOn();
         resetShoulderMode();
+        shoulderCurrentPosition = 0;
         shoulderState = SHOULDER_STATE.PICKUP;
     }
 }

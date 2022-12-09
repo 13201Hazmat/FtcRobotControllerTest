@@ -394,7 +394,7 @@ public class GamepadController {
                 if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
                     hand.moveWristLevel(shoulder.shoulderCurrentPosition);
                 }
-                if (hand.wristState == Hand.WRIST_STATE.WRIST_UP) {
+                if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
                     hand.moveWristUp(shoulder.shoulderCurrentPosition);
                 }
                 if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN &&
@@ -405,7 +405,7 @@ public class GamepadController {
                 if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
                     hand.moveWristLevel(shoulder.shoulderCurrentPosition);
                 }
-                if (hand.wristState == Hand.WRIST_STATE.WRIST_UP) {
+                if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
                     hand.moveWristUp(shoulder.shoulderCurrentPosition);
                 }
                 shoulderPowerReductionFactorBasedOnArmLength = (1-arm.armCurrentPosition/arm.MAX_EXTENDED_POSITION);
@@ -474,12 +474,12 @@ public class GamepadController {
         if (gp1GetLeftBumper() && gp1GetButtonXPress()) {
             timer.reset();
             moveToNeutralHigh();
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runArmShoulderWristToLevel();
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayX.getTurretAngle());
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayX.getAadiVector(), recordAndReplayX.getWristState());
@@ -488,12 +488,12 @@ public class GamepadController {
         if (gp1GetLeftBumper() && gp1GetButtonYPress()) {
             timer.reset();
             moveToNeutralHigh();
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runArmShoulderWristToLevel();
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayY.getTurretAngle());
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayY.getAadiVector(), recordAndReplayY.getWristState());
@@ -502,12 +502,12 @@ public class GamepadController {
         if (gp1GetLeftBumper() && gp1GetButtonAPress()) {
             timer.reset();
             moveToNeutralHigh();
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runArmShoulderWristToLevel();
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayA.getTurretAngle());
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayA.getAadiVector(), recordAndReplayA.getWristState());
@@ -516,12 +516,12 @@ public class GamepadController {
         if (gp1GetLeftBumper() && gp1GetButtonBPress()) {
             timer.reset();
             moveToNeutralHigh();
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runArmShoulderWristToLevel();
             };
             timer.reset();
             turret.moveTurretToAngle(recordAndReplayB.getTurretAngle());
-            while (timer.time() < 1000) {
+            while (timer.time() < 500) {
                 runTurret();
             };
             moveToAadiVector(recordAndReplayB.getAadiVector(), recordAndReplayB.getWristState());
@@ -547,11 +547,11 @@ public class GamepadController {
     public void moveToAadiVector(AadiVector aadiVector, Hand.WRIST_STATE wristState){
         arm.moveArmToLength(aadiVector.getArmLength());
         shoulder.moveShoulderToAngle(aadiVector.getShoulderAngle());
-        if (wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+        /*if (wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
             hand.moveWristLevel(aadiVector.getShoulderAngle());
         } else {
             hand.moveWristUp(aadiVector.getShoulderAngle());
-        }
+        }*/
         runArmShoulderWristToLevel();
     }
 
@@ -563,9 +563,9 @@ public class GamepadController {
     }
 
     public void moveToNeutralLow(){
-        hand.moveWristUp(shoulder.PICKUP_POSITION);
+       // hand.moveWristUp(shoulder.PICKUP_POSITION);
         arm.moveArmToMinRetracted();
-        //shoulder.moveShoulderToPickup();
+        shoulder.moveShoulderToPickup();
         runArmShoulderWristToLevel();
     }
 
