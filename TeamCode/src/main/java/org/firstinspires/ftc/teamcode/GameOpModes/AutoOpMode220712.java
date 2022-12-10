@@ -179,18 +179,18 @@ public class AutoOpMode220712 extends LinearOpMode{
                 dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
-                pickConeAadiPose[1] = new AadiPose(2125,357, Hand.WRIST_STATE.WRIST_LEVEL, -675);
-                pickConeAadiPose[2] = new AadiPose(2186,314, Hand.WRIST_STATE.WRIST_LEVEL, -675);
-                pickConeAadiPose[3] = new AadiPose(2264,265, Hand.WRIST_STATE.WRIST_LEVEL, -675);
-                pickConeAadiPose[4] = new AadiPose(2223,219, Hand.WRIST_STATE.WRIST_LEVEL, -675);
-                pickConeAadiPose[5] = new AadiPose(2383,173, Hand.WRIST_STATE.WRIST_LEVEL, -675);
+                pickConeAadiPose[1] = new AadiPose(2125,343, Hand.WRIST_STATE.WRIST_LEVEL, -675); //357
+                pickConeAadiPose[2] = new AadiPose(2186,305, Hand.WRIST_STATE.WRIST_LEVEL, -675); //314
+                pickConeAadiPose[3] = new AadiPose(2264,252, Hand.WRIST_STATE.WRIST_LEVEL, -675); //265
+                pickConeAadiPose[4] = new AadiPose(2223,206, Hand.WRIST_STATE.WRIST_LEVEL, -675); //219
+                pickConeAadiPose[5] = new AadiPose(2383,160, Hand.WRIST_STATE.WRIST_LEVEL, -675); //173
                 break;
 
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
+                dropConeFrontHigh = new AadiPose(1450,908, Hand.WRIST_STATE.WRIST_LEVEL, -338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, 1850);
                 pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, 675);
@@ -218,37 +218,37 @@ public class AutoOpMode220712 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 48, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-13, 36, Math.toRadians(0)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -48, Math.toRadians(0)); break; // Location 3
+                    case LOCATION2: parkPose = new Pose2d(-13, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -37, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -12, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(13, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(180)); break; // Location 3
                 }
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 48, Math.toRadians(180)); break; // Location 3
+                    case LOCATION2: parkPose = new Pose2d(13, 35, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(180)); break; // Location 3
                 }
                 break;
         }
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
-                .back(10)
+                .back(15)
                 .build();
     }
 
@@ -311,7 +311,7 @@ public class AutoOpMode220712 extends LinearOpMode{
         gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector(), pickConeAadiPose.getWristState());
         gamepadController.runArmShoulderWristToLevel();
         hand.moveWristLevel(shoulder.shoulderCurrentPosition);
-        safeWait(1000);
+        safeWait(1500);
 
         //Close grip
         hand.closeGrip();
