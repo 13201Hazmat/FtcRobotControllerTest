@@ -273,11 +273,11 @@ public class Vision {
                                 break;
                             //case "2 Bulb":
                             case "Yellow":
-                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
                                 break;
                             //case "3 Panel":
                             case "Purple":
-                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
                                 break;
                         }
                     }

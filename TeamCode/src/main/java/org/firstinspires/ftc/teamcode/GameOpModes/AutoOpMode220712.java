@@ -146,7 +146,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
 
                 //midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
+                dropConeFrontHigh = new AadiPose(1460,930, Hand.WRIST_STATE.WRIST_LEVEL, 338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
                 pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, -675);
@@ -161,7 +161,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, -338);
+                dropConeFrontHigh = new AadiPose(1460,930, Hand.WRIST_STATE.WRIST_LEVEL, -338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, 1850);
                 pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, 675);
@@ -176,7 +176,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                dropConeFrontHigh = new AadiPose(1460,900, Hand.WRIST_STATE.WRIST_LEVEL, 338);
+                dropConeFrontHigh = new AadiPose(1460,930, Hand.WRIST_STATE.WRIST_LEVEL, 338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, -1850);
                 pickConeAadiPose[1] = new AadiPose(2125,343, Hand.WRIST_STATE.WRIST_LEVEL, -675); //357
@@ -190,7 +190,7 @@ public class AutoOpMode220712 extends LinearOpMode{
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                dropConeFrontHigh = new AadiPose(1450,908, Hand.WRIST_STATE.WRIST_LEVEL, -338);
+                dropConeFrontHigh = new AadiPose(1450,930, Hand.WRIST_STATE.WRIST_LEVEL, -338);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_LEVEL, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_LEVEL, 1850);
                 pickConeAadiPose[1] = new AadiPose(300,280, Hand.WRIST_STATE.WRIST_LEVEL, 675);
