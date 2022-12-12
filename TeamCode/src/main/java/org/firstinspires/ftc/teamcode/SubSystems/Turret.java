@@ -68,8 +68,8 @@ public class Turret {
     public double turretAngleRadians;
     public double turretAngleDegrees;
 
-    public static final double TURRET_POWER = 0.9;
-    public static final double TURRET_RESET_POWER = 0.7;
+    public static final double TURRET_POWER = 0.95; //0.9
+    public static final double TURRET_RESET_POWER = 0.95; //0.7
 
     //value declarations
     public boolean runTurretToLevelState = false;

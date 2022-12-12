@@ -82,8 +82,8 @@ public class Shoulder {
     public double shoulderAngleRadians, shoulderAngleDegrees;
 
     //Different constants of shoulder speed
-    public static final double SHOULDER_POWER_UP = 0.8;
-    public static final double SHOULDER_POWER_DOWN = 0.8;
+    public static final double SHOULDER_POWER_UP = 0.95;
+    public static final double SHOULDER_POWER_DOWN = 0.95;
 
     public enum SHOULDER_MOVEMENT_DIRECTION {
         UP,

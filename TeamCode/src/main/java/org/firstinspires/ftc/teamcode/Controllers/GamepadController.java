@@ -442,7 +442,7 @@ public class GamepadController {
     public AadiPose recordAndReplayA = GameField.PRESET_PICKUP_A; //Pickup
     public AadiPose recordAndReplayB = GameField.PRESET_MEDIUM_JUNCTION_B; //Medium Junction
     public AadiPose recordAndReplayX = GameField.PRESET_LOW_JUNCTION_X; //Low Junction
-    public AadiPose recordAndReplayY = GameField.PRESET_MEDIUM_JUNCTION_B; //High Junction
+    public AadiPose recordAndReplayY = GameField.PRESET_HIGH_JUNCTION_Y; //High Junction
 
 
     public void runRecordAndReplay(){

@@ -43,9 +43,9 @@ public class GameField {
         LOCATION3
     }
 
-    public static AadiPose PRESET_PICKUP_A = new AadiPose(986,31, Hand.WRIST_STATE.WRIST_UP,904); //Pickup
-    public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(193,699, Hand.WRIST_STATE.WRIST_UP,2072); //Medium Junction
-    public static AadiPose PRESET_LOW_JUNCTION_X = new AadiPose(0,324, Hand.WRIST_STATE.WRIST_UP,1556); //Low Junction
-    public static AadiPose PRESET_HIGH_JUNCTION_Y = new AadiPose(901,876, Hand.WRIST_STATE.WRIST_UP,11); //High Junction
+    public static AadiPose PRESET_PICKUP_A = new AadiPose(735,14, Hand.WRIST_STATE.WRIST_DOWN,1247); //Pickup
+    public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(193,738, Hand.WRIST_STATE.WRIST_UP,-287); //Medium Junction
+    public static AadiPose PRESET_LOW_JUNCTION_X = new AadiPose(0,318, Hand.WRIST_STATE.WRIST_UP,1706); //Low Junction
+    public static AadiPose PRESET_HIGH_JUNCTION_Y = new AadiPose(916,888, Hand.WRIST_STATE.WRIST_UP,386); //High Junction
 
 }
