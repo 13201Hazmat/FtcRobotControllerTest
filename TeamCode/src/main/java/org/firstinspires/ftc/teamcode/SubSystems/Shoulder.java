@@ -316,8 +316,8 @@ public class Shoulder {
 
     }
 
-    public double getShoulderAngleRadians(){
-        return shoulderAngleRadians = shoulderCurrentPosition * Math.PI/SHOULDER_MOTOR_ENCODER_TICKS;
+    public double convertShoulderAngleRadians(double shoulderPosition){
+        return shoulderAngleRadians = shoulderPosition * Math.PI/SHOULDER_MOTOR_ENCODER_TICKS;
         //shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
     }
 

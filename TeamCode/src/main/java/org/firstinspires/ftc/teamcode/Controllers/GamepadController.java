@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
 import org.firstinspires.ftc.teamcode.AadiGeometry.AadiVector;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.Hand;
@@ -241,7 +242,9 @@ public class GamepadController {
         //Move the shoulder angle based on the Gamepad 2 left and right trigger
         if (gp2GetRightTrigger() > 0.2) {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger()  * 1.25 - 0.25, 3));
-            arm.moveArmExtensionBasedOnShoulderAngle(shoulder.shoulderCurrentPosition, shoulder.shoulderNewPosition);
+            /*arm.moveArmExtensionBasedOnShoulderAngle(
+                    shoulder.convertShoulderAngleRadians(shoulder.shoulderCurrentPosition),
+                    shoulder.convertShoulderAngleRadians(shoulder.shoulderNewPosition));*/
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
             if (shoulder.shoulderNewPosition < Shoulder.PICKUP_POSITION_ARM_MAX_EXTENDED) {
@@ -253,7 +256,9 @@ public class GamepadController {
                     arm.moveArmToDynamicMaxExtended();
                 }
             }
-            arm.moveArmExtensionBasedOnShoulderAngle(shoulder.shoulderCurrentPosition, shoulder.shoulderNewPosition);
+            /*arm.moveArmExtensionBasedOnShoulderAngle(
+                    shoulder.convertShoulderAngleRadians(shoulder.shoulderCurrentPosition),
+                    shoulder.convertShoulderAngleRadians(shoulder.shoulderNewPosition));*/
         }
 
         //**********************
@@ -434,10 +439,11 @@ public class GamepadController {
     }
 
     //Positions to be used for Record and Replay functionality, initialized to neutral positions.
-    public AadiPose recordAndReplayA = new AadiPose(986,31, Hand.WRIST_STATE.WRIST_UP,904); //Pickup
-    public AadiPose recordAndReplayB = new AadiPose(193,699, Hand.WRIST_STATE.WRIST_UP,2072); //Medium Junction
-    public AadiPose recordAndReplayX = new AadiPose(0,324, Hand.WRIST_STATE.WRIST_UP,1556); //Low Junction
-    public AadiPose recordAndReplayY = new AadiPose(901,876, Hand.WRIST_STATE.WRIST_UP,11); //High Junction
+    public AadiPose recordAndReplayA = GameField.PRESET_PICKUP_A; //Pickup
+    public AadiPose recordAndReplayB = GameField.PRESET_MEDIUM_JUNCTION_B; //Medium Junction
+    public AadiPose recordAndReplayX = GameField.PRESET_LOW_JUNCTION_X; //Low Junction
+    public AadiPose recordAndReplayY = GameField.PRESET_MEDIUM_JUNCTION_B; //High Junction
+
 
     public void runRecordAndReplay(){
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);

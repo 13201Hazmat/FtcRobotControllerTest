@@ -264,7 +264,9 @@ public class Arm {
 
     public void moveArmExtensionBasedOnShoulderAngle(double shoulderCurrentPosRadians, double shoudlerNewPosRadians){
         armCurrentMM = convertMotorEncoderValueToArmMM(armCurrentPosition);
-        armMMNewPosition = ARM_MINIMUM_MM*(1-(armCurrentMM*(Math.sin(shoudlerNewPosRadians)/Math.sin(shoulderCurrentPosRadians))));
+        armMMNewPosition = ARM_MINIMUM_MM * (1 - (armCurrentMM *
+                (Math.sin(shoudlerNewPosRadians - Math.PI/4)/
+                        Math.sin(shoulderCurrentPosRadians - Math.PI/4))));
         armNewPosition = convertArmMMToEncoderValue(armMMNewPosition);
         if(armNewPosition < MIN_RETRACTED_POSITION){
             armNewPosition = MIN_RETRACTED_POSITION;

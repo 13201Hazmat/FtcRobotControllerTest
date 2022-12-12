@@ -273,10 +273,12 @@ public class Vision {
                                 break;
                             //case "2 Bulb":
                             case "Yellow":
+                                //Adjusted to match to recogonition by Hazmat Model
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
                                 break;
                             //case "3 Panel":
                             case "Purple":
+                                //Adjusted to match to recogonition by Hazmat Model
                                 visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
                                 break;
                         }

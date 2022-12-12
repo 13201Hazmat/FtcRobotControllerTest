@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
+import org.firstinspires.ftc.teamcode.SubSystems.Hand;
+
 /**
  * Static Class to define Gamefield Vector positions.
  * These are used in start Position estimates and in automatic targetic.
@@ -34,17 +37,15 @@ public class GameField {
     public static boolean poseSetInAutonomous = false;
     public static Pose2d currentPose = new Pose2d();
 
-    public enum VISION_IDENTIFIER{
-        BOLT,
-        BULB,
-        PANEL,
-        GREEN,
-        YELLOW,
-        PURPLE
-    }
     public enum VISION_IDENTIFIED_TARGET {
         LOCATION1,
         LOCATION2,
         LOCATION3
     }
+
+    public static AadiPose PRESET_PICKUP_A = new AadiPose(986,31, Hand.WRIST_STATE.WRIST_UP,904); //Pickup
+    public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(193,699, Hand.WRIST_STATE.WRIST_UP,2072); //Medium Junction
+    public static AadiPose PRESET_LOW_JUNCTION_X = new AadiPose(0,324, Hand.WRIST_STATE.WRIST_UP,1556); //Low Junction
+    public static AadiPose PRESET_HIGH_JUNCTION_Y = new AadiPose(901,876, Hand.WRIST_STATE.WRIST_UP,11); //High Junction
+
 }
