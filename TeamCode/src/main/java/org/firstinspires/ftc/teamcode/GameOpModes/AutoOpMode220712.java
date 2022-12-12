@@ -248,7 +248,7 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
-                .back(15)
+                .back(24)
                 .build();
     }
 
@@ -293,7 +293,8 @@ public class AutoOpMode220712 extends LinearOpMode{
         turret.rotateAutoTurnToAngle(0);
         safeWait(1000);
         driveTrain.followTrajectorySequence(trajectoryParking);
-        gamepadController.moveToNeutralLow();
+        gamepadController.moveToNeutralPickup();
+        hand.moveWristUp(shoulder.PICKUP_POSITION);
         safeWait(2000);
     }
 

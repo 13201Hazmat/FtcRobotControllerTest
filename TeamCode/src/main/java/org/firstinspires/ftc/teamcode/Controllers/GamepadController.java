@@ -195,7 +195,6 @@ public class GamepadController {
         }
 
         if (turret.runTurretToLevelState) {
-            arm.convertMotorEncoderValueToArmLength();
             //Lowers the power based on the extension length of the arm
             turretPowerReductionFactorBasedOnArmLength = (1-arm.armCurrentPosition/arm.MAX_EXTENDED_POSITION);
             if (turretPowerReductionFactorBasedOnArmLength < 0.05) {
@@ -229,19 +228,20 @@ public class GamepadController {
 
         //Moves arm to middle junction if Gamepad 2 Y is pressed
         if (gp2GetButtonYPress()){
-            arm.moveArmToMediumJunction();
-            shoulder.moveToShoulderMediumJunction();
+            arm.moveArmToHighJunction();
+            shoulder.moveToShoulderHighJunction();
         }
 
         //Moves arm to the high junction if Gamepad 2 B is pressed
         if (!gp2GetStart() && gp2GetButtonBPress()){
-            arm.moveArmToHighJunction();
-            shoulder.moveToShoulderHighJunction();
+            arm.moveArmToMediumJunction();
+            shoulder.moveToShoulderMediumJunction();
         }
 
         //Move the shoulder angle based on the Gamepad 2 left and right trigger
         if (gp2GetRightTrigger() > 0.2) {
             shoulder.raiseShoulder(Math.pow(gp2GetRightTrigger()  * 1.25 - 0.25, 3));
+            arm.moveArmExtensionBasedOnShoulderAngle(shoulder.shoulderCurrentPosition, shoulder.shoulderNewPosition);
         } else if(gp2GetLeftTrigger() > 0.2) { //retract the arm based on the right joystick
             shoulder.lowerShoulder(Math.pow(gp2GetLeftTrigger() * 1.25 - 0.25, 3));
             if (shoulder.shoulderNewPosition < Shoulder.PICKUP_POSITION_ARM_MAX_EXTENDED) {
@@ -253,6 +253,7 @@ public class GamepadController {
                     arm.moveArmToDynamicMaxExtended();
                 }
             }
+            arm.moveArmExtensionBasedOnShoulderAngle(shoulder.shoulderCurrentPosition, shoulder.shoulderNewPosition);
         }
 
         //**********************
@@ -433,10 +434,10 @@ public class GamepadController {
     }
 
     //Positions to be used for Record and Replay functionality, initialized to neutral positions.
-    public AadiPose recordAndReplayA = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
-    public AadiPose recordAndReplayB = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
-    public AadiPose recordAndReplayX = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
-    public AadiPose recordAndReplayY = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP,0);
+    public AadiPose recordAndReplayA = new AadiPose(986,31, Hand.WRIST_STATE.WRIST_UP,904); //Pickup
+    public AadiPose recordAndReplayB = new AadiPose(193,699, Hand.WRIST_STATE.WRIST_UP,2072); //Medium Junction
+    public AadiPose recordAndReplayX = new AadiPose(0,324, Hand.WRIST_STATE.WRIST_UP,1556); //Low Junction
+    public AadiPose recordAndReplayY = new AadiPose(901,876, Hand.WRIST_STATE.WRIST_UP,11); //High Junction
 
     public void runRecordAndReplay(){
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -562,7 +563,7 @@ public class GamepadController {
         runArmShoulderWristToLevel();
     }
 
-    public void moveToNeutralLow(){
+    public void moveToNeutralPickup(){
        // hand.moveWristUp(shoulder.PICKUP_POSITION);
         arm.moveArmToMinRetracted();
         shoulder.moveShoulderToPickup();
@@ -576,7 +577,7 @@ public class GamepadController {
 
     public void raiseShoulderToClearStack(){
         shoulder.shoulderCurrentPosition += 150;
-        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition);
+        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition); //TODO: Change to dynamic arm function
         runArmShoulderWristToLevel();
     }
 

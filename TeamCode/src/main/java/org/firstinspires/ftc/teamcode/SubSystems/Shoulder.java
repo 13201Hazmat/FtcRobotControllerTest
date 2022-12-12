@@ -267,7 +267,7 @@ public class Shoulder {
             if (shoulderNewPosition != shoulderCurrentPosition) {
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
-                shoulderCurrentPosition = shoulderNewPosition;
+                //shoulderCurrentPosition = shoulderNewPosition;
                 runShoulderToLevelState = true;
             }
         }
@@ -289,7 +289,7 @@ public class Shoulder {
                 turnShoulderBrakeModeOn();
                 rightShoulderMotor.setTargetPosition((int)shoulderNewPosition);
                 leftShoulderMotor.setTargetPosition((int)shoulderNewPosition);
-                shoulderCurrentPosition = shoulderNewPosition;
+                //shoulderCurrentPosition = shoulderNewPosition;
                 runShoulderToLevelState = true;
             }
         }
@@ -316,9 +316,9 @@ public class Shoulder {
 
     }
 
-    public void calculateShoulderAngle(){
-        shoulderAngleRadians = rightShoulderMotor.getCurrentPosition() * Math.PI/SHOULDER_MOTOR_ENCODER_TICKS;
-        shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
+    public double getShoulderAngleRadians(){
+        return shoulderAngleRadians = shoulderCurrentPosition * Math.PI/SHOULDER_MOTOR_ENCODER_TICKS;
+        //shoulderAngleDegrees = Math.toDegrees(shoulderAngleRadians);
     }
 
     public void resetShoulderMode(){

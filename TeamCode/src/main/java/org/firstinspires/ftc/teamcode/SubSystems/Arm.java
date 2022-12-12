@@ -65,13 +65,16 @@ public class Arm {
     public double dynamicMaxExtendedPosition = MAX_EXTENDED_POSITION_3_SLIDES;
 
     public double armCurrentPosition = PICKUP_POSITION; //Default arm position count
+    public double armCurrentMM = 0;
     public double armNewPosition = PICKUP_POSITION;
+    public double armMMNewPosition = 0;
 
     public static final double CONE_2_POSITION = 1000;
     public static final double CONE_3_POSITION = 1200;
     public static final double CONE_4_POSITION = 1300;
     public static final double CONE_5_POSITION = 1400;
-    public static final double ENCODER_TO_LENGTH = 1/574 * 2; //TODO - fix this value to millimeter
+    public static final double ARM_ENCODER_TO_MM = 1/574 * 2; //TODO - fix this value to millimeter
+    public static final double ARM_MINIMUM_MM = 390; //Min in mm for arm
 
     public static final double ARM_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
     public static final double ARM_DELTA_COUNT_RESET = 50;
@@ -259,9 +262,29 @@ public class Arm {
         runArmToLevelState = true;
     }
 
-    public void convertMotorEncoderValueToArmLength(){
-        int convertedMotorEncoderValueToArmLength = (int) (armMotor.getCurrentPosition() * ENCODER_TO_LENGTH); //TODO: From encoder value Find Max length and write proportional convertion algorithm
-        SystemState.ArmExtensionMM = convertedMotorEncoderValueToArmLength;
+    public void moveArmExtensionBasedOnShoulderAngle(double shoulderCurrentPosRadians, double shoudlerNewPosRadians){
+        armCurrentMM = convertMotorEncoderValueToArmMM(armCurrentPosition);
+        armMMNewPosition = ARM_MINIMUM_MM*(1-(armCurrentMM*(Math.sin(shoudlerNewPosRadians)/Math.sin(shoulderCurrentPosRadians))));
+        armNewPosition = convertArmMMToEncoderValue(armMMNewPosition);
+        if(armNewPosition < MIN_RETRACTED_POSITION){
+            armNewPosition = MIN_RETRACTED_POSITION;
+        }
+        if(armNewPosition> MAX_EXTENDED_POSITION){
+            armNewPosition = MAX_EXTENDED_POSITION;
+        }
+        if(armNewPosition != armCurrentPosition){
+            moveArmToLength(armNewPosition);
+        }
+    }
+
+    public double convertMotorEncoderValueToArmMM(double armMotorPosition){
+        double convertedMotorEncoderValueToArmMM = (armMotorPosition * ARM_ENCODER_TO_MM); //TODO: From encoder value Find Max length and write proportional convertion algorithm
+        return convertedMotorEncoderValueToArmMM;
+    }
+
+    public double convertArmMMToEncoderValue(double armMMPosition){
+        double convertedArmMMToEncoderValue = armMMPosition / ARM_ENCODER_TO_MM;
+        return convertedArmMMToEncoderValue;
     }
 
     //sets the arm motor power
