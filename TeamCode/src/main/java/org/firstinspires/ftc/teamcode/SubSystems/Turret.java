@@ -266,6 +266,7 @@ public class Turret {
     }
 
 
+
     public void runTurretToPosition(double power){//receive value from testing
         turretMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runTurretToLevelState == true) {
