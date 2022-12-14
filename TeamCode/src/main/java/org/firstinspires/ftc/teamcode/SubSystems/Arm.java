@@ -80,7 +80,7 @@ public class Arm {
     public static final double ARM_DELTA_COUNT_RESET = 50;
 
     //Different constants of arm speed
-    public static final double ARM_POWER_EXTEND = 0.95;
+    public static final double ARM_POWER_EXTEND = 0.6; //0.8
     public static final double ARM_POWER_RETRACT = 0.95;
     public enum ARM_MOVEMENT_DIRECTION {
         EXTEND,
@@ -265,8 +265,8 @@ public class Arm {
     public void moveArmExtensionBasedOnShoulderAngle(double shoulderCurrentPosRadians, double shoudlerNewPosRadians){
         armCurrentMM = convertMotorEncoderValueToArmMM(armCurrentPosition);
         armMMNewPosition = ARM_MINIMUM_MM * (1 - (armCurrentMM *
-                (Math.sin(shoudlerNewPosRadians - Math.PI/4)/
-                        Math.sin(shoulderCurrentPosRadians - Math.PI/4))));
+                (Math.cos(shoudlerNewPosRadians - Math.PI/4)/
+                        Math.cos(shoulderCurrentPosRadians - Math.PI/4))));
         armNewPosition = convertArmMMToEncoderValue(armMMNewPosition);
         if(armNewPosition < MIN_RETRACTED_POSITION){
             armNewPosition = MIN_RETRACTED_POSITION;
