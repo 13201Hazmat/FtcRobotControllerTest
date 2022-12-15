@@ -217,25 +217,25 @@ public class GamepadController {
 
         //Moves arm to pickup / ground junction if Gamepad 2 A is pressed
         if (gp2GetButtonAPress()){
-            arm.moveArmToPickUp();
+            moveToAadiVector(GameField.PRESET_PICKUP_A.getAadiVector(), GameField.PRESET_PICKUP_A.getWristState());
             shoulder.moveShoulderToPickup();
         }
 
         //Move arm to low junction if Gamepad 2 X is pressed
         if (gp2GetButtonXPress()){
-            arm.moveArmToLowJunction();
+            moveToAadiVector(GameField.PRESET_LOW_JUNCTION_X.getAadiVector(), GameField.PRESET_LOW_JUNCTION_X.getWristState());
             shoulder.moveToShoulderLowJunction();
         }
 
         //Moves arm to middle junction if Gamepad 2 Y is pressed
         if (gp2GetButtonYPress()){
-            arm.moveArmToMediumJunction();
+            moveToAadiVector(GameField.PRESET_MEDIUM_JUNCTION_B.getAadiVector(), GameField.PRESET_MEDIUM_JUNCTION_B.getWristState());
             shoulder.moveToShoulderMediumJunction();
         }
 
         //Moves arm to the high junction if Gamepad 2 B is pressed
         if (!gp2GetStart() && gp2GetButtonBPress()){
-            arm.moveArmToHighJunction();
+            moveToAadiVector(GameField.PRESET_HIGH_JUNCTION_Y.getAadiVector(), GameField.PRESET_HIGH_JUNCTION_Y.getWristState());
             shoulder.moveToShoulderHighJunction();
         }
 
@@ -384,6 +384,73 @@ public class GamepadController {
         SystemState.HandGripState = hand.gripState;
         SystemState.HandWristState = hand.wristState;
         SystemState.ShoulderState = shoulder.shoulderState;
+    }
+
+    public void runAutoArmShoulderWristToLevel(){
+        // Run Arm motor if position is changed
+        if (arm.runArmToLevelState) {
+            if (arm.armMovementDirection == Arm.ARM_MOVEMENT_DIRECTION.EXTEND) {
+                arm.runArmToLevel(arm.ARM_AUTO_POWER_EXTEND);
+            } else {
+                arm.runArmToLevel(arm.ARM_AUTO_POWER_RETRACT);
+            }
+        }
+
+        //Run Shoulder motors if position is changed
+        if (shoulder.runShoulderToLevelState){
+            if (shoulder.shoulderMovementDirection == Shoulder.SHOULDER_MOVEMENT_DIRECTION.UP) {
+                shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER_UP);
+                switch (hand.wristState){
+                    case WRIST_DOWN:
+                        if(shoulder.shoulderState == Shoulder.SHOULDER_STATE.PICKUP_WRIST_DOWN){
+                            hand.moveWristDown();
+                        }
+                        break;
+                    case WRIST_UP:
+                    case WRIST_UP_MAX:
+                        hand.moveWristUp(shoulder.shoulderCurrentPosition);
+                        break;
+                    case WRIST_LEVEL:
+                        hand.moveWristLevel(shoulder.shoulderCurrentPosition);
+                        break;
+                }
+            } else {
+                switch (hand.wristState){
+                    case WRIST_DOWN:
+                        if(shoulder.shoulderState == Shoulder.SHOULDER_STATE.PICKUP_WRIST_DOWN){
+                            hand.moveWristDown();
+                        }
+                        break;
+                    case WRIST_UP:
+                    case WRIST_UP_MAX:
+                        hand.moveWristUp(shoulder.shoulderCurrentPosition);
+                        break;
+                    case WRIST_LEVEL:
+                        hand.moveWristLevel(shoulder.shoulderCurrentPosition);
+                        break;
+                }
+                shoulderPowerReductionFactorBasedOnArmLength = (1-arm.armCurrentPosition/arm.MAX_EXTENDED_POSITION);
+                if (shoulderPowerReductionFactorBasedOnArmLength < 0.05) {
+                    shoulderPowerReductionFactorBasedOnArmLength = 0.05;
+                }
+                shoulder.runShoulderToLevel(shoulder.SHOULDER_POWER_DOWN * shoulderPowerReductionFactorBasedOnArmLength);
+            }
+        }
+
+        if (hand.wristState == Hand.WRIST_STATE.WRIST_LEVEL) {
+            //hand.moveWristLevel(shoulder.shoulderCurrentPosition);
+            hand.moveWristLevel(shoulder.leftShoulderMotor.getCurrentPosition());
+        }
+
+        if (hand.wristState == Hand.WRIST_STATE.WRIST_UP || hand.wristState == Hand.WRIST_STATE.WRIST_UP_MAX) {
+            //hand.moveWristUp(shoulder.shoulderCurrentPosition);
+            hand.moveWristUp(shoulder.leftShoulderMotor.getCurrentPosition());
+        }
+
+        if (hand.wristState == Hand.WRIST_STATE.WRIST_DOWN &&
+                shoulder.shoulderState != Shoulder.SHOULDER_STATE.PICKUP_WRIST_DOWN) {
+            hand.moveWristUp(shoulder.leftShoulderMotor.getCurrentPosition());
+        }
     }
 
     public void runArmShoulderWristToLevel(){
