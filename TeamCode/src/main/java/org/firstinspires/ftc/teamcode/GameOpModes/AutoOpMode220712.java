@@ -310,7 +310,7 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         //Move Arm to pickCone Pose
         gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector(), pickConeAadiPose.getWristState());
-        gamepadController.runAutoArmShoulderWristToLevel();
+        gamepadController.runArmShoulderWristToLevel();
         hand.moveWristLevel(shoulder.shoulderCurrentPosition);
         safeWait(2000);
 
@@ -344,7 +344,7 @@ public class AutoOpMode220712 extends LinearOpMode{
 
         //Move Arm to dropCone Post, wrist level
         gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector(), dropConeAadiPose.getWristState());
-        gamepadController.runAutoArmShoulderWristToLevel();
+        gamepadController.runArmShoulderWristToLevel();
         safeWait(2000);
 
         //Open grip to drop Cone
