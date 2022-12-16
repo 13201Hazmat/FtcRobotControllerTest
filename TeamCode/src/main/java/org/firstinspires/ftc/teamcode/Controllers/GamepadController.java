@@ -668,7 +668,9 @@ public class GamepadController {
 
     public void raiseShoulderToClearStack(){
         shoulder.shoulderCurrentPosition += 150;
-        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition); //TODO: Change to dynamic arm function
+        shoulder.moveShoulderToAngle(shoulder.shoulderCurrentPosition);
+        arm.armCurrentPosition -= 100;
+        arm.moveArmToLength(arm.armCurrentPosition);
         runArmShoulderWristToLevel();
     }
 
