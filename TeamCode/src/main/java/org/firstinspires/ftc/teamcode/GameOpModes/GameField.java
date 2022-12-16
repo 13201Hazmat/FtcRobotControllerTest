@@ -26,6 +26,12 @@ public class GameField {
     }
     public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.MAXIMUM;
 
+    public enum OP_MODE_RUNNING {
+        HAZMAT_TELEOP,
+        HAZMAT_AUTONOMOUS
+    }
+    public static OP_MODE_RUNNING opModeRunning = OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
+
     //Define and declare Playing Alliance
     public enum PLAYING_ALLIANCE{
         RED_ALLIANCE,

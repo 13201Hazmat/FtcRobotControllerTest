@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Autonomous HazmatAutonomous20221215", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-public class HazmatAutonomous20221215 extends LinearOpMode{
+@Autonomous(name = "Hazmat 1+3 Lakeshore", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutonomousLakeShoreOnePlus3 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -64,6 +64,7 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
+        GameField.opModeRunning = GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
 
@@ -142,7 +143,7 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
             case BLUE_LEFT:
                 initPose = new Pose2d(-64, 36, Math.toRadians(0)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
+                midWayPose = new Pose2d(-11, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
 
                 //midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 325);
@@ -150,7 +151,7 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
                 pickConeAadiPose[1] = new AadiPose(2073,330, Hand.WRIST_STATE.WRIST_LEVEL, -660); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
                 pickConeAadiPose[2] = new AadiPose(2261,315, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2180,300, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 225, arm second: 983, shoulder second: 177
+                pickConeAadiPose[3] = new AadiPose(2180,290, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 225, arm second: 983, shoulder second: 177
                 pickConeAadiPose[4] = new AadiPose(2327,229, Hand.WRIST_STATE.WRIST_LEVEL, -660); // shoulder 210, shoulder second: 132, arm second: 1108
                 pickConeAadiPose[5] = new AadiPose(2404,165, Hand.WRIST_STATE.WRIST_LEVEL, -660);
                 //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
@@ -159,13 +160,13 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
             case BLUE_RIGHT:
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
+                midWayPose = new Pose2d(-11, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1420,930, Hand.WRIST_STATE.WRIST_UP, -279);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1850);
                 pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[3] = new AadiPose(2259,252, Hand.WRIST_STATE.WRIST_LEVEL, 660);
+                pickConeAadiPose[3] = new AadiPose(2259,297, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
@@ -174,13 +175,13 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
+                midWayPose = new Pose2d(11, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
                 dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 315); //781 2nd pos shoulder, 1874 arm 2nd pos
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
                 pickConeAadiPose[1] = new AadiPose(2073,330, Hand.WRIST_STATE.WRIST_LEVEL, -650); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
                 pickConeAadiPose[2] = new AadiPose(2261,315, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2180,300, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 225, arm second: 983, shoulder second: 177
+                pickConeAadiPose[3] = new AadiPose(2180,290, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 225, arm second: 983, shoulder second: 177
                 pickConeAadiPose[4] = new AadiPose(2327,229, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 210, shoulder second: 132, arm second: 1108
                 pickConeAadiPose[5] = new AadiPose(2404,165, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 115, shoulder second:44  , arm second: 1117
                 break;
@@ -188,13 +189,13 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
-                midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
+                midWayPose = new Pose2d(11, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1450,930, Hand.WRIST_STATE.WRIST_UP, -290);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1850);
                 pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[3] = new AadiPose(2259,252, Hand.WRIST_STATE.WRIST_LEVEL, 660);
+                pickConeAadiPose[3] = new AadiPose(2259,297, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 660);
                 //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
@@ -206,7 +207,7 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
                 .addTemporalMarker(0.1 ,() -> {
                     turret.rotateAutoInitTurn();
                 })
-                .setVelConstraint(getVelocityConstraint(30, 15, DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(getVelocityConstraint(40, 15, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(midWayPose)
                 .resetVelConstraint()
                 .build();
@@ -217,37 +218,37 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-13, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-36, 61, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-36, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-36, 11, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-13, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-36, -11, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-36, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-36, -61, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(13, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(36, -61, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(36, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(36, -11, Math.toRadians(180)); break; // Location 3
                 }
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(13, 35, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(36, 11, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(36, 36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(36, 61, Math.toRadians(180)); break; // Location 3
                 }
                 break;
         }
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
-                .lineToLinearHeading(parkPose)
                 .back(21)
+                .lineToLinearHeading(parkPose)
                 .build();
     }
 
@@ -290,12 +291,12 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
             }
         }
         turret.rotateAutoTurnToAngle(0);
-        safeWait(500);
+        safeWait(400);
         driveTrain.followTrajectorySequence(trajectoryParking);
         gamepadController.moveToNeutralPickup();
         hand.moveWristUpMax();
         hand.closeGrip();
-        safeWait(1000);
+        safeWait(750);
     }
 
     //Write a method which is able to pick the cone from the stack depending on your subsystems
@@ -303,26 +304,26 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
         //Open Grip and rotate to pickConeAadiPose
         hand.openGrip();
         turret.rotateAutoTurnToAngle(pickConeAadiPose.getTurretAngle());
-        safeWait(500);
+        safeWait(400);
 
         //gamepadController.moveToNeutralLow();
         //safeWait(2000);
 
         //Move Arm to pickCone Pose
         gamepadController.moveToAadiVector(pickConeAadiPose.getAadiVector(), pickConeAadiPose.getWristState());
-        gamepadController.runAutoArmShoulderWristToLevel();
+        gamepadController.runArmShoulderWristToLevel();
         hand.moveWristLevel(shoulder.shoulderCurrentPosition);
-        safeWait(1000);
+        safeWait(750);
 
         //Close grip
         hand.closeGrip();
-        safeWait(1500);
+        safeWait(1000);
 
         //Raise shoulder to clear from stack and wrist up
         gamepadController.raiseShoulderToClearStack();
-        safeWait(500);
+        safeWait(400);
         hand.moveWristUp(shoulder.shoulderCurrentPosition);
-        safeWait(500);
+        safeWait(400);
 
         telemetry.addData("Picked Cone: Stack", coneCount);
         telemetry.update();
@@ -340,20 +341,20 @@ public class HazmatAutonomous20221215 extends LinearOpMode{
         telemetry.addData("dropConeAadiPose.getTurretAngle()",dropConeAadiPose.getTurretAngle() );
         telemetry.addData("turret.turretCurrentPosition", turret.turretCurrentPosition);
         telemetry.update();
-        safeWait(1000);
+        safeWait(750);
 
         //Move Arm to dropCone Post, wrist level
         gamepadController.moveToAadiVector(dropConeAadiPose.getAadiVector(), dropConeAadiPose.getWristState());
-        gamepadController.runAutoArmShoulderWristToLevel();
-        safeWait(1000);
+        gamepadController.runArmShoulderWristToLevel();
+        safeWait(750);
 
         //Open grip to drop Cone
         hand.openGrip();
-        safeWait(1000);
+        safeWait(750);
 
         //Move arm to neutral high, wrist level
         gamepadController.moveToNeutralHigh();
-        safeWait(500);
+        safeWait(400);
 
         if (coneCount == 0) {
             telemetry.addData("Dropped Cone", "Pre-loaded");

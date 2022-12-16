@@ -54,7 +54,7 @@ public class Arm {
     public static final double MIN_RETRACTED_POSITION = 0;
     public static final double PICKUP_POSITION = 550;
     public static final double GROUND_JUNCTION_POSITION = PICKUP_POSITION;
-    public static final double PICKUP_WRIST_DOWN_POSITION = 200;
+    public static final double PICKUP_WRIST_DOWN_POSITION = 100;
     public static final double LOW_JUNCTION_POSITION = (int) 0;
     public static final double MEDIUM_JUNCTION_POSITION = (int) 450;
     public static final double HIGH_JUNCTION_POSITION = (int) 1555;

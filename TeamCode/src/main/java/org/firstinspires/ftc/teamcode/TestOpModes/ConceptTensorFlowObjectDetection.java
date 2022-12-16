@@ -52,6 +52,7 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "Concept: Modified TensorFlow Object Detection", group = "Concept")
+@Disabled
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     /*

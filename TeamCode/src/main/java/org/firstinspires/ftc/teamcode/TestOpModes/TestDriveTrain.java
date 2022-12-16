@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Turret;
  *
  */
 @TeleOp(name = "Test DriveTrain", group = "Testing")
+@Disabled
 public class TestDriveTrain extends LinearOpMode {
 
     public GamepadController gamepadController;
