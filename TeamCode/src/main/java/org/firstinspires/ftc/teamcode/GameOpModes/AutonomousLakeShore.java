@@ -147,7 +147,7 @@ public class AutonomousLakeShore extends LinearOpMode{
 
                 //midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 325);
-                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1700);;
+                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1630);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
                 pickConeAadiPose[1] = new AadiPose(2073,330, Hand.WRIST_STATE.WRIST_LEVEL, -660); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
                 pickConeAadiPose[2] = new AadiPose(2261,315, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 275,  shoulder second: 266, arm second: 957
@@ -176,14 +176,14 @@ public class AutonomousLakeShore extends LinearOpMode{
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 315); //781 2nd pos shoulder, 1874 arm 2nd pos
-                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1700);;
-                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
-                pickConeAadiPose[1] = new AadiPose(2073,330, Hand.WRIST_STATE.WRIST_LEVEL, -650); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
-                pickConeAadiPose[2] = new AadiPose(2261,315, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2180,300, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 225, arm second: 983, shoulder second: 177
-                pickConeAadiPose[4] = new AadiPose(2327,229, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 210, shoulder second: 132, arm second: 1108
-                pickConeAadiPose[5] = new AadiPose(2404,165, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 115, shoulder second:44  , arm second: 1117
+                dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 326); //781 2nd pos shoulder, 1874 arm 2nd pos
+                dropConeBackMedium = new AadiPose(432,632, Hand.WRIST_STATE.WRIST_UP, -1700);;
+                dropConeBackHigh = new AadiPose(1460,764, Hand.WRIST_STATE.WRIST_UP, -1830);
+                pickConeAadiPose[1] = new AadiPose(2073,336, Hand.WRIST_STATE.WRIST_LEVEL, -650); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
+                pickConeAadiPose[2] = new AadiPose(2261,321, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 275,  shoulder second: 266, arm second: 957
+                pickConeAadiPose[3] = new AadiPose(2180,306, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 225, arm second: 983, shoulder second: 177
+                pickConeAadiPose[4] = new AadiPose(2327,235, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 210, shoulder second: 132, arm second: 1108
+                pickConeAadiPose[5] = new AadiPose(2404,171, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 115, shoulder second:44  , arm second: 1117
                 break;
 
             case RED_RIGHT:
@@ -444,7 +444,7 @@ public class AutonomousLakeShore extends LinearOpMode{
                 telemetry.addData("Selected Auto Option", autoOption);
                 telemetry.addLine("Select dropCone Postition");
                 telemetry.addData("    Front High           ", "X / Square");
-                telemetry.addData("    Back Medium          ", "A / Cross");
+                telemetry.addData("    Back Medium          ", "Y / Triangle");
                 telemetry.addData("    Back High            ", "B / Circle");
                 if (gamepadController.gp1GetButtonXPress()) {
                     dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
