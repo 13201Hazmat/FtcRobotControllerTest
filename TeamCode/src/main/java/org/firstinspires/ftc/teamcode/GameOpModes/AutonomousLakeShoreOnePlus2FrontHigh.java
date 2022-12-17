@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Auto 1+2 Lakeshore", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-public class AutonomousLakeShore extends LinearOpMode{
+@Autonomous(name = "Hazmat Auto 1+2 Lakeshore Front High", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutonomousLakeShoreOnePlus2FrontHigh extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
