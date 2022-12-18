@@ -164,11 +164,11 @@ public class AutonomousLakeShoreOnePlus3 extends LinearOpMode{
                 dropConeFrontHigh = new AadiPose(1420,930, Hand.WRIST_STATE.WRIST_UP, -279);
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, 1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1850);
-                pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[3] = new AadiPose(2259,297, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 660);
+                pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 643);
+                pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 643);
+                pickConeAadiPose[3] = new AadiPose(2259,297, Hand.WRIST_STATE.WRIST_LEVEL, 643);
+                pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 643);
+                pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 643);
                 //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
                 break;
 
@@ -176,14 +176,14 @@ public class AutonomousLakeShoreOnePlus3 extends LinearOpMode{
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(13, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                dropConeFrontHigh = new AadiPose(1248,946, Hand.WRIST_STATE.WRIST_UP, 353); //781 2nd pos shoulder, 1874 arm 2nd pos
+                dropConeFrontHigh = new AadiPose(1270,946, Hand.WRIST_STATE.WRIST_UP, 353); //781 2nd pos shoulder, 1874 arm 2nd pos
                 dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1700);;
                 dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
-                pickConeAadiPose[1] = new AadiPose(2075,333, Hand.WRIST_STATE.WRIST_LEVEL, -650); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
-                pickConeAadiPose[2] = new AadiPose(2263,317, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2182,293, Hand.WRIST_STATE.WRIST_LEVEL, -650); //shoulder first angle 225, arm second: 983, shoulder second: 177
-                pickConeAadiPose[4] = new AadiPose(2329,232, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 210, shoulder second: 132, arm second: 1108
-                pickConeAadiPose[5] = new AadiPose(2406,167, Hand.WRIST_STATE.WRIST_LEVEL, -650); // shoulder 115, shoulder second:44  , arm second: 1117
+                pickConeAadiPose[1] = new AadiPose(2075,333, Hand.WRIST_STATE.WRIST_LEVEL, -635); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
+                pickConeAadiPose[2] = new AadiPose(2263,317, Hand.WRIST_STATE.WRIST_LEVEL, -635); //shoulder first angle 275,  shoulder second: 266, arm second: 957
+                pickConeAadiPose[3] = new AadiPose(2182,293, Hand.WRIST_STATE.WRIST_LEVEL, -635); //shoulder first angle 225, arm second: 983, shoulder second: 177
+                pickConeAadiPose[4] = new AadiPose(2329,232, Hand.WRIST_STATE.WRIST_LEVEL, -635); // shoulder 210, shoulder second: 132, arm second: 1108
+                pickConeAadiPose[5] = new AadiPose(2406,167, Hand.WRIST_STATE.WRIST_LEVEL, -635); // shoulder 115, shoulder second:44  , arm second: 1117
                 break;
 
             case RED_RIGHT:
