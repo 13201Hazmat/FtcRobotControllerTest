@@ -55,6 +55,7 @@ public class OuttakeSlides {
         OUTTAKE_MOTOR_STATE(double motorPosition) {
             this.motorPosition = motorPosition;
         }
+
     }
     public OUTTAKE_MOTOR_STATE outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
 
@@ -109,20 +110,7 @@ public class OuttakeSlides {
         outtakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    //Sets outtake slides to Transfer position
-    public void moveOuttakeSlides(OUTTAKE_MOTOR_STATE toOuttakeMotorState){
-        turnOuttakeBrakeModeOn();
-        outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
-        if (outtakeMotorCurrentPosition < toOuttakeMotorState.motorPosition ) {
-            outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.EXTEND;
-        } else {
-            outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.RETRACT;
-        }
-        outtakeMotorLeft.setTargetPosition((int)toOuttakeMotorState.motorPosition);
-        outtakeMotorRight.setTargetPosition((int)toOuttakeMotorState.motorPosition);
-        outtakeMotorState = toOuttakeMotorState;
-        runOuttakeMotorToLevelState = true;
-    }
+
 
     public void modifyOuttakeSlidesLength(double stepSizeFactor){
         deltaCount = stepSizeFactor * OUTTAKE_MOTOR_DELTA_COUNT_MAX;
@@ -201,12 +189,8 @@ public class OuttakeSlides {
         turnOuttakeBrakeModeOn();
         outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
     }
+    ;
 
-    public double TURRET_INIT_POSITION = 0.5;
-    public double TURRET_MAX_LEFT_POSITION = 0.3;
-    public double TURRET_MAX_RIGHT_POSITION = 0.7;
-    public double TURRET_DELTA = 0.01;
-    public double TURRET_TURBO_DELTA = 0.03;
 
     public enum TURRET_STATE{
         MAX_LEFT (0.7),
@@ -217,9 +201,12 @@ public class OuttakeSlides {
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;
         }
-
     }
+
     public TURRET_STATE turretState = TURRET_STATE.INIT;
+
+    public double TURRET_DELTA = 0.01;
+    public double TURRET_TURBO_DELTA = 0.03;
 
     public void initTurret(){
         outtakeTurretServo.setPosition(TURRET_STATE.INIT.turretPosition);

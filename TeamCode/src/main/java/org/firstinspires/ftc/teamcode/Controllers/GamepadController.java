@@ -77,6 +77,8 @@ public class GamepadController {
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
+        runOuttakeSlides();
+        recordAndReplay();
         runDriveControl_byRRDriveModes();
     }
 
@@ -116,6 +118,23 @@ public class GamepadController {
             };
             driveTrain.driveTrainFieldCentric();
         }*/
+    }
+
+    public void runOuttakeSlides(){
+
+        //TODO
+        //move outtake slides to junctions positions
+        //move outtake slides delta
+
+
+        //move Turret by delta
+        //move Turret to preset
+
+
+    }
+
+    public void recordAndReplay(){
+        //TODO
     }
 
 
