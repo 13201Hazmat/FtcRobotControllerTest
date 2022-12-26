@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -100,7 +101,7 @@ public class OuttakeSlides {
         outtakeMotorRight.setPositionPIDFCoefficients(5.0);
         outtakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
         outtakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
-        turnOuttakeBrakeModeOn();
+        turnOuttakeBrakeModeOff();
         manualResetOuttakeMotor();
     }
 
@@ -110,7 +111,11 @@ public class OuttakeSlides {
         outtakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-
+    //Turns on the brake for Outtake motor
+    public void turnOuttakeBrakeModeOff(){
+        outtakeMotorLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        outtakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+    }
 
     public void modifyOuttakeSlidesLength(double stepSizeFactor){
         deltaCount = stepSizeFactor * OUTTAKE_MOTOR_DELTA_COUNT_MAX;
@@ -144,6 +149,11 @@ public class OuttakeSlides {
     //sets the Outtake motor power
     public void runOuttakeMotorToLevel(){
         double power = 0;
+        if (outtakeMotorState != OUTTAKE_MOTOR_STATE.MIN_RETRACTED) {
+            turnOuttakeBrakeModeOff();
+        } else {
+            turnOuttakeBrakeModeOn();
+        }
         if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
             power = OUTTAKE_MOTOR_POWER_AUTO;
         } else {
@@ -186,10 +196,10 @@ public class OuttakeSlides {
             runOuttakeMotorToLevel();
         }
         resetOuttakeMotorMode();
-        turnOuttakeBrakeModeOn();
+        turnOuttakeBrakeModeOff();
         outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
     }
-    ;
+
 
 
     public enum TURRET_STATE{
