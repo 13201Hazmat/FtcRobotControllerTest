@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.AadiGeometry;
 
-import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 public class AadiVector {
-    private double armLength; // Arm Length in Encoder value
+   /* private double armLength; // Arm Length in Encoder value
     private double shoulderAngle; //Shoulder Angle in Encoder value
-    public Hand.WRIST_STATE wristState;
+    public OldHand.WRIST_STATE wristState;
 
-    public AadiVector(double armLength, double shoulderAngle, Hand.WRIST_STATE wristState){
+    public AadiVector(double armLength, double shoulderAngle, OldHand.WRIST_STATE wristState){
         this.armLength = armLength;
         this.shoulderAngle = shoulderAngle;
         this.wristState = wristState;
@@ -46,12 +45,12 @@ public class AadiVector {
         return shoulderRadians * SystemState.SHOULDER_ANGLE_TO_RADIANS_RATIO;
     }
 
-    public Hand.WRIST_STATE getWristState(){
+    public OldHand.WRIST_STATE getWristState(){
         return wristState;
     }
 
-    public void setWristState(Hand.WRIST_STATE wristState){
+    public void setWristState(OldHand.WRIST_STATE wristState){
         this.wristState = wristState;
     }
-
+*/
 }

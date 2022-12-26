@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
-import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 
 /**
  * Static Class to define Gamefield Vector positions.
@@ -49,9 +48,10 @@ public class GameField {
         LOCATION3
     }
 
-    public static AadiPose PRESET_PICKUP_A = new AadiPose(735,85, Hand.WRIST_STATE.WRIST_LEVEL,1308); //Pickup
-    public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(283,819, Hand.WRIST_STATE.WRIST_UP,2354); //Medium Junction
-    public static AadiPose PRESET_LOW_JUNCTION_X = new AadiPose(0,318, Hand.WRIST_STATE.WRIST_UP,1665); //Low Junction
-    public static AadiPose PRESET_HIGH_JUNCTION_Y = new AadiPose(1250,900, Hand.WRIST_STATE.WRIST_UP,350); //High Junction
-
+    /*
+    public static AadiPose PRESET_PICKUP_A = new AadiPose(735,85, OldHand.WRIST_STATE.WRIST_LEVEL,1308); //Pickup
+    public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(283,819, OldHand.WRIST_STATE.WRIST_UP,2354); //Medium Junction
+    public static AadiPose PRESET_LOW_JUNCTION_X = new AadiPose(0,318, OldHand.WRIST_STATE.WRIST_UP,1665); //Low Junction
+    public static AadiPose PRESET_HIGH_JUNCTION_Y = new AadiPose(1250,900, OldHand.WRIST_STATE.WRIST_UP,350); //High Junction
+    */
 }

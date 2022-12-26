@@ -9,12 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Hand;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
-import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -28,10 +24,6 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
-    public Arm arm;
-    public Hand hand;
-    public Shoulder shoulder;
-    public Turret turret;
     public Lights lights;
 
     //public Vuforia Vuforia1;
@@ -50,14 +42,10 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
 
         /* Create Subsystem Objects*/
         //driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
-        shoulder = new Shoulder(hardwareMap);
-        turret = new Turret(hardwareMap);
         lights = new Lights(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, lights);
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous
         if ( GameField.poseSetInAutonomous) {
