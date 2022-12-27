@@ -4,15 +4,13 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class IntakeArm {
-    public Servo intakeArmServo;
-    public Servo intakeWristServo;
+    public Servo intakeArmServoLeft, intakeArmServoRight;
+    public Servo intakeWristServoLeft, intakeWristServoRight;
     public Servo intakeGripServo;
 
     public NormalizedColorSensor intakeGripColor;
@@ -30,41 +28,55 @@ public class IntakeArm {
     public GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSED;
 
     public enum ARM_STATE{
-        AUTO_CONE_1(0.6,1),
-        AUTO_CONE_2(0.7,2),
-        AUTO_CONE_3(0.8,3),
-        AUTO_CONE_4(0.9, 4),
-        AUTO_CONE_5(1,5),
-        PICKUP(1,6),
-        PICKUP_WRIST_DOWN_POSITION(0.7,7),
-        RANDOM(0,8),
-        TRANSFER(0.0,9);
+        PICKUP(1, 0,0),
+        AUTO_CONE_1(1,0,1),
+        AUTO_CONE_2(0.9, 0.1, 2),
+        AUTO_CONE_3(0.8, 0.2, 3),
+        AUTO_CONE_4(0.7, 0.3, 4),
+        AUTO_CONE_5(0.6, 0.4, 5),
 
-        private final double motorPosition;
-        private final double index;
-        ARM_STATE(double motorPosition, int index){
-            this.motorPosition = motorPosition;
+        PICKUP_FALLEN_CONE(0.7, 0.3,  6),
+        RANDOM(0,0,7),
+        TRANSFER(0.6,0.4,8);
+
+        private final double leftArmPosition, rightArmPosition;
+        private final int index;
+        ARM_STATE(double leftArmPosition, double rightArmPosition, int index){
+            this.leftArmPosition = leftArmPosition;
+            this.rightArmPosition = rightArmPosition;
             this.index = index;
         }
-        private ARM_STATE armStateByIndex(int index) {
-            return ARM_STATE.values()[index-1];
-        }
 
+        private ARM_STATE byIndex(int ord) {
+            if (ord <1) ord = 1;
+            if (ord >5) ord = 5;
+            for (ARM_STATE a : ARM_STATE.values()) {
+                if (a.index == ord) {
+                    return a;
+                }
+            }
+            return null;
+        }
     }
     public ARM_STATE armState = ARM_STATE.TRANSFER;
+    public double ARM_DELTA = 0.01;
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        UP(0.2),
-        LEVEL(0.5),
-        TRANSFER (0.7),
-        DOWN(1);
+        UP(0.2, 0.8),
+        PICKUP_LEVEL(0.5, 0.5),
+        AUTO_CONE_5(1, 0),
+        TRANSFER (0.7,0.3),
+        FALLEN_CONE(1,0);
 
-        private final double wristPosition;
-        WRIST_STATE(double wristPosition) {
-            this.wristPosition = wristPosition;
+        private final double leftWristPosition;
+        private final double rightWristPosition;
+        WRIST_STATE(double leftWristPosition, double rightWristPosition) {
+            this.leftWristPosition = leftWristPosition;
+            this.rightWristPosition = rightWristPosition;
         }
     }
+    public WRIST_STATE wristState = WRIST_STATE.TRANSFER;
 
     public enum INTAKE_GRIP_COLOR_SENSOR_STATE {
         DETECTED,
@@ -72,11 +84,12 @@ public class IntakeArm {
     }
 
     public INTAKE_GRIP_COLOR_SENSOR_STATE intakeGripColorSensorState = INTAKE_GRIP_COLOR_SENSOR_STATE.NOT_DETECTED;
-    public WRIST_STATE wristState = WRIST_STATE.TRANSFER;
 
     public IntakeArm(HardwareMap hardwareMap) { //map hand servo's to each
-        intakeArmServo = hardwareMap.get(Servo.class, "intakeArmServo");
-        intakeWristServo = hardwareMap.get(Servo.class, "intakeWristServo");
+        intakeArmServoLeft = hardwareMap.get(Servo.class, "intake_arm_left");
+        intakeArmServoRight = hardwareMap.get(Servo.class, "intake_arm_right");
+        intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
+        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
         intakeGripServo = hardwareMap.get(Servo.class, "intakeGripServo");
 
         intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
@@ -89,6 +102,95 @@ public class IntakeArm {
             ((SwitchableLight)intakeGripColor).enableLight(true);
         }
         closeGrip();
+    }
+
+    public void moveArm(ARM_STATE toArmState) {
+        intakeArmServoLeft.setPosition(toArmState.leftArmPosition);
+        intakeArmServoRight.setPosition(toArmState.rightArmPosition);
+        armState = toArmState;
+    }
+
+    public void moveArmWristUpOneStack(){
+        if (armState.index < 1 || armState.index > 4) {
+            return;
+        } else {
+            assert armState.byIndex(armState.index + 1) != null;
+            moveArm(armState.byIndex(armState.index + 1));
+        }
+    }
+
+    public void continousArmRotateUp(){
+        intakeArmServoLeft.setPosition(intakeArmServoLeft.getPosition() + ARM_DELTA);
+        intakeArmServoRight.setPosition(intakeArmServoRight.getPosition() - ARM_DELTA);
+        armState = ARM_STATE.RANDOM;
+    }
+
+    public void continousArmRotateDown(){
+        intakeArmServoLeft.setPosition(intakeArmServoLeft.getPosition() - ARM_DELTA);
+        intakeArmServoRight.setPosition(intakeArmServoRight.getPosition() + ARM_DELTA);
+        armState = ARM_STATE.RANDOM;
+    }
+
+    public static final double WRIST_UP_DELTA = 0.2;
+
+    public void moveWrist(WRIST_STATE toWristState) {
+        switch (toWristState) {
+            case PICKUP_LEVEL:
+            case AUTO_CONE_5:
+                intakeWristServoLeft.setPosition(determineWristLevelLeft(/*TODO*/));
+                intakeWristServoRight.setPosition(determineWristLevelRight(/*TODO*/));
+                break;
+            case UP:
+                intakeWristServoLeft.setPosition(determineWristLevelLeft(/*TODO*/) + WRIST_UP_DELTA);
+                intakeWristServoRight.setPosition(determineWristLevelRight(/*TODO*/) + WRIST_UP_DELTA);
+                break;
+            case TRANSFER:
+            case FALLEN_CONE:
+                intakeWristServoLeft.setPosition(toWristState.leftWristPosition);
+                intakeWristServoRight.setPosition(toWristState.leftWristPosition);
+                break;
+        }
+        wristState = toWristState;
+    }
+
+    //Algorithm to determine wrist position based on arm angle
+    public double determineWristLevelLeft(/*double armAngle TODO*/){
+        double determinedWristLeft = 0;
+        /*
+        wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((armAngle - SystemState.SHOULDER_PICKUP_POSITION)
+                / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
+        wristUpPosition = wristLevelPosition + WRIST_DELTA_FOR_HIGH;
+         */
+        return determinedWristLeft;
+    }
+
+    public double determineWristLevelRight(/*double armAngle TODO*/){
+        double determinedWristRight = 0;
+        /*
+        wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((armAngle - SystemState.SHOULDER_PICKUP_POSITION)
+                / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
+        wristUpPosition = wristLevelPosition + WRIST_DELTA_FOR_HIGH;
+         */
+        return determinedWristRight;
+    }
+
+    public double intakeGripDistance;
+    /**
+     * Returns the color sensor state back, and sets specific values to check if the sensor
+     * is detecting anything
+     * @return
+     */
+    public GRIP_STATE getIntakeGripColorDistanceSensorState(){
+        if (intakeGripColor instanceof DistanceSensor) {
+            intakeGripDistance =  ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.CM);
+        }
+
+        if (intakeGripDistance < 4) {
+            gripState = GRIP_STATE.CLOSED;
+        } else {
+            gripState = GRIP_STATE.OPEN;
+        }
+        return gripState;
     }
 
     /**
@@ -112,74 +214,6 @@ public class IntakeArm {
         } else {
             closeGrip();
         }
-    }
-
-    public static final double WRIST_UP_DELTA = 0.2;
-
-    public void moveWrist(WRIST_STATE toWristState) {
-        switch (toWristState) {
-            case LEVEL:
-                intakeWristServo.setPosition(determineWristLevelPosition(/*TODO*/));
-                break;
-            case UP:
-                intakeWristServo.setPosition(determineWristLevelPosition(/*TODO*/) + WRIST_UP_DELTA);
-                break;
-            case TRANSFER:
-            case DOWN:
-                intakeWristServo.setPosition(toWristState.wristPosition);
-                break;
-        }
-        wristState = toWristState;
-    }
-
-    public void moveArmWristUpOneStack(){
-
-    }
-
-    public void moveArmWristFallenCone(){
-
-    }
-
-    public void moveArmWristToPickUp(){
-
-    }
-
-    public void continousArmRotateUp(){
-
-    }
-
-    public void continousArmRotateDown(){
-
-    }
-
-    //Algorithm to determine wrist position based on arm angle
-    public double determineWristLevelPosition(/*double armAngle TODO*/){
-        double determinedWristPosition = 0;
-        /*
-        wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((armAngle - SystemState.SHOULDER_PICKUP_POSITION)
-                / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
-        wristUpPosition = wristLevelPosition + WRIST_DELTA_FOR_HIGH;
-         */
-        return determinedWristPosition;
-    }
-
-    public double intakeGripDistance;
-    /**
-     * Returns the color sensor state back, and sets specific values to check if the sensor
-     * is detecting anything
-     * @return
-     */
-    public GRIP_STATE getIntakeGripColorDistanceSensorState(){
-        if (intakeGripColor instanceof DistanceSensor) {
-            intakeGripDistance =  ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.CM);
-        }
-
-        if (intakeGripDistance < 4) {
-            gripState = GRIP_STATE.CLOSED;
-        } else {
-            gripState = GRIP_STATE.OPEN;
-        }
-        return gripState;
     }
 
     public double getIntakeGripColorSensorDistance(){
