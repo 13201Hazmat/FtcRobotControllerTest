@@ -138,15 +138,74 @@ public class GamepadController {
 
     public void runOuttakeSlides(){
         if(gp2GetButtonXPress()){
+            if(gp2GetLeftBumperPress()){
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.LOW_JUNCTION);
+                //outtakeArm.moveWristToState();
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
+            } else {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.LOW_JUNCTION);
+                //outtakeArm.moveWristToState();
+            }
+        }
 
+        if(gp2GetButtonYPress()){
+            if(gp2GetLeftBumperPress()) {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.MEDIUM_JUNCTION);
+                //outtakeArm.moveWristToState();
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
+            } else {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.MEDIUM_JUNCTION);
+                //outtakeArm.moveWristToState();
+            }
+        }
+
+        if(gp2GetButtonBPress()){
+            if(gp2GetLeftBumperPress()) {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.HIGH_JUNCTION);
+                //outtakeArm.moveWristToState();
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_RIGHT);
+            } else {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.HIGH_JUNCTION);
+                //outtakeArm.moveWristToState();
+            }
+        }
+
+        if(gp2GetButtonAPress()){
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.INIT);
+        }
+
+        if(gp2GetLeftStickY()>= 0.2){
+            outtakeSlides.modifyOuttakeSlidesLength(50); // need to change stepsize
+            //outtakeSlides.moveWristToState();
+        } else if(gp2GetLeftStickY()<= -0.2){
+            outtakeSlides.modifyOuttakeSlidesLength(50); // need to change stepsize
+            //outtakeSlides.moveWristToState();
+        }
+
+        if(gp2GetRightStickY()>=0.2){
+            //For turbo turret movement
+            if(gp2GetRightTrigger()>0.2){
+                outtakeSlides.moveTurretDelta();
+            } else {
+                //No turbo
+                outtakeSlides.moveTurretDelta();
+            }
+        } else if(gp2GetRightStickY()<=-0.2){
+            //For turbo turret movement
+            if(gp2GetRightTrigger()>0.2){
+                outtakeSlides.moveTurretDelta();
+            } else {
+                //No turbo
+                outtakeSlides.moveTurretDelta();
+            }
         }
 
         //TODO
-        //move outtake slides to junctions positions
-        //move outtake slides delta
+        //move outtake slides to junctions positions - Done
+        //move outtake slides delta- done
 
-        //move Turret by delta
-        //move Turret to preset
+        //move Turret by delta-done
+        //move Turret to preset - Done
 
 
     }
