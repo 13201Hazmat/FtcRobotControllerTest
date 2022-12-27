@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -19,31 +19,43 @@ public class IntakeArm {
 
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
-        OPEN,
-        CLOSE
+        OPEN(0.25),
+        CLOSED(0.75);
+
+        private final double gripPosition;
+        GRIP_STATE(double gripPosition) {
+            this.gripPosition = gripPosition;
+        }
     }
-    public IntakeArm.GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSE;
+    public GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSED;
 
     public enum ARM_STATE{
-        CONE_1(0),
-        CONE_2(0),
-        CONE_3(0),
-        CONE_4(0),
-        CONE_5(0),
-        PICKUP_WRIST_DOWN_POSITION(0),
-        RANDOM(0);
+        AUTO_CONE_1(0.6),
+        AUTO_CONE_2(0.7),
+        AUTO_CONE_3(0.8),
+        AUTO_CONE_4(0.9),
+        AUTO_CONE_5(1),
+        PICKUP(1),
+        PICKUP_WRIST_DOWN_POSITION(0.7),
+        RANDOM(0),
+        TRANSFER(0.0);
 
         private final double motorPosition;
         ARM_STATE(double motorPosition){this.motorPosition = motorPosition;}
     }
-    public ARM_STATE armState = ARM_STATE.CONE_5;
+    public ARM_STATE armState = ARM_STATE.TRANSFER;
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        WRIST_TRANSFER,
-        WRIST_LEVEL,
-        WRIST_UP,
-        WRIST_DOWN
+        UP(0.2),
+        LEVEL(0.5),
+        TRANSFER (0.7),
+        DOWN(1);
+
+        private final double wristPosition;
+        WRIST_STATE(double wristPosition) {
+            this.wristPosition = wristPosition;
+        }
     }
 
     public enum INTAKE_GRIP_COLOR_SENSOR_STATE {
@@ -52,17 +64,7 @@ public class IntakeArm {
     }
 
     public INTAKE_GRIP_COLOR_SENSOR_STATE intakeGripColorSensorState = INTAKE_GRIP_COLOR_SENSOR_STATE.NOT_DETECTED;
-    public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
-
-    //constants for Hand and grip position
-    public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
-    public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
-    //public static final double CLOSE_GRIP_FULL_POSITION = 0.00;
-
-    public static final double WRIST_TRANSFER_POSITION = 0.50;
-    public static final double WRIST_UP_POSITION = 0.06;
-    public double WRIST_LEVEL_POSITION = 0.01; //Will dynamically change based on arm angle
-
+    public WRIST_STATE wristState = WRIST_STATE.TRANSFER;
 
     public IntakeArm(HardwareMap hardwareMap) { //map hand servo's to each
         intakeArmServo = hardwareMap.get(Servo.class, "intakeArmServo");
@@ -85,41 +87,41 @@ public class IntakeArm {
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip(){
-        intakeGripServo.setPosition(OPEN_GRIP_POS);
+        intakeGripServo.setPosition(GRIP_STATE.OPEN.gripPosition);
         gripState = GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        intakeGripServo.setPosition(CLOSE_GRIP_POS);
-        gripState = GRIP_STATE.CLOSE;
+        intakeGripServo.setPosition(GRIP_STATE.CLOSED.gripPosition);
+        gripState = GRIP_STATE.CLOSED;
     }
 
     public void toggleGrip(){
-        if (gripState == GRIP_STATE.CLOSE) {
+        if (gripState == GRIP_STATE.CLOSED) {
             openGrip();
         } else {
             closeGrip();
         }
     }
 
-    public void moveWristTransfer(){
-        //determineWristLevelPosition(shoulderLevelPosition);
-        intakeWristServo.setPosition(WRIST_TRANSFER_POSITION);
-        wristState = WRIST_STATE.WRIST_TRANSFER;
-    }
+    public static final double WRIST_UP_DELTA = 0.2;
 
-    //rotates hand down given controller input
-    public void moveWristUp(){
-        intakeWristServo.setPosition(WRIST_UP_POSITION);
-        wristState = WRIST_STATE.WRIST_UP;
-    }
-
-    public void moveWristLevel(double armAngle){
-        determineWristLevelPosition(armAngle);
-        intakeWristServo.setPosition(WRIST_LEVEL_POSITION);
-        wristState = WRIST_STATE.WRIST_LEVEL;
+    public void moveWrist(WRIST_STATE toWristState) {
+        switch (toWristState) {
+            case LEVEL:
+                intakeWristServo.setPosition(determineWristLevelPosition(/*TODO*/));
+                break;
+            case UP:
+                intakeWristServo.setPosition(determineWristLevelPosition(/*TODO*/) + WRIST_UP_DELTA);
+                break;
+            case TRANSFER:
+            case DOWN:
+                intakeWristServo.setPosition(toWristState.wristPosition);
+                break;
+        }
+        wristState = toWristState;
     }
 
     public void moveArmWristUpOneStack(){
@@ -143,12 +145,14 @@ public class IntakeArm {
     }
 
     //Algorithm to determine wrist position based on arm angle
-    public void determineWristLevelPosition(double armAngle){
+    public double determineWristLevelPosition(/*double armAngle TODO*/){
+        double determinedWristPosition = 0;
         /*
         wristLevelPosition = WRIST_PICKUP_LEVEL_POSITION + ((armAngle - SystemState.SHOULDER_PICKUP_POSITION)
                 / SystemState.SHOULDER_WRIST_ANGLE_FACTOR);
         wristUpPosition = wristLevelPosition + WRIST_DELTA_FOR_HIGH;
          */
+        return determinedWristPosition;
     }
 
     public double intakeGripDistance;
@@ -163,7 +167,7 @@ public class IntakeArm {
         }
 
         if (intakeGripDistance < 4) {
-            gripState = GRIP_STATE.CLOSE;
+            gripState = GRIP_STATE.CLOSED;
         } else {
             gripState = GRIP_STATE.OPEN;
         }

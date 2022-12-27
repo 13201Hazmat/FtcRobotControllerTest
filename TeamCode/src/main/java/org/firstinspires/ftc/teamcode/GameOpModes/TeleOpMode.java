@@ -9,7 +9,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 /**
@@ -23,6 +27,10 @@ public class TeleOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
+    public IntakeArm intakeArm;
+    public IntakeSlides intakeSlides;
+    public OuttakeArm outtakeArm;
+    public OuttakeSlides outtakeSlides;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -93,13 +101,28 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addLine("DriveTrain Initialized");
         telemetry.update();
 
+        intakeArm = new IntakeArm(hardwareMap);
+        telemetry.addLine("IntakeArm Initialized");
+        telemetry.update();
+
+        intakeSlides = new IntakeSlides(hardwareMap);
+        telemetry.addLine("IntakeSlides Initialized");
+        telemetry.update();
+
+        outtakeArm = new OuttakeArm(hardwareMap);
+        telemetry.addLine("OuttakeArm Initialized");
+        telemetry.update();
+
+        outtakeSlides = new OuttakeSlides(hardwareMap);
+        telemetry.addLine("OuttakeSlides Initialized");
+        telemetry.update();
 
         lights = new Lights(hardwareMap);
         telemetry.addLine("Lights Initialized");
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, lights);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intakeArm, intakeSlides, outtakeArm, outtakeSlides, lights);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

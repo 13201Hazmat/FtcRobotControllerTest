@@ -9,6 +9,10 @@ import org.firstinspires.ftc.teamcode.AadiGeometry.AadiVector;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 /**
@@ -54,7 +58,11 @@ public class GamepadController {
     //Create object reference to objects to systems passed from TeleOp
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
+    public IntakeArm intakeArm;
+    public IntakeSlides intakeSlides;
     public Lights lights;
+    public OuttakeArm outtakeArm;
+    public OuttakeSlides outtakeSlides;
 
     /**
      * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
@@ -63,11 +71,19 @@ public class GamepadController {
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
                              DriveTrain driveTrain,
+                             IntakeArm intakeArm,
+                             IntakeSlides intakeSlides,
+                             OuttakeArm outtakeArm,
+                             OuttakeSlides outtakeSlides,
                              Lights lights
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
+        this.intakeArm = intakeArm;
+        this.intakeSlides = intakeSlides;
+        this.outtakeArm = outtakeArm;
+        this.outtakeSlides = outtakeSlides;
         this.lights = lights;
     }
 
@@ -121,11 +137,13 @@ public class GamepadController {
     }
 
     public void runOuttakeSlides(){
+        if(gp2GetButtonXPress()){
+
+        }
 
         //TODO
         //move outtake slides to junctions positions
         //move outtake slides delta
-
 
         //move Turret by delta
         //move Turret to preset
