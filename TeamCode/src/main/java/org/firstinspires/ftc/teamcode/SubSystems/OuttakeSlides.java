@@ -117,6 +117,21 @@ public class OuttakeSlides {
         outtakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
+    //Sets outtake slides to Transfer position
+    public void moveOuttakeSlides(OUTTAKE_MOTOR_STATE toOuttakeMotorState){
+        turnOuttakeBrakeModeOn();
+        outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
+        if (outtakeMotorCurrentPosition < toOuttakeMotorState.motorPosition ) {
+            outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.RETRACT;
+        }
+        outtakeMotorLeft.setTargetPosition((int)toOuttakeMotorState.motorPosition);
+        outtakeMotorRight.setTargetPosition((int)toOuttakeMotorState.motorPosition);
+        outtakeMotorState = toOuttakeMotorState;
+        runOuttakeMotorToLevelState = true;
+    }
+
     public void modifyOuttakeSlidesLength(double stepSizeFactor){
         deltaCount = stepSizeFactor * OUTTAKE_MOTOR_DELTA_COUNT_MAX;
         if (deltaCount !=0) {

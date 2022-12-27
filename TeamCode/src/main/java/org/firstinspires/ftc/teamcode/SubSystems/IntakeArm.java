@@ -30,18 +30,26 @@ public class IntakeArm {
     public GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSED;
 
     public enum ARM_STATE{
-        AUTO_CONE_1(0.6),
-        AUTO_CONE_2(0.7),
-        AUTO_CONE_3(0.8),
-        AUTO_CONE_4(0.9),
-        AUTO_CONE_5(1),
-        PICKUP(1),
-        PICKUP_WRIST_DOWN_POSITION(0.7),
-        RANDOM(0),
-        TRANSFER(0.0);
+        AUTO_CONE_1(0.6,1),
+        AUTO_CONE_2(0.7,2),
+        AUTO_CONE_3(0.8,3),
+        AUTO_CONE_4(0.9, 4),
+        AUTO_CONE_5(1,5),
+        PICKUP(1,6),
+        PICKUP_WRIST_DOWN_POSITION(0.7,7),
+        RANDOM(0,8),
+        TRANSFER(0.0,9);
 
         private final double motorPosition;
-        ARM_STATE(double motorPosition){this.motorPosition = motorPosition;}
+        private final double index;
+        ARM_STATE(double motorPosition, int index){
+            this.motorPosition = motorPosition;
+            this.index = index;
+        }
+        private ARM_STATE armStateByIndex(int index) {
+            return ARM_STATE.values()[index-1];
+        }
+
     }
     public ARM_STATE armState = ARM_STATE.TRANSFER;
 

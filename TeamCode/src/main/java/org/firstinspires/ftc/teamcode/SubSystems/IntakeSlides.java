@@ -99,6 +99,21 @@ public class IntakeSlides {
         intakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
+    //Sets outtake slides to Transfer position
+    public void moveIntakeSlides(INTAKE_MOTOR_STATE toIntakeMotorState){
+        turnIntakeBrakeModeOn();
+        intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
+        if (intakeMotorCurrentPosition < toIntakeMotorState.motorPosition ) {
+            intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.EXTEND;
+        } else {
+            intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.RETRACT;
+        }
+        intakeMotorLeft.setTargetPosition((int)toIntakeMotorState.motorPosition);
+        intakeMotorRight.setTargetPosition((int)toIntakeMotorState.motorPosition);
+        intakeMotorState = toIntakeMotorState;
+        runIntakeMotorToLevelState = true;
+    }
+
     public void modifyIntakeSlidesLength(double stepSizeFactor){
         deltaCount = stepSizeFactor * INTAKE_MOTOR_DELTA_COUNT_MAX;
         if (deltaCount !=0) {
