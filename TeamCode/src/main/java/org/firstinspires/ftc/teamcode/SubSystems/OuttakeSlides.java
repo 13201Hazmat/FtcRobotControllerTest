@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -89,6 +88,10 @@ public class OuttakeSlides {
 
         // set the digital channel to input.
         outtakeTouch.setMode(DigitalChannel.Mode.INPUT);
+
+        //Turret
+        outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
+
         initOuttakeSlides();
     }
 
@@ -215,12 +218,11 @@ public class OuttakeSlides {
         outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
     }
 
-
-
     public enum TURRET_STATE{
         MAX_LEFT (0.7),
-        INIT (0.5),
+        CENTER(0.5),
         MAX_RIGHT (0.3),
+        INIT(0.1),
         RANDOM (0.5);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
@@ -228,13 +230,13 @@ public class OuttakeSlides {
         }
     }
 
-    public TURRET_STATE turretState = TURRET_STATE.INIT;
+    public TURRET_STATE turretState = TURRET_STATE.CENTER;
 
     public double TURRET_DELTA = 0.01;
-    public double TURRET_TURBO_DELTA = 0.03;
+    public double TURRET_TURBO_DELTA = 0.09;
 
     public void initTurret(){
-        outtakeTurretServo.setPosition(TURRET_STATE.INIT.turretPosition);
+        outtakeTurretServo.setPosition(TURRET_STATE.CENTER.turretPosition);
         turretState = TURRET_STATE.INIT;
     }
 
@@ -243,8 +245,9 @@ public class OuttakeSlides {
         turretState = toTurretState;
     }
 
-    public void moveTurretDelta(){
-        //TODO
+    public void moveTurretDelta(double stepSizeFactor){
+        outtakeTurretServo.setPosition(stepSizeFactor);
+        turretState = TURRET_STATE.RANDOM;
     }
 
 }

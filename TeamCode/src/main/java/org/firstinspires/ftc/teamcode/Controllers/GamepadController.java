@@ -2,18 +2,13 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
-import org.firstinspires.ftc.teamcode.AadiGeometry.AadiVector;
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
 
 /**
  * Defenition of the HzGamepad Class <BR>
@@ -188,78 +183,37 @@ public class GamepadController {
 
     }
 
+    //TODO : Change all outtake positions to presets to enable record and replay
 
     public void runOuttakeSlides(){
         if(gp2GetButtonXPress()){
             if(gp2GetLeftBumperPress()){
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.LOW_JUNCTION);
-                //outtakeArm.moveWristToState();
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
-            } else {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.LOW_JUNCTION);
-                //outtakeArm.moveWristToState();
             }
+            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.LOW_JUNCTION);
         }
 
         if(gp2GetButtonYPress()){
             if(gp2GetLeftBumperPress()) {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.MEDIUM_JUNCTION);
-                //outtakeArm.moveWristToState();
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
-            } else {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.MEDIUM_JUNCTION);
-                //outtakeArm.moveWristToState();
             }
+            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.MEDIUM_JUNCTION);
         }
 
-        if(gp2GetButtonBPress()){
+        if(!gp2GetStart() && gp2GetButtonBPress()){
             if(gp2GetLeftBumperPress()) {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.HIGH_JUNCTION);
-                //outtakeArm.moveWristToState();
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_RIGHT);
-            } else {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.HIGH_JUNCTION);
-                //outtakeArm.moveWristToState();
             }
+            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_MOTOR_STATE.HIGH_JUNCTION);
         }
 
-        if(gp2GetButtonAPress()){
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.INIT);
+        if(!gp2GetStart() && gp2GetButtonAPress()){
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
         }
 
-        if(gp2GetLeftStickY()>= 0.2){
-            outtakeSlides.modifyOuttakeSlidesLength(50); // need to change stepsize
-            //outtakeSlides.moveWristToState();
-        } else if(gp2GetLeftStickY()<= -0.2){
-            outtakeSlides.modifyOuttakeSlidesLength(50); // need to change stepsize
-            //outtakeSlides.moveWristToState();
-        }
+        outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(gp2GetLeftStickY() * outtakeSlides.OUTTAKE_MOTOR_DELTA_COUNT_MAX));
 
-        if(gp2GetRightStickY()>=0.2){
-            //For turbo turret movement
-            if(gp2GetRightTrigger()>0.2){
-                outtakeSlides.moveTurretDelta();
-            } else {
-                //No turbo
-                outtakeSlides.moveTurretDelta();
-            }
-        } else if(gp2GetRightStickY()<=-0.2){
-            //For turbo turret movement
-            if(gp2GetRightTrigger()>0.2){
-                outtakeSlides.moveTurretDelta();
-            } else {
-                //No turbo
-                outtakeSlides.moveTurretDelta();
-            }
-        }
-
-        //TODO
-        //move outtake slides to junctions positions - Done
-        //move outtake slides delta- done
-
-        //move Turret by delta-done
-        //move Turret to preset - Done
-
+        outtakeSlides.moveTurretDelta(gp2TurboMode(-gp2GetRightStickX() * outtakeSlides.TURRET_TURBO_DELTA));
 
     }
 

@@ -9,6 +9,41 @@ Expansion Hub Motor Port 3        rightFront = hardwareMap.get(DcMotorEx.class, 
 
 Expansion Hub I2C Bus 0           imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+IntakeArm:
+        intakeArmServoLeft = hardwareMap.get(Servo.class, "intake_arm_left");
+        intakeArmServoRight = hardwareMap.get(Servo.class, "intake_arm_right");
+        intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
+        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
+        intakeGripServo = hardwareMap.get(Servo.class, "intakeGripServo");
+        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+
+Intake Slides:
+        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
+        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
+        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
+
+OuttakeArm :
+        outtakeWristServo = hardwareMap.get(Servo.class, "outtakeWristServo");
+        outtakeGripServo = hardwareMap.get(Servo.class, "outtakeGripServo");
+        outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+        outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
+
+Outtake Slides:
+        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_motor_left");
+        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_motor_right");
+        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
+        outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
+
+Webcam
+Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+Lights
+Expansion Hub Servo Port 3        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+
+
+Old:
+-----
 Arm:
 Control Hub Motor Port 1          armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
 Control Hub Digital Port 3        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
@@ -27,9 +62,3 @@ Control Hub Motor Port 0          turretMotor = hardwareMap.get(DcMotorEx.class,
 Expansion Hub Digital Port 1        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
 Expansion Hub Digital Port 3        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
 Expansion Hub Digital Port 5        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
-
-Webcam
-Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-Lights
-Expansion Hub Servo Port 3        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
