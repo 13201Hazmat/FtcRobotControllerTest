@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Arm;
-import org.firstinspires.ftc.teamcode.SubSystems.Hand;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
-import org.firstinspires.ftc.teamcode.SubSystems.Turret;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -27,10 +27,10 @@ public class TeleOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
-    public Arm arm;
-    public Hand hand;
-    public Shoulder shoulder;
-    public Turret turret;
+    public IntakeArm intakeArm;
+    public IntakeSlides intakeSlides;
+    public OuttakeArm outtakeArm;
+    public OuttakeSlides outtakeSlides;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -88,6 +88,7 @@ public class TeleOpMode extends LinearOpMode {
     }
 
     public void initSubsystems(){
+        /*
         telemetry.setAutoClear(false);
 
         //Init Pressed
@@ -100,25 +101,20 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.addLine("DriveTrain Initialized");
         telemetry.update();
 
-        hand = new Hand(hardwareMap);
-        telemetry.addLine("Hand Initialized");
+        intakeArm = new IntakeArm(hardwareMap);
+        telemetry.addLine("IntakeArm Initialized");
         telemetry.update();
 
-        arm = new Arm(hardwareMap);
-        telemetry.addLine("Arm Initialized, Pulled in completely");
-        telemetry.addData("  - Arm Touch Sensor State", arm.armTouchSensor.getState());
+        intakeSlides = new IntakeSlides(hardwareMap);
+        telemetry.addLine("IntakeSlides Initialized");
         telemetry.update();
 
-        shoulder = new Shoulder(hardwareMap);
-        telemetry.addLine("Shoulder Initialized, Pushed down completely");
-        telemetry.addData("  - Should Touch Sensor State: ", shoulder.shoulderTouchSensor.getState());
+        outtakeArm = new OuttakeArm(hardwareMap);
+        telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
-        turret = new Turret(hardwareMap);
-        telemetry.addLine("Turret Initialized, Set to middle");
-        telemetry.addData("  - Turret Left Mag Sensor State: ", turret.turretLeftMagneticSensor.getState());
-        telemetry.addData("  - Turret Center Mag Sensor State: ", turret.turretCenterMagneticSensor.getState());
-        telemetry.addData("  - Turret Right Mag Sensor State: ", turret.turretRightMagneticSensor.getState());
+        outtakeSlides = new OuttakeSlides(hardwareMap);
+        telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
         lights = new Lights(hardwareMap);
@@ -126,7 +122,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intakeArm, intakeSlides, outtakeArm, outtakeSlides, lights);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -165,6 +161,7 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             //telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
+            /*
 
             telemetry.addData("Arm State", arm.armState);
             //telemetry.addData("Arm Motor Position", arm.armMotor.getCurrentPosition());
@@ -212,7 +209,9 @@ public class TeleOpMode extends LinearOpMode {
             }
             telemetry.addData("Turret Delta Count", turret.turretDeltaCount);
             telemetry.addLine("=============");
+            */
         }
         telemetry.update();
     }
+
 }

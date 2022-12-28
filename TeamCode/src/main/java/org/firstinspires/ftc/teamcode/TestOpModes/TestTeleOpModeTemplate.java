@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.Arm;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Hand;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Shoulder;
-import org.firstinspires.ftc.teamcode.SubSystems.Turret;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 
 /**
  * Ultimate Goal TeleOp mode <BR>
@@ -28,10 +28,10 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
-    public Arm arm;
-    public Hand hand;
-    public Shoulder shoulder;
-    public Turret turret;
+    public IntakeArm intakeArm;
+    public IntakeSlides intakeSlides;
+    public OuttakeArm outtakeArm;
+    public OuttakeSlides outtakeSlides;
     public Lights lights;
 
     //public Vuforia Vuforia1;
@@ -49,15 +49,15 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         /* Create Subsystem Objects*/
-        //driveTrain = new DriveTrain(hardwareMap);
-        arm = new Arm(hardwareMap);
-        hand = new Hand(hardwareMap);
-        shoulder = new Shoulder(hardwareMap);
-        turret = new Turret(hardwareMap);
+        driveTrain = new DriveTrain(hardwareMap);
         lights = new Lights(hardwareMap);
+        intakeArm = new IntakeArm(hardwareMap);
+        intakeSlides = new IntakeSlides(hardwareMap);
+        outtakeArm = new OuttakeArm(hardwareMap);
+        outtakeSlides = new OuttakeSlides(hardwareMap);
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, arm, hand, shoulder, turret, lights);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intakeArm, intakeSlides, outtakeArm, outtakeSlides, lights);
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous
         if ( GameField.poseSetInAutonomous) {
