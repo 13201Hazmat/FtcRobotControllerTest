@@ -114,11 +114,11 @@ public class IntakeSlides {
         runIntakeMotorToLevelState = true;
     }
 
-    public void modifyIntakeSlidesLength(double stepSizeFactor){
+    public void modifyIntakeSlidesLength(double stepSizeFactor, int direction){
         deltaCount = stepSizeFactor * INTAKE_MOTOR_DELTA_COUNT_MAX;
         if (deltaCount !=0) {
             intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
-            intakeMotorNewPosition = (intakeMotorCurrentPosition + deltaCount);
+            intakeMotorNewPosition = (intakeMotorCurrentPosition + direction * deltaCount);
             if (intakeMotorNewPosition < IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition) {
                 intakeMotorNewPosition = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition;
                 intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;

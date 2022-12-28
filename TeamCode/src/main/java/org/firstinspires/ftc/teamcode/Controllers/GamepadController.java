@@ -93,6 +93,8 @@ public class GamepadController {
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
+        runIntakeArm();
+        runIntakeSlides();
         runOuttakeSlides();
         recordAndReplay();
         runDriveControl_byRRDriveModes();
@@ -135,6 +137,57 @@ public class GamepadController {
             driveTrain.driveTrainFieldCentric();
         }*/
     }
+
+    public void runIntakeSlides(){
+        if (!gp1GetStart() && gp1GetButtonBPress()) {
+            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()),1);
+        }
+        if (gp1GetButtonXPress()) {
+            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()),-1);
+        }
+    }
+
+    public void runIntakeArm(){
+        if (gp1GetStart() && gp1GetRightBumper()) {
+            intakeArm.autoIntakeClose = !intakeArm.autoIntakeClose;
+        }
+
+        if (intakeArm.autoIntakeClose && intakeArm.senseIntakeCone()) {
+            intakeArm.closeGrip();
+        }
+
+        if (gp1GetRightBumper()) {
+            intakeArm.toggleGrip();
+        }
+
+        if (gp1GetDpad_downPress()) {
+            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP);
+            intakeArm.openGrip();
+        }
+
+        if (gp1GetDpad_up()){
+            intakeArm.continousArmRotateUp();
+        }
+
+        if (gp1GetStart() && gp1GetDpad_downPress()) {
+            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_FALLEN_CONE);
+            intakeArm.openGrip();
+        }
+
+        if (gp1GetLeftBumper()) {
+            intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
+        }
+
+        if (gp1GetButtonYPress()) {
+            intakeArm.moveArmWristUpOneStack();
+        }
+
+        if (!gp1GetStart() && gp1GetButtonBPress()) {
+            intakeArm.moveArmWristDownOneStack();
+        }
+
+    }
+
 
     public void runOuttakeSlides(){
         if(gp2GetButtonXPress()){
