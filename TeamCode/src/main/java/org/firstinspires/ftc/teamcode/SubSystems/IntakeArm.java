@@ -106,7 +106,7 @@ public class IntakeArm {
         intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
         intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
 
-        //intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
         initIntakeArm();
     }
 

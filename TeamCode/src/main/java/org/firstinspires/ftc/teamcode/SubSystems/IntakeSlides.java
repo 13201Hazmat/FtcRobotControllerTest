@@ -70,12 +70,12 @@ public class IntakeSlides {
         intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 
         // get a reference to our digitalTouch object.
-        //intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
         // set the digital channel to input.
-        //intakeTouch.setMode(DigitalChannel.Mode.INPUT);
+        intakeTouch.setMode(DigitalChannel.Mode.INPUT);
 
-        //intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
-        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)intakeDistanceSensor;
+        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)intakeDistanceSensor;
 
         initIntakeSlides();
     }
