@@ -42,7 +42,7 @@ public class OuttakeSlides {
     public Servo outtakeTurretServo;
 
     //Outtake Motor states
-    public enum OUTTAKE_MOTOR_STATE {
+    public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
         LOW_JUNCTION (0),
@@ -52,15 +52,15 @@ public class OuttakeSlides {
         RANDOM(0);
 
         private final double motorPosition;
-        OUTTAKE_MOTOR_STATE(double motorPosition) {
+        OUTTAKE_SLIDE_STATE(double motorPosition) {
             this.motorPosition = motorPosition;
         }
 
     }
-    public OUTTAKE_MOTOR_STATE outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
+    public OUTTAKE_SLIDE_STATE outtakeSlideState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
 
-    public double outtakeMotorCurrentPosition = outtakeMotorState.motorPosition;
-    public double outtakeMotorNewPosition = outtakeMotorState.motorPosition;
+    public double outtakeMotorCurrentPosition = outtakeSlideState.motorPosition;
+    public double outtakeMotorNewPosition = outtakeSlideState.motorPosition;
 
     public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
     public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 50;
@@ -80,6 +80,7 @@ public class OuttakeSlides {
 
     //Constructor`
     public OuttakeSlides(HardwareMap hardwareMap){
+
         outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_motor_left");
         outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_motor_right");
 
@@ -121,7 +122,7 @@ public class OuttakeSlides {
     }
 
     //Sets outtake slides to Transfer position
-    public void moveOuttakeSlides(OUTTAKE_MOTOR_STATE toOuttakeMotorState){
+    public void moveOuttakeSlides(OUTTAKE_SLIDE_STATE toOuttakeMotorState){
         turnOuttakeBrakeModeOn();
         outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
         if (outtakeMotorCurrentPosition < toOuttakeMotorState.motorPosition ) {
@@ -131,7 +132,7 @@ public class OuttakeSlides {
         }
         outtakeMotorLeft.setTargetPosition((int)toOuttakeMotorState.motorPosition);
         outtakeMotorRight.setTargetPosition((int)toOuttakeMotorState.motorPosition);
-        outtakeMotorState = toOuttakeMotorState;
+        outtakeSlideState = toOuttakeMotorState;
         runOuttakeMotorToLevelState = true;
     }
 
@@ -140,14 +141,14 @@ public class OuttakeSlides {
         if (deltaCount !=0) {
             outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
             outtakeMotorNewPosition = (outtakeMotorCurrentPosition + deltaCount);
-            if (outtakeMotorNewPosition < OUTTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition) {
-                outtakeMotorNewPosition = OUTTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition;
-                outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
-            } else if (outtakeMotorNewPosition > OUTTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition) {
-                outtakeMotorNewPosition = OUTTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition;
-                outtakeMotorState = OUTTAKE_MOTOR_STATE.MAX_EXTENDED;
+            if (outtakeMotorNewPosition < OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition) {
+                outtakeMotorNewPosition = OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition;
+                outtakeSlideState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
+            } else if (outtakeMotorNewPosition > OUTTAKE_SLIDE_STATE.MAX_EXTENDED.motorPosition) {
+                outtakeMotorNewPosition = OUTTAKE_SLIDE_STATE.MAX_EXTENDED.motorPosition;
+                outtakeSlideState = OUTTAKE_SLIDE_STATE.MAX_EXTENDED;
             } else {
-                outtakeMotorState = OUTTAKE_MOTOR_STATE.RANDOM;
+                outtakeSlideState = OUTTAKE_SLIDE_STATE.RANDOM;
             }
             outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
             if (outtakeMotorCurrentPosition < outtakeMotorNewPosition ) {
@@ -167,7 +168,7 @@ public class OuttakeSlides {
     //sets the Outtake motor power
     public void runOuttakeMotorToLevel(){
         double power = 0;
-        if (outtakeMotorState != OUTTAKE_MOTOR_STATE.MIN_RETRACTED) {
+        if (outtakeSlideState != OUTTAKE_SLIDE_STATE.MIN_RETRACTED) {
             turnOuttakeBrakeModeOff();
         } else {
             turnOuttakeBrakeModeOn();
@@ -215,7 +216,7 @@ public class OuttakeSlides {
         }
         resetOuttakeMotorMode();
         turnOuttakeBrakeModeOff();
-        outtakeMotorState = OUTTAKE_MOTOR_STATE.MIN_RETRACTED;
+        outtakeSlideState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
     }
 
     public enum TURRET_STATE{

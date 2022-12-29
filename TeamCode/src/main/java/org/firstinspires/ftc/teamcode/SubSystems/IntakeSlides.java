@@ -18,7 +18,7 @@ public class IntakeSlides {
     public DcMotorEx intakeMotorLeft, intakeMotorRight;
 
     //Intake Motor : 5203 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 8mm REX Shaft, 435 RPM, 3.3 - 5V Encoder)
-    public static final double INTAKE_MOTOR_ENCODER_TICKS = 384.5;
+    public static final double INTAKE_MOTOR_ENCODER_TICKS = 1500; //384.5
 
     public DigitalChannel intakeTouch;  // Hardware Device Object
 
@@ -70,12 +70,12 @@ public class IntakeSlides {
         intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 
         // get a reference to our digitalTouch object.
-        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+        //intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
         // set the digital channel to input.
-        intakeTouch.setMode(DigitalChannel.Mode.INPUT);
+        //intakeTouch.setMode(DigitalChannel.Mode.INPUT);
 
-        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)intakeDistanceSensor;
+        //intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
+        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)intakeDistanceSensor;
 
         initIntakeSlides();
     }
@@ -167,6 +167,9 @@ public class IntakeSlides {
         if (!intakeTouch.getState()) {
             resetIntakeMotorMode();
         }
+    }
+    public boolean senseIntakeSlidesMinRetracted(){
+        return intakeTouch.getState();
     }
 
     //Resets the arm

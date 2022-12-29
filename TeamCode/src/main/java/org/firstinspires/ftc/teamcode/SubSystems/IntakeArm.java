@@ -28,7 +28,7 @@ public class IntakeArm {
     }
     public GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSED;
 
-    public boolean autoIntakeClose = true;
+    public boolean autoIntakeCloseMode = true;
 
     public enum ARM_STATE{
         PICKUP(0.01, 0.95,0),
@@ -104,9 +104,9 @@ public class IntakeArm {
         intakeArmServoRight = hardwareMap.get(Servo.class, "intake_arm_right");
         intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
         intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
-        intakeGripServo = hardwareMap.get(Servo.class, "intakeGripServo");
+        intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
 
-        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+        //intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
         initIntakeArm();
     }
 
@@ -231,16 +231,17 @@ public class IntakeArm {
      * @return
      */
     public boolean senseIntakeCone(){
-
         boolean intakeConeSensed = false;
-        if (intakeGripColor instanceof DistanceSensor) {
-            intakeGripDistance =  ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
-        }
+        if (armState != ARM_STATE.TRANSFER) {
+            if (intakeGripColor instanceof DistanceSensor) {
+                intakeGripDistance = ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
+            }
 
-        if (intakeGripDistance < 40) {
-            intakeConeSensed = true;
-        } else {
-            intakeConeSensed = false;
+            if (intakeGripDistance < 40) {
+                intakeConeSensed = true;
+            } else {
+                intakeConeSensed = false;
+            }
         }
         return intakeConeSensed;
     }
@@ -250,7 +251,7 @@ public class IntakeArm {
      */
     public void openGrip(){
         intakeGripServo.setPosition(GRIP_STATE.OPEN.gripPosition);
-        if (autoIntakeClose) {
+        if (autoIntakeCloseMode) {
             gripState = GRIP_STATE.OPEN_AUTO;
         } else {
             gripState = GRIP_STATE.OPEN;
@@ -283,7 +284,7 @@ public class IntakeArm {
                     openGrip();
                 } else {
                     closeGrip();
-                    moveWristUp();
+                    moveWristUp(); //TODO : TEST
                 }
                 break;
             case PICKUP_FALLEN_CONE:
