@@ -15,19 +15,19 @@ Control Hub Servo Port 0        intakeArmServoRight = hardwareMap.get(Servo.clas
 Expansion Hub Servo Port 2        intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
 Control Hub Servo Port 1        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
 Control Hub Servo Port 2        intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
-Control Hub Digital Port 0        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+Control Hub I2C BUS 3        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
 
 Intake Slides:
 Control Hub Motor Port 0        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
 Control Hub Motor Port 1        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
-Control Hub Digital Port 3        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
+Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
 
 OuttakeArm :
 Control Hub Servo Port 3        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
 Control Hub Servo Port 4        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
-Control Hub Digital Port 5        outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
-Control Hub Digital Port 6        outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
+Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+Control Hub I2C BUS 2         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
 Outtake Slides:
 Control Hub Motor Port 2        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_motor_left");

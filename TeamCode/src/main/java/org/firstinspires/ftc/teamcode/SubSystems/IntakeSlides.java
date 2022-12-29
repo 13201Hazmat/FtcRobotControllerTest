@@ -43,10 +43,10 @@ public class IntakeSlides {
         }
 
     }
-    public IntakeSlides.INTAKE_MOTOR_STATE intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
+    public IntakeSlides.INTAKE_MOTOR_STATE intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
 
-    public double intakeMotorCurrentPosition = intakeMotorState.motorPosition;
-    public double intakeMotorNewPosition = intakeMotorState.motorPosition;
+    public double intakeMotorCurrentPosition = intakeSlidesState.motorPosition;
+    public double intakeMotorNewPosition = intakeSlidesState.motorPosition;
 
     public static final double INTAKE_MOTOR_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
     public static final double INTAKE_MOTOR_DELTA_COUNT_RESET = 50;
@@ -87,10 +87,10 @@ public class IntakeSlides {
         intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intakeMotorLeft.setPositionPIDFCoefficients(5.0);
         intakeMotorRight.setPositionPIDFCoefficients(5.0);
-        intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
+        intakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        intakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
         turnIntakeBrakeModeOn();
-        manualResetIntakeMotor();
+        //manualResetIntakeMotor();
     }
 
     //Turns on the brake for Intake motor
@@ -110,7 +110,7 @@ public class IntakeSlides {
         }
         intakeMotorLeft.setTargetPosition((int)toIntakeMotorState.motorPosition);
         intakeMotorRight.setTargetPosition((int)toIntakeMotorState.motorPosition);
-        intakeMotorState = toIntakeMotorState;
+        intakeSlidesState = toIntakeMotorState;
         runIntakeMotorToLevelState = true;
     }
 
@@ -121,12 +121,12 @@ public class IntakeSlides {
             intakeMotorNewPosition = (intakeMotorCurrentPosition + direction * deltaCount);
             if (intakeMotorNewPosition < IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition) {
                 intakeMotorNewPosition = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition;
-                intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
+                intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
             } else if (intakeMotorNewPosition > IntakeSlides.INTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition) {
                 intakeMotorNewPosition = IntakeSlides.INTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition;
-                intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.MAX_EXTENDED;
+                intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MAX_EXTENDED;
             } else {
-                intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.RANDOM;
+                intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.RANDOM;
             }
             intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
             if (intakeMotorCurrentPosition < intakeMotorNewPosition ) {
@@ -153,7 +153,7 @@ public class IntakeSlides {
         }
         intakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        if (runIntakeMotorToLevelState == true){
+        if (runIntakeMotorToLevelState){
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
             runIntakeMotorToLevelState = false;
@@ -164,9 +164,9 @@ public class IntakeSlides {
         /*if ((armState == ARM_STATE.MIN_RETRACTED) && (armTouchSensor.getState())){
             manualResetArm();
         } Overheating arm? TODO */
-        if (!intakeTouch.getState()) {
+        /*if (!intakeTouch.getState()) {
             resetIntakeMotorMode();
-        }
+        }*/
     }
     public boolean senseIntakeSlidesMinRetracted(){
         return intakeTouch.getState();
@@ -192,7 +192,7 @@ public class IntakeSlides {
         }
         resetIntakeMotorMode();
         turnIntakeBrakeModeOn();
-        intakeMotorState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
+        intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
     }
 
     public double getDistance(){

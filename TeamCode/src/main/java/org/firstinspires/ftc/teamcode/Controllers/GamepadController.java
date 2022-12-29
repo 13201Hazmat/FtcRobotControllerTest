@@ -145,6 +145,10 @@ public class GamepadController {
         if (gp1GetButtonXPress() && !gp1GetButtonBPress()) {
             intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()),-1);
         }
+
+        if (intakeSlides.runIntakeMotorToLevelState) {
+            intakeSlides.runIntakeMotorToLevel();
+        }
     }
 
     public void runIntakeArm(){
@@ -175,10 +179,7 @@ public class GamepadController {
         }
 
         if (gp1GetLeftBumper()) {
-            //TODO : RUN THE TRANSFER SEQUENCE
-            //========================================
-            intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
-
+            runTransferSequence();
         }
 
         if (gp1GetButtonYPress()) {
@@ -223,6 +224,10 @@ public class GamepadController {
         outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(gp2GetLeftStickY()));
 
         outtakeSlides.moveTurretDelta(gp2TurboMode(-gp2GetRightStickX()));
+
+        if (outtakeSlides.runOuttakeMotorToLevelState) {
+            outtakeSlides.runOuttakeMotorToLevel();
+        }
 
     }
 
