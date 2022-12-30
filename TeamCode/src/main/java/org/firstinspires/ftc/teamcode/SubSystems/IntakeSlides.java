@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -18,7 +20,7 @@ public class IntakeSlides {
     public DcMotorEx intakeMotorLeft, intakeMotorRight;
 
     //Intake Motor : 5203 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 8mm REX Shaft, 435 RPM, 3.3 - 5V Encoder)
-    public static final double INTAKE_MOTOR_ENCODER_TICKS = 1500; //384.5
+    public static final double INTAKE_MOTOR_ENCODER_TICKS = 145.6;//384.5;
 
     public DigitalChannel intakeTouch;  // Hardware Device Object
 
@@ -28,14 +30,14 @@ public class IntakeSlides {
     public enum INTAKE_MOTOR_STATE {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
-        MAX_EXTENDED(0),
+        MAX_EXTENDED(666), //1760
         RANDOM(0),
         
-        AUTO_CONE_1(0),
-        AUTO_CONE_2(0),
-        AUTO_CONE_3(0),
-        AUTO_COME_4(0),
-        AUTO_CONE_5(0);
+        AUTO_CONE_1(500),
+        AUTO_CONE_2(500),
+        AUTO_CONE_3(500),
+        AUTO_COME_4(500),
+        AUTO_CONE_5(500);
 
         private final double motorPosition;
         INTAKE_MOTOR_STATE(double motorPosition) {
@@ -48,12 +50,10 @@ public class IntakeSlides {
     public double intakeMotorCurrentPosition = intakeSlidesState.motorPosition;
     public double intakeMotorNewPosition = intakeSlidesState.motorPosition;
 
-    public static final double INTAKE_MOTOR_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
-    public static final double INTAKE_MOTOR_DELTA_COUNT_RESET = 50;
-
-    //Different constants of arm speed
-    public static final double INTAKE_MOTOR_POWER_TELEOP = 0.8;
-    public static final double INTAKE_MOTOR_POWER_AUTO = 0.8;
+       //Different constants of arm speed
+    public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
+    public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
+    public static final double INTAKE_MOTOR_POWER_AUTO = 1.0;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -87,8 +87,8 @@ public class IntakeSlides {
         intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intakeMotorLeft.setPositionPIDFCoefficients(5.0);
         intakeMotorRight.setPositionPIDFCoefficients(5.0);
-        intakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        intakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
+        intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
         //manualResetIntakeMotor();
     }
@@ -114,7 +114,7 @@ public class IntakeSlides {
         runIntakeMotorToLevelState = true;
     }
 
-    public void modifyIntakeSlidesLength(double stepSizeFactor, int direction){
+    /*public void modifyIntakeSlidesLength1(double stepSizeFactor, int direction){
         deltaCount = stepSizeFactor * INTAKE_MOTOR_DELTA_COUNT_MAX;
         if (deltaCount !=0) {
             intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
@@ -142,6 +142,22 @@ public class IntakeSlides {
             }
         }
     }
+*/
+    public void modifyIntakeSlidesLength(double power){
+        intakeMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turnIntakeBrakeModeOn();
+        double intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
+        if ((power > 0.01 && intakeMotorCurrentPosition < INTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition) ||
+            (power < 0.01 && intakeMotorCurrentPosition > INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition )) {
+            intakeMotorLeft.setPower(power);
+            intakeMotorRight.setPower(power);
+        } else {
+            intakeMotorLeft.setPower(0);
+            intakeMotorRight.setPower(0);
+        }
+    }
+
 
     //sets the Intake motor power
     public void runIntakeMotorToLevel(){
@@ -174,11 +190,12 @@ public class IntakeSlides {
 
     //Resets the arm
     public void resetIntakeMotorMode(){
-        DcMotorEx.RunMode runMode = intakeMotorLeft.getMode();
+        DcMotorEx.RunMode runModeLeft = intakeMotorLeft.getMode();
+        DcMotorEx.RunMode runModeRight = intakeMotorRight.getMode();
         intakeMotorLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotorLeft.setMode(runMode);
-        intakeMotorRight.setMode(runMode);
+        intakeMotorLeft.setMode(runModeLeft);
+        intakeMotorRight.setMode(runModeRight);
     }
 
     public void manualResetIntakeMotor(){

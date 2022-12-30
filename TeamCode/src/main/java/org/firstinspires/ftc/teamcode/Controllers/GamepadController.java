@@ -94,10 +94,7 @@ public class GamepadController {
         runOuttakeArm();
         runOuttakeSlides();
         recordAndReplay();
-
         runDriveControl_byRRDriveModes();
-
-
     }
 
     /**
@@ -139,15 +136,15 @@ public class GamepadController {
     }
 
     public void runIntakeSlides(){
-        if (!gp1GetStart() && gp1GetButtonBPress()) {
-            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()),1);
+        if (!gp1GetStart() && gp1GetB()) {
+            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()));
+        } else if (gp1GetX()) {
+            intakeSlides.modifyIntakeSlidesLength(-0.33*(1.0 + 2.0 * gp1GetLeftTrigger()));
+        } else {
+            intakeSlides.modifyIntakeSlidesLength(0);
         }
-        if (gp1GetButtonXPress() && !gp1GetButtonBPress()) {
-            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()),-1);
-        }
-
-        if (intakeSlides.runIntakeMotorToLevelState) {
-            intakeSlides.runIntakeMotorToLevel();
+        if(gp1GetStart() && gp1GetX()){
+            intakeSlides.manualResetIntakeMotor();
         }
     }
 
@@ -165,7 +162,7 @@ public class GamepadController {
         }
 
         if (gp1GetDpad_downPress()) {
-            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP);
+            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
             intakeArm.openGrip();
         }
 
@@ -221,14 +218,19 @@ public class GamepadController {
             outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
         }
 
-        outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(gp2GetLeftStickY()));
-
-        outtakeSlides.moveTurretDelta(gp2TurboMode(-gp2GetRightStickX()));
+        if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<0.05) {
+            outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(gp2GetLeftStickY()));
+        }
 
         if (outtakeSlides.runOuttakeMotorToLevelState) {
             outtakeSlides.runOuttakeMotorToLevel();
         }
 
+        outtakeSlides.moveTurretDelta(gp2TurboMode(-gp2GetRightStickX()));
+
+        if (gp1GetButtonAPress()) {
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        }
     }
 
     public void runOuttakeArm(){
@@ -242,9 +244,6 @@ public class GamepadController {
                 }
             }
         }
-
-
-
     }
     public boolean outtakeTransferReady = false;
 
@@ -260,27 +259,27 @@ public class GamepadController {
 
     public void runTransferSequence(){
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        if (intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
+        /*if (intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
             if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone()) {
                 if(!outtakeTransferReady){
                     moveOuttakeToTransfer();
-                }
+                }*/
                 intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
                 intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
                 intakeArm.openGrip();
                 transferTimer.reset();
-                while(!(intakeArm.senseIntakeCone() || transferTimer.time() > 500)){
+                while(!(outtakeArm.senseOuttakeCone() || transferTimer.time() > 500)){
                     runDriveControl_byRRDriveModes();
                 }
                 outtakeArm.closeGrip();
                 outtakeTransferReady = false;
-                intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP);
+                intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
                 outtakeArm.moveWristDrop();
                 outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
             }
 
-        }
-    }
+        //}
+   // }
 
     public void recordAndReplay(){
         //TODO

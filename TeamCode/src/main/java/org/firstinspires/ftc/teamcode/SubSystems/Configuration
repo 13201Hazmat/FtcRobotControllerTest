@@ -1,6 +1,5 @@
 Configuration for Hazmat Power Play robot
 =========================================
-//TODO
 DriveTrain :
 Expansion Hub Motor Port 0 5203 Motor      leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
 Expansion Hub Motor Port 2 5203 Motor      leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -30,8 +29,7 @@ Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColo
 Control Hub I2C BUS 2         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
 Outtake Slides:
-Control Hub Motor Port 2        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_motor_left");
-Control Hub Motor Port 3        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_motor_right");
+Control Hub Motor Port 2        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");
 Control Hub Digital Port 7        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
 Expansion Hub Servo Port 0     outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
 
@@ -41,24 +39,9 @@ Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class,
 Lights
 Expansion Hub Servo Port 3        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
 
-
-Old:
------
-Arm:
-Control Hub Motor Port 1          armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
-Control Hub Digital Port 3        armTouchSensor = hardwareMap.get(DigitalChannel.class, "armTouch");
-
-Hand:
-Control Hub Servo 1               gripServo = hardwareMap.get(Servo.class, "gripServo");
-Control Hub Servo 0               wristServo = hardwareMap.get(Servo.class, "wristServo");
-
-Shoulder:
-Control Hub Motor Port 2          leftShoulderMotor = hardwareMap.get(DcMotorEx.class, "lshMotor");
-Control Hub Motor Port 3          rightShoulderMotor = hardwareMap.get(DcMotorEx.class, "rshMotor");
-Control Hub Digital Port 1        shoulderTouchSensor = hardwareMap.get(DigitalChannel.class, "shTouch");
-
-Turret:
-Control Hub Motor Port 0          turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-Expansion Hub Digital Port 1        turretLeftMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretLeftMag");
-Expansion Hub Digital Port 3        turretCenterMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretCenterMag");
-Expansion Hub Digital Port 5        turretRightMagneticSensor = hardwareMap.get(DigitalChannel.class, "turretRightMag");
+2 touch
+3 color
+1 distance
+4 312rpm motor
+3 435 rpm motor
+7 servos

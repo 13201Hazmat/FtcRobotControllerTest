@@ -23,8 +23,10 @@ public class Lights {
     public RevBlinkinLedDriver blinkinLedDriver;
     public RevBlinkinLedDriver.BlinkinPattern currentPattern;
     public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-    public RevBlinkinLedDriver.BlinkinPattern patternOpenGrip = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-    public RevBlinkinLedDriver.BlinkinPattern patternCloseGrip = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+    public RevBlinkinLedDriver.BlinkinPattern patternIntakeOpenGrip = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+    public RevBlinkinLedDriver.BlinkinPattern patternIntakeCloseGrip = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+    public RevBlinkinLedDriver.BlinkinPattern patternTransferProgress = RevBlinkinLedDriver.BlinkinPattern.RED;
+    public RevBlinkinLedDriver.BlinkinPattern patternOuttakeJunctionAligned = RevBlinkinLedDriver.BlinkinPattern.GREEN;
     public RevBlinkinLedDriver.BlinkinPattern patternEndGame = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
     public RevBlinkinLedDriver.BlinkinPattern patternDefault = RevBlinkinLedDriver.BlinkinPattern.LIGHT_CHASE_BLUE;
     public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.BLACK;
@@ -33,23 +35,34 @@ public class Lights {
     public RevBlinkinLedDriver.BlinkinPattern patternYellow = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
     public RevBlinkinLedDriver.BlinkinPattern patternGreen = RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN;
 
+    public enum REV_BLINKIN_PATTERN {
+        DEMO(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE),
+        INTAKE_OPEN_GRIP(RevBlinkinLedDriver.BlinkinPattern.BLACK),
+        TRANSFER_PROGRESS(RevBlinkinLedDriver.BlinkinPattern.RED),
+        OUTTAKE_JUNCTION_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.GREEN),
+        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED);
+
+        private RevBlinkinLedDriver.BlinkinPattern blinkinPattern;
+        private REV_BLINKIN_PATTERN(RevBlinkinLedDriver.BlinkinPattern blinkinPattern) {
+            this.blinkinPattern = blinkinPattern;
+        };
+    }
+    REV_BLINKIN_PATTERN revBlinkinPattern;
+
     public Lights(HardwareMap hardwareMap){
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
         blinkinLedDriver.setPattern(patternDemo);
         currentPattern = patternDemo;
     }
 
+    public void setPattern(REV_BLINKIN_PATTERN revBlinkinPattern) {
+        blinkinLedDriver.setPattern(revBlinkinPattern.blinkinPattern);
+    }
+
     public void setPatternDemo(){
         if (currentPattern != patternDemo) {
             blinkinLedDriver.setPattern(patternDemo);
             currentPattern = patternDemo;
-        }
-    }
-
-    public void setPatternElementLoaded(){
-        if (currentPattern != patternCloseGrip) {
-            blinkinLedDriver.setPattern(patternCloseGrip);
-            currentPattern = patternCloseGrip;
         }
     }
 

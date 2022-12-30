@@ -54,6 +54,7 @@ public class TeleOpMode extends LinearOpMode {
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
@@ -177,18 +178,18 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addLine("=============");
 
             telemetry.addData("Intake Arm State", intakeArm.armState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Arm Left Position", "%.2f", intakeArm.intakeArmServoLeft.getPosition());
                 telemetry.addData("Intake Arm Right Position", "%.2f", intakeArm.intakeArmServoRight.getPosition());
             }
 
             telemetry.addData("Intake Wrist State", intakeArm.wristState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Wrist Left Position", "%.2f", intakeArm.intakeWristServoLeft.getPosition());
                 telemetry.addData("Intake Wrist Right Position", "%.2f", intakeArm.intakeWristServoRight.getPosition());
             }
             telemetry.addData("Intake Grip State", intakeArm.gripState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Grip Servo Position", "%.2f", intakeArm.intakeGripServo.getPosition());
             }
             telemetry.addData("Intake Grip Color Sensor", intakeArm.senseIntakeCone());
