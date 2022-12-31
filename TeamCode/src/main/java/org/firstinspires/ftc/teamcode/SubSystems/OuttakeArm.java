@@ -51,14 +51,17 @@ public class OuttakeArm {
 
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
-        OPEN,
-        CLOSED
+        OPEN(0.45),
+        CLOSED(0);
+
+        private double gripState;
+
+        GRIP_STATE(double gripState){
+            this.gripState = gripState;
+        }
     }
     public GRIP_STATE gripState = GRIP_STATE.CLOSED;
     //constants for Hand and grip position
-    public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
-    public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
-
     public enum OUTTAKE_GRIP_COLOR_SENSOR_STATE {
         DETECTED,
         NOT_DETECTED
@@ -89,30 +92,30 @@ public class OuttakeArm {
             ((SwitchableLight)outtakeGripColor).enableLight(true);
         }
         if (GameField.opModeRunning == HAZMAT_AUTONOMOUS) {
-            closeGrip();
+            closeGrip(GRIP_STATE.CLOSED);
         }
     }
 
     /**
      *If state of hand grip is set to open, set position of servo's to specified
      */
-    public void openGrip(){
-        outtakeGripServo.setPosition(OPEN_GRIP_POS);
+    public void openGrip(GRIP_STATE toGripState) {
+        outtakeGripServo.setPosition(GRIP_STATE.OPEN.gripState);
         gripState = GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
-    public void closeGrip(){
-        outtakeGripServo.setPosition(CLOSE_GRIP_POS);
+    public void closeGrip(GRIP_STATE toGripState){
+        outtakeGripServo.setPosition(GRIP_STATE.CLOSED.gripState);
         gripState = GRIP_STATE.CLOSED;
     }
 
     public void toggleGrip(){
         if (gripState == GRIP_STATE.CLOSED) {
-            openGrip();
+            openGrip(GRIP_STATE.OPEN);
         } else {
-            closeGrip();
+            closeGrip(GRIP_STATE.CLOSED);
         }
     }
 

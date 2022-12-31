@@ -239,7 +239,7 @@ public class GamepadController {
         if (outtakeArm.wristState == OuttakeArm.WRIST_STATE.WRIST_DROP) {
             if (gp2GetRightBumperPress()) {
                 if (outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED) {
-                    outtakeArm.openGrip();
+                    outtakeArm.openGrip(OuttakeArm.GRIP_STATE.OPEN);
                 } else {
                     moveOuttakeToTransfer();
                 }
@@ -251,11 +251,11 @@ public class GamepadController {
     public void moveOuttakeToTransfer(){
         //TODO: Convert to state machine
         if(outtakeTransferReady){
-            outtakeArm.closeGrip();
+            outtakeArm.closeGrip(OuttakeArm.GRIP_STATE.CLOSED);
             outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_TRANSFER);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-            outtakeArm.openGrip();
+            outtakeArm.openGrip(OuttakeArm.GRIP_STATE.OPEN);
             outtakeTransferReady = true;
         }
     }
@@ -275,7 +275,7 @@ public class GamepadController {
                 while(!(outtakeArm.senseOuttakeCone() || transferTimer.time() > 500)){
                     runDriveControl_byRRDriveModes();
                 }
-                outtakeArm.closeGrip();
+                outtakeArm.closeGrip(OuttakeArm.GRIP_STATE.CLOSED);
                 outtakeTransferReady = false;
                 intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
