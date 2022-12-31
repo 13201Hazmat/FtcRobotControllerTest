@@ -137,7 +137,7 @@ public class GamepadController {
 
     public void runIntakeSlides(){
         if (!gp1GetStart() && gp1GetB()) {
-            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger()));
+            intakeSlides.modifyIntakeSlidesLength(0.33*(1.0 + 2.0 * gp1GetLeftTrigger())); //TODO : Should it be cubic
         } else if (gp1GetX()) {
             intakeSlides.modifyIntakeSlidesLength(-0.33*(1.0 + 2.0 * gp1GetLeftTrigger()));
         } else {
@@ -154,6 +154,7 @@ public class GamepadController {
         }
 
         if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone()) {
+            //TODO : Close only if Outtake is open
             intakeArm.closeGrip();
         }
 

@@ -31,7 +31,7 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum ARM_STATE{
-        PICKUP_AUTO_CONE_1(0.01,0.95,0),
+        PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.07, 0.89, 2),
         AUTO_CONE_3(0.11, 0.86, 3),
         AUTO_CONE_4(0.14, 0.83, 4),
@@ -164,6 +164,7 @@ public class IntakeArm {
         intakeArmServoLeft.setPosition(deltaArmIntakeLeft);
         intakeArmServoRight.setPosition(deltaArmIntakeRight);
         armState = ARM_STATE.RANDOM;
+        moveWrist(ARM_STATE.RANDOM);
     }
 
     public void continousArmRotateDown(){
@@ -172,6 +173,8 @@ public class IntakeArm {
         armState.rightArmPosition = intakeArmServoRight.getPosition() + ARM_DELTA;
         intakeArmServoLeft.setPosition(armState.leftArmPosition);
         intakeArmServoRight.setPosition(armState.rightArmPosition);
+        armState = ARM_STATE.RANDOM;
+        moveWrist(ARM_STATE.RANDOM);
     }
 
     public static final double WRIST_UP_DELTA = 0.2;
