@@ -231,7 +231,9 @@ public class OuttakeSlides {
         CENTER(0.44),
         MAX_RIGHT (0.54),
         INIT(0.1),
-        RANDOM (0.5);
+        RANDOM (0.5),
+        AUTO_LEFT(0.39),
+        AUTO_RIGHT(0.49);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

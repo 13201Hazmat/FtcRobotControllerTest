@@ -44,11 +44,10 @@ public class AutoOpMode extends LinearOpMode{
     public static AUTO_OPTION autoOption;
 
     public enum DROP_CONE_POSITION {
-        FRONT_HIGH,
-        BACK_MEDIUM,
-        BACK_HIGH
+        MEDIUM,
+        HIGH
     }
-    public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
+    public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.HIGH;
 
     public int pickAndDropConeCount = 1;
 
@@ -127,14 +126,14 @@ public class AutoOpMode extends LinearOpMode{
     //Initialize Robot Positions (Pose2d's)
     Pose2d initPose; // Starting Pose
     Pose2d midWayPose;
+    Pose2d pickAndDropHighPose;
+    Pose2d pickAndDropMediumPose;
+    Pose2d pickAndDropPose;
     Pose2d parkPose;
 
-    //Initialize Arm/Shoulder/Turret Positions (AadiPoses)
-    AadiPose initAadiPose;
-    AadiPose[] pickConeAadiPose = new AadiPose[6];
-    AadiPose dropConeAadiPose;
-    AadiPose dropConeFrontHigh, dropConeBackMedium, dropConeBackHigh;
-    //AadiPose endAadiPose;
+    OuttakeSlides.TURRET_STATE pickAndDropTurretStateHigh;
+    OuttakeSlides.TURRET_STATE pickAndDropTurretStateMedium;
+    OuttakeSlides.TURRET_STATE pickAndDropTurretState;
 
     int coneCount = 0;
 
@@ -143,78 +142,60 @@ public class AutoOpMode extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 initPose = new Pose2d(-64, 36, Math.toRadians(0)); //Starting pose
-                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-/*                dropConeFrontHigh = new AadiPose(1248,937, Hand.WRIST_STATE.WRIST_UP, 325);
-                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, -1630);;
-                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, -1850);
-                pickConeAadiPose[1] = new AadiPose(2073,330, Hand.WRIST_STATE.WRIST_LEVEL, -660); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
-                pickConeAadiPose[2] = new AadiPose(2261,315, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2180,300, Hand.WRIST_STATE.WRIST_LEVEL, -660); //shoulder first angle 225, arm second: 983, shoulder second: 177
-                pickConeAadiPose[4] = new AadiPose(2327,229, Hand.WRIST_STATE.WRIST_LEVEL, -660); // shoulder 210, shoulder second: 132, arm second: 1108
-                pickConeAadiPose[5] = new AadiPose(2404,165, Hand.WRIST_STATE.WRIST_LEVEL, -660);
-                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
-*/
+                pickAndDropHighPose = new Pose2d(-12, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(-12, 33, Math.toRadians(90));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 break;
 
             case BLUE_RIGHT:
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
-                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-/*                dropConeFrontHigh = new AadiPose(1420,930, Hand.WRIST_STATE.WRIST_UP, -279);
-                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, 1700);;
-                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1850);
-                pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[3] = new AadiPose(2259,252, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
-*/
+                pickAndDropHighPose = new Pose2d(-12, -39, Math.toRadians(-90));
+                pickAndDropMediumPose = new Pose2d(-12, -33, Math.toRadians(-90));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 break;
 
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
-                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-/*
-                dropConeFrontHigh = new AadiPose(1273,941, Hand.WRIST_STATE.WRIST_UP, 373); //781 2nd pos shoulder, 1874 arm 2nd pos
-                dropConeBackMedium = new AadiPose(432,632, Hand.WRIST_STATE.WRIST_UP, -1700);;
-                dropConeBackHigh = new AadiPose(1460,764, Hand.WRIST_STATE.WRIST_UP, -1830);
-                pickConeAadiPose[1] = new AadiPose(2065,336, Hand.WRIST_STATE.WRIST_LEVEL, -635); // arm 1st : 2089, shoulder 1st : 295, arm 2nd: 832, shoulder 2nd: 175
-                pickConeAadiPose[2] = new AadiPose(2224,321, Hand.WRIST_STATE.WRIST_LEVEL, -635); //shoulder first angle 275,  shoulder second: 266, arm second: 957
-                pickConeAadiPose[3] = new AadiPose(2174,306, Hand.WRIST_STATE.WRIST_LEVEL, -635); //shoulder first angle 225, arm second: 983, shoulder second: 177
-                pickConeAadiPose[4] = new AadiPose(2321,235, Hand.WRIST_STATE.WRIST_LEVEL, -635); // shoulder 210, shoulder second: 132, arm second: 1108
-                pickConeAadiPose[5] = new AadiPose(2395,171, Hand.WRIST_STATE.WRIST_LEVEL, -635); // shoulder 115, shoulder second:44  , arm second: 1117
-*/
+                pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(270));
+                pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(270));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 break;
 
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
-                //initAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_UP, 0);
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-/*
-                dropConeFrontHigh = new AadiPose(1450,930, Hand.WRIST_STATE.WRIST_UP, -290);
-                dropConeBackMedium = new AadiPose(450,730, Hand.WRIST_STATE.WRIST_UP, 1700);;
-                dropConeBackHigh = new AadiPose(1460,760, Hand.WRIST_STATE.WRIST_UP, 1850);
-                pickConeAadiPose[1] = new AadiPose(2140,347, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[2] = new AadiPose(2206,322, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[3] = new AadiPose(2259,252, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[4] = new AadiPose(2219,206, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                pickConeAadiPose[5] = new AadiPose(2379,160, Hand.WRIST_STATE.WRIST_LEVEL, 660);
-                //endAadiPose = new AadiPose(0,shoulder.MAX_RAISED_POSITION, Hand.WRIST_STATE.WRIST_LEVEL, 0);
-*/
+                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                break;
+        }
+        switch (dropConePosition) {
+            case MEDIUM:
+                pickAndDropPose = pickAndDropMediumPose;
+                pickAndDropTurretState = pickAndDropTurretStateMedium;
+                break;
+            case HIGH:
+                pickAndDropPose = pickAndDropHighPose;
+                pickAndDropTurretState = pickAndDropTurretStateHigh;
                 break;
         }
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
-/*                .addTemporalMarker(0.1 ,() -> {
-                    turret.rotateAutoInitTurn();
-                })
-*/
+              .addTemporalMarker(0.1 ,() -> {
+                    outtakeSlides.moveTurret(pickAndDropTurretState);
+              })
+
                 .setVelConstraint(getVelocityConstraint(30, 15, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(midWayPose)
+                .lineToLinearHeading(pickAndDropPose)
                 .resetVelConstraint()
                 .build();
     }
@@ -225,28 +206,28 @@ public class AutoOpMode extends LinearOpMode{
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-13, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-13, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break; // Location 3
                 }
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(13, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(180)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(180)); break; // Location 3
                 }
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(13, 35, Math.toRadians(180)); break; // Location 2
+                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(180)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(180)); break; // Location 3
                 }
                 break;
@@ -254,7 +235,6 @@ public class AutoOpMode extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
-                .back(21)
                 .build();
     }
 
@@ -272,13 +252,6 @@ public class AutoOpMode extends LinearOpMode{
             telemetry.addData("Selected number of pickAndDropCone", pickAndDropConeCount);
         }
         telemetry.update();
-
-        switch (dropConePosition) {
-            case FRONT_HIGH: dropConeAadiPose = dropConeFrontHigh; break;
-            case BACK_MEDIUM: dropConeAadiPose = dropConeBackMedium; break;
-            case BACK_HIGH: dropConeAadiPose = dropConeBackHigh; break;
-        }
-
         //Starting AadiPose - Arm max retracted, shoulder at Intake, turret facing +45degrees, camera to the front
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret.
@@ -286,16 +259,17 @@ public class AutoOpMode extends LinearOpMode{
         //turret.resetTurretMode();
 
         //turn turret and pick, then drop cone
-        if (autoOption != AUTO_OPTION.ONLY_PARK) {
-            dropCone(dropConeAadiPose); //Drop preloaded Cone
-
-            if (autoOption == AUTO_OPTION.FULL_AUTO) {
-                for (coneCount = 1; coneCount <= pickAndDropConeCount; coneCount++) {
-                    pickCone(pickConeAadiPose[coneCount]);
-                    dropCone(dropConeAadiPose);
-                }
+        if (autoOption == AUTO_OPTION.ONLY_PARK) {
+            dropCone(); //Drop preloaded Cone
+        } else { //TODO: Write state machine for intake and outtake looping
+            /*
+            for (coneCount = 1; coneCount <= pickAndDropConeCount; coneCount++) {
+                pickCone(coneCount);
+                dropCone();
             }
+             */
         }
+
         //turret.rotateAutoTurnToAngle(0);
         safeWait(500);
         driveTrain.followTrajectorySequence(trajectoryParking);
@@ -306,7 +280,7 @@ public class AutoOpMode extends LinearOpMode{
     }
 
     //Write a method which is able to pick the cone from the stack depending on your subsystems
-    public void pickCone(AadiPose pickConeAadiPose) {
+    public void pickCone(int coneCount) {
         //Open Grip and rotate to pickConeAadiPose
         //hand.openGrip();
         //turret.rotateAutoTurnToAngle(pickConeAadiPose.getTurretAngle());
@@ -336,7 +310,7 @@ public class AutoOpMode extends LinearOpMode{
     }
 
     //Write a method which is able to drop the cone depending on your subsystems
-    public void dropCone(AadiPose dropConeAadiPose){
+    public void dropCone(){
         //Raise arm to Neutral High and wrist up
         //gamepadController.moveToNeutralHigh();
         //safeWait(500);
@@ -450,19 +424,14 @@ public class AutoOpMode extends LinearOpMode{
                 telemetry.addData("Selected Starting Position", startPosition);
                 telemetry.addData("Selected Auto Option", autoOption);
                 telemetry.addLine("Select dropCone Postition");
-                telemetry.addData("    Front High           ", "X / Square");
-                telemetry.addData("    Back Medium          ", "Y / Triangle");
-                telemetry.addData("    Back High            ", "B / Circle");
-                if (gamepadController.gp1GetButtonXPress()) {
-                    dropConePosition = DROP_CONE_POSITION.FRONT_HIGH;
-                    break;
-                }
+                telemetry.addData("    Medium          ", "Y / Triangle");
+                telemetry.addData("    High            ", "B / Circle");
                 if (gamepadController.gp1GetButtonYPress()) {
-                    dropConePosition = DROP_CONE_POSITION.BACK_MEDIUM;
+                    dropConePosition = DROP_CONE_POSITION.MEDIUM;
                     break;
                 }
                 if (gamepadController.gp1GetButtonBPress()) {
-                    dropConePosition = DROP_CONE_POSITION.BACK_HIGH;
+                    dropConePosition = DROP_CONE_POSITION.HIGH;
                     break;
                 }
                 telemetry.update();
