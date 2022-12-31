@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import org.firstinspires.ftc.teamcode.AadiGeometry.AadiVector;
-
 /**
  * Static Class to capture States of all subsystems and pass to each other
  */

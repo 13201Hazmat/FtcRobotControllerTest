@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
@@ -342,19 +341,6 @@ public class AutoOpMode extends LinearOpMode{
             telemetry.addData("Dropped Cone: Stack", coneCount);
         }
         telemetry.update();
-    }
-
-    //Move subsysetms to a specific AadiPose
-    public void moveToAadiPose(AadiPose aadiPose){
-/*        arm.moveArmToLength(aadiPose.getArmLength());
-        shoulder.moveShoulderToAngle(aadiPose.getShoulderAngle());
-        if (aadiPose.getWristState() == Hand.WRIST_STATE.WRIST_LEVEL) {
-            hand.moveWristLevel(aadiPose.getShoulderAngle());
-        } else {
-            hand.moveWristUp(aadiPose.getShoulderAngle());
-        }
-        turret.moveTurretToAngle(aadiPose.getTurretAngle());
-*/
     }
 
     public void parkingComplete(){

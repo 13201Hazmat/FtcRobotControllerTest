@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
-import org.firstinspires.ftc.teamcode.AadiGeometry.AadiPose;
-
 /**
  * Static Class to define Gamefield Vector positions.
  * These are used in start Position estimates and in automatic targetic.
