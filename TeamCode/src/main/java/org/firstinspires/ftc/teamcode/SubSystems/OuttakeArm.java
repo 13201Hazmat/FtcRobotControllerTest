@@ -15,6 +15,8 @@ public class OuttakeArm {
     //Initialization of <outtake arm servo's>
     public Servo outtakeWristServo;
     public Servo outtakeGripServo;
+    public Servo outtakeArmLeft;
+    public Servo outtakeArmRight;
 
     public NormalizedColorSensor outtakeWristColor;
     public NormalizedColorSensor outtakeGripColor;
@@ -32,8 +34,15 @@ public class OuttakeArm {
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        WRIST_TRANSFER,
-        WRIST_DROP
+        WRIST_TRANSFER(0), //TODO test real
+        WRIST_DROP(1); //TODO test real
+
+        private double wristPosition;
+
+        WRIST_STATE(double wristPosition){
+            this.wristPosition = wristPosition;
+
+        }
     }
     public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
     public static final double WRIST_TRANSFER_POSITION = 0.50;
@@ -43,6 +52,21 @@ public class OuttakeArm {
         DETECTED,
         NOT_DETECTED
     }
+
+    public enum OUTTAKE_ARM_STATE{
+        TRANSFER(0, 0), //TODO test real values
+        DROP(1, 1); //TODO test real values
+
+        private double leftArmPosition;
+        private double rightArmPosition;
+
+        OUTTAKE_ARM_STATE(double leftArmPosition, double rightArmPosition){
+            this.leftArmPosition = leftArmPosition;
+            this.rightArmPosition = rightArmPosition;
+        }
+    }
+
+    public OUTTAKE_ARM_STATE outtakeArmState = OUTTAKE_ARM_STATE.TRANSFER;
     public OUTTAKE_GRIP_COLOR_SENSOR_STATE outtakeGripColorSensorState = OUTTAKE_GRIP_COLOR_SENSOR_STATE.NOT_DETECTED;
     public boolean autoIntakeClose = true;
 
@@ -53,6 +77,9 @@ public class OuttakeArm {
 
         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
+
+        outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
+        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
 
         initOuttakeArm();
     }
@@ -117,7 +144,6 @@ public class OuttakeArm {
 
     //rotates hand up given controller input
     public void moveWristTransfer(){
-        //determineWristLevelPosition(shoulderLevelPosition);
         outtakeWristServo.setPosition(WRIST_TRANSFER_POSITION);
         wristState = WRIST_STATE.WRIST_TRANSFER;
     }
@@ -126,6 +152,11 @@ public class OuttakeArm {
     public void moveWristDrop(){
         outtakeWristServo.setPosition(WRIST_DOWN_POSITION);
         wristState = WRIST_STATE.WRIST_DROP;
+    }
+
+    public void moveWrist(WRIST_STATE toWristState){
+        outtakeWristServo.setPosition(toWristState.wristPosition);
+        wristState = toWristState;
     }
 
     public double outtakeWristDistance;
@@ -163,6 +194,14 @@ public class OuttakeArm {
 
          */
         return outtakeGripColorSensorState;
+    }
+
+    public void moveArm(OUTTAKE_ARM_STATE toArmState){
+        outtakeArmLeft.setPosition(toArmState.leftArmPosition);
+        outtakeArmRight.setPosition(toArmState.rightArmPosition);
+
+        outtakeArmState = toArmState;
+
     }
 
 

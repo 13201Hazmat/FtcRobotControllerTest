@@ -153,8 +153,8 @@ public class GamepadController {
             intakeArm.autoIntakeCloseMode = !intakeArm.autoIntakeCloseMode;
         }
 
-        if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone()) {
-            //TODO : Close only if Outtake is open
+        if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone() && outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN) {
+            //TODO : check if it works
             intakeArm.closeGrip();
         }
 
