@@ -245,20 +245,15 @@ public class GamepadController {
                 }
             }
         }
-
-
-
-
-
-
-
     }
     public boolean outtakeTransferReady = false;
 
     public void moveOuttakeToTransfer(){
+        //TODO: Convert to state machine
         if(outtakeTransferReady){
             outtakeArm.closeGrip();
             outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_TRANSFER);
+            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
             outtakeArm.openGrip();
             outtakeTransferReady = true;
@@ -266,6 +261,7 @@ public class GamepadController {
     }
 
     public void runTransferSequence(){
+        //TODO : Convert to State Machine
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         /*if (intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
             if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone()) {
@@ -282,6 +278,7 @@ public class GamepadController {
                 outtakeArm.closeGrip();
                 outtakeTransferReady = false;
                 intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                 outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
                 outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
             }

@@ -21,37 +21,6 @@ public class OuttakeArm {
     public NormalizedColorSensor outtakeWristColor;
     public NormalizedColorSensor outtakeGripColor;
 
-    //Initialization of GRIP_STATE
-    public enum GRIP_STATE { //state of the Hand Grip
-        OPEN,
-        CLOSED
-    }
-    public GRIP_STATE gripState = GRIP_STATE.CLOSED;
-    //constants for Hand and grip position
-    public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
-    public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
-    //public static final double CLOSE_GRIP_FULL_POSITION = 0.00;
-
-    //Hand - wrist, grip state declaration
-    public enum WRIST_STATE {
-        WRIST_TRANSFER(0), //TODO test real
-        WRIST_DROP(1); //TODO test real
-
-        private double wristPosition;
-
-        WRIST_STATE(double wristPosition){
-            this.wristPosition = wristPosition;
-        }
-    }
-    public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
-    public static final double WRIST_TRANSFER_POSITION = 0.50;
-    public double WRIST_DOWN_POSITION = 0.06;
-
-    public enum OUTTAKE_GRIP_COLOR_SENSOR_STATE {
-        DETECTED,
-        NOT_DETECTED
-    }
-
     public enum OUTTAKE_ARM_STATE{
         TRANSFER(0, 0), //TODO test real values
         DROP(1, 1); //TODO test real values
@@ -66,6 +35,34 @@ public class OuttakeArm {
     }
 
     public OUTTAKE_ARM_STATE outtakeArmState = OUTTAKE_ARM_STATE.TRANSFER;
+
+    //Hand - wrist, grip state declaration
+    public enum WRIST_STATE {
+        WRIST_TRANSFER(0), //TODO test real
+        WRIST_DROP(1); //TODO test real
+
+        private double wristPosition;
+
+        WRIST_STATE(double wristPosition){
+            this.wristPosition = wristPosition;
+        }
+    }
+    public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
+
+    //Initialization of GRIP_STATE
+    public enum GRIP_STATE { //state of the Hand Grip
+        OPEN,
+        CLOSED
+    }
+    public GRIP_STATE gripState = GRIP_STATE.CLOSED;
+    //constants for Hand and grip position
+    public static final double OPEN_GRIP_POS = 0.45; //value of Grip to open
+    public static final double CLOSE_GRIP_POS = 0; //value of Grip to close
+
+    public enum OUTTAKE_GRIP_COLOR_SENSOR_STATE {
+        DETECTED,
+        NOT_DETECTED
+    }
     public OUTTAKE_GRIP_COLOR_SENSOR_STATE outtakeGripColorSensorState = OUTTAKE_GRIP_COLOR_SENSOR_STATE.NOT_DETECTED;
     public boolean autoIntakeClose = true;
 
@@ -141,21 +138,6 @@ public class OuttakeArm {
         return outtakeConeSensed;
     }
 
-    /*
-    //rotates hand up given controller input
-    public void moveWristTransfer(){
-        outtakeWristServo.setPosition(WRIST_TRANSFER_POSITION);
-        wristState = WRIST_STATE.WRIST_TRANSFER;
-    }
-
-    //rotates hand down given controller input
-    public void moveWristDrop(){
-        outtakeWristServo.setPosition(WRIST_DOWN_POSITION);
-        wristState = WRIST_STATE.WRIST_DROP;
-    }
-
-
-     */
     public void moveWrist(WRIST_STATE toWristState){
         outtakeWristServo.setPosition(toWristState.wristPosition);
         wristState = toWristState;
@@ -186,22 +168,17 @@ public class OuttakeArm {
 
     //TODO:How to detect if a cone is in transfer pos with only a color sensor on grip
     public OUTTAKE_GRIP_COLOR_SENSOR_STATE getOuttakeGripColorSensorState(){
-
-        /*
         if (outtakeWristDistance < 4) {
             outtakeGripColorSensorState = OUTTAKE_GRIP_COLOR_SENSOR_STATE.DETECTED;
         } else {
             outtakeGripColorSensorState = OUTTAKE_GRIP_COLOR_SENSOR_STATE.NOT_DETECTED;
         }
-
-         */
         return outtakeGripColorSensorState;
     }
 
     public void moveArm(OUTTAKE_ARM_STATE toArmState){
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
-
         outtakeArmState = toArmState;
 
     }
