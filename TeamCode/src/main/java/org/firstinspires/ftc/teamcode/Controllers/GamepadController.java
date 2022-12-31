@@ -245,13 +245,20 @@ public class GamepadController {
                 }
             }
         }
+
+
+
+
+
+
+
     }
     public boolean outtakeTransferReady = false;
 
     public void moveOuttakeToTransfer(){
         if(outtakeTransferReady){
             outtakeArm.closeGrip();
-            outtakeArm.moveWristTransfer();
+            outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_TRANSFER);
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
             outtakeArm.openGrip();
             outtakeTransferReady = true;
@@ -275,7 +282,7 @@ public class GamepadController {
                 outtakeArm.closeGrip();
                 outtakeTransferReady = false;
                 intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
-                outtakeArm.moveWristDrop();
+                outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
                 outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
             }
 

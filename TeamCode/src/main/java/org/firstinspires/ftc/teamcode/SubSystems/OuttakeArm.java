@@ -41,7 +41,6 @@ public class OuttakeArm {
 
         WRIST_STATE(double wristPosition){
             this.wristPosition = wristPosition;
-
         }
     }
     public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
@@ -142,6 +141,7 @@ public class OuttakeArm {
         return outtakeConeSensed;
     }
 
+    /*
     //rotates hand up given controller input
     public void moveWristTransfer(){
         outtakeWristServo.setPosition(WRIST_TRANSFER_POSITION);
@@ -154,6 +154,8 @@ public class OuttakeArm {
         wristState = WRIST_STATE.WRIST_DROP;
     }
 
+
+     */
     public void moveWrist(WRIST_STATE toWristState){
         outtakeWristServo.setPosition(toWristState.wristPosition);
         wristState = toWristState;
