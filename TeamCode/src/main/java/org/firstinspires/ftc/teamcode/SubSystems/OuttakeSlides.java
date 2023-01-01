@@ -193,7 +193,7 @@ public class OuttakeSlides {
         outtakeMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runOuttakeMotorToLevelState == true){
             outtakeMotor.setPower(power);
-            runOuttakeMotorToLevelState = false;
+            if (!outtakeMotor.isBusy()) runOuttakeMotorToLevelState = false;
         } else{
             outtakeMotor.setPower(0.0);
         }
@@ -265,6 +265,10 @@ public class OuttakeSlides {
         }
         outtakeTurretServo.setPosition(deltaTurret);
         turretState = TURRET_STATE.RANDOM;
+    }
+    public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE outttakeSlideState) {
+        return ((outtakeMotor.getCurrentPosition() < outttakeSlideState.motorPosition + 10) &&
+                ((outtakeMotor).getCurrentPosition()  > outttakeSlideState.motorPosition - 10));
     }
 
 }

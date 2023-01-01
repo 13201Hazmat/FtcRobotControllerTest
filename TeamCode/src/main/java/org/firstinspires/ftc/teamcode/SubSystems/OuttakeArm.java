@@ -32,6 +32,12 @@ public class OuttakeArm {
             this.leftArmPosition = leftArmPosition;
             this.rightArmPosition = rightArmPosition;
         }
+        public double getLeftArmPosition(){
+            return leftArmPosition;
+        }
+        public double getRightArmPosition(){
+            return rightArmPosition;
+        }
     }
 
     public OUTTAKE_ARM_STATE outtakeArmState = OUTTAKE_ARM_STATE.TRANSFER;
@@ -46,6 +52,9 @@ public class OuttakeArm {
         WRIST_STATE(double wristPosition){
             this.wristPosition = wristPosition;
         }
+        public double getWristPosition(){
+            return wristPosition;
+        }
     }
     public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
 
@@ -58,6 +67,9 @@ public class OuttakeArm {
 
         GRIP_STATE(double gripState){
             this.gripState = gripState;
+        }
+        public double getGripState(){
+            return gripState;
         }
     }
     public GRIP_STATE gripState = GRIP_STATE.CLOSED;
@@ -92,30 +104,30 @@ public class OuttakeArm {
             ((SwitchableLight)outtakeGripColor).enableLight(true);
         }
         if (GameField.opModeRunning == HAZMAT_AUTONOMOUS) {
-            closeGrip(GRIP_STATE.CLOSED);
+            closeGrip();
         }
     }
 
     /**
      *If state of hand grip is set to open, set position of servo's to specified
      */
-    public void openGrip(GRIP_STATE toGripState) {
+    public void openGrip() {
         outtakeGripServo.setPosition(GRIP_STATE.OPEN.gripState);
         gripState = GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
-    public void closeGrip(GRIP_STATE toGripState){
+    public void closeGrip(){
         outtakeGripServo.setPosition(GRIP_STATE.CLOSED.gripState);
         gripState = GRIP_STATE.CLOSED;
     }
 
     public void toggleGrip(){
         if (gripState == GRIP_STATE.CLOSED) {
-            openGrip(GRIP_STATE.OPEN);
+            openGrip();
         } else {
-            closeGrip(GRIP_STATE.CLOSED);
+            closeGrip();
         }
     }
 
@@ -183,8 +195,14 @@ public class OuttakeArm {
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
+        if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
+            openGrip();
+        }
 
     }
 
+    public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE outtakeArmState) {
+        return (outtakeArmLeft.getPosition() == outtakeArmState.leftArmPosition);
+    }
 
 }

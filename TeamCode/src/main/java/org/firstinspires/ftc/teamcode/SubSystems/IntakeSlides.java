@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.GameOpModes.AutoOpMode;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class IntakeSlides {
@@ -28,20 +29,34 @@ public class IntakeSlides {
 
     //Intake Motor states
     public enum INTAKE_MOTOR_STATE {
-        MIN_RETRACTED (0), //Position
-        TRANSFER (0),
-        MAX_EXTENDED(666), //1760
-        RANDOM(0),
+        MIN_RETRACTED (0,0), //Position
+        TRANSFER (0, 0),
+        MAX_EXTENDED(666, 6), //1760
+        RANDOM(0, 7),
         
-        AUTO_CONE_1(500),
-        AUTO_CONE_2(500),
-        AUTO_CONE_3(500),
-        AUTO_COME_4(500),
-        AUTO_CONE_5(500);
+        AUTO_CONE_1(500,1),
+        AUTO_CONE_2(500, 2),
+        AUTO_CONE_3(500, 3),
+        AUTO_COME_4(500, 4),
+        AUTO_CONE_5(500, 5);
 
         private final double motorPosition;
-        INTAKE_MOTOR_STATE(double motorPosition) {
+        private final int index;
+        INTAKE_MOTOR_STATE(double motorPosition, int index) {
+
             this.motorPosition = motorPosition;
+            this.index = index;
+        }
+
+        public INTAKE_MOTOR_STATE byIndex(int ord) {
+            if (ord <1) ord = 1;
+            if (ord >5) ord = 5;
+            for (INTAKE_MOTOR_STATE a : INTAKE_MOTOR_STATE.values()) {
+                if (a.index == ord) {
+                    return a;
+                }
+            }
+            return null;
         }
 
     }
@@ -172,7 +187,7 @@ public class IntakeSlides {
         if (runIntakeMotorToLevelState){
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
-            runIntakeMotorToLevelState = false;
+            if(!intakeMotorLeft.isBusy()) runIntakeMotorToLevelState = false;
         } else{
             intakeMotorLeft.setPower(0.0);
             intakeMotorRight.setPower(0.0);
@@ -218,4 +233,10 @@ public class IntakeSlides {
 
     //TODO Protect intake so that it does not hit anything based on distance read by Distance Sensor
 
+
+    public boolean isIntakeSlidesInTransfer() {
+        return ((intakeMotorLeft.getCurrentPosition() < INTAKE_MOTOR_STATE.TRANSFER.motorPosition + 10) &&
+                (intakeMotorLeft.getCurrentPosition()  > INTAKE_MOTOR_STATE.TRANSFER.motorPosition - 10));
+    }
 }
+

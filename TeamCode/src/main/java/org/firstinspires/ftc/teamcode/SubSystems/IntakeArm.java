@@ -31,6 +31,7 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum ARM_STATE{
+        INIT(0.39,61,0),
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.07, 0.89, 2),
         AUTO_CONE_3(0.11, 0.86, 3),
@@ -42,7 +43,6 @@ public class IntakeArm {
         RANDOM(0,0,8),
         RANDOM_MAX(0.46,0.53,9); //Level 14
 
-
         private double leftArmPosition;
         private double rightArmPosition;
         private final int index;
@@ -52,7 +52,7 @@ public class IntakeArm {
             this.index = index;
         }
 
-        private ARM_STATE byIndex(int ord) {
+        public ARM_STATE byIndex(int ord) {
             if (ord <1) ord = 1;
             if (ord >6) ord = 6;
             for (ARM_STATE a : ARM_STATE.values()) {
@@ -64,10 +64,12 @@ public class IntakeArm {
         }
     }
     public ARM_STATE armState = ARM_STATE.TRANSFER;
+    public ARM_STATE targetArmState;
     public double ARM_DELTA = 0.01;
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
+        INIT(0.33,0.73),
         PICKUP_AUTO_CONE_1_LEVEL(0.26, 0.8),
         /*
         AUTO_CONE_2(0.23 ,0.77),
@@ -79,6 +81,7 @@ public class IntakeArm {
         LOW_JUNCTION(0.4,0.66),
         TRANSFER (0.4,0.66),
         FALLEN_CONE(0.5,0.5);
+
 
         private double leftWristPosition;
         private double rightWristPosition;
@@ -130,7 +133,7 @@ public class IntakeArm {
     public void moveArm(ARM_STATE toArmState) {
         intakeArmServoLeft.setPosition(toArmState.leftArmPosition);
         intakeArmServoRight.setPosition(toArmState.rightArmPosition);
-        armState = toArmState;
+        targetArmState = toArmState;
         moveWrist(toArmState);
     }
 
@@ -308,6 +311,10 @@ public class IntakeArm {
 
     public double getIntakeGripColorSensorDistance(){
         return intakeGripDistance;
+    }
+
+    public boolean isIntakeArmInTransfer() {
+        return (intakeArmServoLeft.getPosition() == ARM_STATE.TRANSFER.leftArmPosition);
     }
 
 
