@@ -20,9 +20,11 @@ Intake Slides:
 Control Hub Motor Port 0        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
 Control Hub Motor Port 1        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
-Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
+//Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
 
 OuttakeArm :
+        outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
+        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
 Control Hub Servo Port 3        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
 Control Hub Servo Port 4        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
 Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");

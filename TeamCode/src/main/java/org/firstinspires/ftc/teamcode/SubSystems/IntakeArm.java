@@ -273,42 +273,6 @@ public class IntakeArm {
         gripState = GRIP_STATE.CLOSED;
     }
 
-    public void toggleGrip(){
-        switch (armState) {
-            case PICKUP_AUTO_CONE_1:
-                if (gripState == GRIP_STATE.CLOSED) {
-                    openGrip();
-                } else {
-                    closeGrip();
-                }
-                break;
-            case AUTO_CONE_2:
-            case AUTO_CONE_3:
-            case AUTO_CONE_4:
-            case AUTO_CONE_5:
-            case RANDOM:
-                if (gripState == GRIP_STATE.CLOSED) {
-                    openGrip();
-                } else {
-                    closeGrip();
-                    moveWristUp(); //TODO : TEST
-                }
-                break;
-            case PICKUP_FALLEN_CONE:
-                if (gripState == GRIP_STATE.CLOSED) {
-                    openGrip();
-                } else {
-                    closeGrip();
-                    moveWrist(ARM_STATE.AUTO_CONE_5);
-                    moveWristUp();
-                }
-                break;
-            case TRANSFER:
-                break;
-        }
-
-    }
-
     public double getIntakeGripColorSensorDistance(){
         return intakeGripDistance;
     }

@@ -272,10 +272,17 @@ public class AutoOpMode extends LinearOpMode{
             driveTrain.followTrajectorySequence(trajectoryParking);
         }
 
+        ElapsedTime exitTimer = new ElapsedTime(MILLISECONDS);
+
         //End Condition for Auto
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        exitTimer.reset();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        while (opModeIsActive() && !isStopRequested() &&
+                exitTimer.time()<1000 && intakeArm.isIntakeArmInTransfer()) {
+           safeWait(100);
+        }
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         driveTrain.followTrajectorySequence(trajectoryParking);
@@ -299,7 +306,9 @@ public class AutoOpMode extends LinearOpMode{
     public int stackConeCounter = 0;
 
     public void autoPickAndDropStateMachine(){
-        while(opModeIsActive() && !isStopRequested() && dropConeCounter != dropConeCount && gameTimer.time() < 3000) {
+        while(opModeIsActive() && !isStopRequested() &&
+                dropConeCounter != dropConeCount &&
+                gameTimer.time() < 3000) {
             switch (intakeState) {
                 case I0:
                     if(stackConeCounter < stackConeCount) {
@@ -326,6 +335,7 @@ public class AutoOpMode extends LinearOpMode{
                     stackConeCounter = (stackConeCounter+1 < stackConeCount) ? stackConeCounter++ : stackConeCounter;
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
                     intakeSlides.runIntakeMotorToLevel();
+                    intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
                     intakeState = INTAKE_STATE.I4;
                     break;
 
