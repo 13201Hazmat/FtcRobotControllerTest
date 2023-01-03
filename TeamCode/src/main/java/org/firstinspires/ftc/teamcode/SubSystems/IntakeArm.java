@@ -17,9 +17,9 @@ public class IntakeArm {
 
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
-        OPEN(0.25),
+        OPEN(0.65),
         OPEN_AUTO(0.25),
-        CLOSED(0.75);
+        CLOSED(0.97);
 
         private final double gripPosition;
         GRIP_STATE(double gripPosition) {
@@ -31,17 +31,17 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum ARM_STATE{
-        INIT(0.39,61,0),
+        INIT(0.39,0.61,0),
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.07, 0.89, 2),
         AUTO_CONE_3(0.11, 0.86, 3),
         AUTO_CONE_4(0.14, 0.83, 4),
         AUTO_CONE_5(0.17, 0.8, 5),
-        TRANSFER(0.62,0.38,5), //Level 19
-        LOW_JUNCTION(0.39,0.59,6), //Level 12
-        PICKUP_FALLEN_CONE(0.17, 0.8,  7),
-        RANDOM(0,0,8),
-        RANDOM_MAX(0.46,0.53,9); //Level 14
+        TRANSFER(0.62,0.38,6), //Level 19
+        LOW_JUNCTION(0.39,0.59,7), //Level 12
+        PICKUP_FALLEN_CONE(0.17, 0.8,  8),
+        RANDOM(0,0,9),
+        RANDOM_MAX(0.46,0.53,10); //Level 14
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -53,9 +53,9 @@ public class IntakeArm {
         }
 
         public ARM_STATE byIndex(int ord) {
-            if (ord <1) ord = 1;
-            if (ord >6) ord = 6;
             for (ARM_STATE a : ARM_STATE.values()) {
+                if (ord <1) ord = 1;
+                if (ord >5) ord = 5;
                 if (a.index == ord) {
                     return a;
                 }
@@ -131,6 +131,7 @@ public class IntakeArm {
     }
 
     public void moveArm(ARM_STATE toArmState) {
+        moveWristUp();
         intakeArmServoLeft.setPosition(toArmState.leftArmPosition);
         intakeArmServoRight.setPosition(toArmState.rightArmPosition);
         targetArmState = toArmState;
@@ -186,7 +187,7 @@ public class IntakeArm {
         switch (toArmState) {
             case PICKUP_AUTO_CONE_1:
                 intakeWristServoLeft.setPosition(WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition);
-                intakeWristServoRight.setPosition(WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.rightWristPosition);
                 wristState = WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL;
                 break;
             case AUTO_CONE_2:
@@ -199,17 +200,17 @@ public class IntakeArm {
                 break;
             case AUTO_CONE_5:
                 intakeWristServoLeft.setPosition(WRIST_STATE.AUTO_CONE_5.leftWristPosition);
-                intakeWristServoRight.setPosition(WRIST_STATE.AUTO_CONE_5.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.AUTO_CONE_5.rightWristPosition);
                 wristState = WRIST_STATE.AUTO_CONE_5;
                 break;
             case TRANSFER:
                 intakeWristServoLeft.setPosition(WRIST_STATE.TRANSFER.leftWristPosition);
-                intakeWristServoRight.setPosition(WRIST_STATE.TRANSFER.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.TRANSFER.rightWristPosition);
                 wristState = WRIST_STATE.TRANSFER;
                 break;
             case PICKUP_FALLEN_CONE:
                 intakeWristServoLeft.setPosition(WRIST_STATE.FALLEN_CONE.leftWristPosition);
-                intakeWristServoRight.setPosition(WRIST_STATE.FALLEN_CONE.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.FALLEN_CONE.rightWristPosition);
                 wristState = WRIST_STATE.FALLEN_CONE;
                 break;
         }
@@ -228,7 +229,7 @@ public class IntakeArm {
 
     public void moveWristUp(){
         intakeWristServoLeft.setPosition(intakeWristServoLeft.getPosition() + WRIST_UP_DELTA);
-        intakeWristServoRight.setPosition(intakeWristServoRight.getPosition() + WRIST_UP_DELTA);
+        intakeWristServoRight.setPosition(intakeWristServoRight.getPosition() - WRIST_UP_DELTA);
 
     }
 

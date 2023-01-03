@@ -101,7 +101,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         GameField.poseSetInAutonomous = false;
     }
 
-    public void initSubsystems(){
+    public void initSubsystems() {
 
         telemetry.setAutoClear(false);
 
@@ -116,18 +116,24 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         telemetry.update();
 
         intakeArm = new IntakeArm(hardwareMap);
+        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         telemetry.addLine("IntakeArm Initialized");
         telemetry.update();
 
         intakeSlides = new IntakeSlides(hardwareMap);
+        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         telemetry.addLine("IntakeSlides Initialized");
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+        outtakeArm.openGrip();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
         outtakeSlides = new OuttakeSlides(hardwareMap);
+        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
@@ -145,7 +151,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
         }
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
-        if ( GameField.poseSetInAutonomous) {
+        if (GameField.poseSetInAutonomous) {
             driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.getLocalizer().setPoseEstimate(startPose);
@@ -163,10 +169,10 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
      * Method to add debug messages. Update as telemetry.addData.
      * Use public attributes or methods if needs to be called here.
      */
-    public void printDebugMessages(){
+    public void printDebugMessages() {
         telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
-        telemetry.addData("Robot ready to start","");
+        telemetry.addData("Robot ready to start", "");
 
         if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
 
@@ -208,8 +214,8 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
                 telemetry.addData("Intake Grip Servo Position", "%.2f", intakeArm.intakeGripServo.getPosition());
             }
             telemetry.addData("Intake Grip Color Sensor", intakeArm.senseIntakeCone());
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
-                telemetry.addData("Intake Grip Sensor Distance", "%.2f", ((DistanceSensor)intakeArm.intakeGripColor).getDistance(DistanceUnit.MM));
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Intake Grip Sensor Distance", "%.2f", ((DistanceSensor) intakeArm.intakeGripColor).getDistance(DistanceUnit.MM));
             }
 
             telemetry.addLine("=============");
@@ -219,7 +225,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
                 telemetry.addData("Outtake Slides Position", outtakeSlides.outtakeMotor.getCurrentPosition());
                 telemetry.addData("Outtake Slides Power", outtakeSlides.outtakeMotor.getPower());
                 telemetry.addData("Outtake Slides is busy", outtakeSlides.outtakeMotor.isBusy());
-                telemetry.addData("Outtake Slides Touch Sensor State", outtakeSlides.outtakeTouch.getState());
+                // telemetry.addData("Outtake Slides Touch Sensor State", outtakeSlides.outtakeTouch.getState());
             }
 
             telemetry.addData("Outtake Turret State", outtakeSlides.turretState);
@@ -229,22 +235,28 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
 
             telemetry.addLine("=============");
 
-            telemetry.addData("Outtake Arm State", outtakeArm.wristState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            telemetry.addData("Outtake Wrist State", outtakeArm.wristState);
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Wrist Servo Position", "%.2f", outtakeArm.outtakeWristServo.getPosition());
             }
 
             telemetry.addData("Outtake Grip State", outtakeArm.gripState);
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Grip Servo Position", "%.2f", outtakeArm.outtakeGripServo.getPosition());
             }
+
+            telemetry.addData("Outtake Arm State", outtakeArm.outtakeArmState);
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Outtake Left Arm Servo Position", "%.2f", outtakeArm.outtakeArmLeft.getPosition());
+                telemetry.addData("Outtake Right Arm Servo Position", "%.2f", outtakeArm.outtakeArmRight.getPosition());
+            }
+
             telemetry.addData("Outtake Grip Color Sensor", outtakeArm.senseOuttakeCone());
-            if (GameField.debugLevel != GameField.DEBUG_LEVEL.MAXIMUM) {
-                telemetry.addData("Outtake Grip Sensor Distance", "%.2f", ((DistanceSensor)outtakeArm.outtakeGripColor).getDistance(DistanceUnit.MM));
+            if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
+                telemetry.addData("Outtake Grip Sensor Distance", "%.2f", ((DistanceSensor) outtakeArm.outtakeGripColor).getDistance(DistanceUnit.MM));
             }
 
             telemetry.addLine("=============");
-
         }
         telemetry.update();
     }

@@ -187,7 +187,7 @@ public class IntakeSlides {
         if (runIntakeMotorToLevelState){
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
-            if(!intakeMotorLeft.isBusy()) runIntakeMotorToLevelState = false;
+            /*TODO if(!intakeMotorLeft.isBusy())*/ runIntakeMotorToLevelState = false;
         } else{
             intakeMotorLeft.setPower(0.0);
             intakeMotorRight.setPower(0.0);

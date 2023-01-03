@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -45,11 +46,11 @@ public class OuttakeSlides {
     //Outtake Motor states
     public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
-        TRANSFER (100),
-        LOW_JUNCTION (200),
-        MEDIUM_JUNCTION (450),
-        HIGH_JUNCTION (640),
-        MAX_EXTENDED(660),
+        TRANSFER (0),
+        LOW_JUNCTION (0),
+        MEDIUM_JUNCTION (2880),//350:1150 2880:312
+        HIGH_JUNCTION (4250),//630:1150 4250:312
+        MAX_EXTENDED(4350),//650:1159 4350:312
         RANDOM(0);
 
         private final double motorPosition;
@@ -63,12 +64,12 @@ public class OuttakeSlides {
     public double outtakeMotorCurrentPosition = outtakeSlidesState.motorPosition;
     public double outtakeMotorNewPosition = outtakeSlidesState.motorPosition;
 
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 100;//200;//200 //need tested values
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 50;
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;
 
     //Different constants of arm speed
-    public static final double OUTTAKE_MOTOR_POWER_TELEOP = 0.8;
-    public static final double OUTTAKE_MOTOR_POWER_AUTO = 0.8;
+    public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1;
+    public static final double OUTTAKE_MOTOR_POWER_AUTO = 1;
     public enum OUTTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -103,7 +104,7 @@ public class OuttakeSlides {
         outtakeMotor.setPositionPIDFCoefficients(5.0);
         outtakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
-        manualResetOuttakeMotor();
+        //manualResetOuttakeMotor();
     }
 
     //Turns on the brake for Outtake motor
@@ -193,7 +194,7 @@ public class OuttakeSlides {
         outtakeMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runOuttakeMotorToLevelState == true){
             outtakeMotor.setPower(power);
-            if (!outtakeMotor.isBusy()) runOuttakeMotorToLevelState = false;
+            /*TODO if (!outtakeMotor.isBusy()) */runOuttakeMotorToLevelState = false;
         } else{
             outtakeMotor.setPower(0.0);
         }
@@ -216,24 +217,24 @@ public class OuttakeSlides {
     public void manualResetOuttakeMotor(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (/*outtakeTouch.getState() &&*/ timer.time() < 5000) {
+        //while (outtakeTouch.getState() && timer.time() < 5000) { TODO : Do it without touch sensor
             outtakeMotor.setTargetPosition((int) (outtakeMotor.getCurrentPosition() - OUTTAKE_MOTOR_DELTA_COUNT_RESET));
             runOuttakeMotorToLevelState = true;
             runOuttakeMotorToLevel();
-        }
+        //}
         resetOuttakeMotorMode();
         turnOuttakeBrakeModeOff();
         outtakeSlidesState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
     }
 
     public enum TURRET_STATE{
-        MAX_LEFT (0.34),
-        CENTER(0.44),
-        MAX_RIGHT (0.54),
+        MAX_LEFT (0.35),
+        CENTER(0.45),
+        MAX_RIGHT (0.55),
         INIT(0.1),
-        RANDOM (0.5),
-        AUTO_LEFT(0.39),
-        AUTO_RIGHT(0.49);
+        RANDOM (0.45),
+        AUTO_LEFT(0.40),
+        AUTO_RIGHT(0.50);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

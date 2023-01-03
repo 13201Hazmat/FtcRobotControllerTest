@@ -23,10 +23,10 @@ Control Hub Motor Port 0        intakeMotorRight = hardwareMap.get(DcMotorEx.cla
 //Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
 
 OuttakeArm :
-Control Hub Servo Port 1       outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
-Control Hub Servo Port 3        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+Control Hub Servo Port 2       outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
 Control Hub Servo Port 4        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
-Control Hub Servo Port 2        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
+Control Hub Servo Port 3        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+Control Hub Servo Port 1        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
 //Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
 Control Hub I2C BUS 1         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
@@ -39,7 +39,7 @@ Webcam
 Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
 Lights
-Expansion Hub Servo Port 3        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+Expansion Hub Servo Port 5        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
 
 2 touch
 3 color

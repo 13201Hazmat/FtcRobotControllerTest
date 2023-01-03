@@ -22,8 +22,8 @@ public class OuttakeArm {
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0, 0), //TODO test real values
-        DROP(1, 1); //TODO test real values
+        TRANSFER(1, 0), //TODO test real values
+        DROP(0.4, 0.6); //TODO test real values
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -44,8 +44,8 @@ public class OuttakeArm {
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        WRIST_TRANSFER(0), //TODO test real
-        WRIST_DROP(1); //TODO test real
+        WRIST_TRANSFER(0.35), //TODO test real
+        WRIST_DROP(0.56); //TODO test real
 
         private double wristPosition;
 
@@ -60,16 +60,16 @@ public class OuttakeArm {
 
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
-        OPEN(0.45),
-        CLOSED(0);
+        OPEN(0.6),
+        CLOSED(0.75); //Max 1.0
 
-        private double gripState;
+        private double gripPosition;
 
-        GRIP_STATE(double gripState){
-            this.gripState = gripState;
+        GRIP_STATE(double gripPosition){
+            this.gripPosition = gripPosition;
         }
-        public double getGripState(){
-            return gripState;
+        public double getGripPosition(){
+            return gripPosition;
         }
     }
     public GRIP_STATE gripState = GRIP_STATE.CLOSED;
@@ -112,14 +112,14 @@ public class OuttakeArm {
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip() {
-        outtakeGripServo.setPosition(GRIP_STATE.OPEN.gripState);
+        outtakeGripServo.setPosition(GRIP_STATE.OPEN.gripPosition);
         gripState = GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        outtakeGripServo.setPosition(GRIP_STATE.CLOSED.gripState);
+        outtakeGripServo.setPosition(GRIP_STATE.CLOSED.gripPosition);
         gripState = GRIP_STATE.CLOSED;
     }
 
@@ -196,7 +196,10 @@ public class OuttakeArm {
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
         if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
+            moveWrist(WRIST_STATE.WRIST_TRANSFER);
             openGrip();
+        } else {
+            moveWrist(WRIST_STATE.WRIST_DROP);
         }
 
     }
