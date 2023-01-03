@@ -209,7 +209,7 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.addData("Outtake Slides Position", outtakeSlides.outtakeMotor.getCurrentPosition());
                 telemetry.addData("Outtake Slides Power", outtakeSlides.outtakeMotor.getPower());
                 telemetry.addData("Outtake Slides is busy", outtakeSlides.outtakeMotor.isBusy());
-                telemetry.addData("Outtake Slides Touch Sensor State", outtakeSlides.outtakeTouch.getState());
+               // telemetry.addData("Outtake Slides Touch Sensor State", outtakeSlides.outtakeTouch.getState());
             }
 
             telemetry.addData("Outtake Turret State", outtakeSlides.turretState);

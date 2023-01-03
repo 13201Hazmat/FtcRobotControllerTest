@@ -85,10 +85,10 @@ public class OuttakeSlides {
         outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");
 
         // get a reference to our digitalTouch object.
-        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
+        //outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
 
         // set the digital channel to input.
-        outtakeTouch.setMode(DigitalChannel.Mode.INPUT);
+        //outtakeTouch.setMode(DigitalChannel.Mode.INPUT);
 
         //Turret
         outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
@@ -216,7 +216,7 @@ public class OuttakeSlides {
     public void manualResetOuttakeMotor(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (outtakeTouch.getState() && timer.time() < 5000) {
+        while (/*outtakeTouch.getState() &&*/ timer.time() < 5000) {
             outtakeMotor.setTargetPosition((int) (outtakeMotor.getCurrentPosition() - OUTTAKE_MOTOR_DELTA_COUNT_RESET));
             runOuttakeMotorToLevelState = true;
             runOuttakeMotorToLevel();

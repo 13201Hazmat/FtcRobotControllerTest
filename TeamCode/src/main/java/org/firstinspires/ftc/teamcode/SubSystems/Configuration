@@ -1,39 +1,39 @@
-Configuration for Hazmat Power Play robot
+ Configuration for Hazmat Power Play robot
 =========================================
 DriveTrain :
-Expansion Hub Motor Port 0 5203 Motor      leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-Expansion Hub Motor Port 2 5203 Motor      leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-Expansion Hub Motor Port 1 5203 Motor      rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-Expansion Hub Motor Port 3 5203 Motor      rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+Expansion Hub Motor Port 3 5203 Motor      leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
+Expansion Hub Motor Port 1 5203 Motor      leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+Expansion Hub Motor Port 2 5203 Motor      rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+Expansion Hub Motor Port 0 5203 Motor      rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
 
 Expansion Hub I2C Bus 0           imu = hardwareMap.get(BNO055IMU.class, "imu");
 
 IntakeArm:
 Expansion Hub Servo Port 1        intakeArmServoLeft = hardwareMap.get(Servo.class, "intake_arm_left");
-Control Hub Servo Port 0        intakeArmServoRight = hardwareMap.get(Servo.class, "intake_arm_right");
+Expansion Hub Servo Port 0        intakeArmServoRight = hardwareMap.get(Servo.class, "intake_arm_right");
 Expansion Hub Servo Port 2        intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
-Control Hub Servo Port 1        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
-Control Hub Servo Port 2        intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
-Control Hub I2C BUS 3        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+Expansion Hub Servo Port 4        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
+Expansion Hub Servo Port 3        intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
+//Control Hub I2C BUS 3        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
 
 Intake Slides:
-Control Hub Motor Port 0        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
-Control Hub Motor Port 1        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
-Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+Control Hub Motor Port 1        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
+Control Hub Motor Port 0        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
+//Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
 //Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
 
 OuttakeArm :
-        outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
-        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
-Control Hub Servo Port 3        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
-Control Hub Servo Port 4        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
-Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
-Control Hub I2C BUS 2         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
+Control Hub Servo Port 1       outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
+Control Hub Servo Port 3        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+Control Hub Servo Port 4        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
+Control Hub Servo Port 2        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
+//Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+Control Hub I2C BUS 1         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
 Outtake Slides:
-Control Hub Motor Port 2        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");
-Control Hub Digital Port 7        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
-Expansion Hub Servo Port 0     outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
+Control Hub Motor Port 3        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");
+//Control Hub Digital Port 7        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
+Control Hub Servo Port 0     outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
 
 Webcam
 Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
