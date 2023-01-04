@@ -103,6 +103,9 @@ public class OuttakeArm {
         if (outtakeGripColor instanceof SwitchableLight) {
             ((SwitchableLight)outtakeGripColor).enableLight(true);
         }
+
+        moveArm(OUTTAKE_ARM_STATE.TRANSFER);
+
         if (GameField.opModeRunning == HAZMAT_AUTONOMOUS) {
             closeGrip();
         }
