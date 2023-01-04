@@ -18,8 +18,8 @@ public class IntakeArm {
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
         OPEN(0.65),
-        OPEN_AUTO(0.25),
-        CLOSED(0.97);
+        OPEN_AUTO(0.65),
+        CLOSED(1.0);
 
         private final double gripPosition;
         GRIP_STATE(double gripPosition) {
@@ -31,13 +31,13 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum ARM_STATE{
-        INIT(0.39,0.61,0),
+        INIT(0.49,0.50,0), //Level 15
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.07, 0.89, 2),
         AUTO_CONE_3(0.11, 0.86, 3),
         AUTO_CONE_4(0.14, 0.83, 4),
         AUTO_CONE_5(0.17, 0.8, 5),
-        TRANSFER(0.62,0.38,6), //Level 19
+        TRANSFER(0.65,0.35,6), //Level 20
         LOW_JUNCTION(0.39,0.59,7), //Level 12
         PICKUP_FALLEN_CONE(0.17, 0.8,  8),
         RANDOM(0,0,9),
@@ -78,7 +78,7 @@ public class IntakeArm {
         RANDOM (0.6,0.4),
         AUTO_CONE_5(0.40, 0.66),
         LOW_JUNCTION(0.4,0.66),
-        TRANSFER (0.4,0.66),
+        TRANSFER (0.33,0.73),
         FALLEN_CONE(0.5,0.5);
 
 
@@ -125,7 +125,7 @@ public class IntakeArm {
         WRIST_ARM_FACTOR_RIGHT = (WRIST_STATE.AUTO_CONE_5.rightWristPosition - WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.rightWristPosition)/
                 (ARM_STATE.AUTO_CONE_5.rightArmPosition - ARM_STATE.PICKUP_AUTO_CONE_1.rightArmPosition) ;
 
-        moveArm(ARM_STATE.TRANSFER);
+        moveArm(ARM_STATE.INIT);
         closeGrip();
     }
 
@@ -184,6 +184,11 @@ public class IntakeArm {
 
     public void moveWrist(ARM_STATE toArmState) {
         switch (toArmState) {
+            case INIT:
+                intakeWristServoLeft.setPosition(WRIST_STATE.INIT.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.INIT.rightWristPosition);
+                wristState = WRIST_STATE.INIT;
+                break;
             case PICKUP_AUTO_CONE_1:
                 intakeWristServoLeft.setPosition(WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition);
                 intakeWristServoRight.setPosition(WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.rightWristPosition);
@@ -201,6 +206,11 @@ public class IntakeArm {
                 intakeWristServoLeft.setPosition(WRIST_STATE.AUTO_CONE_5.leftWristPosition);
                 intakeWristServoRight.setPosition(WRIST_STATE.AUTO_CONE_5.rightWristPosition);
                 wristState = WRIST_STATE.AUTO_CONE_5;
+                break;
+            case LOW_JUNCTION:
+                intakeWristServoLeft.setPosition(WRIST_STATE.LOW_JUNCTION.leftWristPosition);
+                intakeWristServoRight.setPosition(WRIST_STATE.LOW_JUNCTION.rightWristPosition);
+                wristState = WRIST_STATE.LOW_JUNCTION;
                 break;
             case TRANSFER:
                 intakeWristServoLeft.setPosition(WRIST_STATE.TRANSFER.leftWristPosition);

@@ -105,7 +105,7 @@ public class IntakeSlides {
         intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
         intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
-        //manualResetIntakeMotor();
+        manualResetIntakeMotor();
     }
 
     //Turns on the brake for Intake motor
@@ -216,7 +216,7 @@ public class IntakeSlides {
     public void manualResetIntakeMotor(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (intakeTouch.getState() && timer.time() < 5000) {
+        while (intakeTouch.getState() && timer.time() < 2000) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             intakeMotorRight.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             runIntakeMotorToLevelState = true;

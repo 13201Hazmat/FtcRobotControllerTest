@@ -114,7 +114,7 @@ public class TestIntake extends LinearOpMode {
 
     public void runIntakeArm(){
 
-        if (gamepadController.gp1GetStart() && gamepadController.gp1GetRightBumper()) {
+        if (gamepadController.gp1GetStart() && gamepadController.gp1GetRightBumperPress()) {
             intakeArm.autoIntakeCloseMode = !intakeArm.autoIntakeCloseMode;
         }
 
@@ -124,7 +124,7 @@ public class TestIntake extends LinearOpMode {
             intakeArm.closeGrip();
         }
 
-        if (gamepadController.gp1GetRightBumper() && intakeArm.armState != IntakeArm.ARM_STATE.TRANSFER &&
+        if (gamepadController.gp1GetRightBumperPress() && intakeArm.armState != IntakeArm.ARM_STATE.TRANSFER &&
                 intakeArm.armState != IntakeArm.ARM_STATE.INIT) {
             if(intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
@@ -146,7 +146,7 @@ public class TestIntake extends LinearOpMode {
             intakeArm.openGrip();
         }
 
-        if (gamepadController.gp1GetLeftBumper() && intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
+        if (gamepadController.gp1GetLeftBumperPress() && intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
             runTransferSequence();
         }
 
@@ -167,47 +167,56 @@ public class TestIntake extends LinearOpMode {
 
     public void runTransferSequence(){
         //TODO : Convert to State Machine
+        telemetry.setAutoClear(false);
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeArm.moveWristUp();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
+        intakeSlides.runIntakeMotorToLevel();
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         /*if(!isOuttakeAtTransfer()){
             moveOuttakeToTransfer();
         }*/
         telemetry.addLine("TEST: if(!isOuttakeAtTransfer()) {moveOuttakeToTransfer();}");
         telemetry.update();
-        /*transferTimer.reset();
-        while(transferTimer.time() < 2000 && !isOuttakeAtTransfer()){
-            gamepadController.runDriveControl_byRRDriveModes();
-        }*/
+        transferTimer.reset();
+        while(transferTimer.time() < 2000 /*&& !isOuttakeAtTransfer()*/){
+            //gamepadController.runDriveControl_byRRDriveModes();
+        }
         telemetry.addLine("TEST: Wait till !isOuttakeArmAtTransfer()");
         telemetry.update();
         /*if (isOuttakeArmAtTransfer()) {*/
         telemetry.addLine("TEST:(isOuttakeArmAtTransfer()");
         telemetry.update();
             intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
+            transferTimer.reset();
+            while(transferTimer.time()<500) {
+                gamepadController.runDriveControl_byRRDriveModes();
+            }
             intakeArm.openGrip();
         //}
-        /*transferTimer.reset();
-        while(!(outtakeArm.senseOuttakeCone() || transferTimer.time() > 500)){
-            runDriveControl_byRRDriveModes();
+        transferTimer.reset();
+        while(/*!(outtakeArm.senseOuttakeCone() ||*/ (transferTimer.time() < 2000)){
+            //gamepadController.runDriveControl_byRRDriveModes();
         }
-        outtakeArm.closeGrip();*/
+        //outtakeArm.closeGrip();
         telemetry.addLine("TEST: !(outtakeArm.senseOuttakeCone())");
         telemetry.addLine("TEST: outtakeArm.closeGrip();");
         telemetry.update();
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
-        /*transferTimer.reset();
-        while(transferTimer.time() < 700 && !intakeArm.isIntakeArmInTransfer()){
-            runDriveControl_byRRDriveModes();
+        transferTimer.reset();
+        while(transferTimer.time() < 2000 && !intakeArm.isIntakeArmInTransfer()){
+            //gamepadController.runDriveControl_byRRDriveModes();
         }
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
-        */
+        //outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+        //outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
+        //outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
+
         telemetry.addLine("TEST: !intakeArm.isIntakeArmInTransfer())");
         telemetry.addLine("TEST: Move outtake arm and wrist to Drop, outtake slides to Low Junction");
         telemetry.update();
+        while(transferTimer.time() < 2000){
+            //gamepadController.runDriveControl_byRRDriveModes();
+        }
     }
 
     public void initSubsystems() {
@@ -225,13 +234,11 @@ public class TestIntake extends LinearOpMode {
         telemetry.update();
 
         intakeArm = new IntakeArm(hardwareMap);
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         telemetry.addLine("IntakeArm Initialized");
         telemetry.update();
 
 
         intakeSlides = new IntakeSlides(hardwareMap);
-        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         telemetry.addLine("IntakeSlides Initialized");
         telemetry.update();
 

@@ -49,8 +49,8 @@ public class OuttakeSlides {
         TRANSFER (0),
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (2880),//350:1150 2880:312
-        HIGH_JUNCTION (3500),//630:1150 4250:312 **Old: 4250
-        MAX_EXTENDED(3500),//650:1159 4350:312 **Old : 4350
+        HIGH_JUNCTION (4000),//630:1150 4250:312 **Old: 4250
+        MAX_EXTENDED(4000),//650:1159 4350:312 **Old : 4350
         RANDOM(0);
 
         private final double motorPosition;
@@ -95,6 +95,7 @@ public class OuttakeSlides {
         outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
 
         initOuttakeSlides();
+        initTurret();
     }
 
     //Method is able to initialize the arm
@@ -228,13 +229,13 @@ public class OuttakeSlides {
     }
 
     public enum TURRET_STATE{
-        MAX_LEFT (0.48),
+        MAX_LEFT (0.46),
         CENTER(0.56),
         MAX_RIGHT (0.66),
         INIT(0.1),
         RANDOM (0.45),
-        AUTO_LEFT(0.40),
-        AUTO_RIGHT(0.50);
+        AUTO_LEFT(0.51),
+        AUTO_RIGHT(0.61);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;
@@ -247,8 +248,13 @@ public class OuttakeSlides {
     public double TURRET_TURBO_DELTA = 0.09;
 
     public void initTurret(){
-        outtakeTurretServo.setPosition(TURRET_STATE.CENTER.turretPosition);
-        turretState = TURRET_STATE.INIT;
+        if(GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+            outtakeTurretServo.setPosition(TURRET_STATE.MAX_LEFT.turretPosition);
+            turretState = TURRET_STATE.MAX_LEFT;
+        } else {
+            outtakeTurretServo.setPosition(TURRET_STATE.CENTER.turretPosition);
+            turretState = TURRET_STATE.INIT;
+        }
     }
 
     public void moveTurret(TURRET_STATE toTurretState){

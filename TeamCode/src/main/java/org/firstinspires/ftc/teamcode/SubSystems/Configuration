@@ -14,7 +14,7 @@ Expansion Hub Servo Port 0        intakeArmServoRight = hardwareMap.get(Servo.cl
 Expansion Hub Servo Port 2        intakeWristServoLeft = hardwareMap.get(Servo.class, "intake_wrist_left");
 Expansion Hub Servo Port 4        intakeWristServoRight = hardwareMap.get(Servo.class, "intake_wrist_right");
 Expansion Hub Servo Port 3        intakeGripServo = hardwareMap.get(Servo.class, "intake_grip_servo");
-//Control Hub I2C BUS 3        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
+Control Hub I2C BUS 1        intakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "intake_grip_sensor");
 
 Intake Slides:
 Control Hub Motor Port 1        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
@@ -27,8 +27,8 @@ Control Hub Servo Port 2       outtakeArmLeft = hardwareMap.get(Servo.class, "ou
 Control Hub Servo Port 4        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
 Control Hub Servo Port 3        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
 Control Hub Servo Port 1        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
-//Control Hub I2C BUS 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
-Control Hub I2C BUS 1         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
+Control Hub I2C BUS 0 port 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+Control Hub I2C BUS 3         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
 Outtake Slides:
 Control Hub Motor Port 3        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");

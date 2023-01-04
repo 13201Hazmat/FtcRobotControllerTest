@@ -56,6 +56,7 @@ public class TestOuttake extends LinearOpMode {
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
+        printDebugMessages();
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
         /* Wait for Start or Stop Button to be pressed */
@@ -104,6 +105,7 @@ public class TestOuttake extends LinearOpMode {
             if(gamepadController.gp2GetLeftBumperPress()){
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
             }
+            runTransferSequence(); // for testing
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
@@ -114,9 +116,9 @@ public class TestOuttake extends LinearOpMode {
 
         if(gamepadController.gp2GetButtonYPress()){
             if(gamepadController.gp2GetLeftBumperPress()) {
-                runTransferSequence();
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
             }
+            runTransferSequence();// for testing
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
@@ -125,6 +127,7 @@ public class TestOuttake extends LinearOpMode {
             if(gamepadController.gp2GetLeftBumperPress()) {
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_RIGHT);
             }
+            runTransferSequence();// for testing
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.HIGH_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
@@ -134,7 +137,7 @@ public class TestOuttake extends LinearOpMode {
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(gamepadController.gp2GetLeftStickY()>0.05|| gamepadController.gp2GetLeftStickY()<0.05) {
+        if(gamepadController.gp2GetLeftStickY()>0.05|| gamepadController.gp2GetLeftStickY()<-0.05) {
             outtakeSlides.modifyOuttakeSlidesLength(gamepadController.gp2TurboMode(-gamepadController.gp2GetLeftStickY()));
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
@@ -191,6 +194,7 @@ public class TestOuttake extends LinearOpMode {
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         //intakeArm.moveWristUp();
         //intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
+        //intakeSlides.runIntakeMotorToLevel();
         //intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         telemetry.addLine("TEST: intakeArm.moveWristUp();");
         telemetry.addLine("TEST: intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);");
@@ -211,7 +215,7 @@ public class TestOuttake extends LinearOpMode {
             telemetry.update();
         }
         transferTimer.reset();
-        while(!(outtakeArm.senseOuttakeCone() || transferTimer.time() > 500)){
+        while(!outtakeArm.senseOuttakeCone() && transferTimer.time() < 2000){
             gamepadController.runDriveControl_byRRDriveModes();
         }
         outtakeArm.closeGrip();
@@ -227,6 +231,7 @@ public class TestOuttake extends LinearOpMode {
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
+        outtakeSlides.runOuttakeMotorToLevel();
     }
 
     public void initSubsystems() {
@@ -243,25 +248,24 @@ public class TestOuttake extends LinearOpMode {
         telemetry.addLine("DriveTrain Initialized");
         telemetry.update();
 
-        intakeArm = new IntakeArm(hardwareMap);
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        /*intakeArm = new IntakeArm(hardwareMap);
         telemetry.addLine("IntakeArm Initialized");
         telemetry.update();
 
         intakeSlides = new IntakeSlides(hardwareMap);
-        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
+        //intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         telemetry.addLine("IntakeSlides Initialized");
-        telemetry.update();
+        telemetry.update();*/
 
         outtakeArm = new OuttakeArm(hardwareMap);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+        //outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeArm.openGrip();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
         outtakeSlides = new OuttakeSlides(hardwareMap);
-        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+        //outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        //outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
@@ -291,6 +295,7 @@ public class TestOuttake extends LinearOpMode {
         telemetry.addLine("+++++++++++++++++++++++");
         telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
         telemetry.update();
+
     }
 
     /**

@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.apache.commons.math3.analysis.integration.IterativeLegendreGaussIntegrator;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
@@ -149,7 +151,7 @@ public class GamepadController {
     }
 
     public void runIntakeArm(){
-        if (gp1GetStart() && gp1GetRightBumper()) {
+        if (gp1GetStart() && gp1GetRightBumperPress()) {
             intakeArm.autoIntakeCloseMode = !intakeArm.autoIntakeCloseMode;
         }
 
@@ -159,7 +161,7 @@ public class GamepadController {
             intakeArm.closeGrip();
         }
 
-        if (gp1GetRightBumper() && intakeArm.armState != IntakeArm.ARM_STATE.TRANSFER &&
+        if (gp1GetRightBumperPress() && intakeArm.armState != IntakeArm.ARM_STATE.TRANSFER &&
                 intakeArm.armState != IntakeArm.ARM_STATE.INIT) {
             if(intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
@@ -181,7 +183,7 @@ public class GamepadController {
             intakeArm.openGrip();
         }
 
-        if (gp1GetLeftBumper() && intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
+        if (gp1GetLeftBumperPress() && intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
             runTransferSequence();
         }
 
@@ -217,8 +219,7 @@ public class GamepadController {
 
         if(gp2GetButtonYPress()){
             if(gp2GetLeftBumperPress()) {
-                runTransferSequence();
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
             }
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
@@ -226,7 +227,7 @@ public class GamepadController {
 
         if(!gp2GetStart() && gp2GetButtonBPress()){
             if(gp2GetLeftBumperPress()) {
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_RIGHT);
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
             }
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.HIGH_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
@@ -237,7 +238,7 @@ public class GamepadController {
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<0.05) {
+        if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<-0.05) {
             outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(-gp2GetLeftStickY()));
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
@@ -291,6 +292,7 @@ public class GamepadController {
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeArm.moveWristUp();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
+        intakeSlides.runIntakeMotorToLevel();
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         if(!isOuttakeAtTransfer()){
             moveOuttakeToTransfer();
@@ -301,10 +303,17 @@ public class GamepadController {
         }
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
+            while(transferTimer.time() < 500) {
+                runDriveControl_byRRDriveModes();
+            }
             intakeArm.openGrip();
+        } else {
+            //Outtake has some error
+            intakeArm.moveArm(IntakeArm.ARM_STATE.LOW_JUNCTION);
+            return;
         }
         transferTimer.reset();
-        while(!(outtakeArm.senseOuttakeCone() || transferTimer.time() > 500)){
+        while(!outtakeArm.senseOuttakeCone() && transferTimer.time() < 1000){
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.closeGrip();
@@ -316,6 +325,7 @@ public class GamepadController {
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
+        outtakeSlides.runOuttakeMotorToLevel();
     }
 
     public void recordAndReplay(){

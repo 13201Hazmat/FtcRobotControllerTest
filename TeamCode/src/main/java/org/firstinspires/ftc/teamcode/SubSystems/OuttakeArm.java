@@ -147,7 +147,7 @@ public class OuttakeArm {
                 outtakeGripDistance = ((DistanceSensor) outtakeGripColor).getDistance(DistanceUnit.MM);
             }
 
-            if (outtakeGripDistance < 20) {
+            if (outtakeGripDistance < 25) {
                 outtakeConeSensed = true;
             } else {
                 outtakeConeSensed = false;
@@ -162,27 +162,9 @@ public class OuttakeArm {
     }
 
     public double outtakeWristDistance;
-    /**
-     * Returns the color sensor state back, and sets specific values to check if the sensor
-     * is detecting anything
-     * @return
-     */
-    public WRIST_STATE getOuttakeWristColorDistanceSensorState(){
-        if (outtakeWristColor instanceof DistanceSensor) {
-            outtakeWristDistance =  ((DistanceSensor) outtakeWristColor).getDistance(DistanceUnit.CM);
-        }
 
-        if (outtakeWristDistance < 4) {
-            wristState = WRIST_STATE.WRIST_DROP;
-        } else {
-            wristState = WRIST_STATE.WRIST_TRANSFER;
-        }
-        return wristState;
-    }
 
-    public double getOuttakeWristColorSensorDistance(){
-        return outtakeWristDistance;
-    }
+
 
     //TODO:How to detect if a cone is in transfer pos with only a color sensor on grip
     public OUTTAKE_GRIP_COLOR_SENSOR_STATE getOuttakeGripColorSensorState(){

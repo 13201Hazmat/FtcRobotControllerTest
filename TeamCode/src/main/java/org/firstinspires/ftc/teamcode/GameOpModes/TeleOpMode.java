@@ -106,24 +106,18 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.update();
 
         intakeArm = new IntakeArm(hardwareMap);
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         telemetry.addLine("IntakeArm Initialized");
         telemetry.update();
 
         intakeSlides = new IntakeSlides(hardwareMap);
-        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         telemetry.addLine("IntakeSlides Initialized");
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-        outtakeArm.openGrip();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
         outtakeSlides = new OuttakeSlides(hardwareMap);
-        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
