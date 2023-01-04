@@ -139,7 +139,7 @@ public class GamepadController {
 
     public void runIntakeSlides(){
         if (!gp1GetStart() && gp1GetB()) {
-            intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger())); //TODO : Should it be cubic
+            intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
         } else if (gp1GetX()) {
             intakeSlides.modifyIntakeSlidesLength(-0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
         } else {
@@ -157,7 +157,6 @@ public class GamepadController {
 
         if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone() &&
                 outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN) {
-            //TODO : check if it works
             intakeArm.closeGrip();
         }
 
@@ -201,8 +200,6 @@ public class GamepadController {
         }
 
     }
-
-    //TODO : Change all outtake positions to presets to enable record and replay
 
     public void runOuttakeSlides(){
         if(gp2GetButtonXPress()){
@@ -277,7 +274,6 @@ public class GamepadController {
             }
         }
     }
-    public boolean outtakeTransferReady = false;
 
     public void moveOuttakeToTransfer(){
         outtakeArm.closeGrip();
@@ -288,7 +284,6 @@ public class GamepadController {
     }
 
     public void runTransferSequence(){
-        //TODO : Convert to State Machine
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeArm.moveWristUp();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);

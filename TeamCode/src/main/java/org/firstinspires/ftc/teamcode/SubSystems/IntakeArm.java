@@ -82,8 +82,8 @@ public class IntakeArm {
         FALLEN_CONE(0.5,0.5);
 
 
-        private double leftWristPosition;
-        private double rightWristPosition;
+        private final double leftWristPosition;
+        private final double rightWristPosition;
         WRIST_STATE(double leftWristPosition, double rightWristPosition) {
             this.leftWristPosition = leftWristPosition;
             this.rightWristPosition = rightWristPosition;
