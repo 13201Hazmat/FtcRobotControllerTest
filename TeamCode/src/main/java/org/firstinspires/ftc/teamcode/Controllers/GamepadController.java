@@ -238,7 +238,7 @@ public class GamepadController {
         }
 
         if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<0.05) {
-            outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(gp2GetLeftStickY()));
+            outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(-gp2GetLeftStickY()));
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
