@@ -113,12 +113,13 @@ public class TestIntake extends LinearOpMode {
     }
 
     public void runIntakeArm(){
+
         if (gamepadController.gp1GetStart() && gamepadController.gp1GetRightBumper()) {
             intakeArm.autoIntakeCloseMode = !intakeArm.autoIntakeCloseMode;
         }
 
-        if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone() &&
-                outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN) {
+        if (intakeArm.autoIntakeCloseMode && intakeArm.senseIntakeCone() /*&&
+                outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN*/) {
             //TODO : check if it works
             intakeArm.closeGrip();
         }
@@ -127,7 +128,7 @@ public class TestIntake extends LinearOpMode {
                 intakeArm.armState != IntakeArm.ARM_STATE.INIT) {
             if(intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
-            } else if(outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN){
+            } else /*if(outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN)*/{
                 intakeArm.closeGrip();
                 if(intakeArm.armState == IntakeArm.ARM_STATE.PICKUP_FALLEN_CONE){
                     intakeArm.moveWrist(IntakeArm.ARM_STATE.AUTO_CONE_5);

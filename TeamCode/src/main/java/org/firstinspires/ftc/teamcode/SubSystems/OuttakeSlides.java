@@ -49,8 +49,8 @@ public class OuttakeSlides {
         TRANSFER (0),
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (2880),//350:1150 2880:312
-        HIGH_JUNCTION (4250),//630:1150 4250:312
-        MAX_EXTENDED(4350),//650:1159 4350:312
+        HIGH_JUNCTION (3500),//630:1150 4250:312 **Old: 4250
+        MAX_EXTENDED(3500),//650:1159 4350:312 **Old : 4350
         RANDOM(0);
 
         private final double motorPosition;
@@ -228,9 +228,9 @@ public class OuttakeSlides {
     }
 
     public enum TURRET_STATE{
-        MAX_LEFT (0.35),
-        CENTER(0.45),
-        MAX_RIGHT (0.55),
+        MAX_LEFT (0.48),
+        CENTER(0.56),
+        MAX_RIGHT (0.66),
         INIT(0.1),
         RANDOM (0.45),
         AUTO_LEFT(0.40),
@@ -257,7 +257,7 @@ public class OuttakeSlides {
     }
 
     public void moveTurretDelta(double stepSizeFactor){
-        double deltaTurret = outtakeTurretServo.getPosition() + (stepSizeFactor /90 );
+        double deltaTurret = outtakeTurretServo.getPosition() + (stepSizeFactor /250 );
         if(deltaTurret > TURRET_STATE.MAX_RIGHT.turretPosition){
             deltaTurret = TURRET_STATE.MAX_RIGHT.turretPosition;
         }

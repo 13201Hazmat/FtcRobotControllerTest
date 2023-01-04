@@ -64,7 +64,6 @@ public class IntakeArm {
         }
     }
     public ARM_STATE armState = ARM_STATE.TRANSFER;
-    public ARM_STATE targetArmState;
     public double ARM_DELTA = 0.01;
 
     //Hand - wrist, grip state declaration
@@ -134,7 +133,7 @@ public class IntakeArm {
         moveWristUp();
         intakeArmServoLeft.setPosition(toArmState.leftArmPosition);
         intakeArmServoRight.setPosition(toArmState.rightArmPosition);
-        targetArmState = toArmState;
+        armState = toArmState;
         moveWrist(toArmState);
     }
 
