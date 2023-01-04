@@ -134,8 +134,8 @@ public class TestOuttake extends LinearOpMode {
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(gamepadController.gp2GetLeftStickY()>0.05|| gamepadController.gp2GetLeftStickY()<-0.05) {
-            outtakeSlides.modifyOuttakeSlidesLength(gamepadController.gp2TurboMode(gamepadController.gp2GetLeftStickY()));
+        if(gamepadController.gp2GetLeftStickY()>0.05|| gamepadController.gp2GetLeftStickY()<0.05) {
+            outtakeSlides.modifyOuttakeSlidesLength(gamepadController.gp2TurboMode(-gamepadController.gp2GetLeftStickY()));
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
