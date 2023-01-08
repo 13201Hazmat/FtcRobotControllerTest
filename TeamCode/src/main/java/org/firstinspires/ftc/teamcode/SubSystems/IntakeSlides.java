@@ -162,7 +162,7 @@ public class IntakeSlides {
         turnIntakeBrakeModeOn();
         double intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
         if ((power > 0.01 && intakeMotorCurrentPosition < INTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition) ||
-            (power < 0.01 && intakeMotorCurrentPosition > INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition )) {
+            (power < -0.01 && intakeMotorCurrentPosition > INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition )) {
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
         } else {

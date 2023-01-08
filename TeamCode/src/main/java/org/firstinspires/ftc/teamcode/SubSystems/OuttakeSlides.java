@@ -104,7 +104,7 @@ public class OuttakeSlides {
         outtakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotor.setPositionPIDFCoefficients(5.0);
         outtakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        turnOuttakeBrakeModeOff();
+        turnOuttakeBrakeModeOn();
         //manualResetOuttakeMotor();
     }
 
@@ -114,9 +114,9 @@ public class OuttakeSlides {
     }
 
     //Turns on the brake for Outtake motor
-    public void turnOuttakeBrakeModeOff(){
+    /*public void turnOuttakeBrakeModeOff(){
         outtakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-    }
+    }*/
 
     //Sets outtake slides to Transfer position
     public void moveOuttakeSlides(OUTTAKE_SLIDE_STATE toOuttakeMotorState){
@@ -183,7 +183,7 @@ public class OuttakeSlides {
     public void runOuttakeMotorToLevel(){
         double power = 0;
         if (outtakeSlidesState == OUTTAKE_SLIDE_STATE.MIN_RETRACTED) {
-            turnOuttakeBrakeModeOff();
+            turnOuttakeBrakeModeOn();
         } else {
             turnOuttakeBrakeModeOn();
         }
@@ -224,7 +224,7 @@ public class OuttakeSlides {
             runOuttakeMotorToLevel();
         //}
         resetOuttakeMotorMode();
-        turnOuttakeBrakeModeOff();
+        turnOuttakeBrakeModeOn();
         outtakeSlidesState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
     }
 
