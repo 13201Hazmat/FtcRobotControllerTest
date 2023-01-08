@@ -75,8 +75,6 @@ public class IntakeSlides {
     }
     public IntakeSlides.INTAKE_MOVEMENT_DIRECTION intakeMovementDirection = IntakeSlides.INTAKE_MOVEMENT_DIRECTION.RETRACT;
 
-    public double deltaCount = 0; //Need tested value
-
     public boolean runIntakeMotorToLevelState = false;
 
     //Constructor`
@@ -182,6 +180,7 @@ public class IntakeSlides {
         } else {
             power = INTAKE_MOTOR_POWER_TELEOP;
         }
+        turnIntakeBrakeModeOn();
         intakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         if (runIntakeMotorToLevelState){
@@ -205,20 +204,22 @@ public class IntakeSlides {
 
     //Resets the arm
     public void resetIntakeMotorMode(){
-        DcMotorEx.RunMode runModeLeft = intakeMotorLeft.getMode();
-        DcMotorEx.RunMode runModeRight = intakeMotorRight.getMode();
         intakeMotorLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotorLeft.setMode(runModeLeft);
-        intakeMotorRight.setMode(runModeRight);
+        intakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intakeMotorLeft.setPositionPIDFCoefficients(5.0);
+        intakeMotorRight.setPositionPIDFCoefficients(5.0);
+        turnIntakeBrakeModeOn();
+
     }
 
     public void manualResetIntakeMotor(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (intakeTouch.getState() && timer.time() < 2000) {
+        while (!intakeTouch.getState() && timer.time() < 2000) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
-            intakeMotorRight.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
+            intakeMotorRight.setTargetPosition((int) (intakeMotorRight.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             runIntakeMotorToLevelState = true;
             runIntakeMotorToLevel();
         }

@@ -19,7 +19,7 @@ Control Hub I2C BUS 1        intakeGripColor = hardwareMap.get(NormalizedColorSe
 Intake Slides:
 Control Hub Motor Port 1        intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
 Control Hub Motor Port 0        intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
-//Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+Control Hub Digital Port 2        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
 //Expansion Hub I2C BUS 1        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
 
 OuttakeArm :

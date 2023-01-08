@@ -282,6 +282,7 @@ public class TestIntake extends LinearOpMode {
         telemetry.addLine("+++++++++++++++++++++++");
         telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
         telemetry.update();
+        printDebugMessages();
     }
 
     /**
@@ -313,6 +314,9 @@ public class TestIntake extends LinearOpMode {
                 telemetry.addData("Intake Slides Right Power", intakeSlides.intakeMotorRight.getPower());
                 telemetry.addData("Intake Slides Left is busy", intakeSlides.intakeMotorLeft.isBusy());
                 telemetry.addData("Intake Slides Right is busy", intakeSlides.intakeMotorRight.isBusy());
+                telemetry.addData("Intake Slides Left BRAKE MODE", intakeSlides.intakeMotorLeft.getZeroPowerBehavior());
+                telemetry.addData("Intake Slides Right BRAKE MODE", intakeSlides.intakeMotorRight.getZeroPowerBehavior());
+
                 telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
             }
             telemetry.addLine("=============");
