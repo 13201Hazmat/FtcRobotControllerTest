@@ -291,5 +291,9 @@ public class IntakeArm {
         return (intakeArmServoLeft.getPosition() == ARM_STATE.TRANSFER.leftArmPosition);
     }
 
+    public boolean isIntakeInit() {
+        return (intakeArmServoLeft.getPosition() == ARM_STATE.INIT.leftArmPosition);
+    }
+
 
 }

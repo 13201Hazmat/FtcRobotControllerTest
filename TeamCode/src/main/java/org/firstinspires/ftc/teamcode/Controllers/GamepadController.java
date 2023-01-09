@@ -262,15 +262,22 @@ public class GamepadController {
         }
     }
 
+    public boolean moveOuttakeToTransferFlag = false;
+    public ElapsedTime outtakeGripTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void runOuttakeArm(){
-        //TODO
         if (outtakeArm.wristState == OuttakeArm.WRIST_STATE.WRIST_DROP) {
             if (gp2GetRightBumperPress()) {
                 if (outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED) {
                     outtakeArm.openGrip();
+                    outtakeGripTimer.reset();
+                    moveOuttakeToTransferFlag = true;
                 } else {
                     moveOuttakeToTransfer();
                 }
+            }
+            if (moveOuttakeToTransferFlag && outtakeGripTimer.time() > 300) {
+                moveOuttakeToTransfer();
+                moveOuttakeToTransferFlag = false;
             }
         }
     }
@@ -298,7 +305,7 @@ public class GamepadController {
         }
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
-            while(transferTimer.time() < 500) {
+            while(transferTimer.time() < 1000) {
                 runDriveControl_byRRDriveModes();
             }
             intakeArm.openGrip();
@@ -314,7 +321,7 @@ public class GamepadController {
         outtakeArm.closeGrip();
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         transferTimer.reset();
-        while(transferTimer.time() < 700 && !intakeArm.isIntakeArmInTransfer()){
+        while(transferTimer.time() < 700 && !intakeArm.isIntakeInit()){
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);

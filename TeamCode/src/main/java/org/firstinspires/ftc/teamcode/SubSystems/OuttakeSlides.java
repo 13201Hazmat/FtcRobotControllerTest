@@ -36,8 +36,8 @@ public class OuttakeSlides {
     //Initialization of outtakemotor
     public DcMotorEx outtakeMotor;
 
-    //Outtake Motor : 5203 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 8mm REX Shaft, 435 RPM, 3.3 - 5V Encoder)
-    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 145.6;//384.5;
+    //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
+    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 384.5;
 
     public DigitalChannel outtakeTouch;  // Hardware Device Object
 
@@ -48,9 +48,9 @@ public class OuttakeSlides {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
         LOW_JUNCTION (0),
-        MEDIUM_JUNCTION (2880),//350:1150 2880:312
-        HIGH_JUNCTION (4000),//630:1150 4250:312 **Old: 4250
-        MAX_EXTENDED(4000),//650:1159 4350:312 **Old : 4350
+        MEDIUM_JUNCTION (530),
+        HIGH_JUNCTION (1440),
+        MAX_EXTENDED(1650),
         RANDOM(0);
 
         private final double motorPosition;
@@ -64,8 +64,8 @@ public class OuttakeSlides {
     public double outtakeMotorCurrentPosition = outtakeSlidesState.motorPosition;
     public double outtakeMotorNewPosition = outtakeSlidesState.motorPosition;
 
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 200;//200;//200 //need tested values
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 50;//200;//200 //need tested values
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 100;
 
     //Different constants of arm speed
     public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1;
@@ -104,7 +104,7 @@ public class OuttakeSlides {
         outtakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotor.setPositionPIDFCoefficients(5.0);
         outtakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        turnOuttakeBrakeModeOn();
+        turnOuttakeBrakeModeOff();
         //manualResetOuttakeMotor();
     }
 
@@ -114,9 +114,9 @@ public class OuttakeSlides {
     }
 
     //Turns on the brake for Outtake motor
-    /*public void turnOuttakeBrakeModeOff(){
+    public void turnOuttakeBrakeModeOff(){
         outtakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-    }*/
+    }
 
     //Sets outtake slides to Transfer position
     public void moveOuttakeSlides(OUTTAKE_SLIDE_STATE toOuttakeMotorState){
@@ -183,7 +183,7 @@ public class OuttakeSlides {
     public void runOuttakeMotorToLevel(){
         double power = 0;
         if (outtakeSlidesState == OUTTAKE_SLIDE_STATE.MIN_RETRACTED) {
-            turnOuttakeBrakeModeOn();
+            turnOuttakeBrakeModeOff();
         } else {
             turnOuttakeBrakeModeOn();
         }
@@ -224,18 +224,18 @@ public class OuttakeSlides {
             runOuttakeMotorToLevel();
         //}
         resetOuttakeMotorMode();
-        turnOuttakeBrakeModeOn();
+        turnOuttakeBrakeModeOff();
         outtakeSlidesState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
     }
 
     public enum TURRET_STATE{
-        MAX_LEFT (0.46),
-        CENTER(0.56),
-        MAX_RIGHT (0.66),
-        INIT(0.1),
-        RANDOM (0.45),
-        AUTO_LEFT(0.51),
-        AUTO_RIGHT(0.61);
+        MAX_LEFT (0.19), //0.20
+        CENTER(0.32), //0.35
+        MAX_RIGHT (0.45), //0.66
+        INIT(0.32), //0.5
+        RANDOM (0.25), //0.45
+        AUTO_LEFT(0.26), //0.31
+        AUTO_RIGHT(0.38); //0.41
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

@@ -5,7 +5,6 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -217,7 +216,7 @@ public class IntakeSlides {
     public void manualResetIntakeMotor(){
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
-        while (!intakeTouch.getState() && timer.time() < 2000) {
+        while (intakeTouch.getState() && timer.time() < 2000) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             intakeMotorRight.setTargetPosition((int) (intakeMotorRight.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             runIntakeMotorToLevelState = true;
