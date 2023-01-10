@@ -274,8 +274,8 @@ public class OuttakeSlides {
         turretState = TURRET_STATE.RANDOM;
     }
     public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE outttakeSlideState) {
-        return ((outtakeMotor.getCurrentPosition() < outttakeSlideState.motorPosition + 10) &&
-                ((outtakeMotor).getCurrentPosition()  > outttakeSlideState.motorPosition - 10));
+        return ((outtakeMotor.getCurrentPosition() < outttakeSlideState.motorPosition + 30) &&
+                ((outtakeMotor).getCurrentPosition()  > outttakeSlideState.motorPosition - 30));
     }
 
 }

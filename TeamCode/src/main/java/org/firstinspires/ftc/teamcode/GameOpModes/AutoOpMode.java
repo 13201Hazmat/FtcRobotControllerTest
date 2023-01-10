@@ -194,6 +194,7 @@ public class AutoOpMode extends LinearOpMode{
         }
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret
+
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
                 .addTemporalMarker(0.1 ,() -> {
                     outtakeSlides.moveTurret(pickAndDropTurretState);
@@ -203,6 +204,8 @@ public class AutoOpMode extends LinearOpMode{
                 .lineToLinearHeading(pickAndDropPose)
                 .resetVelConstraint()
                 .build();
+
+
     }
 
     //Build parking trajectory based on target detected by vision
@@ -238,9 +241,12 @@ public class AutoOpMode extends LinearOpMode{
                 break;
         }
 
+
         trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
                 .lineToLinearHeading(parkPose)
                 .build();
+
+
     }
 
     //Run Auto trajectory and parking trajectory
@@ -259,18 +265,22 @@ public class AutoOpMode extends LinearOpMode{
         telemetry.update();
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret.
+        /*
         if(opModeIsActive() && !isStopRequested()) {
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
+         */
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             autoPickAndDropStateMachine();
         }
 
+        /*
         if(opModeIsActive() && !isStopRequested()) {
             driveTrain.followTrajectorySequence(trajectoryParking);
         }
+         */
 
         ElapsedTime exitTimer = new ElapsedTime(MILLISECONDS);
 
@@ -285,7 +295,7 @@ public class AutoOpMode extends LinearOpMode{
         }
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-        driveTrain.followTrajectorySequence(trajectoryParking);
+        //driveTrain.followTrajectorySequence(trajectoryParking);
 
         safeWait(1000);
     }

@@ -45,7 +45,8 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
         WRIST_TRANSFER(0.33), //TODO test real, 0.36
-        WRIST_DROP(0.56); //0.56 TODO test real
+        WRIST_DROP(0.56), //0.56 TODO test real
+        WRIST_LOW_JUNCTION(0.34); //TODO test real
 
         private double wristPosition;
 
@@ -57,6 +58,7 @@ public class OuttakeArm {
         }
     }
     public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
+    public double OUTTAKE_WRIST_DELTA = 0.02;
 
     //Initialization of GRIP_STATE
     public enum GRIP_STATE { //state of the Hand Grip
@@ -178,13 +180,23 @@ public class OuttakeArm {
                 outtakeWristDistance = ((DistanceSensor) outtakeWristColor).getDistance(DistanceUnit.MM);
             }
 
-            if (outtakeWristDistance < 50) {
+            if (outtakeWristDistance < 60) {
                 junctionSensed = true;
             } else {
                 junctionSensed = false;
             }
         }
         return junctionSensed;
+    }
+
+    public void moveOuttakeWristUp() {
+        //TODO : Put Limits
+        outtakeWristServo.setPosition(outtakeWristServo.getPosition() + OUTTAKE_WRIST_DELTA);
+    }
+
+    public void moveOuttakeWristDown() {
+        //TODO : Put Limits
+        outtakeWristServo.setPosition(outtakeWristServo.getPosition() - OUTTAKE_WRIST_DELTA);
     }
 
 }

@@ -37,10 +37,11 @@ public class Lights {
 
     public enum REV_BLINKIN_PATTERN {
         DEMO(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE),
-        INTAKE_OPEN_GRIP(RevBlinkinLedDriver.BlinkinPattern.BLACK),
+        NONE(RevBlinkinLedDriver.BlinkinPattern.BLACK),
         TRANSFER_PROGRESS(RevBlinkinLedDriver.BlinkinPattern.RED),
+        OUTTAKE_JUNCTION_NOT_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.YELLOW),
         OUTTAKE_JUNCTION_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.GREEN),
-        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED);
+        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE);
 
         private RevBlinkinLedDriver.BlinkinPattern blinkinPattern;
         private REV_BLINKIN_PATTERN(RevBlinkinLedDriver.BlinkinPattern blinkinPattern) {
