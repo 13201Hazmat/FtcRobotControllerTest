@@ -270,6 +270,7 @@ public class AutoOpMode extends LinearOpMode{
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
          */
+        outtakeSlides.moveTurret(pickAndDropTurretState);
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
@@ -341,7 +342,7 @@ public class AutoOpMode extends LinearOpMode{
 
                 case I3:
                     intakeArm.closeGrip();
-                    intakeArm.moveWristUp();
+                    intakeArm.moveWristUp(); // TODO : TEST WITH MOVE TO LOW JUNCTION
                     stackConeCounter = (stackConeCounter+1 < stackConeCount) ? stackConeCounter++ : stackConeCounter;
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
                     intakeSlides.runIntakeMotorToLevel();

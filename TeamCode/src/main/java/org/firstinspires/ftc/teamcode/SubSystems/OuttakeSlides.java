@@ -64,8 +64,8 @@ public class OuttakeSlides {
     public double outtakeMotorCurrentPosition = outtakeSlidesState.motorPosition;
     public double outtakeMotorNewPosition = outtakeSlidesState.motorPosition;
 
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 50;//200;//200 //need tested values
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 100;
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 100;//200;//200 //need tested values
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;
 
     //Different constants of arm speed
     public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1;
@@ -229,13 +229,13 @@ public class OuttakeSlides {
     }
 
     public enum TURRET_STATE{
-        MAX_LEFT (0.19), //0.20
-        CENTER(0.32), //0.35
+        MAX_LEFT (0.21), //0.20
+        CENTER(0.33), //0.35
         MAX_RIGHT (0.45), //0.66
-        INIT(0.32), //0.5
-        RANDOM (0.25), //0.45
+        INIT(0.33), //0.5
+        RANDOM (0.33), //0.45
         AUTO_LEFT(0.26), //0.31
-        AUTO_RIGHT(0.38); //0.41
+        AUTO_RIGHT(0.40); //0.41
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

@@ -46,7 +46,9 @@ public class OuttakeArm {
     public enum WRIST_STATE {
         WRIST_TRANSFER(0.33), //TODO test real, 0.36
         WRIST_DROP(0.56), //0.56 TODO test real
-        WRIST_LOW_JUNCTION(0.34); //TODO test real
+        WRIST_LOW_JUNCTION(0.34), //TODO test real
+        WRIST_MIN(0.2),
+        WRIST_MAX(0.76);
 
         private double wristPosition;
 
@@ -190,13 +192,19 @@ public class OuttakeArm {
     }
 
     public void moveOuttakeWristUp() {
-        //TODO : Put Limits
-        outtakeWristServo.setPosition(outtakeWristServo.getPosition() + OUTTAKE_WRIST_DELTA);
+        if (outtakeWristServo.getPosition() <= wristState.WRIST_MAX.getWristPosition()) {
+            outtakeWristServo.setPosition(outtakeWristServo.getPosition() + OUTTAKE_WRIST_DELTA);
+        } else {
+            outtakeWristServo.setPosition(wristState.WRIST_MAX.getWristPosition());
+        }
     }
 
     public void moveOuttakeWristDown() {
-        //TODO : Put Limits
-        outtakeWristServo.setPosition(outtakeWristServo.getPosition() - OUTTAKE_WRIST_DELTA);
+        if (outtakeWristServo.getPosition() >= wristState.WRIST_MIN.getWristPosition()) {
+            outtakeWristServo.setPosition(outtakeWristServo.getPosition() - OUTTAKE_WRIST_DELTA);
+        } else {
+            outtakeWristServo.setPosition(wristState.WRIST_MIN.getWristPosition());
+        }
     }
 
 }
