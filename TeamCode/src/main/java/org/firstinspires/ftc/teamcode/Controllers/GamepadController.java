@@ -141,9 +141,9 @@ public class GamepadController {
 
     public void runIntakeSlides(){
         if (!gp1GetStart() && gp1GetB()) {
-            intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
+            intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 1.0 * gp1GetLeftTrigger()));
         } else if (gp1GetX()) {
-            intakeSlides.modifyIntakeSlidesLength(-0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
+            intakeSlides.modifyIntakeSlidesLength(-0.33 * (1.0 + 1.0 * gp1GetLeftTrigger()));
         } else {
             intakeSlides.modifyIntakeSlidesLength(0);
         }
@@ -175,8 +175,12 @@ public class GamepadController {
             }
         }
 
-        if (!gp1GetStart() && gp1GetDpad_up()){
+        if (!gp1GetStart() && gp1GetDpad_upPress()){
             intakeArm.moveArm(IntakeArm.ARM_STATE.LOW_JUNCTION);
+        }
+
+        if(!gp1GetStart() && gp1GetDpad_upPress() && intakeArm.armState == IntakeArm.ARM_STATE.LOW_JUNCTION){
+            intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         }
 
         if (gp1GetStart() && gp1GetDpad_up()){
@@ -216,50 +220,37 @@ public class GamepadController {
     }
 
     public void runOuttakeSlides(){
-        if(!gp2GetLeftBumper() && gp2GetButtonXPress()){
-            /*if(gp2GetLeftBumperPress()){
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
-            }*/
+        if(!gp2GetLeftBumper() && outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED && gp2GetButtonXPress()){
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.LOW_JUNCTION);
             outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_LOW_JUNCTION);
         }
 
         if(gp2GetLeftBumper() && gp2GetButtonXPress()) {
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
         }
 
-        //TODO : Test with no color sensor
-        if (gp2GetStart() && (-gp2GetLeftStickY() < -0.5)) {
-            outtakeSlides.manualResetOuttakeMotor();
-        }
-
-        if(gp2GetButtonYPress()){
-            /*if(gp2GetLeftBumperPress()) {
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
-            }*/
+        if(outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED && gp2GetButtonYPress() ){
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(!gp2GetStart() && !gp2GetLeftBumper() && gp2GetButtonBPress()){
-            /*if(gp2GetLeftBumperPress()) {
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
-            }*/
+        if(!gp2GetStart() && !gp2GetLeftBumper() &&
+                outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED && gp2GetButtonBPress()){
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.HIGH_JUNCTION);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(!gp2GetStart() && gp2GetLeftBumper() && gp2GetButtonBPress()){
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
+        if(!gp2GetStart() && gp2GetLeftBumper() &&
+                outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED && gp2GetButtonBPress()){
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
         }
 
-        if(!gp2GetStart() && !gp2GetLeftBumper() && gp2GetButtonAPress()){
-            //outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        /*if(!gp2GetStart() && !gp2GetLeftBumper() && gp2GetButtonAPress()){
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        }
+        }*/
 
-        if(!gp2GetStart() && gp2GetLeftBumper() && gp2GetButtonAPress()){
+        if(!gp2GetStart() && gp2GetButtonAPress()){
             outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
         }
 
@@ -274,7 +265,13 @@ public class GamepadController {
 
         //outtakeSlides.moveTurretDelta(gp2TurboMode(gp2GetRightStickX())); // Cubic
 
-        outtakeSlides.moveTurretDelta(gp2GetRightStickX() * 0.33 *(1.0 + 2.0 * gp2GetRightTrigger())); // Linear
+        outtakeSlides.moveTurretDelta(-gp2GetRightStickX() * 0.5 *(1.0 + 1.0 * gp2GetRightTrigger())); // Linear
+
+        //TODO : Test with no color sensor
+        if (gp2GetStart() && (-gp2GetLeftStickY() < -0.5)) {
+            outtakeSlides.manualResetOuttakeMotor();
+        }
+
 
         /*
         if (gp1GetButtonAPress()) {
@@ -296,7 +293,7 @@ public class GamepadController {
     public boolean moveOuttakeToTransferFlag = false;
     public ElapsedTime outtakeGripTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void runOuttakeArm(){
-        if (outtakeArm.wristState == OuttakeArm.WRIST_STATE.WRIST_DROP) {
+        if (outtakeArm.wristState != OuttakeArm.WRIST_STATE.WRIST_TRANSFER ) {
             if (gp2GetRightBumperPress()) {
                 if (outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED) {
                     outtakeArm.openGrip();
@@ -330,20 +327,34 @@ public class GamepadController {
     }
 
     public void moveOuttakeToTransfer(){
-        outtakeArm.closeGrip();
+        //outtakeArm.closeGrip();
         outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.openGrip();
     }
 
+    boolean intakeArmNotAtPickup = false;
     public void runTransferSequence(){
+        if (intakeArm.armState != IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1){
+            intakeArmNotAtPickup = true;
+        }
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.TRANSFER_PROGRESS);
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        intakeArm.moveWristUp();
+        ElapsedTime stackTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        ElapsedTime gripTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        //intakeArm.moveWristUp();
+        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        if(intakeArmNotAtPickup){
+            stackTimer.reset();
+            while(stackTimer.time() <300){
+                runDriveControl_byRRDriveModes();
+            }
+        }
+        //TODO : Add wait if the pick up is from AUTOCONE LOCATION oR RANDOM
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         intakeSlides.runIntakeMotorToLevel();
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        //intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         if(!isOuttakeAtTransfer()){
             moveOuttakeToTransfer();
         }
@@ -353,7 +364,7 @@ public class GamepadController {
         }
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
-            while(transferTimer.time() < 1000) {
+            while(transferTimer.time() < 900) {
                 runDriveControl_byRRDriveModes();
             }
             intakeArm.openGrip();
@@ -363,7 +374,10 @@ public class GamepadController {
             return;
         }
         transferTimer.reset();
-        while(!outtakeArm.senseOuttakeCone() && transferTimer.time() < 1000){
+        while(!outtakeArm.senseOuttakeCone() && transferTimer.time() < 700){
+            runDriveControl_byRRDriveModes();
+        }
+        while(transferTimer.time() < 300){
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.closeGrip();
@@ -373,11 +387,15 @@ public class GamepadController {
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+        transferTimer.reset();
+        while(transferTimer.time() < 500){
+            runDriveControl_byRRDriveModes();
+        }
         outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
-        //outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
-        //outtakeSlides.runOuttakeMotorToLevel();
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
     }
+
+
 
     public void recordAndReplay(){
         //TODO

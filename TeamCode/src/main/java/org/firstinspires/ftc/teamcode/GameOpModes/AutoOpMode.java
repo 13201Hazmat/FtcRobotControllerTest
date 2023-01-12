@@ -342,11 +342,12 @@ public class AutoOpMode extends LinearOpMode{
 
                 case I3:
                     intakeArm.closeGrip();
-                    intakeArm.moveWristUp(); // TODO : TEST WITH MOVE TO LOW JUNCTION
+                    //intakeArm.moveWristUp(); // TODO : TEST WITH MOVE TO LOW JUNCTION
+                    intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+                    safeWait(300);
                     stackConeCounter = (stackConeCounter+1 < stackConeCount) ? stackConeCounter++ : stackConeCounter;
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
                     intakeSlides.runIntakeMotorToLevel();
-                    intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
                     intakeState = INTAKE_STATE.I4;
                     break;
 

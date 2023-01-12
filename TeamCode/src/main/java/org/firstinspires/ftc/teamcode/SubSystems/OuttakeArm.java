@@ -23,7 +23,8 @@ public class OuttakeArm {
 
     public enum OUTTAKE_ARM_STATE{
         TRANSFER(1.0, 0.0), //TODO test real values
-        DROP(0.4, 0.6); //TODO test real values
+        DROP(0.4, 0.6), //TODO test real values
+        LOW_JUNCTION (0.2, 0.8);
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -46,7 +47,7 @@ public class OuttakeArm {
     public enum WRIST_STATE {
         WRIST_TRANSFER(0.33), //TODO test real, 0.36
         WRIST_DROP(0.56), //0.56 TODO test real
-        WRIST_LOW_JUNCTION(0.34), //TODO test real
+        WRIST_LOW_JUNCTION(0.68), //TODO test real
         WRIST_MIN(0.2),
         WRIST_MAX(0.76);
 
@@ -165,7 +166,7 @@ public class OuttakeArm {
             moveWrist(WRIST_STATE.WRIST_TRANSFER);
             openGrip();
         } else {
-            moveWrist(WRIST_STATE.WRIST_DROP);
+            //moveWrist(WRIST_STATE.WRIST_DROP);
         }
 
     }

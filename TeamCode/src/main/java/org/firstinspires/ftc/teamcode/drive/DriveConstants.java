@@ -38,9 +38,9 @@ public class DriveConstants {
     /*public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));*
      */
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
-    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(2, 0, 0.01, 13.270676300716438);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(3.5, 0, 0.03, 12.5 ); // f = 13.525017014052797
     /*
      * These are physical constants that can be determined from your robot (including the track
      * width; it will be tune empirically later although a rough estimate is important). Users are
@@ -51,7 +51,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 12;
+    public static double TRACK_WIDTH = 14.31;//14.93;//12.25;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -72,7 +72,7 @@ public class DriveConstants {
      */
     /*
      * Note from LearnRoadRunner.com:
-     * The velocity and acceleration constraints were calculated based on the following equation:
+     * The velocity and acceleration constraints were calculated based xon the following equation:
      * ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85
      * Resulting in 52.48291908330528 in/s.
      * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
@@ -91,10 +91,10 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 0.9 * 62.17967076779256;
-    public static double MAX_ACCEL = 0.9 * 62.17967076779256;
-    public static double MAX_ANG_VEL = 0.9* Math.toRadians(214.78926857142858);
-    public static double MAX_ANG_ACCEL = 0.9* Math.toRadians(214.78926857142858);
+    public static double MAX_VEL =  0.9*61.181349488079576;
+    public static double MAX_ACCEL =  0.9*61.181349488079576;
+    public static double MAX_ANG_VEL = 0.9*Math.toRadians(271.581981778047);
+    public static double MAX_ANG_ACCEL = 0.9*Math.toRadians(271.581981778047);
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

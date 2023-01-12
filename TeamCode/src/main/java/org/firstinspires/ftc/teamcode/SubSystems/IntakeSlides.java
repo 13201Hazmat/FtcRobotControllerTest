@@ -209,12 +209,14 @@ public class IntakeSlides {
         intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intakeMotorLeft.setPositionPIDFCoefficients(5.0);
         intakeMotorRight.setPositionPIDFCoefficients(5.0);
+        intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
 
     }
 
     public void manualResetIntakeMotor(){
-        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         timer.reset();
         while (intakeTouch.getState() && timer.time() < 2000) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
