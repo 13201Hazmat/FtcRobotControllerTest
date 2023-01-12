@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
  *
  */
 @TeleOp(name = "TestOuttake", group = "Testing")
+@Disabled
 public class TestOuttake extends LinearOpMode {
 
     public GamepadController gamepadController;

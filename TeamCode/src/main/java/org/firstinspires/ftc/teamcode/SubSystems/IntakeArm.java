@@ -289,6 +289,11 @@ public class IntakeArm {
         return intakeGripDistance;
     }
 
+    public boolean isIntakeArmInState(ARM_STATE toArmState) {
+        return (Math.abs(intakeArmServoLeft.getPosition() - toArmState.leftArmPosition)
+                <= 0.02 * toArmState.leftArmPosition);
+    }
+    /*
     public boolean isIntakeArmInTransfer() {
         return (intakeArmServoLeft.getPosition() == ARM_STATE.TRANSFER.leftArmPosition);
     }
@@ -296,6 +301,7 @@ public class IntakeArm {
     public boolean isIntakeInit() {
         return (intakeArmServoLeft.getPosition() == ARM_STATE.INIT.leftArmPosition);
     }
+     */
 
 
 }

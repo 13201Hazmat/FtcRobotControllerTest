@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.GameOpModes.AutoOpMode;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class IntakeSlides {
@@ -67,7 +64,7 @@ public class IntakeSlides {
        //Different constants of arm speed
     public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
     public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
-    public static final double INTAKE_MOTOR_POWER_AUTO = 1.0;
+    public static final double INTAKE_MOTOR_POWER_AUTO = 0.33;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -102,7 +99,7 @@ public class IntakeSlides {
         intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
         intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
-        manualResetIntakeMotor();
+        //manualResetIntakeMotor(); TODO : CAUSING BATTERY DISCHARGE
     }
 
     //Turns on the brake for Intake motor
@@ -186,19 +183,17 @@ public class IntakeSlides {
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
             /*TODO if(!intakeMotorLeft.isBusy())*/ runIntakeMotorToLevelState = false;
-        } else{
+        } else {
             intakeMotorLeft.setPower(0.0);
             intakeMotorRight.setPower(0.0);
         }
+
         /*if ((armState == ARM_STATE.MIN_RETRACTED) && (armTouchSensor.getState())){
             manualResetArm();
         } Overheating arm? TODO */
         /*if (!intakeTouch.getState()) {
             resetIntakeMotorMode();
         }*/
-    }
-    public boolean senseIntakeSlidesMinRetracted(){
-        return intakeTouch.getState();
     }
 
     //Resets the arm
@@ -236,9 +231,9 @@ public class IntakeSlides {
     //TODO Protect intake so that it does not hit anything based on distance read by Distance Sensor
 
 
-    public boolean isIntakeSlidesInTransfer() {
-        return ((intakeMotorLeft.getCurrentPosition() < INTAKE_MOTOR_STATE.TRANSFER.motorPosition + 10) &&
-                (intakeMotorLeft.getCurrentPosition()  > INTAKE_MOTOR_STATE.TRANSFER.motorPosition - 10));
+    public boolean isIntakeSlidesInState(INTAKE_MOTOR_STATE toIntakeMotorState) {
+        return (Math.abs(intakeMotorLeft.getCurrentPosition() - toIntakeMotorState.motorPosition)
+                <= 0.02 * toIntakeMotorState.motorPosition);
     }
 }
 

@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
  *
  */
 @TeleOp(name = "TestIntake", group = "Testing")
+@Disabled
 public class TestIntake extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -204,7 +205,7 @@ public class TestIntake extends LinearOpMode {
         telemetry.update();
         intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
         transferTimer.reset();
-        while(transferTimer.time() < 2000 && !intakeArm.isIntakeArmInTransfer()){
+        while(transferTimer.time() < 2000 && !intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)){
             //gamepadController.runDriveControl_byRRDriveModes();
         }
         //outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);

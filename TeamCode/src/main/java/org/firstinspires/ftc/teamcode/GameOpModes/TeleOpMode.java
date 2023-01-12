@@ -194,9 +194,12 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.addData("Intake Wrist Right Position", "%.2f", intakeArm.intakeWristServoRight.getPosition());
             }
             telemetry.addData("Intake Grip State", intakeArm.gripState);
+
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Grip Servo Position", "%.2f", intakeArm.intakeGripServo.getPosition());
             }
+            telemetry.addData("Intake AutoClose Mode", intakeArm.autoIntakeCloseMode);
+            telemetry.addData("Intake Temp AutoClose Disable Flag", gamepadController.tempAutoCloseDisableFlag);
             telemetry.addData("Intake Grip Color Sensor", intakeArm.senseIntakeCone());
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Grip Sensor Distance", "%.2f", ((DistanceSensor)intakeArm.intakeGripColor).getDistance(DistanceUnit.MM));

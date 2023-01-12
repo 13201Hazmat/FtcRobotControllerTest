@@ -33,7 +33,8 @@ public class AutoOpMode extends LinearOpMode{
         BLUE_LEFT,
         BLUE_RIGHT,
         RED_LEFT,
-        RED_RIGHT
+        RED_RIGHT,
+        TEST_POSE
     }
     public static START_POSITION startPosition;
 
@@ -51,7 +52,7 @@ public class AutoOpMode extends LinearOpMode{
     public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.HIGH;
 
     public int dropConeCount = 0;
-    public int stackConeCount = 5;
+    public int stackConeCount = 0;
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -134,6 +135,8 @@ public class AutoOpMode extends LinearOpMode{
     Pose2d pickAndDropMediumPose;
     Pose2d pickAndDropPose;
     Pose2d parkPose;
+    double endPoseTurn;
+    double endPoseForward;
 
     OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeDropState;
 
@@ -165,8 +168,8 @@ public class AutoOpMode extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(270));
-                pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(270));
+                pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 break;
@@ -174,12 +177,28 @@ public class AutoOpMode extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
-                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
+                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(-90));
+                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(-90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 break;
+
+            case TEST_POSE:
+                initPose = new Pose2d(0, 0, Math.toRadians(180)); //Starting pose
+                midWayPose = new Pose2d(3, 0, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
+                pickAndDropHighPose = new Pose2d(4, 0, Math.toRadians(180));
+                pickAndDropMediumPose = new Pose2d(4, 0, Math.toRadians(180));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                parkPose = new Pose2d(5, 0, Math.toRadians(180));
+                endPoseForward = 1;
+                break;
         }
+
+        if (autoOption == AUTO_OPTION.ONLY_PARK) {
+            pickAndDropPose = pickAndDropMediumPose;
+        }
+
         switch (dropConePosition) {
             case MEDIUM:
                 outtakeDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION;
@@ -213,37 +232,48 @@ public class AutoOpMode extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(90)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(90)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(90)); break; // Location 3
                 }
+                endPoseTurn = 90;
+                endPoseForward = 20;
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(-90)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(-90)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(-90)); break; // Location 3
                 }
+                endPoseTurn = -90;
+                endPoseForward = 20;
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(90)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(90)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(90)); break; // Location 3
                 }
+                endPoseTurn = 90;
+                endPoseForward = 20;
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(180)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(180)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(180)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(90)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(90)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(90)); break; // Location 3
                 }
+                endPoseTurn = -90;
+                endPoseForward = 20;
+                break;
+            case TEST_POSE:
                 break;
         }
 
-
-        trajectoryParking = driveTrain.trajectorySequenceBuilder(midWayPose)
+        trajectoryParking = driveTrain.trajectorySequenceBuilder(pickAndDropPose)
                 .lineToLinearHeading(parkPose)
+                .turn(Math.toRadians(endPoseTurn))
+                .forward(endPoseForward)
                 .build();
 
 
@@ -265,23 +295,16 @@ public class AutoOpMode extends LinearOpMode{
         telemetry.update();
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret.
-        /*
+
         if(opModeIsActive() && !isStopRequested()) {
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
-         */
         outtakeSlides.moveTurret(pickAndDropTurretState);
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             autoPickAndDropStateMachine();
         }
-
-        /*
-        if(opModeIsActive() && !isStopRequested()) {
-            driveTrain.followTrajectorySequence(trajectoryParking);
-        }
-         */
 
         ElapsedTime exitTimer = new ElapsedTime(MILLISECONDS);
 
@@ -291,12 +314,15 @@ public class AutoOpMode extends LinearOpMode{
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
         outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
         while (opModeIsActive() && !isStopRequested() &&
-                exitTimer.time()<1000 && intakeArm.isIntakeArmInTransfer()) {
+                exitTimer.time()<1000 && intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)) {
            safeWait(100);
         }
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-        //driveTrain.followTrajectorySequence(trajectoryParking);
+
+        if(opModeIsActive() && !isStopRequested()) {
+            driveTrain.followTrajectorySequence(trajectoryParking);
+        }
 
         safeWait(1000);
     }
@@ -307,7 +333,7 @@ public class AutoOpMode extends LinearOpMode{
     public INTAKE_STATE intakeState = INTAKE_STATE.I0;
 
     public enum OUTTAKE_STATE{
-        O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11;
+        O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10;
     }
     public OUTTAKE_STATE outtakeState = OUTTAKE_STATE.O0;
 
@@ -318,8 +344,96 @@ public class AutoOpMode extends LinearOpMode{
 
     public void autoPickAndDropStateMachine(){
         while(opModeIsActive() && !isStopRequested() &&
-                dropConeCounter != dropConeCount &&
-                gameTimer.time() < 3000) {
+                dropConeCounter != dropConeCount /*&&
+                gameTimer.time() < 26000*/) {
+            telemetry.addLine("Beginning of While loop");
+            telemetry.addData("dropConeCounter", dropConeCounter);
+            telemetry.addData("dropConeCount", dropConeCount);
+            telemetry.addData("stackConeCounter", stackConeCounter);
+            telemetry.addData("stackConeCount", stackConeCount);
+            //safeWait( 1000); // For Testing
+
+            switch (outtakeState) {
+                case O0:
+                    outtakeState = OUTTAKE_STATE.O1;
+                    break;
+
+                case O1:
+                    outtakeArm.closeGrip();
+                    outtakeState = OUTTAKE_STATE.O2;
+                    break;
+
+                case O2:
+                    telemetry.addData("intakeArm.isIntakeArmInTransfer()",
+                            intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER));
+                    if(!intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)) {
+                        outtakeState = OUTTAKE_STATE.O3;
+                    }
+                    break;
+
+                case O3:
+                    outtakeSlides.moveOuttakeSlides(outtakeDropState);
+                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                    outtakeState = OUTTAKE_STATE.O4;
+                    break;
+
+                case O4:
+                    telemetry.addData("outtakeSlides.isOuttakeSlidesInState(outtakeDropState)", outtakeSlides.isOuttakeSlidesInState(outtakeDropState));
+                    telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP));
+                    telemetry.addData("outtakeArm.outtakeArmLeft.getPosition()", outtakeArm.outtakeArmLeft.getPosition());
+                    if (outtakeSlides.isOuttakeSlidesInState(outtakeDropState) &&
+                            outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
+                        outtakeState = OUTTAKE_STATE.O5;
+                    }
+                    break;
+
+                case O5:
+                    outtakeArm.openGrip();
+                    dropConeCount ++;
+                    outtakeGripTimer.reset();
+                    outtakeState = OUTTAKE_STATE.O6;
+                    break;
+
+                /*case O6:
+                    if (outtakeGripTimer.time() > 200) {
+                        dropConeCount ++;
+                        outtakeState = OUTTAKE_STATE.O7;
+                    }
+                    break;*/
+
+                case O6:
+                    telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
+                            !intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER));
+                    if (!intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)) {
+                        outtakeState = OUTTAKE_STATE.O7;
+                    }
+                    break;
+
+                case O7:
+                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+                    outtakeArm.openGrip();
+                    outtakeState = OUTTAKE_STATE.O8;
+
+                case O8:
+                    telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
+                    telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
+                    if(outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
+                            && outtakeArm.isOuttakeWristInState(OuttakeArm.WRIST_STATE.WRIST_TRANSFER)
+                            && outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN
+                            && outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)) {
+                        outtakeState = OUTTAKE_STATE.O9;
+                    }
+                    break;
+
+                case O9:
+                    telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
+                    if(outtakeArm.senseOuttakeCone()) {
+                        outtakeState = OUTTAKE_STATE.O1;
+                    }
+                    break;
+            }
+
             switch (intakeState) {
                 case I0:
                     if(stackConeCounter < stackConeCount) {
@@ -335,7 +449,7 @@ public class AutoOpMode extends LinearOpMode{
                     break;
 
                 case I2:
-                    if(outtakeState == OUTTAKE_STATE.O5) {
+                    if(outtakeState == OUTTAKE_STATE.O6) {
                         intakeState = INTAKE_STATE.I3;
                     }
                     break;
@@ -343,8 +457,8 @@ public class AutoOpMode extends LinearOpMode{
                 case I3:
                     intakeArm.closeGrip();
                     //intakeArm.moveWristUp(); // TODO : TEST WITH MOVE TO LOW JUNCTION
-                    intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
-                    safeWait(300);
+                    intakeArm.moveArm(IntakeArm.ARM_STATE.LOW_JUNCTION);
+                    safeWait(300); // TODO : TEST WITH MOVE TO LOW JUNCTION
                     stackConeCounter = (stackConeCounter+1 < stackConeCount) ? stackConeCounter++ : stackConeCounter;
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
                     intakeSlides.runIntakeMotorToLevel();
@@ -363,9 +477,11 @@ public class AutoOpMode extends LinearOpMode{
                     break;
 
                 case I6:
-                    if(intakeArm.isIntakeArmInTransfer() && intakeSlides.isIntakeSlidesInTransfer()) {
-                        telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInTransfer());
-                        telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInTransfer());
+                    telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER) );
+                    telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER));
+
+                    if(intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)
+                            && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER)) {
                         intakeState = INTAKE_STATE.I7;
                     }
                     break;
@@ -378,91 +494,12 @@ public class AutoOpMode extends LinearOpMode{
 
                 case I8:
                     if (intakeGripTimer.time() > 500) {
+                        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
                         intakeState = INTAKE_STATE.I1;
                     }
                     break;
             }
-            switch (outtakeState) {
-                case O0:
-                    outtakeState = OUTTAKE_STATE.O1;
-                    break;
 
-                case O1:
-                    outtakeArm.closeGrip();
-                    outtakeState = OUTTAKE_STATE.O2;
-                    break;
-
-                case O2:
-                    if(!intakeArm.isIntakeArmInTransfer()) {
-                        telemetry.addData("intakeArm.isIntakeArmInTransfer()", intakeArm.isIntakeArmInTransfer());
-                        outtakeState = OUTTAKE_STATE.O3;
-                    }
-                    break;
-
-                case O3:
-                    outtakeSlides.moveOuttakeSlides(outtakeDropState);
-                    outtakeSlides.runOuttakeMotorToLevel();
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-                    outtakeState = OUTTAKE_STATE.O4;
-                    break;
-
-                case O4:
-                    if (outtakeSlides.isOuttakeSlidesInState(outtakeDropState) &&
-                        outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
-                        telemetry.addData("outtakeSlides.isOuttakeSlidesInState(outtakeDropState)", outtakeSlides.isOuttakeSlidesInState(outtakeDropState));
-                        telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP));
-                        outtakeState = OUTTAKE_STATE.O5;
-                    }
-                    break;
-
-                case O5:
-                    outtakeArm.openGrip();
-                    outtakeGripTimer.reset();
-                    outtakeState = OUTTAKE_STATE.O6;
-                    break;
-
-                case O6:
-                    if (outtakeGripTimer.time() > 500) {
-                        outtakeState = OUTTAKE_STATE.O7;
-                        dropConeCount ++;
-                    }
-                    break;
-
-                case O7:
-                    if(!intakeArm.isIntakeArmInTransfer()) {
-                        telemetry.addData("!intakeArm.isIntakeArmInTransfer()", !intakeArm.isIntakeArmInTransfer());
-                        outtakeState = OUTTAKE_STATE.O8;
-                    }
-                    break;
-
-                case O8:
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-                    outtakeSlides.runOuttakeMotorToLevel();
-                    outtakeState = OUTTAKE_STATE.O9;
-                    break;
-
-                case O9:
-                    if(outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
-                    && outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)) {
-                        telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
-                        telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
-                        outtakeState = OUTTAKE_STATE.O10;
-                    }
-                    break;
-
-                case O10:
-                    outtakeArm.openGrip();
-                    outtakeState = OUTTAKE_STATE.O11;
-                    break;
-
-                case O11:
-                    if(outtakeArm.senseOuttakeCone()) {
-                        telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
-                        outtakeState = OUTTAKE_STATE.O1;
-                    }
-                    break;
-            }
             telemetry.addData("stackConeCounter", stackConeCounter);
             telemetry.addData("dropConeCounter", dropConeCounter);
             telemetry.addData(" IntakeState", intakeState);
@@ -490,6 +527,7 @@ public class AutoOpMode extends LinearOpMode{
             telemetry.addData("    Blue Right ", "(Y / Triangle)");
             telemetry.addData("    Red Left    ", "(A / Cross)");
             telemetry.addData("    Red Right  ", "(B / Circle)");
+            telemetry.addData("      TEST POSE", "Right Bumper");
             if(gamepadController.gp1GetButtonXPress()){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
@@ -504,6 +542,10 @@ public class AutoOpMode extends LinearOpMode{
             }
             if(gamepadController.gp1GetButtonBPress()){
                 startPosition = START_POSITION.RED_RIGHT;
+                break;
+            }
+            if (gamepadController.gp1GetRightBumperPress()){
+                startPosition = START_POSITION.TEST_POSE;
                 break;
             }
             telemetry.update();
@@ -542,6 +584,7 @@ public class AutoOpMode extends LinearOpMode{
                 telemetry.addData("    Medium          ", "Y / Triangle");
                 telemetry.addData("    High            ", "B / Circle");
                 dropConeCount = 1;
+                stackConeCount = 0;
                 if (gamepadController.gp1GetButtonYPress()) {
                     dropConePosition = DROP_CONE_POSITION.MEDIUM;
                     break;
@@ -622,7 +665,7 @@ public class AutoOpMode extends LinearOpMode{
 
         outtakeSlides = new OuttakeSlides(hardwareMap);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.INIT);
+        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.MAX_LEFT);
         telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
@@ -639,6 +682,10 @@ public class AutoOpMode extends LinearOpMode{
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intakeArm, intakeSlides, outtakeArm, outtakeSlides, lights);
         telemetry.addLine("Gamepad Initialized");
+        telemetry.update();
+
+        vision = new Vision(hardwareMap);
+        telemetry.addLine("Vision Initialized");
         telemetry.update();
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {

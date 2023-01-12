@@ -39,7 +39,7 @@ public class OuttakeSlides {
     //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
     public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 384.5;
 
-    public DigitalChannel outtakeTouch;  // Hardware Device Object
+    //public DigitalChannel outtakeTouch;  // Hardware Device Object
 
     public Servo outtakeTurretServo;
 
@@ -274,8 +274,8 @@ public class OuttakeSlides {
         turretState = TURRET_STATE.RANDOM;
     }
     public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE outttakeSlideState) {
-        return ((outtakeMotor.getCurrentPosition() < outttakeSlideState.motorPosition + 30) &&
-                ((outtakeMotor).getCurrentPosition()  > outttakeSlideState.motorPosition - 30));
+        return (Math.abs(outtakeMotor.getCurrentPosition() - outttakeSlideState.motorPosition)
+                <= 0.1 * outttakeSlideState.motorPosition);
     }
 
 }

@@ -144,7 +144,7 @@ public class OuttakeArm {
                 outtakeGripDistance = ((DistanceSensor) outtakeGripColor).getDistance(DistanceUnit.MM);
             }
 
-            if (outtakeGripDistance < 25) {
+            if (outtakeGripDistance < 50) {
                 outtakeConeSensed = true;
             } else {
                 outtakeConeSensed = false;
@@ -165,15 +165,19 @@ public class OuttakeArm {
         if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
             moveWrist(WRIST_STATE.WRIST_TRANSFER);
             openGrip();
-        } else {
-            //moveWrist(WRIST_STATE.WRIST_DROP);
         }
-
     }
 
     public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE outtakeArmState) {
-        return (outtakeArmLeft.getPosition() == outtakeArmState.leftArmPosition);
+        return ((Math.abs(outtakeArmLeft.getPosition() - outtakeArmState.leftArmPosition)
+                <= 0.03*outtakeArmState.leftArmPosition));
     }
+
+    public boolean isOuttakeWristInState(WRIST_STATE outtakeWristState) {
+        return ((Math.abs(outtakeWristServo.getPosition() - outtakeWristState.getWristPosition())
+                <= 0.03*outtakeWristState.getWristPosition()));
+    }
+
 
     public double outtakeWristDistance;
     public boolean senseJunction(){
