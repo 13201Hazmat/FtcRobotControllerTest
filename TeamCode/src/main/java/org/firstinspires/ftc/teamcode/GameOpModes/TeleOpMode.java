@@ -170,6 +170,12 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
 
+            telemetry.addData("isOuttakeAtTransfer", gamepadController.isOuttakeAtTransfer());
+            telemetry.addData("isOuttakeArmInTransfer",outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
+            telemetry.addData( "isOuttakeWristInTransfer", outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER));
+            telemetry.addData("isOuttakeGripOpen", outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN));
+            telemetry.addData("isOuttakeSlidesInTransfer", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
+
             telemetry.addData("Intake Slides State", intakeSlides.intakeSlidesState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Slides Left Position", intakeSlides.intakeMotorLeft.getCurrentPosition());
@@ -182,7 +188,7 @@ public class TeleOpMode extends LinearOpMode {
             }
             telemetry.addLine("=============");
 
-            telemetry.addData("Intake Arm State", intakeArm.armState);
+            telemetry.addData("Intake Arm State", intakeArm.intakeArmState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Arm Left Position", "%.2f", intakeArm.intakeArmServoLeft.getPosition());
                 telemetry.addData("Intake Arm Right Position", "%.2f", intakeArm.intakeArmServoRight.getPosition());
@@ -193,7 +199,7 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.addData("Intake Wrist Left Position", "%.2f", intakeArm.intakeWristServoLeft.getPosition());
                 telemetry.addData("Intake Wrist Right Position", "%.2f", intakeArm.intakeWristServoRight.getPosition());
             }
-            telemetry.addData("Intake Grip State", intakeArm.gripState);
+            telemetry.addData("Intake Grip State", intakeArm.intakeGripState);
 
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Grip Servo Position", "%.2f", intakeArm.intakeGripServo.getPosition());
@@ -223,12 +229,12 @@ public class TeleOpMode extends LinearOpMode {
 
             telemetry.addLine("=============");
 
-            telemetry.addData("Outtake Wrist State", outtakeArm.wristState);
+            telemetry.addData("Outtake Wrist State", outtakeArm.outtakeWristState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Wrist Servo Position", "%.2f", outtakeArm.outtakeWristServo.getPosition());
             }
 
-            telemetry.addData("Outtake Grip State", outtakeArm.gripState);
+            telemetry.addData("Outtake Grip State", outtakeArm.outtakeGripState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Grip Servo Position", "%.2f", outtakeArm.outtakeGripServo.getPosition());
             }

@@ -157,8 +157,8 @@ public class TestOuttake extends LinearOpMode {
     public boolean isOuttakeAtTransfer(){
         if(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
                 (outtakeArm.outtakeArmLeft.getPosition() == OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER.getLeftArmPosition()) &&
-                (outtakeArm.outtakeWristServo.getPosition() == OuttakeArm.WRIST_STATE.WRIST_TRANSFER.getWristPosition()) &&
-                (outtakeArm.outtakeGripServo.getPosition() == OuttakeArm.GRIP_STATE.OPEN.getGripPosition())){
+                (outtakeArm.outtakeWristServo.getPosition() == OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER.getWristPosition()) &&
+                (outtakeArm.outtakeGripServo.getPosition() == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN.getGripPosition())){
             return true;
         } else {
             return false;
@@ -167,9 +167,9 @@ public class TestOuttake extends LinearOpMode {
 
     public void runOuttakeArm(){
         //TODO
-        if (outtakeArm.wristState == OuttakeArm.WRIST_STATE.WRIST_DROP) {
+        if (outtakeArm.outtakeWristState == OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP) {
             if (gamepadController.gp2GetRightBumperPress()) {
-                if (outtakeArm.gripState == OuttakeArm.GRIP_STATE.CLOSED) {
+                if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.CLOSED) {
                     outtakeArm.openGrip();
                 } else {
                     moveOuttakeToTransfer();
@@ -184,7 +184,7 @@ public class TestOuttake extends LinearOpMode {
 
     public void moveOuttakeToTransfer(){
         outtakeArm.closeGrip();
-        outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_TRANSFER);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.openGrip();
@@ -230,7 +230,7 @@ public class TestOuttake extends LinearOpMode {
         telemetry.addLine("TEST: !intakeArm.isIntakeArmInTransfer())");
         telemetry.update();
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        outtakeArm.moveWrist(OuttakeArm.WRIST_STATE.WRIST_DROP);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LOW_JUNCTION);
         outtakeSlides.runOuttakeMotorToLevel();
     }
@@ -370,12 +370,12 @@ public class TestOuttake extends LinearOpMode {
 
             telemetry.addLine("=============");
 
-            telemetry.addData("Outtake Wrist State", outtakeArm.wristState);
+            telemetry.addData("Outtake Wrist State", outtakeArm.outtakeWristState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Wrist Servo Position", "%.2f", outtakeArm.outtakeWristServo.getPosition());
             }
 
-            telemetry.addData("Outtake Grip State", outtakeArm.gripState);
+            telemetry.addData("Outtake Grip State", outtakeArm.outtakeGripState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Grip Servo Position", "%.2f", outtakeArm.outtakeGripServo.getPosition());
             }

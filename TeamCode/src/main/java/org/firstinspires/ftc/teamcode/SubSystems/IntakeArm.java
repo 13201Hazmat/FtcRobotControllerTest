@@ -16,21 +16,21 @@ public class IntakeArm {
     public NormalizedColorSensor intakeGripColor;
 
     //Initialization of GRIP_STATE
-    public enum GRIP_STATE { //state of the Hand Grip
+    public enum INTAKE_GRIP_STATE { //state of the Hand Grip
         OPEN(0.65),
         OPEN_AUTO(0.65),
         CLOSED(1.0);
 
         private final double gripPosition;
-        GRIP_STATE(double gripPosition) {
+        INTAKE_GRIP_STATE(double gripPosition) {
             this.gripPosition = gripPosition;
         }
     }
-    public GRIP_STATE gripState = IntakeArm.GRIP_STATE.CLOSED;
+    public INTAKE_GRIP_STATE intakeGripState = INTAKE_GRIP_STATE.CLOSED;
 
     public boolean autoIntakeCloseMode = true;
 
-    public enum ARM_STATE{
+    public enum INTAKE_ARM_STATE {
         INIT(0.49,0.50,0), //Level 15
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.06, 0.90, 2),
@@ -46,14 +46,14 @@ public class IntakeArm {
         private double leftArmPosition;
         private double rightArmPosition;
         private final int index;
-        ARM_STATE(double leftArmPosition, double rightArmPosition, int index){
+        INTAKE_ARM_STATE(double leftArmPosition, double rightArmPosition, int index){
             this.leftArmPosition = leftArmPosition;
             this.rightArmPosition = rightArmPosition;
             this.index = index;
         }
 
-        public ARM_STATE byIndex(int ord) {
-            for (ARM_STATE a : ARM_STATE.values()) {
+        public INTAKE_ARM_STATE byIndex(int ord) {
+            for (INTAKE_ARM_STATE a : INTAKE_ARM_STATE.values()) {
                 if (ord <1) ord = 1;
                 if (ord >5) ord = 5;
                 if (a.index == ord) {
@@ -63,7 +63,7 @@ public class IntakeArm {
             return null;
         }
     }
-    public ARM_STATE armState = ARM_STATE.TRANSFER;
+    public INTAKE_ARM_STATE intakeArmState = INTAKE_ARM_STATE.TRANSFER;
     public double ARM_DELTA = 0.01;
 
     //Hand - wrist, grip state declaration
@@ -119,37 +119,37 @@ public class IntakeArm {
         }
 
         WRIST_ARM_FACTOR_LEFT = (WRIST_STATE.AUTO_CONE_5.leftWristPosition - WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition)/
-                (ARM_STATE.AUTO_CONE_5.leftArmPosition - ARM_STATE.PICKUP_AUTO_CONE_1.leftArmPosition) ;
+                (INTAKE_ARM_STATE.AUTO_CONE_5.leftArmPosition - INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1.leftArmPosition) ;
 
         WRIST_ARM_FACTOR_RIGHT = (WRIST_STATE.AUTO_CONE_5.rightWristPosition - WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.rightWristPosition)/
-                (ARM_STATE.AUTO_CONE_5.rightArmPosition - ARM_STATE.PICKUP_AUTO_CONE_1.rightArmPosition) ;
+                (INTAKE_ARM_STATE.AUTO_CONE_5.rightArmPosition - INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1.rightArmPosition) ;
 
-        moveArm(ARM_STATE.INIT);
+        moveArm(INTAKE_ARM_STATE.INIT);
         closeGrip();
     }
 
-    public void moveArm(ARM_STATE toArmState) {
+    public void moveArm(INTAKE_ARM_STATE toArmState) {
         intakeArmServoLeft.setPosition(toArmState.leftArmPosition);
         intakeArmServoRight.setPosition(toArmState.rightArmPosition);
-        armState = toArmState;
+        intakeArmState = toArmState;
         moveWrist(toArmState);
     }
 
     public void moveArmWristUpOneStack(){
-        if (armState.index < 1 || armState.index > 5) {
+        if (intakeArmState.index < 1 || intakeArmState.index > 5) {
             return;
         } else {
-            assert armState.byIndex(armState.index + 1) != null;
-            moveArm(armState.byIndex(armState.index + 1));
+            assert intakeArmState.byIndex(intakeArmState.index + 1) != null;
+            moveArm(intakeArmState.byIndex(intakeArmState.index + 1));
         }
     }
 
     public void moveArmWristDownOneStack(){
-        if (armState.index <= 1 || armState.index > 6) {
+        if (intakeArmState.index <= 1 || intakeArmState.index > 6) {
             return;
         } else {
-            assert armState.byIndex(armState.index - 1) != null;
-            moveArm(armState.byIndex(armState.index - 1));
+            assert intakeArmState.byIndex(intakeArmState.index - 1) != null;
+            moveArm(intakeArmState.byIndex(intakeArmState.index - 1));
         }
     }
 
@@ -157,30 +157,30 @@ public class IntakeArm {
     public void continousArmRotateUp(){
         double deltaArmIntakeLeft = intakeArmServoLeft.getPosition() + ARM_DELTA;
         double deltaArmIntakeRight = intakeArmServoRight.getPosition() - ARM_DELTA;
-        if(deltaArmIntakeLeft > ARM_STATE.RANDOM_MAX.leftArmPosition){
-            deltaArmIntakeLeft = ARM_STATE.RANDOM_MAX.leftArmPosition;
-            deltaArmIntakeRight = ARM_STATE.RANDOM_MAX.rightArmPosition;
+        if(deltaArmIntakeLeft > INTAKE_ARM_STATE.RANDOM_MAX.leftArmPosition){
+            deltaArmIntakeLeft = INTAKE_ARM_STATE.RANDOM_MAX.leftArmPosition;
+            deltaArmIntakeRight = INTAKE_ARM_STATE.RANDOM_MAX.rightArmPosition;
         }
 
         intakeArmServoLeft.setPosition(deltaArmIntakeLeft);
         intakeArmServoRight.setPosition(deltaArmIntakeRight);
-        armState = ARM_STATE.RANDOM;
-        moveWrist(ARM_STATE.RANDOM);
+        intakeArmState = INTAKE_ARM_STATE.RANDOM;
+        moveWrist(INTAKE_ARM_STATE.RANDOM);
     }
 
     public void continousArmRotateDown(){
-        armState = ARM_STATE.RANDOM;
-        armState.leftArmPosition = intakeArmServoLeft.getPosition() - ARM_DELTA;
-        armState.rightArmPosition = intakeArmServoRight.getPosition() + ARM_DELTA;
-        intakeArmServoLeft.setPosition(armState.leftArmPosition);
-        intakeArmServoRight.setPosition(armState.rightArmPosition);
-        armState = ARM_STATE.RANDOM;
-        moveWrist(ARM_STATE.RANDOM);
+        intakeArmState = INTAKE_ARM_STATE.RANDOM;
+        intakeArmState.leftArmPosition = intakeArmServoLeft.getPosition() - ARM_DELTA;
+        intakeArmState.rightArmPosition = intakeArmServoRight.getPosition() + ARM_DELTA;
+        intakeArmServoLeft.setPosition(intakeArmState.leftArmPosition);
+        intakeArmServoRight.setPosition(intakeArmState.rightArmPosition);
+        intakeArmState = INTAKE_ARM_STATE.RANDOM;
+        moveWrist(INTAKE_ARM_STATE.RANDOM);
     }
 
     public static final double WRIST_UP_DELTA = 0.2;
 
-    public void moveWrist(ARM_STATE toArmState) {
+    public void moveWrist(INTAKE_ARM_STATE toArmState) {
         switch (toArmState) {
             case INIT:
                 intakeWristServoLeft.setPosition(WRIST_STATE.INIT.leftWristPosition);
@@ -226,12 +226,12 @@ public class IntakeArm {
     //Algorithm to determine wrist position based on arm angle
     public double determineWristLevelLeft(double leftArmPosition){
         return (WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition +
-                (leftArmPosition - ARM_STATE.PICKUP_AUTO_CONE_1.leftArmPosition) * WRIST_ARM_FACTOR_LEFT);
+                (leftArmPosition - INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1.leftArmPosition) * WRIST_ARM_FACTOR_LEFT);
     }
 
     public double determineWristLevelRight(double rightArmPosition){
         return (WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.rightWristPosition +
-                (rightArmPosition - ARM_STATE.PICKUP_AUTO_CONE_1.rightArmPosition) * WRIST_ARM_FACTOR_RIGHT);
+                (rightArmPosition - INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1.rightArmPosition) * WRIST_ARM_FACTOR_RIGHT);
     }
 
     public void moveWristUp(){
@@ -252,7 +252,7 @@ public class IntakeArm {
      */
     public boolean senseIntakeCone(){
         boolean intakeConeSensed = false;
-        if (armState != ARM_STATE.TRANSFER) {
+        if (intakeArmState != INTAKE_ARM_STATE.TRANSFER) {
             if (intakeGripColor instanceof DistanceSensor) {
                 intakeGripDistance = ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
             }
@@ -270,38 +270,35 @@ public class IntakeArm {
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip(){
-        intakeGripServo.setPosition(GRIP_STATE.OPEN.gripPosition);
+        intakeGripServo.setPosition(INTAKE_GRIP_STATE.OPEN.gripPosition);
         if (autoIntakeCloseMode) {
-            gripState = GRIP_STATE.OPEN_AUTO;
+            intakeGripState = INTAKE_GRIP_STATE.OPEN_AUTO;
         } else {
-            gripState = GRIP_STATE.OPEN;
+            intakeGripState = INTAKE_GRIP_STATE.OPEN;
         }
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        intakeGripServo.setPosition(GRIP_STATE.CLOSED.gripPosition);
-        gripState = GRIP_STATE.CLOSED;
+        intakeGripServo.setPosition(INTAKE_GRIP_STATE.CLOSED.gripPosition);
+        intakeGripState = INTAKE_GRIP_STATE.CLOSED;
     }
 
     public double getIntakeGripColorSensorDistance(){
         return intakeGripDistance;
     }
 
-    public boolean isIntakeArmInState(ARM_STATE toArmState) {
-        return (Math.abs(intakeArmServoLeft.getPosition() - toArmState.leftArmPosition)
-                <= 0.02 * toArmState.leftArmPosition);
-    }
-    /*
-    public boolean isIntakeArmInTransfer() {
-        return (intakeArmServoLeft.getPosition() == ARM_STATE.TRANSFER.leftArmPosition);
+    public boolean isIntakeArmInState(INTAKE_ARM_STATE toArmState) {
+        return ((intakeArmState == toArmState) &&
+                Math.abs(intakeArmServoLeft.getPosition() - toArmState.leftArmPosition) <= 0.03);
     }
 
-    public boolean isIntakeInit() {
-        return (intakeArmServoLeft.getPosition() == ARM_STATE.INIT.leftArmPosition);
+    public boolean isIntakeGripInState(INTAKE_GRIP_STATE toGripState) {
+        return ((intakeGripState == toGripState) &&
+                Math.abs(intakeGripServo.getPosition() - toGripState.gripPosition) <= 0.05);
     }
-     */
+
 
 
 }

@@ -24,7 +24,7 @@ public class IntakeSlides {
     public DistanceSensor intakeDistanceSensor;
 
     //Intake Motor states
-    public enum INTAKE_MOTOR_STATE {
+    public enum INTAKE_SLIDES_STATE {
         MIN_RETRACTED (0,0), //Position
         TRANSFER (0, 0),
         MAX_EXTENDED(666, 6), //1760
@@ -38,16 +38,16 @@ public class IntakeSlides {
 
         private final double motorPosition;
         private final int index;
-        INTAKE_MOTOR_STATE(double motorPosition, int index) {
+        INTAKE_SLIDES_STATE(double motorPosition, int index) {
 
             this.motorPosition = motorPosition;
             this.index = index;
         }
 
-        public INTAKE_MOTOR_STATE byIndex(int ord) {
+        public INTAKE_SLIDES_STATE byIndex(int ord) {
             if (ord <1) ord = 1;
             if (ord >5) ord = 5;
-            for (INTAKE_MOTOR_STATE a : INTAKE_MOTOR_STATE.values()) {
+            for (INTAKE_SLIDES_STATE a : INTAKE_SLIDES_STATE.values()) {
                 if (a.index == ord) {
                     return a;
                 }
@@ -56,7 +56,7 @@ public class IntakeSlides {
         }
 
     }
-    public IntakeSlides.INTAKE_MOTOR_STATE intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
+    public INTAKE_SLIDES_STATE intakeSlidesState = INTAKE_SLIDES_STATE.MIN_RETRACTED;
 
     public double intakeMotorCurrentPosition = intakeSlidesState.motorPosition;
     public double intakeMotorNewPosition = intakeSlidesState.motorPosition;
@@ -109,7 +109,7 @@ public class IntakeSlides {
     }
 
     //Sets outtake slides to Transfer position
-    public void moveIntakeSlides(INTAKE_MOTOR_STATE toIntakeMotorState){
+    public void moveIntakeSlides(INTAKE_SLIDES_STATE toIntakeMotorState){
         turnIntakeBrakeModeOn();
         intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
         if (intakeMotorCurrentPosition < toIntakeMotorState.motorPosition ) {
@@ -157,8 +157,8 @@ public class IntakeSlides {
         intakeMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turnIntakeBrakeModeOn();
         double intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
-        if ((power > 0.01 && intakeMotorCurrentPosition < INTAKE_MOTOR_STATE.MAX_EXTENDED.motorPosition) ||
-            (power < -0.01 && intakeMotorCurrentPosition > INTAKE_MOTOR_STATE.MIN_RETRACTED.motorPosition )) {
+        if ((power > 0.01 && intakeMotorCurrentPosition < INTAKE_SLIDES_STATE.MAX_EXTENDED.motorPosition) ||
+            (power < -0.01 && intakeMotorCurrentPosition > INTAKE_SLIDES_STATE.MIN_RETRACTED.motorPosition )) {
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
         } else {
@@ -221,7 +221,7 @@ public class IntakeSlides {
         }
         resetIntakeMotorMode();
         turnIntakeBrakeModeOn();
-        intakeSlidesState = IntakeSlides.INTAKE_MOTOR_STATE.MIN_RETRACTED;
+        intakeSlidesState = INTAKE_SLIDES_STATE.MIN_RETRACTED;
     }
 
     public double getDistance(){
@@ -231,9 +231,10 @@ public class IntakeSlides {
     //TODO Protect intake so that it does not hit anything based on distance read by Distance Sensor
 
 
-    public boolean isIntakeSlidesInState(INTAKE_MOTOR_STATE toIntakeMotorState) {
-        return (Math.abs(intakeMotorLeft.getCurrentPosition() - toIntakeMotorState.motorPosition)
-                <= 0.02 * toIntakeMotorState.motorPosition);
+    public boolean isIntakeSlidesInState(INTAKE_SLIDES_STATE toIntakeSlidesState) {
+        return ( (intakeSlidesState == toIntakeSlidesState) &&
+                Math.abs(intakeMotorLeft.getCurrentPosition() - toIntakeSlidesState.motorPosition)
+                <= 0.05 * toIntakeSlidesState.motorPosition);
     }
 }
 

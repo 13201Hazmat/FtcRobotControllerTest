@@ -125,14 +125,14 @@ public class TestIntake extends LinearOpMode {
             intakeArm.closeGrip();
         }
 
-        if (gamepadController.gp1GetRightBumperPress() && intakeArm.armState != IntakeArm.ARM_STATE.TRANSFER &&
-                intakeArm.armState != IntakeArm.ARM_STATE.INIT) {
-            if(intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED){
+        if (gamepadController.gp1GetRightBumperPress() && intakeArm.intakeArmState != IntakeArm.INTAKE_ARM_STATE.TRANSFER &&
+                intakeArm.intakeArmState != IntakeArm.INTAKE_ARM_STATE.INIT) {
+            if(intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
             } else /*if(outtakeArm.gripState == OuttakeArm.GRIP_STATE.OPEN)*/{
                 intakeArm.closeGrip();
-                if(intakeArm.armState == IntakeArm.ARM_STATE.PICKUP_FALLEN_CONE){
-                    intakeArm.moveWrist(IntakeArm.ARM_STATE.AUTO_CONE_5);
+                if(intakeArm.intakeArmState == IntakeArm.INTAKE_ARM_STATE.PICKUP_FALLEN_CONE){
+                    intakeArm.moveWrist(IntakeArm.INTAKE_ARM_STATE.AUTO_CONE_5);
                     intakeArm.moveWristUp();
                 }
             }
@@ -143,16 +143,16 @@ public class TestIntake extends LinearOpMode {
         }
 
         if (gamepadController.gp1GetStart() && gamepadController.gp1GetDpad_downPress()) {
-            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_FALLEN_CONE);
+            intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.PICKUP_FALLEN_CONE);
             intakeArm.openGrip();
         }
 
-        if (gamepadController.gp1GetLeftBumperPress() && intakeArm.gripState == IntakeArm.GRIP_STATE.CLOSED) {
+        if (gamepadController.gp1GetLeftBumperPress() && intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED) {
             runTransferSequence();
         }
 
         if (gamepadController.gp1GetDpad_downPress()) {
-            intakeArm.moveArm(IntakeArm.ARM_STATE.PICKUP_AUTO_CONE_1);
+            intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1);
             intakeArm.openGrip();
         }
 
@@ -171,9 +171,9 @@ public class TestIntake extends LinearOpMode {
         telemetry.setAutoClear(false);
         ElapsedTime transferTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeArm.moveWristUp();
-        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_MOTOR_STATE.TRANSFER);
+        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
         intakeSlides.runIntakeMotorToLevel();
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         /*if(!isOuttakeAtTransfer()){
             moveOuttakeToTransfer();
         }*/
@@ -188,7 +188,7 @@ public class TestIntake extends LinearOpMode {
         /*if (isOuttakeArmAtTransfer()) {*/
         telemetry.addLine("TEST:(isOuttakeArmAtTransfer()");
         telemetry.update();
-            intakeArm.moveArm(IntakeArm.ARM_STATE.TRANSFER);
+            intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
             transferTimer.reset();
             while(transferTimer.time()<500) {
                 gamepadController.runDriveControl_byRRDriveModes();
@@ -203,9 +203,9 @@ public class TestIntake extends LinearOpMode {
         telemetry.addLine("TEST: !(outtakeArm.senseOuttakeCone())");
         telemetry.addLine("TEST: outtakeArm.closeGrip();");
         telemetry.update();
-        intakeArm.moveArm(IntakeArm.ARM_STATE.INIT);
+        intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         transferTimer.reset();
-        while(transferTimer.time() < 2000 && !intakeArm.isIntakeArmInState(IntakeArm.ARM_STATE.TRANSFER)){
+        while(transferTimer.time() < 2000 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)){
             //gamepadController.runDriveControl_byRRDriveModes();
         }
         //outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
@@ -322,7 +322,7 @@ public class TestIntake extends LinearOpMode {
             }
             telemetry.addLine("=============");
 
-            telemetry.addData("Intake Arm State", intakeArm.armState);
+            telemetry.addData("Intake Arm State", intakeArm.intakeArmState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Arm Left Position", "%.2f", intakeArm.intakeArmServoLeft.getPosition());
                 telemetry.addData("Intake Arm Right Position", "%.2f", intakeArm.intakeArmServoRight.getPosition());
@@ -333,7 +333,7 @@ public class TestIntake extends LinearOpMode {
                 telemetry.addData("Intake Wrist Left Position", "%.2f", intakeArm.intakeWristServoLeft.getPosition());
                 telemetry.addData("Intake Wrist Right Position", "%.2f", intakeArm.intakeWristServoRight.getPosition());
             }
-            telemetry.addData("Intake Grip State", intakeArm.gripState);
+            telemetry.addData("Intake Grip State", intakeArm.intakeGripState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Grip Servo Position", "%.2f", intakeArm.intakeGripServo.getPosition());
             }

@@ -7,8 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.GameOpModes.AutoOpMode1;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class OuttakeArm {
@@ -44,7 +46,7 @@ public class OuttakeArm {
     public OUTTAKE_ARM_STATE outtakeArmState = OUTTAKE_ARM_STATE.TRANSFER;
 
     //Hand - wrist, grip state declaration
-    public enum WRIST_STATE {
+    public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.33), //TODO test real, 0.36
         WRIST_DROP(0.56), //0.56 TODO test real
         WRIST_LOW_JUNCTION(0.68), //TODO test real
@@ -53,31 +55,31 @@ public class OuttakeArm {
 
         private double wristPosition;
 
-        WRIST_STATE(double wristPosition){
+        OUTTAKE_WRIST_STATE(double wristPosition){
             this.wristPosition = wristPosition;
         }
         public double getWristPosition(){
             return wristPosition;
         }
     }
-    public WRIST_STATE wristState = WRIST_STATE.WRIST_TRANSFER;
+    public OUTTAKE_WRIST_STATE outtakeWristState = OUTTAKE_WRIST_STATE.WRIST_TRANSFER;
     public double OUTTAKE_WRIST_DELTA = 0.02;
 
     //Initialization of GRIP_STATE
-    public enum GRIP_STATE { //state of the Hand Grip
+    public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
         OPEN(0.5),
         CLOSED(0.75); //Max 1.0
 
         private double gripPosition;
 
-        GRIP_STATE(double gripPosition){
+        OUTTAKE_GRIP_STATE(double gripPosition){
             this.gripPosition = gripPosition;
         }
         public double getGripPosition(){
             return gripPosition;
         }
     }
-    public GRIP_STATE gripState = GRIP_STATE.CLOSED;
+    public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
     //constants for Hand and grip position
     public enum OUTTAKE_GRIP_COLOR_SENSOR_STATE {
         DETECTED,
@@ -120,15 +122,15 @@ public class OuttakeArm {
      *If state of hand grip is set to open, set position of servo's to specified
      */
     public void openGrip() {
-        outtakeGripServo.setPosition(GRIP_STATE.OPEN.gripPosition);
-        gripState = GRIP_STATE.OPEN;
+        outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.OPEN.gripPosition);
+        outtakeGripState = OUTTAKE_GRIP_STATE.OPEN;
     }
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
-        outtakeGripServo.setPosition(GRIP_STATE.CLOSED.gripPosition);
-        gripState = GRIP_STATE.CLOSED;
+        outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.CLOSED.gripPosition);
+        outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
     }
 
     public double outtakeGripDistance;
@@ -139,12 +141,11 @@ public class OuttakeArm {
      */
     public boolean senseOuttakeCone(){
         boolean outtakeConeSensed = false;
-        if (wristState == WRIST_STATE.WRIST_TRANSFER) {
+        if (outtakeWristState == OUTTAKE_WRIST_STATE.WRIST_TRANSFER) {
             if (outtakeGripColor instanceof DistanceSensor) {
                 outtakeGripDistance = ((DistanceSensor) outtakeGripColor).getDistance(DistanceUnit.MM);
             }
-
-            if (outtakeGripDistance < 50) {
+            if (outtakeGripDistance < 60.0) {
                 outtakeConeSensed = true;
             } else {
                 outtakeConeSensed = false;
@@ -153,36 +154,44 @@ public class OuttakeArm {
         return outtakeConeSensed;
     }
 
-    public void moveWrist(WRIST_STATE toWristState){
+    public void moveWrist(OUTTAKE_WRIST_STATE toWristState){
         outtakeWristServo.setPosition(toWristState.wristPosition);
-        wristState = toWristState;
+        outtakeWristState = toWristState;
     }
+    /////TODO : RUN WRIST ERROR
 
+    public boolean runWristInDropFlag = false;
+    //public ElapsedTime runWristBasedOnArmTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void moveArm(OUTTAKE_ARM_STATE toArmState){
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
         if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
-            moveWrist(WRIST_STATE.WRIST_TRANSFER);
+            moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
             openGrip();
         }
+        runWristInDropFlag = true;
     }
 
-    public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE outtakeArmState) {
-        return ((Math.abs(outtakeArmLeft.getPosition() - outtakeArmState.leftArmPosition)
-                <= 0.03*outtakeArmState.leftArmPosition));
-    }
+    /*public void runWristBasedOnArm() {
+        if (runWristBasedOnArmFlag) {
+            if (runWristBasedOnArmTimer.time() > 300) {
+                if (outtakeArmState == OUTTAKE_ARM_STATE.DROP) {
+                    moveWrist(OUTTAKE_WRIST_STATE.WRIST_DROP);
+                } else if (outtakeArmState == OUTTAKE_ARM_STATE.LOW_JUNCTION) {
+                    moveWrist(OUTTAKE_WRIST_STATE.WRIST_LOW_JUNCTION);
+                }
+                runWristBasedOnArmFlag = false;
+            }
+        }
+    }*/
 
-    public boolean isOuttakeWristInState(WRIST_STATE outtakeWristState) {
-        return ((Math.abs(outtakeWristServo.getPosition() - outtakeWristState.getWristPosition())
-                <= 0.03*outtakeWristState.getWristPosition()));
-    }
 
 
     public double outtakeWristDistance;
     public boolean senseJunction(){
         boolean junctionSensed = false;
-        if (wristState == WRIST_STATE.WRIST_DROP) {
+        if (outtakeWristState == OUTTAKE_WRIST_STATE.WRIST_DROP) {
             if (outtakeWristColor instanceof DistanceSensor) {
                 outtakeWristDistance = ((DistanceSensor) outtakeWristColor).getDistance(DistanceUnit.MM);
             }
@@ -197,19 +206,37 @@ public class OuttakeArm {
     }
 
     public void moveOuttakeWristUp() {
-        if (outtakeWristServo.getPosition() <= wristState.WRIST_MAX.getWristPosition()) {
+        if (outtakeWristServo.getPosition() <= outtakeWristState.WRIST_MAX.getWristPosition()) {
             outtakeWristServo.setPosition(outtakeWristServo.getPosition() + OUTTAKE_WRIST_DELTA);
         } else {
-            outtakeWristServo.setPosition(wristState.WRIST_MAX.getWristPosition());
+            outtakeWristServo.setPosition(outtakeWristState.WRIST_MAX.getWristPosition());
         }
     }
 
     public void moveOuttakeWristDown() {
-        if (outtakeWristServo.getPosition() >= wristState.WRIST_MIN.getWristPosition()) {
+        if (outtakeWristServo.getPosition() >= outtakeWristState.WRIST_MIN.getWristPosition()) {
             outtakeWristServo.setPosition(outtakeWristServo.getPosition() - OUTTAKE_WRIST_DELTA);
         } else {
-            outtakeWristServo.setPosition(wristState.WRIST_MIN.getWristPosition());
+            outtakeWristServo.setPosition(outtakeWristState.WRIST_MIN.getWristPosition());
         }
+    }
+
+    public double isOuttakeArmInStateError = 0;
+    public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE toOuttakeArmState) {
+        isOuttakeArmInStateError = Math.abs(outtakeArmLeft.getPosition() - toOuttakeArmState.leftArmPosition);
+        return (outtakeArmState == toOuttakeArmState && isOuttakeArmInStateError <= 0.05);
+    }
+
+    public double isOuttakeWristInStateError = 0;
+    public boolean isOuttakeWristInState(OUTTAKE_WRIST_STATE toOuttakeWristState) {
+        isOuttakeWristInStateError = Math.abs(outtakeWristServo.getPosition() - toOuttakeWristState.getWristPosition());
+        return (outtakeWristState == toOuttakeWristState && isOuttakeWristInStateError <= 0.03);
+    }
+
+    public double isOuttakeGripInStateError = 0;
+    public boolean isOuttakeGripInState(OUTTAKE_GRIP_STATE toOuttakeGripState) {
+        isOuttakeGripInStateError = Math.abs(outtakeGripServo.getPosition() - toOuttakeGripState.getGripPosition());
+        return (outtakeGripState == toOuttakeGripState && isOuttakeGripInStateError <=0.05);
     }
 
 }

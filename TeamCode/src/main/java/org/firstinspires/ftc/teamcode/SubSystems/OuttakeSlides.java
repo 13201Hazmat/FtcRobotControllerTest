@@ -53,7 +53,7 @@ public class OuttakeSlides {
         MAX_EXTENDED(1650),
         RANDOM(0);
 
-        private final double motorPosition;
+        public final double motorPosition;
         OUTTAKE_SLIDE_STATE(double motorPosition) {
             this.motorPosition = motorPosition;
         }
@@ -273,9 +273,11 @@ public class OuttakeSlides {
         outtakeTurretServo.setPosition(deltaTurret);
         turretState = TURRET_STATE.RANDOM;
     }
-    public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE outttakeSlideState) {
-        return (Math.abs(outtakeMotor.getCurrentPosition() - outttakeSlideState.motorPosition)
-                <= 0.1 * outttakeSlideState.motorPosition);
+    public double isOuttakeSlidesInStateError = 0;
+    public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE toOuttakeSlideState) {
+        isOuttakeSlidesInStateError = Math.abs(outtakeMotor.getCurrentPosition() - toOuttakeSlideState.motorPosition);
+        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 100);
+
     }
 
 }
