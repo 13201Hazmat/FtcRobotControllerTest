@@ -33,10 +33,10 @@ public class IntakeArm {
     public enum INTAKE_ARM_STATE {
         INIT(0.49,0.50,0), //Level 15
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
-        AUTO_CONE_2(0.06, 0.90, 2),
-        AUTO_CONE_3(0.10, 0.86, 3),
-        AUTO_CONE_4(0.14, 0.82, 4),
-        AUTO_CONE_5(0.19, 0.77, 5),
+        AUTO_CONE_2(0.10, 0.86, 2),
+        AUTO_CONE_3(0.16, 0.80, 3),
+        AUTO_CONE_4(0.18, 0.78, 4),
+        AUTO_CONE_5(0.26, 0.72, 5),
         TRANSFER(0.65,0.35,6), //Level 20
         LOW_JUNCTION(0.39,0.59,7), //Level 12
         PICKUP_FALLEN_CONE(0.17, 0.8,  8),

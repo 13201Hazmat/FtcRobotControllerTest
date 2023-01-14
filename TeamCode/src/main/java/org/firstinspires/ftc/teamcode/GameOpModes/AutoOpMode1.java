@@ -169,8 +169,8 @@ public class AutoOpMode1 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(90));
-                pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(90));
+                pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(270));
+                pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(270));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 break;
@@ -178,8 +178,8 @@ public class AutoOpMode1 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(-90));
-                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(-90));
+                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 break;
@@ -189,8 +189,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(3, 0, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(4, 0, Math.toRadians(180));
                 pickAndDropMediumPose = new Pose2d(4, 0, Math.toRadians(180));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 parkPose = new Pose2d(5, 0, Math.toRadians(180));
                 endPoseForward = 1;
                 break;
@@ -202,12 +202,12 @@ public class AutoOpMode1 extends LinearOpMode{
 
         switch (dropConePosition) {
             case MEDIUM:
-                outtakeDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION;
+                outtakeDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.AUTO_MEDIUM_JUNCTION;
                 pickAndDropPose = pickAndDropMediumPose;
                 pickAndDropTurretState = pickAndDropTurretStateMedium;
                 break;
             case HIGH:
-                outtakeDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.HIGH_JUNCTION;
+                outtakeDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.AUTO_HIGH_JUNCTION;
                 pickAndDropPose = pickAndDropHighPose;
                 pickAndDropTurretState = pickAndDropTurretStateHigh;
                 break;
@@ -238,25 +238,25 @@ public class AutoOpMode1 extends LinearOpMode{
                     case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(90)); break; // Location 3
                 }
                 endPoseTurn = 90;
-                endPoseForward = 20;
+                endPoseForward = 10;
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(-90)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(-90)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(-90)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(270)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(270)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(270)); break; // Location 3
                 }
                 endPoseTurn = -90;
-                endPoseForward = 20;
+                endPoseForward = 10;
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(90)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(90)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(90)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(270)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(270)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(270)); break; // Location 3
                 }
                 endPoseTurn = 90;
-                endPoseForward = 20;
+                endPoseForward = 10;
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
@@ -265,7 +265,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(90)); break; // Location 3
                 }
                 endPoseTurn = -90;
-                endPoseForward = 20;
+                endPoseForward = 10;
                 break;
             case TEST_POSE:
                 break;
@@ -297,10 +297,13 @@ public class AutoOpMode1 extends LinearOpMode{
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret.
 
-        if(opModeIsActive() && !isStopRequested()) {
+        if(opModeIsActive() && !isStopRequested() && startPosition != START_POSITION.TEST_POSE) {
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
-        outtakeSlides.moveTurret(pickAndDropTurretState);
+        if (startPosition == START_POSITION.TEST_POSE) {
+            outtakeSlides.moveTurret(pickAndDropTurretState);
+            safeWait(1000);
+        }
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
@@ -321,10 +324,9 @@ public class AutoOpMode1 extends LinearOpMode{
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
 
-        if(opModeIsActive() && !isStopRequested()) {
+        if(opModeIsActive() && !isStopRequested() && startPosition != START_POSITION.TEST_POSE) {
             driveTrain.followTrajectorySequence(trajectoryParking);
         }
-
         safeWait(1000);
     }
 
@@ -351,36 +353,40 @@ public class AutoOpMode1 extends LinearOpMode{
         telemetry.setAutoClear(true);
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount ) {
-            /*if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
-                 && gameTimer.time() > 26000) {
+            if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
+                 && gameTimer.time() > 26000 && startPosition != START_POSITION.TEST_POSE) {
                 break;
-            }*/
+            }
             stateMachineLoopCounter ++;
-            telemetry.addLine("=============================");
-            telemetry.addData("Loop counter", stateMachineLoopCounter);
-            //safeWait( 1000); // For Testing
-
             switch (outtakeState) {
                 case O0: // Start of State machine
                     outtakeState = OUTTAKE_STATE.O1;
                     break;
 
                 case O1: // Cone is sensed, close grip
-                    outtakeArm.closeGrip();
-                    outtakeState = OUTTAKE_STATE.O2;
+                    if (intakeState == INTAKE_STATE.I0 || intakeState == INTAKE_STATE.I1) {
+                        outtakeArm.closeGrip();
+                        outtakeGripTimer.reset();
+                        outtakeState = OUTTAKE_STATE.O2;
+                    }
                     break;
 
                 case O2: // If Intake Arm is not in transfer, proceed to move outttake to drop position
-                    telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
-                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));
-                    if(!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
+                    /*telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
+                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));*/
+                    if(outtakeGripTimer.time() > 300 &&
+                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
                         outtakeState = OUTTAKE_STATE.O3;
                     }
                     break;
 
                 case O3: // Move outtake to drop Position
                     outtakeSlides.moveOuttakeSlides(outtakeDropState);
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                    if (dropConePosition == DROP_CONE_POSITION.HIGH) {
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION);
+                    } else { // dropConePosition == DROP_CONE_POSITION.MEDIUM
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION);
+                    }
                     outtakeWristTimer.reset();
                     outtakeState = OUTTAKE_STATE.O4;
                     break;
@@ -394,7 +400,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case O5: // Verify that Outtake slide, Arm and Wrist are in position to drop
-                    telemetry.addData("isOuttakeSlidesInState(outtakeDropState)", outtakeSlides.isOuttakeSlidesInState(outtakeDropState));
+                    /*telemetry.addData("isOuttakeSlidesInState(outtakeDropState)", outtakeSlides.isOuttakeSlidesInState(outtakeDropState));
                     telemetry.addData("isOuttakeSlidesInStateError", outtakeSlides.isOuttakeSlidesInStateError);
                     telemetry.addData("outtakeMotor.getCurrentPosition()", outtakeSlides.outtakeMotor.getCurrentPosition());
                     telemetry.addData("outtakeDropState.motorPosition", outtakeDropState.motorPosition);
@@ -403,11 +409,12 @@ public class AutoOpMode1 extends LinearOpMode{
                     telemetry.addData("isOuttakeWristInState(DROP)", outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP));
                     telemetry.addData("isOuttakeWristInStateError", outtakeArm.isOuttakeWristInStateError);
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
-                    telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );
+                    telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
+
                     if ((outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
                             && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP))
-                            || outtakeWristTimer.time() > 2000) {
+                            || outtakeWristTimer.time() > 1000) {
                         outtakeState = OUTTAKE_STATE.O6;
                     }
                     break;
@@ -425,8 +432,8 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case O8: // Check if intake is in Transfer, else Move outtake to transfer
-                    telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
-                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));
+                    /*telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
+                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));*/
                     if (!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
                         outtakeState = OUTTAKE_STATE.O9;
                     }
@@ -439,8 +446,8 @@ public class AutoOpMode1 extends LinearOpMode{
                     outtakeState = OUTTAKE_STATE.O10;
 
                 case O10: // Check if outtake is at transfer
-                    telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
-                    telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
+                    //telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
+                    //telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
                     if(outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
                             && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER)
                             && outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN
@@ -450,7 +457,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case O11: // Wait till Intake drops cone
-                    telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
+                    //telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
                     dropConeCounter++;
                     if (dropConeCounter < dropConeCount && intakeState == INTAKE_STATE.I1) {
                         if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 1000) {
@@ -483,7 +490,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case I3: // Wait for Outtake grip to be open, and hold position minimum for 500 to stabilize
-                    if(outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) && intakeGripTimer.time() > 500) {
+                    if(outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) && intakeGripTimer.time() > 400) {
                         intakeState = INTAKE_STATE.I4;
                     }
                     break;
@@ -524,15 +531,17 @@ public class AutoOpMode1 extends LinearOpMode{
 
                 case I10: // Move intake Arm to transfer
                     intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
+                    intakeArmTimer.reset();
                     intakeState = INTAKE_STATE.I11;
                     break;
 
                 case I11: // Check if intake Arm and Slides are in Transfer
-                    telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) );
-                    telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER));
+                    //telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) );
+                    //telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER));
 
-                    if(intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
-                            && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER)) {
+                    if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
+                            && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
+                            || intakeArmTimer.time() > 1000) {
                         intakeState = INTAKE_STATE.I12;
                     }
                     break;
