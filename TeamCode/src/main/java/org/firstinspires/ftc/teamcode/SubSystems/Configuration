@@ -32,14 +32,13 @@ Control Hub I2C BUS 3         outtakeGripColor = hardwareMap.get(NormalizedColor
 
 Outtake Slides:
 Control Hub Motor Port 3        outtakeMotor = hardwareMap.get(DcMotorEx.class, "outtake_motor");
-//Control Hub Digital Port 7        outtakeTouch = hardwareMap.get(DigitalChannel.class, "outtake_reset_ts ");
-Control Hub Servo Port 0     outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
+Expansion Hub Servo Port 5     outtakeTurretServo = hardwareMap.get(Servo.class, "outtake_turret");
 
 Webcam
 Control Hub Webcam                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
 Lights
-Expansion Hub Servo Port 5        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+Control Hub Servo Port 0        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
 
 2 touch
 3 color

@@ -51,7 +51,7 @@ public class OuttakeSlides {
         MEDIUM_JUNCTION (530),
         HIGH_JUNCTION (1440),
         AUTO_MEDIUM_JUNCTION(701),
-        AUTO_HIGH_JUNCTION(1440),
+        AUTO_HIGH_JUNCTION(1550),
         MAX_EXTENDED(1650),
         RANDOM(0);
 

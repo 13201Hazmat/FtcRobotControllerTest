@@ -340,6 +340,10 @@ public class GamepadController {
                 lights.setPattern(Lights.REV_BLINKIN_PATTERN.OUTTAKE_JUNCTION_NOT_ALIGNED);
             }
         }
+
+        if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
+        }
     }
 
     public void moveOuttakeToTransfer(){
@@ -372,15 +376,15 @@ public class GamepadController {
             moveOuttakeToTransfer();
         }
         transferTimer.reset();
-        while(transferTimer.time() < 2000 && (!isOuttakeAtTransfer() ||
+        while(transferTimer.time() < 1000 /*2000*/&& (!isOuttakeAtTransfer() ||
                 !intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))){
             runDriveControl_byRRDriveModes();
         }
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
             transferTimer.reset();
-            while( (!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) || transferTimer.time() < 800)
-                    && transferTimer.time() < 2000){
+            while( (!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) || transferTimer.time() < 400) //800
+                    && transferTimer.time() < 1000){ //2000
                 runDriveControl_byRRDriveModes();
             }
             intakeArm.openGrip();

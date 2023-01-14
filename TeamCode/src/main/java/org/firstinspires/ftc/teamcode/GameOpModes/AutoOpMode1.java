@@ -51,8 +51,8 @@ public class AutoOpMode1 extends LinearOpMode{
     }
     public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.HIGH;
 
-    public int dropConeCount = 0;
-    public int stackConeCount = 0;
+    public int dropConeCount = 6;
+    public int stackConeCount = 5;
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -178,7 +178,7 @@ public class AutoOpMode1 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
+                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(95)); //90
                 pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
@@ -221,6 +221,7 @@ public class AutoOpMode1 extends LinearOpMode{
                 })
                 .setVelConstraint(getVelocityConstraint(30, 15, DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(midWayPose)
+                //.turn(endPoseTurn)
                 .lineToLinearHeading(pickAndDropPose)
                 .resetVelConstraint()
                 .build();
@@ -273,8 +274,8 @@ public class AutoOpMode1 extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(pickAndDropPose)
                 .lineToLinearHeading(parkPose)
-                .turn(Math.toRadians(endPoseTurn))
-                .forward(endPoseForward)
+                //.turn(Math.toRadians(endPoseTurn))
+                //.forward(endPoseForward)
                 .build();
 
 
@@ -354,7 +355,7 @@ public class AutoOpMode1 extends LinearOpMode{
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount ) {
             if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
-                 && gameTimer.time() > 26000 && startPosition != START_POSITION.TEST_POSE) {
+                 && gameTimer.time() > 22000 && startPosition != START_POSITION.TEST_POSE) {
                 break;
             }
             stateMachineLoopCounter ++;

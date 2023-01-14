@@ -27,7 +27,7 @@ public class OuttakeArm {
         TRANSFER(1.0, 0.0), //TODO test real values
         DROP(0.4, 0.6), //TODO test real values
         LOW_JUNCTION (0.2, 0.8),
-        AUTO_HIGH_JUNCTION(0.4,0.6),
+        AUTO_HIGH_JUNCTION(0.35,0.65),
         AUTO_MEDIUM_JUNCTION(0.2,0.8);
 
         private double leftArmPosition;
