@@ -178,7 +178,7 @@ public class AutoOpMode1 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(95)); //90
+                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
                 pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
@@ -219,10 +219,21 @@ public class AutoOpMode1 extends LinearOpMode{
                 .addTemporalMarker(0.1 ,() -> {
                     outtakeSlides.moveTurret(pickAndDropTurretState);
                 })
-                .setVelConstraint(getVelocityConstraint(30, 15, DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(getVelocityConstraint(
+                        0.5*DriveConstants.MAX_VEL/*Slower velocity*/,
+                        0.5*DriveConstants.MAX_ANG_VEL, /*Slower angular velocity*/
+                        DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(midWayPose)
-                //.turn(endPoseTurn)
+                .addTemporalMarker(()-> {
+                    telemetry.addData("Midway Pose estimate", driveTrain.getPoseEstimate());
+                    telemetry.update();
+                })
+                //.turn(Math.toRadians(endPoseTurn))
                 .lineToLinearHeading(pickAndDropPose)
+                .addTemporalMarker(()-> {
+                    telemetry.addData("Pick and Drop estimate", driveTrain.getPoseEstimate());
+                    telemetry.update();
+                })
                 .resetVelConstraint()
                 .build();
 
@@ -274,7 +285,11 @@ public class AutoOpMode1 extends LinearOpMode{
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(pickAndDropPose)
                 .lineToLinearHeading(parkPose)
-                //.turn(Math.toRadians(endPoseTurn))
+                .addTemporalMarker(()-> {
+                    telemetry.addData("Park Pose estimate", driveTrain.getPoseEstimate());
+                    telemetry.update();
+                })
+                .turn(Math.toRadians(endPoseTurn))
                 //.forward(endPoseForward)
                 .build();
 
@@ -317,7 +332,23 @@ public class AutoOpMode1 extends LinearOpMode{
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         exitTimer.reset();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-        outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+        switch (startPosition) {
+            case BLUE_LEFT:
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
+                break;
+            case BLUE_RIGHT:
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
+                break;
+            case RED_LEFT:
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
+                break;
+            case RED_RIGHT:
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
+                break;
+            case TEST_POSE:
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
+                break;
+        }
         while (opModeIsActive() && !isStopRequested() &&
                 exitTimer.time()<1000 && intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
            safeWait(100);
@@ -351,7 +382,7 @@ public class AutoOpMode1 extends LinearOpMode{
     public int stateMachineLoopCounter = 0;
 
     public void autoPickAndDropStateMachine(){
-        telemetry.setAutoClear(true);
+        telemetry.setAutoClear(false);
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount ) {
             if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
@@ -573,12 +604,12 @@ public class AutoOpMode1 extends LinearOpMode{
                         intakeState = INTAKE_STATE.I0;
                     }
             }
-            telemetry.addData("dropConeCounter", dropConeCounter);
+            /*telemetry.addData("dropConeCounter", dropConeCounter);
             telemetry.addData("stackConeCounter", stackConeCounter);
             telemetry.addData(" --- OuttakeState", outtakeState);
             telemetry.addData(" --- IntakeState", intakeState);
 
-            telemetry.update();
+            telemetry.update();*/
 
         }
     }
