@@ -138,6 +138,9 @@ public class GamepadController {
     public void runIntakeSlides(){
         if (!gp1GetStart() && gp1GetB()) {
             intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 1.0 * gp1GetLeftTrigger()));
+            if (intakeArm.intakeArmState == IntakeArm.INTAKE_ARM_STATE.INIT) {
+                intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1);
+            }
         } else if (gp1GetX()) {
             intakeSlides.modifyIntakeSlidesLength(-0.33 * (1.0 + 1.0 * gp1GetLeftTrigger()));
         } else {
@@ -354,8 +357,11 @@ public class GamepadController {
         outtakeArm.openGrip();
     }
 
+    public ElapsedTime transferCycleTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public double transferCycleTimeVal = 0;
     boolean intakeArmNotAtPickup = false;
     public void runTransferSequence(){
+        transferCycleTime.reset();
         if (intakeArm.intakeArmState != IntakeArm.INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1){
             intakeArmNotAtPickup = true;
         }
@@ -404,16 +410,18 @@ public class GamepadController {
         outtakeArm.closeGrip();
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         transferTimer.reset();
-        while (transferTimer.time() < 700 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){
+        while (transferTimer.time() < 500 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){ //700
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
         transferTimer.reset();
-        while(transferTimer.time() < 500){
+        while(transferTimer.time() < 300){ //500
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+        transferCycleTimeVal = transferCycleTime.time();
     }
 
 

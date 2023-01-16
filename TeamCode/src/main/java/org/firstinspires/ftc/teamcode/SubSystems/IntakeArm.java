@@ -31,16 +31,17 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum INTAKE_ARM_STATE {
-        INIT(0.49,0.50,0), //Level 15
+        RANDOM(0,0.94,0),
         PICKUP_AUTO_CONE_1(0.01,0.95,1),
         AUTO_CONE_2(0.10, 0.86, 2),
         AUTO_CONE_3(0.16, 0.80, 3),
         AUTO_CONE_4(0.18, 0.78, 4),
         AUTO_CONE_5(0.26, 0.72, 5),
-        TRANSFER(0.65,0.35,6), //Level 20
-        LOW_JUNCTION(0.39,0.59,7), //Level 12
-        PICKUP_FALLEN_CONE(0.17, 0.8,  8),
-        RANDOM(0,0,9),
+        LOW_JUNCTION(0.39,0.59,6), //Level 12
+        INIT(0.49,0.50,7), //Level 15
+        TRANSFER(0.65,0.35,8), //Level 20
+
+        PICKUP_FALLEN_CONE(0.17, 0.8,  9),
         RANDOM_MAX(0.46,0.53,10); //Level 14
 
         private double leftArmPosition;
@@ -54,8 +55,8 @@ public class IntakeArm {
 
         public INTAKE_ARM_STATE byIndex(int ord) {
             for (INTAKE_ARM_STATE a : INTAKE_ARM_STATE.values()) {
-                if (ord <1) ord = 1;
-                if (ord >5) ord = 5;
+                if (ord <1) ord = 7;
+                if (ord >6) ord = 7;
                 if (a.index == ord) {
                     return a;
                 }
@@ -114,10 +115,6 @@ public class IntakeArm {
 
     //initialize intakeArm
     public void initIntakeArm() {
-        if (intakeGripColor instanceof SwitchableLight) {
-            ((SwitchableLight)intakeGripColor).enableLight(true);
-        }
-
         WRIST_ARM_FACTOR_LEFT = (WRIST_STATE.AUTO_CONE_5.leftWristPosition - WRIST_STATE.PICKUP_AUTO_CONE_1_LEVEL.leftWristPosition)/
                 (INTAKE_ARM_STATE.AUTO_CONE_5.leftArmPosition - INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1.leftArmPosition) ;
 
@@ -136,7 +133,7 @@ public class IntakeArm {
     }
 
     public void moveArmWristUpOneStack(){
-        if (intakeArmState.index < 1 || intakeArmState.index > 5) {
+        if (intakeArmState.index < 1 || intakeArmState.index > 7) {
             return;
         } else {
             assert intakeArmState.byIndex(intakeArmState.index + 1) != null;
@@ -145,7 +142,7 @@ public class IntakeArm {
     }
 
     public void moveArmWristDownOneStack(){
-        if (intakeArmState.index <= 1 || intakeArmState.index > 6) {
+        if (intakeArmState.index <= 1 || intakeArmState.index > 8) {
             return;
         } else {
             assert intakeArmState.byIndex(intakeArmState.index - 1) != null;

@@ -254,7 +254,7 @@ public class OuttakeSlides {
             outtakeTurretServo.setPosition(TURRET_STATE.MAX_LEFT.turretPosition);
             turretState = TURRET_STATE.MAX_LEFT;
         } else {
-            outtakeTurretServo.setPosition(TURRET_STATE.CENTER.turretPosition);
+            //outtakeTurretServo.setPosition(TURRET_STATE.CENTER.turretPosition);
             turretState = TURRET_STATE.INIT;
         }
     }

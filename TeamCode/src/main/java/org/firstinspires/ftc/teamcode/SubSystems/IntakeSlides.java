@@ -64,7 +64,7 @@ public class IntakeSlides {
        //Different constants of arm speed
     public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
     public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
-    public static final double INTAKE_MOTOR_POWER_AUTO = 0.5;
+    public static final double INTAKE_MOTOR_POWER_AUTO = 0.75;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -171,7 +171,8 @@ public class IntakeSlides {
     //sets the Intake motor power
     public void runIntakeMotorToLevel(){
         double power = 0;
-        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS
+                &&  intakeMovementDirection == INTAKE_MOVEMENT_DIRECTION.EXTEND) {
             power = INTAKE_MOTOR_POWER_AUTO;
         } else {
             power = INTAKE_MOTOR_POWER_TELEOP;

@@ -169,7 +169,8 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
             telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
             telemetry.addLine("=============");
-
+            telemetry.addData("Transfer Cylce Time :", gamepadController.transferCycleTimeVal);
+            telemetry.addLine("=============");
             telemetry.addData("isOuttakeAtTransfer", gamepadController.isOuttakeAtTransfer());
             telemetry.addData("isOuttakeArmInTransfer",outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
             telemetry.addData( "isOuttakeWristInTransfer", outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER));
