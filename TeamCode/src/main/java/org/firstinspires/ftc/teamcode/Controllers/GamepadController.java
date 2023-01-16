@@ -251,8 +251,7 @@ public class GamepadController {
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
 
-        if(!gp2GetStart() && gp2GetLeftBumper() &&
-                outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.CLOSED && gp2GetButtonBPress()){
+        if(!gp2GetStart() && gp2GetLeftBumper() && gp2GetButtonBPress()){
             outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
         }
 
@@ -282,11 +281,6 @@ public class GamepadController {
             outtakeSlides.manualResetOuttakeMotor();
         }
 
-
-        /*
-        if (gp1GetButtonAPress()) {
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
-        }*/
     }
 
     public boolean isOuttakeAtTransfer(){

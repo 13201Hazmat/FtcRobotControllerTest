@@ -64,6 +64,12 @@ public class AutoOpMode2 extends LinearOpMode{
     public Vision vision;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
+    public ElapsedTime startTimer = new ElapsedTime(MILLISECONDS);
+    public double startTime = 0;
+    public ElapsedTime totalCyclingTimer = new ElapsedTime(MILLISECONDS);
+    public double totalCyclingTime = 0;
+    public ElapsedTime parkTimer = new ElapsedTime(MILLISECONDS);
+    public double parkTime = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -100,6 +106,7 @@ public class AutoOpMode2 extends LinearOpMode{
         if (opModeIsActive() && !isStopRequested()) {
 
             gameTimer.reset();
+            startTimer.reset();
             //Turn Lights Green
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
 
@@ -115,8 +122,14 @@ public class AutoOpMode2 extends LinearOpMode{
 
             //run Autonomous trajectory
             runAutoAndParking();
+            parkTime = parkTimer.time();
         }
 
+        safeWait(10000); // TODO for checking time.. need to remove
+        telemetry.addData("Start Time", startTime);
+        telemetry.addData("Total Cycling Time", cycleTime);
+        telemetry.addData("Average Cycle time", averageCycleTime/(dropConeCount-0.5));
+        telemetry.addData("parkTime", parkTime);
         //Trajectory is completed, display Parking complete
         parkingComplete();
 
@@ -312,11 +325,16 @@ public class AutoOpMode2 extends LinearOpMode{
             outtakeSlides.moveTurret(pickAndDropTurretState);
             safeWait(1000);
         }
+        startTime = startTimer.time();
+        totalCyclingTimer.reset();
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             autoPickAndDropStateMachine();
         }
+
+        totalCyclingTime = totalCyclingTimer.time();
+        parkTimer.reset();
 
         ElapsedTime exitTimer = new ElapsedTime(MILLISECONDS);
 
@@ -366,7 +384,8 @@ public class AutoOpMode2 extends LinearOpMode{
     ElapsedTime outtakeGripTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime outtakeSenseTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime cycleTimer = new ElapsedTime(MILLISECONDS);
-    public double cycleTime;
+    public double cycleTime = 0;
+    public double averageCycleTime = 0;
     public int dropConeCounter = 0;
     public int stackConeCounter = 0;
     public int stateMachineLoopCounter = 0;
@@ -490,6 +509,7 @@ public class AutoOpMode2 extends LinearOpMode{
                         outtakeState = OUTTAKE_STATE.O1;
                     }
                     cycleTime = cycleTimer.time();
+                    averageCycleTime +=cycleTime;
                     cycleTimer.reset();
                     break;
             }
