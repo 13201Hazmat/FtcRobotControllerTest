@@ -32,7 +32,7 @@ public class IntakeArm {
 
     public enum INTAKE_ARM_STATE {
         RANDOM(0,0.94,0),
-        PICKUP_AUTO_CONE_1(0.01,0.95,1),
+        PICKUP_AUTO_CONE_1(0.03,0.93,1),
         AUTO_CONE_2(0.10, 0.86, 2),
         AUTO_CONE_3(0.16, 0.80, 3),
         AUTO_CONE_4(0.18, 0.78, 4),
