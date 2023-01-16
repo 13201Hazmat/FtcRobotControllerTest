@@ -88,7 +88,7 @@ public class TestIntake extends LinearOpMode {
                 gamepadController.runDriveControl_byRRDriveModes();
 
                 if (gameTimer.time() > 80000 && gameTimer.time() < 90000) {
-                    lights.setPatternEndGame();
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
                 }
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {

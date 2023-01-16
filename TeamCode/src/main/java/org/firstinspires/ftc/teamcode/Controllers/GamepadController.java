@@ -342,7 +342,7 @@ public class GamepadController {
         }
 
         if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
         }
     }
 

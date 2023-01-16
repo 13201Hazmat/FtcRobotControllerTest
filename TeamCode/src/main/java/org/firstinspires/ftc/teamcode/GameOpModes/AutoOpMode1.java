@@ -81,7 +81,7 @@ public class AutoOpMode1 extends LinearOpMode{
         buildAuto();
         driveTrain.getLocalizer().setPoseEstimate(initPose);
 
-        lights.setPatternYellow();
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
         while (!isStopRequested() && !opModeIsActive()) {
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
@@ -101,7 +101,8 @@ public class AutoOpMode1 extends LinearOpMode{
 
             gameTimer.reset();
             //Turn Lights Green
-            lights.setPatternGreen();
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
+
 
             //Stop Vision process
             vision.deactivateVuforiaTensorFlow();
@@ -110,7 +111,7 @@ public class AutoOpMode1 extends LinearOpMode{
             buildParking();
 
             //Turn Auto Demo light patten on
-            lights.setPatternDemo();
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
             //run Autonomous trajectory
             runAutoAndParking();
@@ -119,7 +120,7 @@ public class AutoOpMode1 extends LinearOpMode{
         //Trajectory is completed, display Parking complete
         parkingComplete();
 
-        lights.setPatternBlack();
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
         //Write last position to static class to be used as initial position in TeleOp
         GameField.currentPose = driveTrain.getPoseEstimate();

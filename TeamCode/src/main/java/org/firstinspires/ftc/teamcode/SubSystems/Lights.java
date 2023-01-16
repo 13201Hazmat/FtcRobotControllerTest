@@ -22,26 +22,16 @@ public class Lights {
 
     public RevBlinkinLedDriver blinkinLedDriver;
     public RevBlinkinLedDriver.BlinkinPattern currentPattern;
-    public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-    public RevBlinkinLedDriver.BlinkinPattern patternIntakeOpenGrip = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-    public RevBlinkinLedDriver.BlinkinPattern patternIntakeCloseGrip = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-    public RevBlinkinLedDriver.BlinkinPattern patternTransferProgress = RevBlinkinLedDriver.BlinkinPattern.RED;
-    public RevBlinkinLedDriver.BlinkinPattern patternOuttakeJunctionAligned = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-    public RevBlinkinLedDriver.BlinkinPattern patternEndGame = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
-    public RevBlinkinLedDriver.BlinkinPattern patternDefault = RevBlinkinLedDriver.BlinkinPattern.LIGHT_CHASE_BLUE;
-    public RevBlinkinLedDriver.BlinkinPattern patternBlack = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-    public RevBlinkinLedDriver.BlinkinPattern patternWhite = RevBlinkinLedDriver.BlinkinPattern.WHITE;
-    public RevBlinkinLedDriver.BlinkinPattern patternRed = RevBlinkinLedDriver.BlinkinPattern.RED;
-    public RevBlinkinLedDriver.BlinkinPattern patternYellow = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-    public RevBlinkinLedDriver.BlinkinPattern patternGreen = RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN;
+    public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.CP2_BREATH_SLOW;
 
     public enum REV_BLINKIN_PATTERN {
-        DEMO(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE),
+        DEMO(RevBlinkinLedDriver.BlinkinPattern.CP2_BREATH_SLOW),
         NONE(RevBlinkinLedDriver.BlinkinPattern.BLACK),
         TRANSFER_PROGRESS(RevBlinkinLedDriver.BlinkinPattern.RED),
-        OUTTAKE_JUNCTION_NOT_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.YELLOW),
-        OUTTAKE_JUNCTION_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.GREEN),
-        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE);
+        OUTTAKE_JUNCTION_NOT_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE),
+        OUTTAKE_JUNCTION_ALIGNED(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN),
+        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE),
+        DEFAULT(RevBlinkinLedDriver.BlinkinPattern.GOLD);
 
         private RevBlinkinLedDriver.BlinkinPattern blinkinPattern;
         private REV_BLINKIN_PATTERN(RevBlinkinLedDriver.BlinkinPattern blinkinPattern) {
@@ -58,61 +48,5 @@ public class Lights {
 
     public void setPattern(REV_BLINKIN_PATTERN revBlinkinPattern) {
         blinkinLedDriver.setPattern(revBlinkinPattern.blinkinPattern);
-    }
-
-    public void setPatternDemo(){
-        if (currentPattern != patternDemo) {
-            blinkinLedDriver.setPattern(patternDemo);
-            currentPattern = patternDemo;
-        }
-    }
-
-    public void setPatternEndGame(){
-        if (currentPattern != patternEndGame) {
-            blinkinLedDriver.setPattern(patternEndGame);
-            currentPattern = patternEndGame;
-        }
-    }
-
-    public void setPatternDefault(){
-        if (currentPattern != patternDefault) {
-            blinkinLedDriver.setPattern(patternDefault);
-            currentPattern = patternDefault;
-        }
-    }
-
-    public void setPatternBlack(){
-        if (currentPattern != patternBlack) {
-            blinkinLedDriver.setPattern(patternBlack);
-            currentPattern = patternBlack;
-        }
-    }
-
-    public void setPatternWhite(){
-        if (currentPattern != patternWhite) {
-            blinkinLedDriver.setPattern(patternWhite);
-            currentPattern = patternWhite;
-        }
-    }
-
-    public void setPatternRed(){
-        if (currentPattern != patternRed) {
-            blinkinLedDriver.setPattern(patternRed);
-            currentPattern = patternRed;
-        }
-    }
-
-    public void setPatternYellow(){
-        if (currentPattern != patternYellow) {
-            blinkinLedDriver.setPattern(patternYellow);
-            currentPattern = patternYellow;
-        }
-    }
-
-    public void setPatternGreen(){
-        if (currentPattern != patternGreen) {
-            blinkinLedDriver.setPattern(patternGreen);
-            currentPattern = patternGreen;
-        }
     }
 }
