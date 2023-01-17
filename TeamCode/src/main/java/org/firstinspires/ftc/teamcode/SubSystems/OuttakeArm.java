@@ -50,7 +50,7 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.33), //TODO test real, 0.36
-        WRIST_DROP(0.52), //0.56 TODO test real
+        WRIST_DROP(0.48), //0.52 TODO test real
         WRIST_LOW_JUNCTION(0.68), //TODO test real
         WRIST_MIN(0.2),
         WRIST_MAX(0.76);

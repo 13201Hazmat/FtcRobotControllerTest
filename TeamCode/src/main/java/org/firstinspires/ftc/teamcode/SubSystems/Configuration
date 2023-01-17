@@ -27,7 +27,7 @@ Control Hub Servo Port 2       outtakeArmLeft = hardwareMap.get(Servo.class, "ou
 Control Hub Servo Port 4        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
 Control Hub Servo Port 3        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
 Control Hub Servo Port 5        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo"); //port 1 before
-Control Hub I2C BUS 0 port 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+\Control Hub I2C BUS 0 port 1         outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
 Control Hub I2C BUS 3         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
 Outtake Slides:

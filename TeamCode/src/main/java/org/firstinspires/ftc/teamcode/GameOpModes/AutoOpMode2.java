@@ -192,8 +192,8 @@ public class AutoOpMode2 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
-                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
+                pickAndDropHighPose = new Pose2d(15, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(15, 33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
                 break;
@@ -456,7 +456,7 @@ public class AutoOpMode2 extends LinearOpMode{
                     if ((outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
                             && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP))
-                            || outtakeWristTimer.time() > 750) {//1000
+                            || outtakeWristTimer.time() > 1000) {//750
                         outtakeState = OUTTAKE_STATE.O6;
                     }
                     break;
