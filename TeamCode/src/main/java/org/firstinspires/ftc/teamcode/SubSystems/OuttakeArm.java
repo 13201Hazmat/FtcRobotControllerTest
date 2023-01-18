@@ -24,7 +24,7 @@ public class OuttakeArm {
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(1.0, 0.0), //TODO test real values
+        TRANSFER(0.98, 0.02), //TODO test real values
         DROP(0.4, 0.6), //TODO test real values
         LOW_JUNCTION (0.2, 0.8),
         AUTO_HIGH_JUNCTION(0.35,0.65),
@@ -49,7 +49,7 @@ public class OuttakeArm {
 
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
-        WRIST_TRANSFER(0.33), //TODO test real, 0.36
+        WRIST_TRANSFER(0.40), //TODO test real, 0.36
         WRIST_DROP(0.48), //0.52 TODO test real
         WRIST_AUTO_DROP(0.52),
         WRIST_LOW_JUNCTION(0.68), //TODO test real
@@ -220,19 +220,19 @@ public class OuttakeArm {
     public double isOuttakeArmInStateError = 0;
     public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE toOuttakeArmState) {
         isOuttakeArmInStateError = Math.abs(outtakeArmLeft.getPosition() - toOuttakeArmState.leftArmPosition);
-        return (outtakeArmState == toOuttakeArmState && isOuttakeArmInStateError <= 0.05);
+        return (outtakeArmState == toOuttakeArmState && isOuttakeArmInStateError <= 0.02);
     }
 
     public double isOuttakeWristInStateError = 0;
     public boolean isOuttakeWristInState(OUTTAKE_WRIST_STATE toOuttakeWristState) {
         isOuttakeWristInStateError = Math.abs(outtakeWristServo.getPosition() - toOuttakeWristState.getWristPosition());
-        return (outtakeWristState == toOuttakeWristState && isOuttakeWristInStateError <= 0.03);
+        return (outtakeWristState == toOuttakeWristState && isOuttakeWristInStateError <= 0.02);
     }
 
     public double isOuttakeGripInStateError = 0;
     public boolean isOuttakeGripInState(OUTTAKE_GRIP_STATE toOuttakeGripState) {
         isOuttakeGripInStateError = Math.abs(outtakeGripServo.getPosition() - toOuttakeGripState.getGripPosition());
-        return (outtakeGripState == toOuttakeGripState && isOuttakeGripInStateError <=0.05);
+        return (outtakeGripState == toOuttakeGripState && isOuttakeGripInStateError <=0.03);
     }
 
 }

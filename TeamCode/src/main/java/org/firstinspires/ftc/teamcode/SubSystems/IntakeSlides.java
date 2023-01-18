@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,7 +20,8 @@ public class IntakeSlides {
     //Intake Motor : 5203 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 8mm REX Shaft, 435 RPM, 3.3 - 5V Encoder)
     public static final double INTAKE_MOTOR_ENCODER_TICKS = 145.6;//384.5;
 
-    public DigitalChannel intakeTouch;  // Hardware Device Object
+    //public DigitalChannel intakeTouch;  // Hardware Device Object
+    public TouchSensor intakeTouch;
 
     public DistanceSensor intakeDistanceSensor;
 
@@ -79,13 +81,10 @@ public class IntakeSlides {
         intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 
         // get a reference to our digitalTouch object.
-        intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
+        //intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
         // set the digital channel to input.
-        intakeTouch.setMode(DigitalChannel.Mode.INPUT);
-
-        intakeDistanceSensor = hardwareMap.get(DistanceSensor.class, "intake_distance");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)intakeDistanceSensor;
-
+        //intakeTouch.setMode(DigitalChannel.Mode.INPUT);
+        intakeTouch = hardwareMap.get(TouchSensor.class,"intake_reset_ts");
         initIntakeSlides();
     }
 
@@ -99,7 +98,7 @@ public class IntakeSlides {
         intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
         intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
-        //manualResetIntakeMotor(); TODO : CAUSING BATTERY DISCHARGE
+        manualResetIntakeMotor(); //TODO : CAUSING BATTERY DISCHARGE
     }
 
     //Turns on the brake for Intake motor
@@ -108,7 +107,13 @@ public class IntakeSlides {
         intakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    //Sets outtake slides to Transfer position
+    //Turns on the brake for Intake motor
+    public void turnIntakeBrakeModeOff(){
+        intakeMotorLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        intakeMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+    }
+
+    //Sets intake slides to position
     public void moveIntakeSlides(INTAKE_SLIDES_STATE toIntakeMotorState){
         turnIntakeBrakeModeOn();
         intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
@@ -214,14 +219,21 @@ public class IntakeSlides {
     public void manualResetIntakeMotor(){
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         timer.reset();
-        while (intakeTouch.getState() && timer.time() < 2000) {
+        turnIntakeBrakeModeOff();
+        while (!intakeTouch.isPressed() && timer.time() < 500) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             intakeMotorRight.setTargetPosition((int) (intakeMotorRight.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
-            runIntakeMotorToLevelState = true;
-            runIntakeMotorToLevel();
+            //runIntakeMotorToLevelState = true;
+            intakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intakeMotorLeft.setPower(INTAKE_MOTOR_POWER_TELEOP);
+            intakeMotorRight.setPower(INTAKE_MOTOR_POWER_TELEOP);
         }
+
         resetIntakeMotorMode();
         turnIntakeBrakeModeOn();
+        intakeMotorLeft.setPower(0.0);
+        intakeMotorRight.setPower(0.0);
         intakeSlidesState = INTAKE_SLIDES_STATE.MIN_RETRACTED;
     }
 

@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -364,12 +367,8 @@ public class GamepadController {
         ElapsedTime stackTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         if(intakeArmNotAtPickup){
-            stackTimer.reset();
-            while(stackTimer.time() <300){
-                runDriveControl_byRRDriveModes();
-            }
+            safeWait(300);
         }
-        //TODO : Add wait if the pick up is from AUTOCONE LOCATION oR RANDOM
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
         intakeSlides.runIntakeMotorToLevel();
         if(!isOuttakeAtTransfer()){
@@ -383,34 +382,35 @@ public class GamepadController {
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
             transferTimer.reset();
-            while( (!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) || transferTimer.time() < 400) //800
-                    && transferTimer.time() < 1000){ //2000
+            while( !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) && transferTimer.time() < 1000){ //2000
                 runDriveControl_byRRDriveModes();
             }
-            intakeArm.openGrip();
         } else {
             //Outtake has some error
             intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION);
             return;
         }
         transferTimer.reset();
-        while((!outtakeArm.senseOuttakeCone() || transferTimer.time() < 300) && transferTimer.time() < 700){
+        safeWait(400);
+        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 700){
             runDriveControl_byRRDriveModes();
         }
-
-        /*while(transferTimer.time() < 300){
-            runDriveControl_byRRDriveModes();
-        }*/
         outtakeArm.closeGrip();
+        safeWait(200);
+        intakeArm.openGrip();
+        safeWait(200);
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         transferTimer.reset();
-        while (transferTimer.time() < 500 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){ //700
+        while (transferTimer.time() < 700 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){ //700
+            runIntakeSlides();
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
         transferTimer.reset();
-        while(transferTimer.time() < 300){ //500
+        while(transferTimer.time() < 300){ //500 // Allow Intake controls
+            runIntakeSlides();
+            runIntakeArm();
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
@@ -418,10 +418,12 @@ public class GamepadController {
         transferCycleTimeVal = transferCycleTime.time();
     }
 
-
-
-    public void recordAndReplay(){
-        //TODO
+    public void safeWait(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (timer.time() < time) {
+            runDriveControl_byRRDriveModes();
+        }
     }
 
     //*********** KEY PAD MODIFIERS BELOW ***********

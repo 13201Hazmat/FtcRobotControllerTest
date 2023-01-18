@@ -84,7 +84,6 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
                 gamepadController.runIntakeSlides();
                 gamepadController.runOuttakeArm();
                 gamepadController.runOuttakeSlides();
-                gamepadController.recordAndReplay();
                 gamepadController.runDriveControl_byRRDriveModes();
 
                 if (gameTimer.time() > 80000 && gameTimer.time() < 90000) {
@@ -193,7 +192,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
                 telemetry.addData("Intake Slides Right Power", intakeSlides.intakeMotorRight.getPower());
                 telemetry.addData("Intake Slides Left is busy", intakeSlides.intakeMotorLeft.isBusy());
                 telemetry.addData("Intake Slides Right is busy", intakeSlides.intakeMotorRight.isBusy());
-                telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
+                //telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
             }
             telemetry.addLine("=============");
 

@@ -185,7 +185,8 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.addData("Intake Slides Right Power", intakeSlides.intakeMotorRight.getPower());
                 telemetry.addData("Intake Slides Left is busy", intakeSlides.intakeMotorLeft.isBusy());
                 telemetry.addData("Intake Slides Right is busy", intakeSlides.intakeMotorRight.isBusy());
-                telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
+                //telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
+                telemetry.addData("Intake Slides Touch Sensor State",intakeSlides.intakeTouch.isPressed());
             }
             telemetry.addLine("=============");
 

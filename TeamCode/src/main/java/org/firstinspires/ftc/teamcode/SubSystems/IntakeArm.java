@@ -39,7 +39,7 @@ public class IntakeArm {
         AUTO_CONE_5(0.27, 0.69, 5),
         LOW_JUNCTION(0.39,0.59,6), //Level 12
         INIT(0.54,0.45,7), //Level 15
-        TRANSFER(0.65,0.35,8), //Level 20
+        TRANSFER(0.67,0.33,8), //Level 20
 
         PICKUP_FALLEN_CONE(0.17, 0.8,  9),
         RANDOM_MAX(0.46,0.53,10); //Level 14
@@ -55,8 +55,8 @@ public class IntakeArm {
 
         public INTAKE_ARM_STATE byIndex(int ord) {
             for (INTAKE_ARM_STATE a : INTAKE_ARM_STATE.values()) {
-                if (ord <1) ord = 7;
-                if (ord >6) ord = 7;
+                if (ord <1) ord = 8;
+                if (ord >6) ord = 8;
                 if (a.index == ord) {
                     return a;
                 }
@@ -79,7 +79,7 @@ public class IntakeArm {
         RANDOM (0.6,0.4),
         AUTO_CONE_5(0.50, 0.56),
         LOW_JUNCTION(0.4,0.6),
-        TRANSFER (0.33,0.73),
+        TRANSFER (0.28,0.78),
         FALLEN_CONE(0.5,0.5);
 
         private final double leftWristPosition;
@@ -288,12 +288,12 @@ public class IntakeArm {
 
     public boolean isIntakeArmInState(INTAKE_ARM_STATE toArmState) {
         return ((intakeArmState == toArmState) &&
-                Math.abs(intakeArmServoLeft.getPosition() - toArmState.leftArmPosition) <= 0.03);
+                Math.abs(intakeArmServoLeft.getPosition() - toArmState.leftArmPosition) <= 0.01);
     }
 
     public boolean isIntakeGripInState(INTAKE_GRIP_STATE toGripState) {
         return ((intakeGripState == toGripState) &&
-                Math.abs(intakeGripServo.getPosition() - toGripState.gripPosition) <= 0.05);
+                Math.abs(intakeGripServo.getPosition() - toGripState.gripPosition) <= 0.03);
     }
 
 

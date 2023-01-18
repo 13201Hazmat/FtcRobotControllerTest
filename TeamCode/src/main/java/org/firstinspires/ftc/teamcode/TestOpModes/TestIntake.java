@@ -318,7 +318,7 @@ public class TestIntake extends LinearOpMode {
                 telemetry.addData("Intake Slides Left BRAKE MODE", intakeSlides.intakeMotorLeft.getZeroPowerBehavior());
                 telemetry.addData("Intake Slides Right BRAKE MODE", intakeSlides.intakeMotorRight.getZeroPowerBehavior());
 
-                telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
+                //telemetry.addData("Intake Slides Touch Sensor State", intakeSlides.intakeTouch.getState());
             }
             telemetry.addLine("=============");
 
