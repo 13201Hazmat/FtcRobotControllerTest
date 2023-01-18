@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -51,7 +48,7 @@ public class OuttakeSlides {
         MEDIUM_JUNCTION (530),
         HIGH_JUNCTION (1440),
         AUTO_MEDIUM_JUNCTION(701),
-        AUTO_HIGH_JUNCTION(1550),
+        AUTO_HIGH_JUNCTION(1600),
         MAX_EXTENDED(1650),
         RANDOM(0);
 
@@ -236,8 +233,12 @@ public class OuttakeSlides {
         MAX_RIGHT (0.45), //0.66
         INIT(0.33), //0.5
         RANDOM (0.33), //0.45
-        AUTO_LEFT(0.26), //0.27
-        AUTO_RIGHT(0.40); //0.41
+        TELEOP_LEFT(0.27),
+        TELEOP_RIGHT(0.4),
+        AUTO_HIGH_LEFT(0.26), //0.27
+        AUTO_HIGH_RIGHT(0.40), //0.41
+        AUTO_MEDIUM_LEFT(0.26),
+        AUTO_MEDIUM_RIGHT(0.40);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

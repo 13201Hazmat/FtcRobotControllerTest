@@ -38,7 +38,7 @@ public class IntakeArm {
         AUTO_CONE_4(0.24, 0.72, 4),
         AUTO_CONE_5(0.27, 0.69, 5),
         LOW_JUNCTION(0.39,0.59,6), //Level 12
-        INIT(0.49,0.50,7), //Level 15
+        INIT(0.54,0.45,7), //Level 15
         TRANSFER(0.65,0.35,8), //Level 20
 
         PICKUP_FALLEN_CONE(0.17, 0.8,  9),

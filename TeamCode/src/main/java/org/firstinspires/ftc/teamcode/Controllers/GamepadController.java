@@ -237,7 +237,7 @@ public class GamepadController {
         }
 
         if(gp2GetLeftBumper() && gp2GetButtonXPress()) {
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_RIGHT);
         }
 
         if(outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.CLOSED && gp2GetButtonYPress() ){
@@ -252,7 +252,7 @@ public class GamepadController {
         }
 
         if(!gp2GetStart() && gp2GetLeftBumper() && gp2GetButtonBPress()){
-            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
+            outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_LEFT);
         }
 
         /*if(!gp2GetStart() && !gp2GetLeftBumper() && gp2GetButtonAPress()){

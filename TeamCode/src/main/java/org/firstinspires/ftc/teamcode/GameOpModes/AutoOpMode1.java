@@ -154,8 +154,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(-12, 39, Math.toRadians(90));
                 pickAndDropMediumPose = new Pose2d(-12, 33, Math.toRadians(90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
                 break;
 
             case BLUE_RIGHT:
@@ -163,8 +163,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(-12, -39, Math.toRadians(-90));
                 pickAndDropMediumPose = new Pose2d(-12, -33, Math.toRadians(-90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
                 break;
 
             case RED_LEFT:
@@ -172,8 +172,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
                 pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(270));
                 pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(270));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
                 break;
 
             case RED_RIGHT:
@@ -181,8 +181,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
                 pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_LEFT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
                 break;
 
             case TEST_POSE:
@@ -190,8 +190,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(3, 0, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(4, 0, Math.toRadians(180));
                 pickAndDropMediumPose = new Pose2d(4, 0, Math.toRadians(180));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
                 parkPose = new Pose2d(5, 0, Math.toRadians(180));
                 endPoseForward = 1;
                 break;
@@ -336,11 +336,11 @@ public class AutoOpMode1 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
             case RED_LEFT:
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_LEFT);
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_LEFT);
                 break;
             case BLUE_RIGHT:
             case RED_RIGHT:
-                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.AUTO_RIGHT);
+                outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_RIGHT);
                 break;
             case TEST_POSE:
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
