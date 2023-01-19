@@ -540,7 +540,9 @@ public class AutoOpMode3 extends LinearOpMode{
 
                 case I2: //Move Intake arm and slides to stack current cone level
                     intakeArm.moveArm(Objects.requireNonNull(intakeArm.intakeArmState.byIndex(5 - stackConeCounter)));
-
+                    if (5-stackConeCounter <=2) {
+                        safeWait(300);
+                    }
                     intakeSlides.moveIntakeSlides(Objects.requireNonNull(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter)));
                     intakeSlides.runIntakeMotorToLevel();
                     intakeGripTimer.reset();

@@ -30,11 +30,11 @@ public class IntakeSlides {
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
         
-        AUTO_CONE_1(570, 1),
-        AUTO_CONE_2(520, 2),
-        AUTO_CONE_3(500, 3),
-        AUTO_COME_4(500, 4),
-        AUTO_CONE_5(500, 5);
+        AUTO_CONE_1(560, 1),
+        AUTO_CONE_2(510, 2),
+        AUTO_CONE_3(490, 3),
+        AUTO_COME_4(490, 4),
+        AUTO_CONE_5(490, 5);
 
         public final double motorPosition;
         public final int index;
