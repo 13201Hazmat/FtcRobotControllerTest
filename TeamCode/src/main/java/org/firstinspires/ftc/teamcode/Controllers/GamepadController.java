@@ -366,7 +366,7 @@ public class GamepadController {
         if (isOuttakeAtTransfer()) {
             intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
             transferTimer.reset();
-            while( !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) && transferTimer.time() < 1000){ //2000
+            while( !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) && transferTimer.time() < 500){ //1000
                 runDriveControl_byRRDriveModes();
             }
         } else {
@@ -376,16 +376,17 @@ public class GamepadController {
         }
         transferTimer.reset();
         safeWait(400);
-        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 1500){
+        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 700){//1500
             runDriveControl_byRRDriveModes();
         }
-        outtakeArm.closeGrip();
-        safeWait(200);
         intakeArm.openGrip();
         safeWait(200);
+        outtakeArm.closeGrip();
+        safeWait(200);
+
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         transferTimer.reset();
-        while (transferTimer.time() < 700 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){ //700
+        while (transferTimer.time() < 500 && !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)){ //700
             runIntakeSlides();
             runDriveControl_byRRDriveModes();
         }
@@ -393,6 +394,7 @@ public class GamepadController {
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         transferTimer.reset();
         while(transferTimer.time() < 300){ //500 // Allow Intake controls
+            runOuttakeSlides();
             runIntakeSlides();
             runIntakeArm();
             runDriveControl_byRRDriveModes();

@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocityConstraint;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,7 +16,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import java.util.Objects;
@@ -26,9 +23,8 @@ import java.util.Objects;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Auto 1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-@Disabled
-public class AutoOpMode1 extends LinearOpMode{
+@Autonomous(name = "Hazmat Auto 4", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutoOpMode4 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -66,6 +62,12 @@ public class AutoOpMode1 extends LinearOpMode{
     public Vision vision;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
+    public ElapsedTime startTimer = new ElapsedTime(MILLISECONDS);
+    public double startTime = 0;
+    public ElapsedTime totalCyclingTimer = new ElapsedTime(MILLISECONDS);
+    public double totalCyclingTime = 0;
+    public ElapsedTime parkTimer = new ElapsedTime(MILLISECONDS);
+    public double parkTime = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -102,6 +104,7 @@ public class AutoOpMode1 extends LinearOpMode{
         if (opModeIsActive() && !isStopRequested()) {
 
             gameTimer.reset();
+            startTimer.reset();
             //Turn Lights Green
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
 
@@ -117,8 +120,14 @@ public class AutoOpMode1 extends LinearOpMode{
 
             //run Autonomous trajectory
             runAutoAndParking();
+            parkTime = parkTimer.time();
         }
 
+        safeWait(10000); // TODO for checking time.. need to remove
+        telemetry.addData("Start Time", startTime);
+        telemetry.addData("Total Cycling Time", cycleTime);
+        telemetry.addData("Average Cycle time", averageCycleTime/(dropConeCount-0.5));
+        telemetry.addData("parkTime", parkTime);
         //Trajectory is completed, display Parking complete
         parkingComplete();
 
@@ -156,8 +165,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(-12, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(-12, 39, Math.toRadians(90));
                 pickAndDropMediumPose = new Pose2d(-12, 33, Math.toRadians(90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
 
             case BLUE_RIGHT:
@@ -165,8 +174,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(-12, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(-12, -39, Math.toRadians(-90));
                 pickAndDropMediumPose = new Pose2d(-12, -33, Math.toRadians(-90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
 
             case RED_LEFT:
@@ -174,17 +183,17 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(12, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
                 pickAndDropHighPose = new Pose2d(12, -39, Math.toRadians(270));
                 pickAndDropMediumPose = new Pose2d(12, -33, Math.toRadians(270));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
 
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
-                midWayPose = new Pose2d(12, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12, 39, Math.toRadians(90));
-                pickAndDropMediumPose = new Pose2d(12, 33, Math.toRadians(90));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
+                midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
+                pickAndDropHighPose = new Pose2d(15, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(15, 33, Math.toRadians(90));
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
 
             case TEST_POSE:
@@ -192,8 +201,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 midWayPose = new Pose2d(3, 0, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(4, 0, Math.toRadians(180));
                 pickAndDropMediumPose = new Pose2d(4, 0, Math.toRadians(180));
-                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.TELEOP_RIGHT;
-                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.TELEOP_LEFT;
+                pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.CENTER;
+                pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.CENTER;
                 parkPose = new Pose2d(5, 0, Math.toRadians(180));
                 endPoseForward = 1;
                 break;
@@ -222,22 +231,15 @@ public class AutoOpMode1 extends LinearOpMode{
                 .addTemporalMarker(0.1 ,() -> {
                     outtakeSlides.moveTurret(pickAndDropTurretState);
                 })
-                .setVelConstraint(getVelocityConstraint(
-                        0.5*DriveConstants.MAX_VEL/*Slower velocity*/,
-                        0.5*DriveConstants.MAX_ANG_VEL, /*Slower angular velocity*/
-                        DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(midWayPose)
-                .addTemporalMarker(()-> {
-                    telemetry.addData("Midway Pose estimate", driveTrain.getPoseEstimate());
-                    telemetry.update();
-                })
-                //.turn(Math.toRadians(endPoseTurn))
+                /*
+                .setVelConstraint(getVelocityConstraint(
+                        0.5*DriveConstants.MAX_VEL,
+                        0.5*DriveConstants.MAX_ANG_VEL,
+                        DriveConstants.TRACK_WIDTH))
+                 */
                 .lineToLinearHeading(pickAndDropPose)
-                .addTemporalMarker(()-> {
-                    telemetry.addData("Pick and Drop estimate", driveTrain.getPoseEstimate());
-                    telemetry.update();
-                })
-                .resetVelConstraint()
+                //.resetVelConstraint()
                 .build();
 
 
@@ -248,36 +250,36 @@ public class AutoOpMode1 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(90)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(90)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(90)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, 60, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, 36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(180)); break; // Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 10;
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(270)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(270)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(270)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(180)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(-12, -36, Math.toRadians(180)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(-12, -60, Math.toRadians(180)); break; // Location 3
                 }
                 endPoseTurn = -90;
                 endPoseForward = 10;
                 break;
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(270)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(270)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(270)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 10;
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(12, 12, Math.toRadians(90)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(90)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(90)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(15, 12, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(15, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(15, 60, Math.toRadians(0)); break; // Location 3
                 }
                 endPoseTurn = -90;
                 endPoseForward = 10;
@@ -292,8 +294,8 @@ public class AutoOpMode1 extends LinearOpMode{
                     telemetry.addData("Park Pose estimate", driveTrain.getPoseEstimate());
                     telemetry.update();
                 })*/
-                .turn(Math.toRadians(endPoseTurn))
-                .forward(endPoseForward)
+                //.turn(Math.toRadians(endPoseTurn))
+                //.forward(endPoseForward)
                 .build();
 
 
@@ -323,11 +325,16 @@ public class AutoOpMode1 extends LinearOpMode{
             outtakeSlides.moveTurret(pickAndDropTurretState);
             safeWait(1000);
         }
+        startTime = startTimer.time();
+        totalCyclingTimer.reset();
 
         //turn turret and pick, then drop cone
         if (autoOption != AUTO_OPTION.ONLY_PARK) {
             autoPickAndDropStateMachine();
         }
+
+        totalCyclingTime = totalCyclingTimer.time();
+        parkTimer.reset();
 
         ElapsedTime exitTimer = new ElapsedTime(MILLISECONDS);
 
@@ -358,7 +365,7 @@ public class AutoOpMode1 extends LinearOpMode{
         if(opModeIsActive() && !isStopRequested() && startPosition != START_POSITION.TEST_POSE) {
             driveTrain.followTrajectorySequence(trajectoryParking);
         }
-        safeWait(1000);
+        safeWait(30000-gameTimer.time());
     }
 
     public enum INTAKE_STATE{
@@ -377,20 +384,21 @@ public class AutoOpMode1 extends LinearOpMode{
     ElapsedTime outtakeGripTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime outtakeSenseTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime cycleTimer = new ElapsedTime(MILLISECONDS);
-    public double cycleTime;
+    public double cycleTime = 0;
+    public double averageCycleTime = 0;
     public int dropConeCounter = 0;
     public int stackConeCounter = 0;
     public int stateMachineLoopCounter = 0;
 
     public void autoPickAndDropStateMachine(){
-        telemetry.setAutoClear(false);
+        telemetry.setAutoClear(true);
         cycleTimer.reset();
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount ) {
-            if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
+            /*if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1) //TODO : TO BE FIXED TO NEW SYNC POINT
                  && gameTimer.time() > 22000 && startPosition != START_POSITION.TEST_POSE) {
                 break;
-            }
+            }*/
             stateMachineLoopCounter ++;
             switch (outtakeState) {
                 case O0: // Start of State machine
@@ -398,7 +406,10 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case O1: // Cone is sensed, close grip
-                    if (intakeState == INTAKE_STATE.I0 || intakeState == INTAKE_STATE.I1) {
+                    if (dropConeCounter == 0) {
+                        outtakeArm.closeGrip();
+                        outtakeState = OUTTAKE_STATE.O3;
+                    } else if (intakeState == INTAKE_STATE.I13) {
                         outtakeArm.closeGrip();
                         outtakeGripTimer.reset();
                         outtakeState = OUTTAKE_STATE.O2;
@@ -408,7 +419,8 @@ public class AutoOpMode1 extends LinearOpMode{
                 case O2: // If Intake Arm is not in transfer, proceed to move outttake to drop position
                     /*telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
                             !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));*/
-                    if(outtakeGripTimer.time() > 300 &&
+                    if((intakeState == INTAKE_STATE.I1 || intakeState == INTAKE_STATE.I2 || intakeState == INTAKE_STATE.I3)
+                            && outtakeGripTimer.time() > 200 &&
                             !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
                         outtakeState = OUTTAKE_STATE.O3;
                     }
@@ -427,7 +439,7 @@ public class AutoOpMode1 extends LinearOpMode{
 
                 case O4: // Move outtake wrist to Drop
                     if (outtakeWristTimer.time() > 300) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP);
                         outtakeState = OUTTAKE_STATE.O5;
                         outtakeWristTimer.reset();
                     }
@@ -445,10 +457,11 @@ public class AutoOpMode1 extends LinearOpMode{
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
 
-                    if ((outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
+                    if ((outtakeWristTimer.time() > 500 &&
+                            outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
-                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP))
-                            || outtakeWristTimer.time() > 1000) {
+                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP))
+                            || outtakeWristTimer.time() > 1000) {//750
                         outtakeState = OUTTAKE_STATE.O6;
                     }
                     break;
@@ -477,6 +490,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
                     outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                     outtakeArm.openGrip();
+                    dropConeCounter++;
                     outtakeState = OUTTAKE_STATE.O10;
 
                 case O10: // Check if outtake is at transfer
@@ -492,16 +506,21 @@ public class AutoOpMode1 extends LinearOpMode{
 
                 case O11: // Wait till Intake drops cone
                     //telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
-                    dropConeCounter++;
-                    if (dropConeCounter < dropConeCount && intakeState == INTAKE_STATE.I1) {
-                        if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 1000) {
-                            outtakeState = OUTTAKE_STATE.O1;
+                    if (dropConeCounter < dropConeCount) {
+                        if (intakeState == INTAKE_STATE.I12) {
+                            if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 500) { //1500
+                                outtakeState = OUTTAKE_STATE.O1;
+                                cycleTime = cycleTimer.time();
+                                averageCycleTime +=cycleTime;
+                                cycleTimer.reset();
+                            }
                         }
                     } else {
                         outtakeState = OUTTAKE_STATE.O1;
+                        cycleTime = cycleTimer.time();
+                        averageCycleTime +=cycleTime;
+                        cycleTimer.reset();
                     }
-                    cycleTime = cycleTimer.time();
-                    cycleTimer.reset();
                     break;
             }
 
@@ -519,6 +538,9 @@ public class AutoOpMode1 extends LinearOpMode{
 
                 case I2: //Move Intake arm and slides to stack current cone level
                     intakeArm.moveArm(Objects.requireNonNull(intakeArm.intakeArmState.byIndex(5 - stackConeCounter)));
+                    if (5-stackConeCounter <=2) {
+                        safeWait(300);
+                    }
                     intakeSlides.moveIntakeSlides(Objects.requireNonNull(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter)));
                     intakeSlides.runIntakeMotorToLevel();
                     intakeGripTimer.reset();
@@ -526,7 +548,10 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case I3: // Wait for Outtake grip to be open, and hold position minimum for 500 to stabilize
-                    if(outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) && intakeGripTimer.time() > 400) {
+                    if( (intakeSlides.isIntakeSlidesInState(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter))
+                            && outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
+                            && intakeGripTimer.time() > 300)
+                            || intakeGripTimer.time() > 1000) {//400
                         intakeState = INTAKE_STATE.I4;
                     }
                     break;
@@ -550,15 +575,15 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case I7: // Wait for Arm to be completely moved up of stack
-                    if (intakeArmTimer.time() > 400) {
+                    if (intakeArmTimer.time() > 300) {
                         intakeState = INTAKE_STATE.I8;
                     }
                     break;
                 case I8: // Move intake slides to Transfer
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-                    intakeSlides.runIntakeMotorToLevel();
                     intakeState = INTAKE_STATE.I9;
                     break;
+
                 case I9: // Wait till Outtake is ready to accept cone
                     if(outtakeState == OUTTAKE_STATE.O11){
                         intakeState = INTAKE_STATE.I10;
@@ -566,6 +591,7 @@ public class AutoOpMode1 extends LinearOpMode{
                     break;
 
                 case I10: // Move intake Arm to transfer
+                    intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                     intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
                     intakeArmTimer.reset();
                     intakeState = INTAKE_STATE.I11;
@@ -578,43 +604,43 @@ public class AutoOpMode1 extends LinearOpMode{
                     if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
                             && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
                             || intakeArmTimer.time() > 1000) {
+                        outtakeSenseTimer.reset();
                         intakeState = INTAKE_STATE.I12;
                     }
                     break;
 
                 case I12: // Open Intake Grip to drop cone to Transfer
-                    intakeArm.openGrip();
-                    intakeGripTimer.reset();
-                    outtakeSenseTimer.reset();
-                    intakeState = INTAKE_STATE.I13;
-                    break;
-
-                case I13: // Keep grip open for transfer to complete
-                    if (intakeGripTimer.time() > 400) {
-                        intakeState = INTAKE_STATE.I14;
+                    if (outtakeState == OUTTAKE_STATE.O1) {
+                        intakeArm.openGrip();
+                        safeWait(200);
+                        intakeState = INTAKE_STATE.I13;
                     }
                     break;
-
-                case I14 : // Move Intake Arm to Init
+                case I13:
                     intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
                     intakeArmTimer.reset();
-                    intakeState = INTAKE_STATE.I15;
-                    break;
-
-                case I15: // Ensure Intake Arm is moved out of Transfer
-                    if (intakeArmTimer.time() > 300 &&
-                            intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)) {
-                        stackConeCounter++;
-                        intakeState = INTAKE_STATE.I0;
-                    }
+                    while (intakeArmTimer.time() < 700 &&
+                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)) {}
+                    stackConeCounter++;
+                    intakeState = INTAKE_STATE.I1;
             }
             telemetry.addData("dropConeCounter", dropConeCounter);
             telemetry.addData("stackConeCounter", stackConeCounter);
             telemetry.addData("cycleTime", cycleTime);
-            //telemetry.addData(" --- OuttakeState", outtakeState);
-            //telemetry.addData(" --- IntakeState", intakeState);
+            telemetry.addData(" --- OuttakeState", outtakeState);
+            telemetry.addData(" --- IntakeState", intakeState);
+            telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)));
+            telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)).motorPosition);
+            telemetry.addData("Intake Slide Left Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
+            telemetry.addData("Intake Slide Right Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
+            telemetry.addData("Intake touch Pressed", intakeSlides.intakeTouch.isPressed());
+
+            telemetry.addData("Pose Estimate", driveTrain.getPoseEstimate());
 
             telemetry.update();
+            if (startPosition == START_POSITION.TEST_POSE) {
+                safeWait(0);
+            }
 
         }
     }
@@ -684,7 +710,16 @@ public class AutoOpMode1 extends LinearOpMode{
             telemetry.update();
         }
 
-        if (autoOption != AUTO_OPTION.ONLY_PARK) {
+
+
+        if (autoOption == AUTO_OPTION.ONLY_PARK) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            dropConeCount = 0;
+            stackConeCount = 0;
+        } else {
             while (!isStopRequested()) {
                 telemetry.addLine("Initializing Hazmat Autonomous Mode ");
                 telemetry.addData("---------------------------------------", "");
@@ -708,6 +743,7 @@ public class AutoOpMode1 extends LinearOpMode{
         }
 
         if (autoOption == AUTO_OPTION.FULL_AUTO) {
+            dropConeCount = 6;
             while (!isStopRequested()) {
                 telemetry.addLine("Initializing Hazmat Autonomous Mode ");
                 telemetry.addData("---------------------------------------", "");

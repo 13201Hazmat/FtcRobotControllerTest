@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
 @TeleOp(name = "Test Vision", group = "Concept")
-
+@Disabled
 public class TestVision extends LinearOpMode {
 
     public Vision vision;

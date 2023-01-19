@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocit
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +28,7 @@ import java.util.Objects;
  * FTC WIRES Autonomous Example
  */
 @Autonomous(name = "Hazmat Auto 2", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+@Disabled
 public class AutoOpMode2 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
@@ -568,7 +570,6 @@ public class AutoOpMode2 extends LinearOpMode{
                     break;
                 case I8: // Move intake slides to Transfer
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-                    intakeSlides.runIntakeMotorToLevel();
                     intakeState = INTAKE_STATE.I9;
                     break;
                 case I9: // Wait till Outtake is ready to accept cone
@@ -578,6 +579,7 @@ public class AutoOpMode2 extends LinearOpMode{
                     break;
 
                 case I10: // Move intake Arm to transfer
+                    intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                     intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
                     intakeArmTimer.reset();
                     intakeState = INTAKE_STATE.I11;
@@ -590,15 +592,18 @@ public class AutoOpMode2 extends LinearOpMode{
                     if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
                             && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
                             || intakeArmTimer.time() > 1000) {
+                        outtakeSenseTimer.reset();
                         intakeState = INTAKE_STATE.I12;
                     }
                     break;
 
                 case I12: // Open Intake Grip to drop cone to Transfer
-                    intakeArm.openGrip();
-                    intakeGripTimer.reset();
-                    outtakeSenseTimer.reset();
-                    intakeState = INTAKE_STATE.I13;
+                    if(intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
+                        intakeArm.openGrip();
+                        intakeGripTimer.reset();
+                        outtakeSenseTimer.reset();
+                        intakeState = INTAKE_STATE.I13;
+                    }
                     break;
 
                 case I13: // Keep grip open for transfer to complete
@@ -614,7 +619,7 @@ public class AutoOpMode2 extends LinearOpMode{
                     break;
 
                 case I15: // Ensure Intake Arm is moved out of Transfer
-                    if (intakeArmTimer.time() > 400 &&
+                    if (intakeArmTimer.time() > 200 && //400
                             intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)) {
                         stackConeCounter++;
                         intakeState = INTAKE_STATE.I0;

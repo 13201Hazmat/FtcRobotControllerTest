@@ -540,6 +540,7 @@ public class AutoOpMode3 extends LinearOpMode{
 
                 case I2: //Move Intake arm and slides to stack current cone level
                     intakeArm.moveArm(Objects.requireNonNull(intakeArm.intakeArmState.byIndex(5 - stackConeCounter)));
+
                     intakeSlides.moveIntakeSlides(Objects.requireNonNull(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter)));
                     intakeSlides.runIntakeMotorToLevel();
                     intakeGripTimer.reset();
@@ -547,10 +548,13 @@ public class AutoOpMode3 extends LinearOpMode{
                     break;
 
                 case I3: // Wait for Outtake grip to be open, and hold position minimum for 500 to stabilize
-                    //TODO: CONSIDER SYNC HERE WITH O6
-                    if(outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) && intakeGripTimer.time() > 300) {//400
+                    if( (intakeSlides.isIntakeSlidesInState(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter))
+                            && outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
+                            && intakeGripTimer.time() > 300)
+                            || intakeGripTimer.time() > 1000) {//400
                         intakeState = INTAKE_STATE.I4;
                     }
+
                     break;
 
                 case I4: // Close grip on stack

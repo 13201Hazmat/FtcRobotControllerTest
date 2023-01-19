@@ -279,7 +279,7 @@ public class OuttakeSlides {
     public double isOuttakeSlidesInStateError = 0;
     public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE toOuttakeSlideState) {
         isOuttakeSlidesInStateError = Math.abs(outtakeMotor.getCurrentPosition() - toOuttakeSlideState.motorPosition);
-        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 100);
+        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 50);
 
     }
 

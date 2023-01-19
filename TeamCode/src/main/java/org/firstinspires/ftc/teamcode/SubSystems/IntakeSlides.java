@@ -30,11 +30,11 @@ public class IntakeSlides {
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
         
-        AUTO_CONE_1(447, 1),//542
-        AUTO_CONE_2(476, 2),
-        AUTO_CONE_3(485, 3),
-        AUTO_COME_4(485, 4),
-        AUTO_CONE_5(570, 5);
+        AUTO_CONE_1(570, 1),
+        AUTO_CONE_2(520, 2),
+        AUTO_CONE_3(500, 3),
+        AUTO_COME_4(500, 4),
+        AUTO_CONE_5(500, 5);
 
         public final double motorPosition;
         public final int index;
@@ -246,9 +246,14 @@ public class IntakeSlides {
 
 
     public boolean isIntakeSlidesInState(INTAKE_SLIDES_STATE toIntakeSlidesState) {
-        return ( (intakeSlidesState == toIntakeSlidesState) &&
-                Math.abs(intakeMotorLeft.getCurrentPosition() - toIntakeSlidesState.motorPosition)
-                <= 0.05 * toIntakeSlidesState.motorPosition);
+        if (toIntakeSlidesState == INTAKE_SLIDES_STATE.TRANSFER ||
+            toIntakeSlidesState == INTAKE_SLIDES_STATE.MIN_RETRACTED) {
+            return intakeTouch.isPressed();
+        } else {
+            return ( (intakeSlidesState == toIntakeSlidesState) &&
+                    Math.abs(intakeMotorLeft.getCurrentPosition() - toIntakeSlidesState.motorPosition)
+                            <= 30);
+        }
     }
 }
 
