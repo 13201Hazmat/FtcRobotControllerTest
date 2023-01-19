@@ -70,7 +70,7 @@ public class OuttakeArm {
 
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
-        OPEN(0.5),
+        OPEN(0.40),
         CLOSED(0.75); //Max 1.0
 
         private double gripPosition;

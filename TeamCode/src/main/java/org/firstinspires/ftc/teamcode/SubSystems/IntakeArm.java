@@ -55,8 +55,8 @@ public class IntakeArm {
 
         public INTAKE_ARM_STATE byIndex(int ord) {
             for (INTAKE_ARM_STATE a : INTAKE_ARM_STATE.values()) {
-                if (ord <1) ord = 8;
-                if (ord >6) ord = 8;
+                if (ord <1) ord = 1;
+                if (ord >8) ord = 8;
                 if (a.index == ord) {
                     return a;
                 }

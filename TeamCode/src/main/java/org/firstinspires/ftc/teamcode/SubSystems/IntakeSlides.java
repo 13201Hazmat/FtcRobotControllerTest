@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -32,14 +30,14 @@ public class IntakeSlides {
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
         
-        AUTO_CONE_1(420,1),//542
-        AUTO_CONE_2(420, 2),
-        AUTO_CONE_3(420, 3),
-        AUTO_COME_4(420, 4),
-        AUTO_CONE_5(420, 5);
+        AUTO_CONE_1(447, 1),//542
+        AUTO_CONE_2(476, 2),
+        AUTO_CONE_3(485, 3),
+        AUTO_COME_4(485, 4),
+        AUTO_CONE_5(570, 5);
 
-        private final double motorPosition;
-        private final int index;
+        public final double motorPosition;
+        public final int index;
         INTAKE_SLIDES_STATE(double motorPosition, int index) {
 
             this.motorPosition = motorPosition;
@@ -66,6 +64,7 @@ public class IntakeSlides {
        //Different constants of arm speed
     public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
     public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
+    public static final double INTAKE_MOTOR_POWER_RESET = 0.8;
     public static final double INTAKE_MOTOR_POWER_AUTO = 0.75;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
@@ -80,10 +79,6 @@ public class IntakeSlides {
         intakeMotorLeft = hardwareMap.get(DcMotorEx.class, "intake_motor_left");
         intakeMotorRight = hardwareMap.get(DcMotorEx.class, "intake_motor_right");
 
-        // get a reference to our digitalTouch object.
-        //intakeTouch = hardwareMap.get(DigitalChannel.class, "intake_reset_ts ");
-        // set the digital channel to input.
-        //intakeTouch.setMode(DigitalChannel.Mode.INPUT);
         intakeTouch = hardwareMap.get(TouchSensor.class,"intake_reset_ts");
         initIntakeSlides();
     }
@@ -98,7 +93,7 @@ public class IntakeSlides {
         intakeMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
         intakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
         turnIntakeBrakeModeOn();
-        manualResetIntakeMotor(); //TODO : CAUSING BATTERY DISCHARGE
+        moveIntakeSlidesToMinRetracted(); //TODO : CAUSING BATTERY DISCHARGE
     }
 
     //Turns on the brake for Intake motor
@@ -115,17 +110,22 @@ public class IntakeSlides {
 
     //Sets intake slides to position
     public void moveIntakeSlides(INTAKE_SLIDES_STATE toIntakeMotorState){
-        turnIntakeBrakeModeOn();
-        intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
-        if (intakeMotorCurrentPosition < toIntakeMotorState.motorPosition ) {
-            intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.EXTEND;
+        if (toIntakeMotorState == INTAKE_SLIDES_STATE.TRANSFER) {
+            moveIntakeSlidesToMinRetracted();
+            intakeSlidesState = INTAKE_SLIDES_STATE.TRANSFER;
         } else {
-            intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.RETRACT;
+            turnIntakeBrakeModeOn();
+            intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
+            if (intakeMotorCurrentPosition < toIntakeMotorState.motorPosition) {
+                intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.EXTEND;
+            } else {
+                intakeMovementDirection = INTAKE_MOVEMENT_DIRECTION.RETRACT;
+            }
+            intakeMotorLeft.setTargetPosition((int) toIntakeMotorState.motorPosition);
+            intakeMotorRight.setTargetPosition((int) toIntakeMotorState.motorPosition);
+            intakeSlidesState = toIntakeMotorState;
+            runIntakeMotorToLevelState = true;
         }
-        intakeMotorLeft.setTargetPosition((int)toIntakeMotorState.motorPosition);
-        intakeMotorRight.setTargetPosition((int)toIntakeMotorState.motorPosition);
-        intakeSlidesState = toIntakeMotorState;
-        runIntakeMotorToLevelState = true;
     }
 
     /*public void modifyIntakeSlidesLength1(double stepSizeFactor, int direction){
@@ -216,26 +216,27 @@ public class IntakeSlides {
 
     }
 
-    public void manualResetIntakeMotor(){
+    public void moveIntakeSlidesToMinRetracted(){
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         timer.reset();
-        turnIntakeBrakeModeOff();
-        while (!intakeTouch.isPressed() && timer.time() < 500) {
+        //turnIntakeBrakeModeOff();
+        while (!intakeTouch.isPressed() && timer.time() < 1000) {
             intakeMotorLeft.setTargetPosition((int) (intakeMotorLeft.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             intakeMotorRight.setTargetPosition((int) (intakeMotorRight.getCurrentPosition() - INTAKE_MOTOR_DELTA_COUNT_RESET));
             //runIntakeMotorToLevelState = true;
             intakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             intakeMotorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            intakeMotorLeft.setPower(INTAKE_MOTOR_POWER_TELEOP);
-            intakeMotorRight.setPower(INTAKE_MOTOR_POWER_TELEOP);
+            intakeMotorLeft.setPower(INTAKE_MOTOR_POWER_RESET);
+            intakeMotorRight.setPower(INTAKE_MOTOR_POWER_RESET);
         }
-
         resetIntakeMotorMode();
         turnIntakeBrakeModeOn();
         intakeMotorLeft.setPower(0.0);
         intakeMotorRight.setPower(0.0);
         intakeSlidesState = INTAKE_SLIDES_STATE.MIN_RETRACTED;
     }
+
+
 
     public double getDistance(){
         return intakeDistanceSensor.getDistance(DistanceUnit.MM);

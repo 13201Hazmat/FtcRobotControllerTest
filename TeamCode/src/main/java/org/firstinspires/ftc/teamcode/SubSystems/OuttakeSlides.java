@@ -266,7 +266,7 @@ public class OuttakeSlides {
     }
 
     public void moveTurretDelta(double stepSizeFactor){
-        double deltaTurret = outtakeTurretServo.getPosition() + (stepSizeFactor /250 );
+        double deltaTurret = outtakeTurretServo.getPosition() + (stepSizeFactor /100 ); //250
         if(deltaTurret > TURRET_STATE.MAX_RIGHT.turretPosition){
             deltaTurret = TURRET_STATE.MAX_RIGHT.turretPosition;
         }

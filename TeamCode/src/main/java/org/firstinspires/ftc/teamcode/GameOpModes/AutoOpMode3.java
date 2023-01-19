@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import static org.firstinspires.ftc.teamcode.SubSystems.IntakeSlides.INTAKE_MOTOR_POWER_RESET;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
@@ -395,10 +398,10 @@ public class AutoOpMode3 extends LinearOpMode{
         cycleTimer.reset();
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount ) {
-            if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1)
+            /*if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1) //TODO : TO BE FIXED TO NEW SYNC POINT
                  && gameTimer.time() > 22000 && startPosition != START_POSITION.TEST_POSE) {
                 break;
-            }
+            }*/
             stateMachineLoopCounter ++;
             switch (outtakeState) {
                 case O0: // Start of State machine
@@ -406,7 +409,10 @@ public class AutoOpMode3 extends LinearOpMode{
                     break;
 
                 case O1: // Cone is sensed, close grip
-                    if (dropConeCounter == 0 || intakeState == INTAKE_STATE.I12) {
+                    if (dropConeCounter == 0) {
+                        outtakeArm.closeGrip();
+                        outtakeState = OUTTAKE_STATE.O3;
+                    } else if (intakeState == INTAKE_STATE.I12) {
                         outtakeArm.closeGrip();
                         outtakeGripTimer.reset();
                         outtakeState = OUTTAKE_STATE.O2;
@@ -416,7 +422,7 @@ public class AutoOpMode3 extends LinearOpMode{
                 case O2: // If Intake Arm is not in transfer, proceed to move outttake to drop position
                     /*telemetry.addData("!intakeArm.isIntakeArmInTransfer()",
                             !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER));*/
-                    if(intakeState == INTAKE_STATE.I1 && outtakeGripTimer.time() > 300 &&
+                    if(intakeState == INTAKE_STATE.I1 && outtakeGripTimer.time() > 200 &&
                             !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
                         outtakeState = OUTTAKE_STATE.O3;
                     }
@@ -453,7 +459,8 @@ public class AutoOpMode3 extends LinearOpMode{
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
 
-                    if ((outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
+                    if ((outtakeWristTimer.time() > 500 &&
+                            outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
                             && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP))
                             || outtakeWristTimer.time() > 1000) {//750
@@ -485,6 +492,7 @@ public class AutoOpMode3 extends LinearOpMode{
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
                     outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                     outtakeArm.openGrip();
+                    dropConeCounter++;
                     outtakeState = OUTTAKE_STATE.O10;
 
                 case O10: // Check if outtake is at transfer
@@ -500,17 +508,21 @@ public class AutoOpMode3 extends LinearOpMode{
 
                 case O11: // Wait till Intake drops cone
                     //telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
-                    dropConeCounter++;
-                    if (dropConeCounter < dropConeCount && intakeState == INTAKE_STATE.I1) {
-                        if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 750) { //1000
-                            outtakeState = OUTTAKE_STATE.O1;
+                    if (dropConeCounter < dropConeCount) {
+                        if (intakeState == INTAKE_STATE.I12) {
+                            if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 500) { //1500
+                                outtakeState = OUTTAKE_STATE.O1;
+                                cycleTime = cycleTimer.time();
+                                averageCycleTime +=cycleTime;
+                                cycleTimer.reset();
+                            }
                         }
                     } else {
                         outtakeState = OUTTAKE_STATE.O1;
+                        cycleTime = cycleTimer.time();
+                        averageCycleTime +=cycleTime;
+                        cycleTimer.reset();
                     }
-                    cycleTime = cycleTimer.time();
-                    averageCycleTime +=cycleTime;
-                    cycleTimer.reset();
                     break;
             }
 
@@ -535,6 +547,7 @@ public class AutoOpMode3 extends LinearOpMode{
                     break;
 
                 case I3: // Wait for Outtake grip to be open, and hold position minimum for 500 to stabilize
+                    //TODO: CONSIDER SYNC HERE WITH O6
                     if(outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) && intakeGripTimer.time() > 300) {//400
                         intakeState = INTAKE_STATE.I4;
                     }
@@ -565,9 +578,9 @@ public class AutoOpMode3 extends LinearOpMode{
                     break;
                 case I8: // Move intake slides to Transfer
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-                    intakeSlides.runIntakeMotorToLevel();
                     intakeState = INTAKE_STATE.I9;
                     break;
+
                 case I9: // Wait till Outtake is ready to accept cone
                     if(outtakeState == OUTTAKE_STATE.O11){
                         intakeState = INTAKE_STATE.I10;
@@ -575,6 +588,7 @@ public class AutoOpMode3 extends LinearOpMode{
                     break;
 
                 case I10: // Move intake Arm to transfer
+                    intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                     intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
                     intakeArmTimer.reset();
                     intakeState = INTAKE_STATE.I11;
@@ -587,6 +601,7 @@ public class AutoOpMode3 extends LinearOpMode{
                     if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
                             && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
                             || intakeArmTimer.time() > 1000) {
+                        outtakeSenseTimer.reset();
                         intakeState = INTAKE_STATE.I12;
                     }
                     break;
@@ -594,11 +609,10 @@ public class AutoOpMode3 extends LinearOpMode{
                 case I12: // Open Intake Grip to drop cone to Transfer
                     if (outtakeState == OUTTAKE_STATE.O2) {
                         intakeArm.openGrip();
-                        intakeGripTimer.reset();
-                        outtakeSenseTimer.reset();
-                        safeWait(400);
+                        safeWait(200);
                         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
-                        while (intakeArmTimer.time() < 400 &&
+                        intakeArmTimer.reset();
+                        while (intakeArmTimer.time() < 700 &&
                                 !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)) {}
                         stackConeCounter++;
                         intakeState = INTAKE_STATE.I1;
@@ -608,10 +622,13 @@ public class AutoOpMode3 extends LinearOpMode{
             telemetry.addData("dropConeCounter", dropConeCounter);
             telemetry.addData("stackConeCounter", stackConeCounter);
             telemetry.addData("cycleTime", cycleTime);
-            //telemetry.addData(" --- OuttakeState", outtakeState);
-            //telemetry.addData(" --- IntakeState", intakeState);
+            telemetry.addData(" --- OuttakeState", outtakeState);
+            telemetry.addData(" --- IntakeState", intakeState);
 
             telemetry.update();
+            if (startPosition == START_POSITION.TEST_POSE) {
+                safeWait(0);
+            }
 
         }
     }

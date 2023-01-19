@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -150,7 +149,7 @@ public class GamepadController {
             intakeSlides.modifyIntakeSlidesLength(0);
         }
         if(gp1GetStart() && gp1GetX()){
-            intakeSlides.manualResetIntakeMotor();
+            intakeSlides.moveIntakeSlidesToMinRetracted();
         }
     }
 
@@ -258,24 +257,13 @@ public class GamepadController {
             outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_LEFT);
         }
 
-        /*if(!gp2GetStart() && !gp2GetLeftBumper() && gp2GetButtonAPress()){
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        }*/
-
         if(!gp2GetStart() && gp2GetButtonAPress()){
             outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.CENTER);
         }
 
         if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<-0.05) {
             outtakeSlides.modifyOuttakeSlidesLength(gp2TurboMode(-gp2GetLeftStickY()));
-            //outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         }
-
-        /*if (outtakeSlides.runOuttakeMotorToLevelState) { // Already called in outtakeSlides
-            outtakeSlides.runOuttakeMotorToLevel();
-        }*/
-
-        //outtakeSlides.moveTurretDelta(gp2TurboMode(gp2GetRightStickX())); // Cubic
 
         outtakeSlides.moveTurretDelta(-gp2GetRightStickX() * 0.5 *(1.0 + 1.0 * gp2GetRightTrigger())); // Linear
 
@@ -301,15 +289,11 @@ public class GamepadController {
                 if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.CLOSED &&
                         outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
                     outtakeArm.openGrip();
-                    outtakeGripTimer.reset();
-                    moveOuttakeToTransferFlag = true;
+                    safeWait(300);
+                    moveOuttakeToTransfer();
                 } else {
                     moveOuttakeToTransfer();
                 }
-            }
-            if (moveOuttakeToTransferFlag && outtakeGripTimer.time() > 300) {
-                moveOuttakeToTransfer();
-                moveOuttakeToTransferFlag = false;
             }
         }
 
@@ -375,7 +359,7 @@ public class GamepadController {
             moveOuttakeToTransfer();
         }
         transferTimer.reset();
-        while(transferTimer.time() < 1000 /*2000*/&& (!isOuttakeAtTransfer() ||
+        while(transferTimer.time() < 500 /*2000*/&& (!isOuttakeAtTransfer() ||
                 !intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))){
             runDriveControl_byRRDriveModes();
         }
@@ -392,7 +376,7 @@ public class GamepadController {
         }
         transferTimer.reset();
         safeWait(400);
-        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 700){
+        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 1500){
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.closeGrip();
@@ -405,8 +389,8 @@ public class GamepadController {
             runIntakeSlides();
             runDriveControl_byRRDriveModes();
         }
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         transferTimer.reset();
         while(transferTimer.time() < 300){ //500 // Allow Intake controls
             runIntakeSlides();
@@ -414,6 +398,7 @@ public class GamepadController {
             runDriveControl_byRRDriveModes();
         }
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
+        safeWait(500);
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
         transferCycleTimeVal = transferCycleTime.time();
     }

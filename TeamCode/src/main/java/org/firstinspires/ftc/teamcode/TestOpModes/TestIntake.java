@@ -109,7 +109,7 @@ public class TestIntake extends LinearOpMode {
             intakeSlides.modifyIntakeSlidesLength(0);
         }
         if (gamepadController.gp1GetStart() && gamepadController.gp1GetX()) {
-            intakeSlides.manualResetIntakeMotor();
+            intakeSlides.moveIntakeSlidesToMinRetracted();
         }
     }
 
