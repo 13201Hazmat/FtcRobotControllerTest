@@ -125,11 +125,18 @@ public class AutoOpMode6 extends LinearOpMode{
 
         safeWait(10000); // TODO for checking time.. need to remove
         telemetry.addData("Start Time", startTime);
-        telemetry.addData("Total Cycling Time", cycleTime);
-        telemetry.addData("Average Cycle time", averageCycleTime/(dropConeCount-0.5));
+        telemetry.addData("Time to drop Preload Cone", timeToDropPreloadCone);
+        telemetry.addData("Time to drop Cone 1", timeToDropCone1);
+        telemetry.addData("Time to drop Cone 2", timeToDropCone2);
+        telemetry.addData("Time to drop Cone 3", timeToDropCone3);
+        telemetry.addData("Time to drop Cone 3", timeToDropCone4);
+        telemetry.addData("Time to drop Cone 4", timeToDropCone5);
+        telemetry.addData("Total Cycling Time", totalCyclingTime);
+        telemetry.addData("Average Cycle time", cumulativeCycleTime/(dropConeCount-0.5));
         telemetry.addData("parkTime", parkTime);
         //Trajectory is completed, display Parking complete
         parkingComplete();
+        safeWait(10000);
 
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
@@ -385,7 +392,13 @@ public class AutoOpMode6 extends LinearOpMode{
     ElapsedTime outtakeSenseTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime cycleTimer = new ElapsedTime(MILLISECONDS);
     public double cycleTime = 0;
-    public double averageCycleTime = 0;
+    public double timeToDropPreloadCone = 0;
+    public double timeToDropCone1 = 0;
+    public double timeToDropCone2 = 0;
+    public double timeToDropCone3 = 0;
+    public double timeToDropCone4 = 0;
+    public double timeToDropCone5 = 0;
+    public double cumulativeCycleTime = 0;
     public int dropConeCounter = 0;
     public int stackConeCounter = 0;
     public int stateMachineLoopCounter = 0;
@@ -408,7 +421,7 @@ public class AutoOpMode6 extends LinearOpMode{
                     break;
 
                 case O1: // Cone is sensed, close grip
-                    if (dropConeCounter == 0 && intakeGripClosed == false) {
+                    if (dropConeCounter == 0 && !intakeGripClosed) {
                         outtakeArm.closeGrip();
                         outtakeGripClosed = true;
                         outtakeState = OUTTAKE_STATE.O3;
@@ -494,6 +507,26 @@ public class AutoOpMode6 extends LinearOpMode{
                 case O9: // Move outtake to Transfer
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
                     outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+                    switch (dropConeCounter) {
+                        case 0:
+                            timeToDropPreloadCone = gameTimer.time();
+                            break;
+                        case 1:
+                            timeToDropCone1 = gameTimer.time();
+                            break;
+                        case 2:
+                            timeToDropCone2 = gameTimer.time();
+                            break;
+                        case 3:
+                            timeToDropCone3 = gameTimer.time();
+                            break;
+                        case 4:
+                            timeToDropCone4 = gameTimer.time();
+                            break;
+                        case 5:
+                            timeToDropCone5 = gameTimer.time();
+                            break;
+                    }
                     dropConeCounter++;
                     outtakeState = OUTTAKE_STATE.O10;
 
@@ -515,14 +548,14 @@ public class AutoOpMode6 extends LinearOpMode{
                             if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 500) { //1500
                                 outtakeState = OUTTAKE_STATE.O1;
                                 cycleTime = cycleTimer.time();
-                                averageCycleTime +=cycleTime;
+                                cumulativeCycleTime +=cycleTime;
                                 cycleTimer.reset();
                             }
                         }
                     } else {
                         outtakeState = OUTTAKE_STATE.O1;
                         cycleTime = cycleTimer.time();
-                        averageCycleTime +=cycleTime;
+                        cumulativeCycleTime +=cycleTime;
                         cycleTimer.reset();
                     }
                     break;
@@ -562,10 +595,13 @@ public class AutoOpMode6 extends LinearOpMode{
                     break;
 
                 case I4: // Close grip on stack
-                    intakeArm.closeGrip();
-                    intakeGripClosed = true;
-                    intakeGripTimer.reset();
-                    intakeState = INTAKE_STATE.I5;
+                    if (outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
+                            && !outtakeGripClosed) {
+                        intakeArm.closeGrip();
+                        intakeGripClosed = true;
+                        intakeGripTimer.reset();
+                        intakeState = INTAKE_STATE.I5;
+                    }
                     break;
 
                 case I5 : // Wait for grip to be closed completely
