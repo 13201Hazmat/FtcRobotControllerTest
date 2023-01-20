@@ -51,7 +51,7 @@ public class OuttakeArm {
     public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.40), //TODO test real, 0.36
         WRIST_DROP(0.48), //0.52 TODO test real
-        WRIST_AUTO_DROP(0.52),
+        WRIST_AUTO_DROP(0.56),//0.52
         WRIST_LOW_JUNCTION(0.68), //TODO test real
         WRIST_MIN(0.2),
         WRIST_MAX(0.76);

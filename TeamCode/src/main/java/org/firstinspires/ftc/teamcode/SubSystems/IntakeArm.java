@@ -32,10 +32,10 @@ public class IntakeArm {
 
     public enum INTAKE_ARM_STATE {
         RANDOM(0,0.94,0),
-        PICKUP_AUTO_CONE_1(0.03,0.93,1),
+        PICKUP_AUTO_CONE_1(0.04,0.92,1),
         AUTO_CONE_2(0.15, 0.81, 2),
-        AUTO_CONE_3(0.19, 0.77, 3),
-        AUTO_CONE_4(0.24, 0.72, 4),
+        AUTO_CONE_3(0.18, 0.78, 3),
+        AUTO_CONE_4(0.22, 0.74, 4),
         AUTO_CONE_5(0.27, 0.69, 5),
         LOW_JUNCTION(0.39,0.59,6), //Level 12
         INIT(0.54,0.45,7), //Level 15

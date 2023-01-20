@@ -23,8 +23,8 @@ import java.util.Objects;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Auto 4", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-public class AutoOpMode4 extends LinearOpMode{
+@Autonomous(name = "Hazmat Auto 5", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutoOpMode5 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -473,7 +473,7 @@ public class AutoOpMode4 extends LinearOpMode{
                     break;
 
                 case O7: // Wait for cone to be dropped completely
-                    if (outtakeGripTimer.time() > 400) {
+                    if (outtakeGripTimer.time() > 200) {
                         outtakeState = OUTTAKE_STATE.O8;
                     }
                     break;
@@ -612,7 +612,7 @@ public class AutoOpMode4 extends LinearOpMode{
                 case I12: // Open Intake Grip to drop cone to Transfer
                     if (outtakeState == OUTTAKE_STATE.O1) {
                         intakeArm.openGrip();
-                        safeWait(200);
+                        safeWait(300);
                         intakeState = INTAKE_STATE.I13;
                     }
                     break;
@@ -629,11 +629,12 @@ public class AutoOpMode4 extends LinearOpMode{
             telemetry.addData("cycleTime", cycleTime);
             telemetry.addData(" --- OuttakeState", outtakeState);
             telemetry.addData(" --- IntakeState", intakeState);
-            telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)));
-            telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)).motorPosition);
-            telemetry.addData("Intake Slide Left Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
-            telemetry.addData("Intake Slide Right Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
-            telemetry.addData("Intake touch Pressed", intakeSlides.intakeTouch.isPressed());
+            //telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)));
+            //telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)).motorPosition);
+            //telemetry.addData("Intake Slide Left Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
+            //telemetry.addData("Intake Slide Right Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
+            //telemetry.addData("Intake touch Pressed", intakeSlides.intakeTouch.isPressed());
+            telemetry.addData("Outtake Slides", outtakeSlides.outtakeMotor.getCurrentPosition());
 
             telemetry.addData("Pose Estimate", driveTrain.getPoseEstimate());
 

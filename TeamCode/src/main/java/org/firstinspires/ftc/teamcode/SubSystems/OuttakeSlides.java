@@ -48,8 +48,8 @@ public class OuttakeSlides {
         MEDIUM_JUNCTION (530),
         HIGH_JUNCTION (1440),
         AUTO_MEDIUM_JUNCTION(701),
-        AUTO_HIGH_JUNCTION(1600),
-        MAX_EXTENDED(1650),
+        AUTO_HIGH_JUNCTION(1650),
+        MAX_EXTENDED(1600),
         RANDOM(0);
 
         public final double motorPosition;
@@ -235,7 +235,7 @@ public class OuttakeSlides {
         RANDOM (0.33), //0.45
         TELEOP_LEFT(0.27),
         TELEOP_RIGHT(0.4),
-        AUTO_HIGH_LEFT(0.26), //0.27
+        AUTO_HIGH_LEFT(0.265), //0.27
         AUTO_HIGH_RIGHT(0.40), //0.41
         AUTO_MEDIUM_LEFT(0.26),
         AUTO_MEDIUM_RIGHT(0.40);
@@ -279,8 +279,7 @@ public class OuttakeSlides {
     public double isOuttakeSlidesInStateError = 0;
     public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE toOuttakeSlideState) {
         isOuttakeSlidesInStateError = Math.abs(outtakeMotor.getCurrentPosition() - toOuttakeSlideState.motorPosition);
-        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 50);
-
+        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 30);
     }
 
 }
