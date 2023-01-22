@@ -5,6 +5,7 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,6 +25,7 @@ import java.util.Objects;
  * FTC WIRES Autonomous Example
  */
 @Autonomous(name = "Hazmat Auto 5", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+@Disabled
 public class AutoOpMode5 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations

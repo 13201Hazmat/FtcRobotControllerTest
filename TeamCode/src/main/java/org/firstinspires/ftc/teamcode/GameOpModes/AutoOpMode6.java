@@ -266,7 +266,7 @@ public class AutoOpMode6 extends LinearOpMode{
                 break;
             case BLUE_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(-15, -12, Math.toRadians(180)); break; // Location 1
+                    case LOCATION1: parkPose = new Pose2d(-15, -15, Math.toRadians(180)); break; // Location 1, y=-12
                     case LOCATION2: parkPose = new Pose2d(-15, -36, Math.toRadians(180)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(-15, -60, Math.toRadians(180)); break; // Location 3
                 }
@@ -284,7 +284,7 @@ public class AutoOpMode6 extends LinearOpMode{
                 break;
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(15, 12, Math.toRadians(0)); break; // Location 1
+                    case LOCATION1: parkPose = new Pose2d(15, 15, Math.toRadians(0)); break; // Location 1, y=12
                     case LOCATION2: parkPose = new Pose2d(15, 36, Math.toRadians(0)); break; // Location 2
                     case LOCATION3: parkPose = new Pose2d(15, 60, Math.toRadians(0)); break; // Location 3
                 }
@@ -685,6 +685,7 @@ public class AutoOpMode6 extends LinearOpMode{
             if (startPosition == START_POSITION.TEST_POSE) {
                 safeWait(0);
             }
+            //safeWait(1000);
 
         }
     }
