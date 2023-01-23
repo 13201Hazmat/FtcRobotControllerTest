@@ -380,7 +380,7 @@ public class GamepadController {
             runDriveControl_byRRDriveModes();
         }
         intakeArm.openGrip();
-        safeWait(200);
+        safeWait(100); //200
         outtakeArm.closeGrip();
         safeWait(200);
 

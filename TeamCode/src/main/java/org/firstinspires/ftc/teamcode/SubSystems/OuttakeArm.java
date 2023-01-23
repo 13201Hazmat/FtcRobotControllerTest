@@ -46,9 +46,11 @@ public class OuttakeArm {
 
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
-        WRIST_TRANSFER(0.40), //TODO test real, 0.36
-        WRIST_DROP(0.48), //0.52 TODO test real
-        WRIST_AUTO_DROP(0.56),//0.52
+        WRIST_TRANSFER(0.34), //TODO test real, 0.36, 0.4
+        WRIST_DROP(0.51), //0.48 TODO test real
+        WRIST_OUTTAKE_INTERMEDIATE(0.30),
+        WRIST_AUTO_HIGH_JUNCTION(0.56),//0.52
+        WRIST_AUTO_MEDIUM_JUNCTION(0.68),
         WRIST_LOW_JUNCTION(0.68), //TODO test real
         WRIST_MIN(0.2),
         WRIST_MAX(0.76);
@@ -68,7 +70,7 @@ public class OuttakeArm {
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
         OPEN(0.40),
-        CLOSED(0.75); //Max 1.0
+        CLOSED(0.82); //Max 1.0, 0.75
 
         private double gripPosition;
 
@@ -122,6 +124,7 @@ public class OuttakeArm {
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
+        moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_OUTTAKE_INTERMEDIATE); //0.36
         outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.CLOSED.gripPosition);
         outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
     }

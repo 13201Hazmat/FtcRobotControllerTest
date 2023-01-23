@@ -441,7 +441,7 @@ public class AutoOpMode4 extends LinearOpMode{
 
                 case O4: // Move outtake wrist to Drop
                     if (outtakeWristTimer.time() > 300) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
                         outtakeState = OUTTAKE_STATE.O5;
                         outtakeWristTimer.reset();
                     }
@@ -462,7 +462,7 @@ public class AutoOpMode4 extends LinearOpMode{
                     if ((outtakeWristTimer.time() > 500 &&
                             outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
-                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP))
+                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION))
                             || outtakeWristTimer.time() > 1000) {//750
                         outtakeState = OUTTAKE_STATE.O6;
                     }

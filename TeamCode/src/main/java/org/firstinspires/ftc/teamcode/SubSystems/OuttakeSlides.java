@@ -47,8 +47,8 @@ public class OuttakeSlides {
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (530),
         HIGH_JUNCTION (1440),
-        AUTO_MEDIUM_JUNCTION(701),
-        AUTO_HIGH_JUNCTION(1650),
+        AUTO_MEDIUM_JUNCTION(800), //701
+        AUTO_HIGH_JUNCTION(1500), //1550
         MAX_EXTENDED(1600),
         RANDOM(0);
 
@@ -235,7 +235,7 @@ public class OuttakeSlides {
         RANDOM (0.33), //0.45
         TELEOP_LEFT(0.27),
         TELEOP_RIGHT(0.4),
-        AUTO_HIGH_LEFT(0.265), //0.27
+        AUTO_HIGH_LEFT(0.27), //0.282
         AUTO_HIGH_RIGHT(0.40), //0.41
         AUTO_MEDIUM_LEFT(0.26),
         AUTO_MEDIUM_RIGHT(0.40);

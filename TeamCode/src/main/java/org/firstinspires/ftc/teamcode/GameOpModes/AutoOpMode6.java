@@ -188,7 +188,7 @@ public class AutoOpMode6 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(15, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(15.5, -39, Math.toRadians(270));
+                pickAndDropHighPose = new Pose2d(13.5, -39, Math.toRadians(270)); //15.5 x
                 pickAndDropMediumPose = new Pose2d(15.5, -33, Math.toRadians(270));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
@@ -197,7 +197,7 @@ public class AutoOpMode6 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(15, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(15.5, 39, Math.toRadians(90));
+                pickAndDropHighPose = new Pose2d(12.5, 39, Math.toRadians(86)); //13.5 x, 87
                 pickAndDropMediumPose = new Pose2d(15.5, 33, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
@@ -456,7 +456,7 @@ public class AutoOpMode6 extends LinearOpMode{
 
                 case O4: // Move outtake wrist to Drop
                     if (outtakeWristTimer.time() > 300) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
                         outtakeState = OUTTAKE_STATE.O5;
                         outtakeWristTimer.reset();
                     }
@@ -477,7 +477,7 @@ public class AutoOpMode6 extends LinearOpMode{
                     if ((outtakeWristTimer.time() > 500 &&
                             outtakeSlides.isOuttakeSlidesInState(outtakeDropState)
                             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)
-                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_DROP))
+                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION))
                             || outtakeWristTimer.time() > 1000) {//750
                         outtakeState = OUTTAKE_STATE.O6;
                     }

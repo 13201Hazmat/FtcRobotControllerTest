@@ -33,10 +33,10 @@ public class IntakeArm {
     public enum INTAKE_ARM_STATE {
         RANDOM(0,0.94,0),
         PICKUP_AUTO_CONE_1(0.04,0.92,1), //0.04, 0.92
-        AUTO_CONE_2(0.11, 0.85, 2), //0.15, 0.81
-        AUTO_CONE_3(0.15, 0.81, 3), //0.18,0.78
-        AUTO_CONE_4(0.19, 0.77, 4), //0.18,0.78
-        AUTO_CONE_5(0.23, 0.73, 5), //0.27, 0.69
+        AUTO_CONE_2(0.14, 0.82, 2), //0.15, 0.81
+        AUTO_CONE_3(0.19, 0.77, 3), //0.18,0.78
+        AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
+        AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69
         LOW_JUNCTION(0.39,0.59,6), //Level 12
         INIT(0.54,0.45,7), //Level 15
         TRANSFER(0.67,0.33,8), //Level 20
@@ -69,17 +69,17 @@ public class IntakeArm {
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        INIT(0.33,0.73),
-        PICKUP_AUTO_CONE_1_LEVEL(0.28, 0.78),
+        INIT(0.33,0.78),
+        PICKUP_AUTO_CONE_1_LEVEL(0.28, 0.73),
         /*
         AUTO_CONE_2(0.23 ,0.77),
         AUTO_CONE_3(0.26, 0.74),
         AUTO_CONE_4(0.31, 0.69),
          */
         RANDOM (0.6,0.4),
-        AUTO_CONE_5(0.50, 0.56),
-        LOW_JUNCTION(0.4,0.6),
-        TRANSFER (0.28,0.78),
+        AUTO_CONE_5(0.48, 0.58),
+        LOW_JUNCTION(0.4,0.61),
+        TRANSFER (0.28,0.73),
         FALLEN_CONE(0.5,0.5);
 
         private final double leftWristPosition;
