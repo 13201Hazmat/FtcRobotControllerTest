@@ -175,27 +175,27 @@ public class AutoOpMode7 extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 initPose = new Pose2d(-64, 36, Math.toRadians(0)); //Starting pose
-                midWayPose = new Pose2d(-15, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(-15.5, 39, Math.toRadians(90));
-                pickAndDropMediumPose = new Pose2d(-15.5, 33, Math.toRadians(90));
+                midWayPose = new Pose2d(-17, 36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
+                pickAndDropHighPose = new Pose2d(-13, 39, Math.toRadians(90));
+                pickAndDropMediumPose = new Pose2d(-13, 39, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
 
             case BLUE_RIGHT:
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
-                midWayPose = new Pose2d(-15, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(-14, -37, Math.toRadians(-90)); //y-39, x-15.5
-                pickAndDropMediumPose = new Pose2d(-15.5, -33, Math.toRadians(-90));
+                midWayPose = new Pose2d(-17, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
+                pickAndDropHighPose = new Pose2d(-13, -39, Math.toRadians(-90)); //y-39, x-15.5
+                pickAndDropMediumPose = new Pose2d(-13, -39, Math.toRadians(-90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
 
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
-                midWayPose = new Pose2d(15, -36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(13.5, -39, Math.toRadians(270)); //15.5 x
-                pickAndDropMediumPose = new Pose2d(15.5, -33, Math.toRadians(270));
+                midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
+                pickAndDropHighPose = new Pose2d(13, -39, Math.toRadians(270)); //13.5  .5 x
+                pickAndDropMediumPose = new Pose2d(13, -39, Math.toRadians(270));//15,33
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;

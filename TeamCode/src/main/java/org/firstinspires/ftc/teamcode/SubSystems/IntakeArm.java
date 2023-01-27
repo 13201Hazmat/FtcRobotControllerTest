@@ -34,7 +34,7 @@ public class IntakeArm {
         RANDOM(0,0.94,0),
         PICKUP_AUTO_CONE_1(0.04,0.92,1), //0.04, 0.92
 
-        AUTO_CONE_2(0.10, 0.86, 2), //0.15, 0.81
+        AUTO_CONE_2(0.09, 0.87, 2), //0.15, 0.81
         AUTO_CONE_3(0.14, 0.82, 3), //0.18,0.78
         AUTO_CONE_4(0.18, 0.80, 4), //0.18,0.78
         AUTO_CONE_5(0.22, 0.76, 5), //0.27, 0.69
@@ -259,7 +259,7 @@ public class IntakeArm {
                 intakeGripDistance = ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
             }
 
-            if (intakeGripDistance < 40) {
+            if (intakeGripDistance < 25) {
                 intakeConeSensed = true;
             } else {
                 intakeConeSensed = false;
