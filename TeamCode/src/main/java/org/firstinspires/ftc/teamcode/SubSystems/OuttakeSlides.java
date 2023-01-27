@@ -47,7 +47,7 @@ public class OuttakeSlides {
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (530),
         HIGH_JUNCTION (1440),
-        AUTO_MEDIUM_JUNCTION(800), //701
+        AUTO_MEDIUM_JUNCTION(650), //701
         AUTO_HIGH_JUNCTION(1500), //1550
         MAX_EXTENDED(1600),
         RANDOM(0);
@@ -238,7 +238,7 @@ public class OuttakeSlides {
         AUTO_HIGH_LEFT(0.27), //0.282
         AUTO_HIGH_RIGHT(0.40), //0.41
         AUTO_MEDIUM_LEFT(0.26),
-        AUTO_MEDIUM_RIGHT(0.40);
+        AUTO_MEDIUM_RIGHT(0.39);
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;

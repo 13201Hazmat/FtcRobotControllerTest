@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocityConstraint;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -16,6 +18,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import java.util.Objects;
@@ -182,7 +185,7 @@ public class AutoOpMode7 extends LinearOpMode{
             case BLUE_RIGHT:
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
                 midWayPose = new Pose2d(-15, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(-15.5, -39, Math.toRadians(-90));
+                pickAndDropHighPose = new Pose2d(-14, -37, Math.toRadians(-90)); //y-39, x-15.5
                 pickAndDropMediumPose = new Pose2d(-15.5, -33, Math.toRadians(-90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
@@ -199,9 +202,9 @@ public class AutoOpMode7 extends LinearOpMode{
 
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
-                midWayPose = new Pose2d(15, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(12.5, 39, Math.toRadians(86)); //13.5 x, 87
-                pickAndDropMediumPose = new Pose2d(15.5, 33, Math.toRadians(90));
+                midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
+                pickAndDropHighPose = new Pose2d(13, 39, Math.toRadians(90)); //13.5 x, 87,
+                pickAndDropMediumPose = new Pose2d(13, 39, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
@@ -247,17 +250,13 @@ public class AutoOpMode7 extends LinearOpMode{
                     outtakeSlides.moveTurret(pickAndDropTurretState);
                 })
                 .lineToLinearHeading(midWayPose)
-                /*
                 .setVelConstraint(getVelocityConstraint(
-                        0.5*DriveConstants.MAX_VEL,
-                        0.5*DriveConstants.MAX_ANG_VEL,
+                        DriveConstants.MAX_VEL,
+                        0.7* DriveConstants.MAX_ANG_VEL,
                         DriveConstants.TRACK_WIDTH))
-                 */
                 .lineToLinearHeading(pickAndDropPose)
                 //.resetVelConstraint()
                 .build();
-
-
     }
 
     //Build parking trajectory based on target detected by vision
@@ -336,6 +335,12 @@ public class AutoOpMode7 extends LinearOpMode{
         if(opModeIsActive() && !isStopRequested() && startPosition != START_POSITION.TEST_POSE) {
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
+        /**
+        double deltaAngle = 0;
+        deltaAngle = pickAndDropPose.getHeading() - driveTrain.getPoseEstimate().getHeading();
+        driveTrain.turnAsync(deltaAngle);
+         **/
+
         if (startPosition == START_POSITION.TEST_POSE) {
             outtakeSlides.moveTurret(pickAndDropTurretState);
             safeWait(1000);
@@ -384,7 +389,7 @@ public class AutoOpMode7 extends LinearOpMode{
     }
 
     public enum INTAKE_STATE{
-        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15;
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, IExit;
     }
     public INTAKE_STATE intakeState = INTAKE_STATE.I0;
 
@@ -412,12 +417,13 @@ public class AutoOpMode7 extends LinearOpMode{
     public int stateMachineLoopCounter = 0;
     public boolean outtakeGripClosed = true;
     public boolean intakeGripClosed = false;
+    public boolean timeoutExit = false;
 
     public void autoPickAndDropStateMachine(){
         telemetry.setAutoClear(true);
         cycleTimer.reset();
         while(opModeIsActive() && !isStopRequested() &&
-                dropConeCounter < dropConeCount ) {
+                dropConeCounter < dropConeCount && !timeoutExit) {
             /*if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1) //TODO : TO BE FIXED TO NEW SYNC POINT
                  && gameTimer.time() > 22000 && startPosition != START_POSITION.TEST_POSE) {
                 break;
@@ -483,8 +489,10 @@ public class AutoOpMode7 extends LinearOpMode{
                     telemetry.addData("isOuttakeWristInStateError", outtakeArm.isOuttakeWristInStateError);
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
-
-                    if ((outtakeWristTimer.time() > 500 &&
+                    if (dropConePosition == DROP_CONE_POSITION.MEDIUM) {
+                        safeWait(1000);
+                    }
+                    if ((outtakeWristTimer.time() > 500 && //TODO :
                             outtakeSlides.isOuttakeSlidesInState(outtakeSlidesDropState)
                             && outtakeArm.isOuttakeArmInState(outtakeArmDropState)
                             && outtakeArm.isOuttakeWristInState(outtakeWristDropState))
@@ -517,6 +525,7 @@ public class AutoOpMode7 extends LinearOpMode{
                 case O9: // Move outtake to Transfer
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
                     outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+                    outtakeGripTimer.reset();
                     switch (dropConeCounter) {
                         case 0:
                             timeToDropPreloadCone = gameTimer.time();
@@ -543,10 +552,11 @@ public class AutoOpMode7 extends LinearOpMode{
                 case O10: // Check if outtake is at transfer
                     //telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
                     //telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
-                    if(outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
+                    if((outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
                             && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER)
                             && outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN
-                            && outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)) {
+                            && outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER))
+                            || outtakeGripTimer.time()>750) {
                         outtakeState = OUTTAKE_STATE.O11;
                     }
                     break;
@@ -634,6 +644,9 @@ public class AutoOpMode7 extends LinearOpMode{
                 case I8: // Move intake slides to Transfer
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                     intakeState = INTAKE_STATE.I9;
+                    if (gameTimer.time() >27000) {
+                        timeoutExit = true;
+                    }
                     break;
 
                 case I9: // Wait till Outtake is ready to accept cone
