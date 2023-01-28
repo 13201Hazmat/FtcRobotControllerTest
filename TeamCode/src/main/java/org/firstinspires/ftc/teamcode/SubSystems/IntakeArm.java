@@ -259,7 +259,7 @@ public class IntakeArm {
                 intakeGripDistance = ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
             }
 
-            if (intakeGripDistance < 25) {
+            if (intakeGripDistance < 35) { //40
                 intakeConeSensed = true;
             } else {
                 intakeConeSensed = false;
