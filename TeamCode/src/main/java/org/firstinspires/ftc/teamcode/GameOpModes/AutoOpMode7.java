@@ -185,7 +185,7 @@ public class AutoOpMode7 extends LinearOpMode{
             case BLUE_RIGHT:
                 initPose = new Pose2d(-64, -36, Math.toRadians(0));//Starting pose
                 midWayPose = new Pose2d(-17, -36, Math.toRadians(0)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(-13, -39, Math.toRadians(-91)); //y-39, x-15.5, angle: -93
+                pickAndDropHighPose = new Pose2d(-13, -39, Math.toRadians(-90)); //y-39, x-15.5
                 pickAndDropMediumPose = new Pose2d(-13, -39, Math.toRadians(-90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
@@ -203,8 +203,8 @@ public class AutoOpMode7 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(13, 39, Math.toRadians(92)); //13.5 x, 87, 93
-                pickAndDropMediumPose = new Pose2d(13, 39, Math.toRadians(93)); //angle:90
+                pickAndDropHighPose = new Pose2d(13, 39, Math.toRadians(90)); //13.5 x, 87,
+                pickAndDropMediumPose = new Pose2d(13, 39, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
@@ -336,9 +336,9 @@ public class AutoOpMode7 extends LinearOpMode{
             driveTrain.followTrajectorySequence(trajectoryAuto);
         }
         /**
-        double deltaAngle = 0;
-        deltaAngle = pickAndDropPose.getHeading() - driveTrain.getPoseEstimate().getHeading();
-        driveTrain.turnAsync(deltaAngle);
+         double deltaAngle = 0;
+         deltaAngle = pickAndDropPose.getHeading() - driveTrain.getPoseEstimate().getHeading();
+         driveTrain.turnAsync(deltaAngle);
          **/
 
         if (startPosition == START_POSITION.TEST_POSE) {
@@ -377,7 +377,7 @@ public class AutoOpMode7 extends LinearOpMode{
         }
         while (opModeIsActive() && !isStopRequested() &&
                 exitTimer.time()<1000 && intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
-           safeWait(100);
+            safeWait(100);
         }
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
@@ -398,7 +398,6 @@ public class AutoOpMode7 extends LinearOpMode{
     }
     public OUTTAKE_STATE outtakeState = OUTTAKE_STATE.O0;
 
-    double intakeTimeDelay;
     ElapsedTime intakeGripTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime intakeArmTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime outtakeWristTimer = new ElapsedTime(MILLISECONDS);
@@ -588,7 +587,7 @@ public class AutoOpMode7 extends LinearOpMode{
                     break;
 
                 case I1: // Start fo next round of intake sequence, if stack is not empty
-                         // if only drop preloaded, Intake state machine wont move forward
+                    // if only drop preloaded, Intake state machine wont move forward
                     if(stackConeCounter < stackConeCount) {
                         intakeState = INTAKE_STATE.I2;
                     }
@@ -618,8 +617,6 @@ public class AutoOpMode7 extends LinearOpMode{
                 case I4: // Close grip on stack
                     if (outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
                             && !outtakeGripClosed) {
-                        intakeSlides.moveIntakeSlides(Objects.requireNonNull(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter)));
-                        intakeSlides.runIntakeMotorToLevel();
                         intakeArm.closeGrip();
                         intakeGripClosed = true;
                         intakeGripTimer.reset();
@@ -668,11 +665,11 @@ public class AutoOpMode7 extends LinearOpMode{
                 case I11: // Check if intake Arm and Slides are in Transfer
                     //telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) );
                     //telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER));
+
                     if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
                             && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
-                            || intakeArmTimer.time() > 800) { //1000
+                            || intakeArmTimer.time() > 1000) {
                         outtakeSenseTimer.reset();
-                        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                         intakeState = INTAKE_STATE.I12;
                     }
                     break;

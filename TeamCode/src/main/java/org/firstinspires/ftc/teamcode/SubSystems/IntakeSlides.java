@@ -29,12 +29,12 @@ public class IntakeSlides {
         TRANSFER (0, 0),
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
-        
-        AUTO_CONE_1(470, 1), //480
-        AUTO_CONE_2(440, 2), //445
-        AUTO_CONE_3(430, 3), //435
-        AUTO_COME_4(421, 4), //423
-        AUTO_CONE_5(417, 5); //423
+
+        AUTO_CONE_1(480, 1), //490
+        AUTO_CONE_2(445, 2), //455
+        AUTO_CONE_3(435, 3), //445
+        AUTO_COME_4(423, 4), //433
+        AUTO_CONE_5(413, 5); //423
 
         public final double motorPosition;
         public final int index;
@@ -61,11 +61,11 @@ public class IntakeSlides {
     public double intakeMotorCurrentPosition = intakeSlidesState.motorPosition;
     public double intakeMotorNewPosition = intakeSlidesState.motorPosition;
 
-       //Different constants of arm speed
+    //Different constants of arm speed
     public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
     public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
     public static final double INTAKE_MOTOR_POWER_RESET = 0.8;
-    public static final double INTAKE_MOTOR_POWER_AUTO = 0.85; //0.75
+    public static final double INTAKE_MOTOR_POWER_AUTO = 0.75;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -163,7 +163,7 @@ public class IntakeSlides {
         turnIntakeBrakeModeOn();
         double intakeMotorCurrentPosition = intakeMotorLeft.getCurrentPosition();
         if ((power > 0.01 && intakeMotorCurrentPosition < INTAKE_SLIDES_STATE.MAX_EXTENDED.motorPosition) ||
-            (power < -0.01 && intakeMotorCurrentPosition > INTAKE_SLIDES_STATE.MIN_RETRACTED.motorPosition )) {
+                (power < -0.01 && intakeMotorCurrentPosition > INTAKE_SLIDES_STATE.MIN_RETRACTED.motorPosition )) {
             intakeMotorLeft.setPower(power);
             intakeMotorRight.setPower(power);
         } else {
@@ -247,7 +247,7 @@ public class IntakeSlides {
 
     public boolean isIntakeSlidesInState(INTAKE_SLIDES_STATE toIntakeSlidesState) {
         if (toIntakeSlidesState == INTAKE_SLIDES_STATE.TRANSFER ||
-            toIntakeSlidesState == INTAKE_SLIDES_STATE.MIN_RETRACTED) {
+                toIntakeSlidesState == INTAKE_SLIDES_STATE.MIN_RETRACTED) {
             return intakeTouch.isPressed();
         } else {
             return ( (intakeSlidesState == toIntakeSlidesState) &&
@@ -256,4 +256,3 @@ public class IntakeSlides {
         }
     }
 }
-

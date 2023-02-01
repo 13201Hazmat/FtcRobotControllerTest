@@ -126,7 +126,6 @@ public class OuttakeSlides {
         } else {
             outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.RETRACT;
         }
-
          */
         outtakeMotor.setTargetPosition((int)toOuttakeMotorState.motorPosition);
         outtakeSlidesState = toOuttakeMotorState;
@@ -174,7 +173,6 @@ public class OuttakeSlides {
             outtakeMotor.setPower(0);
         }
     }
-
      */
 
 
@@ -218,9 +216,9 @@ public class OuttakeSlides {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
         //while (outtakeTouch.getState() && timer.time() < 5000) { TODO : Do it without touch sensor
-            outtakeMotor.setTargetPosition((int) (outtakeMotor.getCurrentPosition() - OUTTAKE_MOTOR_DELTA_COUNT_RESET));
-            runOuttakeMotorToLevelState = true;
-            runOuttakeMotorToLevel();
+        outtakeMotor.setTargetPosition((int) (outtakeMotor.getCurrentPosition() - OUTTAKE_MOTOR_DELTA_COUNT_RESET));
+        runOuttakeMotorToLevelState = true;
+        runOuttakeMotorToLevel();
         //}
         resetOuttakeMotorMode();
         turnOuttakeBrakeModeOff();
@@ -235,8 +233,8 @@ public class OuttakeSlides {
         RANDOM (0.33), //0.45
         TELEOP_LEFT(0.27),
         TELEOP_RIGHT(0.4),
-        AUTO_HIGH_LEFT(0.27), //0.276
-        AUTO_HIGH_RIGHT(0.39), //0.395
+        AUTO_HIGH_LEFT(0.27), //0.28
+        AUTO_HIGH_RIGHT(0.395), //0.41
         AUTO_MEDIUM_LEFT(0.28),
         AUTO_MEDIUM_RIGHT(0.395);  //0.39
         private final double turretPosition;
@@ -283,8 +281,3 @@ public class OuttakeSlides {
     }
 
 }
-
-
-
-
-
