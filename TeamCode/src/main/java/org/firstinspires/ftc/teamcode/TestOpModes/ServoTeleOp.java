@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 
 @TeleOp(name = "ServoTeleOp", group = "Testing")
-@Disabled
 public class ServoTeleOp extends LinearOpMode {
     Servo masterServo;
     //double servoSetPosition;
@@ -17,12 +16,12 @@ public class ServoTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        masterServo = hardwareMap.get(Servo.class, "outtake_turret");
+        masterServo = hardwareMap.get(Servo.class, "outtake_arm_left");
         waitForStart();
             while (opModeIsActive()) {
                 servoCurrentPosition = masterServo.getPosition();
                 if(gp1GetDpad_downPress()){
-                    if(servoCurrentPosition > 0){
+                    if(servoCurrentPosition > -1){ //0
                         masterServo.setPosition(servoCurrentPosition - 0.01);
                     }  else {
                         masterServo.setPosition(0);
