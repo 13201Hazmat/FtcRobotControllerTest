@@ -21,11 +21,11 @@ public class OuttakeArm {
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0.02, 0.98), //0.98, 0.02
-        DROP(0.6, 0.4), //0.4, 0.6
-        LOW_JUNCTION (0.8, 0.2), //0.2,0.8
-        AUTO_HIGH_JUNCTION(0.65,0.35), //0.35, 0.65
-        AUTO_MEDIUM_JUNCTION(0.8,0.2); //0.2, 0.8
+        TRANSFER(0, 1), //0.02, 0.98 --Pos from yesterday
+        DROP(1, 0), //0.6, 0.4
+        LOW_JUNCTION (1, 0), //0.8,0.2
+        AUTO_HIGH_JUNCTION(1,0), //0.65, 0.35
+        AUTO_MEDIUM_JUNCTION(1,0); //0.8, 0.2
 
         private double leftArmPosition;
         private double rightArmPosition;
