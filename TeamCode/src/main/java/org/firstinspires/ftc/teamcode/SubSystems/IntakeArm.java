@@ -31,23 +31,23 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum INTAKE_ARM_STATE {
-        RANDOM(0,0.94,0),
-        PICKUP_AUTO_CONE_1(0.04,0.92,1), //0.04, 0.92
+        RANDOM(0,0.935,0), //0.94
+        PICKUP_AUTO_CONE_1(0.04,0.915,1), //0.04, 0.92
 
-        AUTO_CONE_2(0.09, 0.87, 2), //0.15, 0.81
-        AUTO_CONE_3(0.14, 0.82, 3), //0.18,0.78
-        AUTO_CONE_4(0.18, 0.80, 4), //0.18,0.78
-        AUTO_CONE_5(0.22, 0.76, 5), //0.27, 0.69
+        AUTO_CONE_2(0.09, 0.865, 2), //0.15, 0.87
+        AUTO_CONE_3(0.14, 0.815, 3), //0.18,0.72
+        AUTO_CONE_4(0.18, 0.795, 4), //0.18,0.80
+        AUTO_CONE_5(0.22, 0.755, 5), //0.27, 0.76
         /*AUTO_CONE_2(0.14, 0.82, 2), //0.15, 0.81
         AUTO_CONE_3(0.19, 0.77, 3), //0.18,0.78
         AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
         AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69*/
-        LOW_JUNCTION(0.39,0.59,6), //Level 12
-        INIT(0.54,0.45,7), //Level 15
-        TRANSFER(0.67,0.33,8), //Level 20
+        LOW_JUNCTION(0.39,0.585,6), //Level 12 //0.39,0.59
+        INIT(0.54,0.445,7), //Level 15 //0.54, 0.45
+        TRANSFER(0.67,0.325,8), //Level 20 //0.67, 0.33
 
-        PICKUP_FALLEN_CONE(0.17, 0.8,  9),
-        RANDOM_MAX(0.46,0.53,10); //Level 14
+        PICKUP_FALLEN_CONE(0.17, 0.795,  9),
+        RANDOM_MAX(0.46,0.525,10); //Level 14
 
         private double leftArmPosition;
         private double rightArmPosition;
