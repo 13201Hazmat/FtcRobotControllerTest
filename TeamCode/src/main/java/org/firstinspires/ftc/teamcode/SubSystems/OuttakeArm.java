@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.OP_MODE_RUNNI
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -17,15 +18,19 @@ public class OuttakeArm {
     public Servo outtakeArmLeft;
     public Servo outtakeArmRight;
 
+    //outtakeArmLeft.setPwmRange(new PwmControl.PwmRange(500, 2500));
+    //outtakeArmRight.setPwmRange(new PwmControl.PwmRange(500, 2500));
+
     public NormalizedColorSensor outtakeWristColor;
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0, 1), //0.02, 0.98 --Pos from yesterday
-        DROP(1, 0), //0.6, 0.4
-        LOW_JUNCTION (1, 0), //0.8,0.2
-        AUTO_HIGH_JUNCTION(1,0), //0.65, 0.35
-        AUTO_MEDIUM_JUNCTION(1,0); //0.8, 0.2
+        TRANSFER(0.06, 0.94), //0.08, 0.92 --Pos from yesterday
+        TRANSFER_INTERMEDIATE(0.09,0.91),
+        DROP(0.6,0.4), //0.6, 0.4
+        LOW_JUNCTION (0.7, 0.3), //0.8,0.2
+        AUTO_HIGH_JUNCTION(0.65,0.35), //0.65, 0.35
+        AUTO_MEDIUM_JUNCTION(0.8,0.2); //0.8, 0.2
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -47,22 +52,13 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.30), //TODO test real, 0.36, 0.4
-        WRIST_DROP(0.42 ), //0.47 TODO test real
+        WRIST_DROP(0.52 ), //0.47 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.52),//0.52
-        WRIST_AUTO_MEDIUM_JUNCTION( 0.68),
+        WRIST_AUTO_MEDIUM_JUNCTION( 0.60),
         WRIST_LOW_JUNCTION(0.58), //0.64
         WRIST_MIN(0.16),
         WRIST_MAX(0.72);
-
-        /*WRIST_TRANSFER(0.34), //TODO test real, 0.36, 0.4
-        WRIST_DROP(0.51), //0.48 TODO test real
-        WRIST_OUTTAKE_INTERMEDIATE(0.30),
-        WRIST_AUTO_HIGH_JUNCTION(0.56),//0.52
-        WRIST_AUTO_MEDIUM_JUNCTION(0.72),
-        WRIST_LOW_JUNCTION(0.68), //TODO test real
-        WRIST_MIN(0.2),
-        WRIST_MAX(0.76);*/
 
         private double wristPosition;
 
@@ -133,6 +129,7 @@ public class OuttakeArm {
      * If state of hand grip is set to close, set position of servo's to specified
      */
     public void closeGrip(){
+        moveArm(OUTTAKE_ARM_STATE.TRANSFER_INTERMEDIATE);
         moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_OUTTAKE_INTERMEDIATE); //0.36
         outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.CLOSED.gripPosition);
         outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;

@@ -45,7 +45,7 @@ public class OuttakeSlides {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
         LOW_JUNCTION (0),
-        MEDIUM_JUNCTION (530),
+        MEDIUM_JUNCTION (474),
         HIGH_JUNCTION (1440),
         AUTO_MEDIUM_JUNCTION(650), //701
         AUTO_HIGH_JUNCTION(1500), //1550

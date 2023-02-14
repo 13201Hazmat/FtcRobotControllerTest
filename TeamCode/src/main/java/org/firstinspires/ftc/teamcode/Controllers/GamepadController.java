@@ -287,7 +287,8 @@ public class GamepadController {
         if (outtakeArm.outtakeWristState != OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER ) {
             if (gp2GetRightBumperPress()) {
                 if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.CLOSED &&
-                        outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
+                        (outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP) ||
+                                outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.LOW_JUNCTION))) {
                     outtakeArm.openGrip();
                     safeWait(300);
                     moveOuttakeToTransfer();
@@ -375,14 +376,14 @@ public class GamepadController {
             return;
         }
         transferTimer.reset();
-        safeWait(400);
-        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 700){//1500
+        //safeWait(400); // Commented out Feb 13
+        while(!outtakeArm.senseOuttakeCone()  && transferTimer.time() < 300){//1500
             runDriveControl_byRRDriveModes();
         }
         intakeArm.openGrip();
         safeWait(100); //200
         outtakeArm.closeGrip();
-        safeWait(200);
+        safeWait(100); //100
 
         intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
         transferTimer.reset();
@@ -392,13 +393,13 @@ public class GamepadController {
         }
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MEDIUM_JUNCTION);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        transferTimer.reset();
+        /*transferTimer.reset(); // Set up delay for goBilda
         while(transferTimer.time() < 300){ //500 // Allow Intake controls
             runOuttakeSlides();
             runIntakeSlides();
             runIntakeArm();
             runDriveControl_byRRDriveModes();
-        }
+        }*/
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP);
         safeWait(500);
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);

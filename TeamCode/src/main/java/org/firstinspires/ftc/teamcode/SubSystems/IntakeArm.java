@@ -31,23 +31,23 @@ public class IntakeArm {
     public boolean autoIntakeCloseMode = true;
 
     public enum INTAKE_ARM_STATE {
-        RANDOM(0,0.935,0), //0.94
-        PICKUP_AUTO_CONE_1(0.04,0.915,1), //0.04, 0.92
+        RANDOM(0,0.94,0), //0.94
+        PICKUP_AUTO_CONE_1(0.04,0.93,1), //0.04, 0.93
 
-        AUTO_CONE_2(0.09, 0.865, 2), //0.15, 0.87
-        AUTO_CONE_3(0.14, 0.815, 3), //0.18,0.72
-        AUTO_CONE_4(0.18, 0.795, 4), //0.18,0.80
-        AUTO_CONE_5(0.22, 0.755, 5), //0.27, 0.76
+        AUTO_CONE_2(0.09, 0.89, 2), //0.15, 0.87
+        AUTO_CONE_3(0.14, 0.84, 3), //0.14,0.82
+        AUTO_CONE_4(0.18, 0.82, 4), //0.18,0.80
+        AUTO_CONE_5(0.22, 0.78, 5), //0.27, 0.76
         /*AUTO_CONE_2(0.14, 0.82, 2), //0.15, 0.81
         AUTO_CONE_3(0.19, 0.77, 3), //0.18,0.78
         AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
         AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69*/
-        LOW_JUNCTION(0.39,0.585,6), //Level 12 //0.39,0.59
-        INIT(0.54,0.445,7), //Level 15 //0.54, 0.45
-        TRANSFER(0.67,0.325,8), //Level 20 //0.67, 0.33
+        LOW_JUNCTION(0.39,0.61,6), //Level 12 //0.39,0.59
+        INIT(0.50,0.50,7), //Level 15 //0.54, 0.45
+        TRANSFER(0.67,0.33,8), //Level 20 //0.65, 0.35
 
-        PICKUP_FALLEN_CONE(0.17, 0.795,  9),
-        RANDOM_MAX(0.46,0.525,10); //Level 14
+        PICKUP_FALLEN_CONE(0.17, 0.81,  9),
+        RANDOM_MAX(0.46,0.54,10); //Level 14
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -74,18 +74,18 @@ public class IntakeArm {
 
     //Hand - wrist, grip state declaration
     public enum WRIST_STATE {
-        INIT(0.33,0.78),
-        PICKUP_AUTO_CONE_1_LEVEL(0.28, 0.73),
+        INIT(0.31,0.80),
+        PICKUP_AUTO_CONE_1_LEVEL(0.28, 0.73), //0.24, 0.77
         /*
         AUTO_CONE_2(0.23 ,0.77),
         AUTO_CONE_3(0.26, 0.74),
         AUTO_CONE_4(0.31, 0.69),
          */
-        RANDOM (0.6,0.4),
-        AUTO_CONE_5(0.48, 0.58),
+        RANDOM (0.61,0.4),
+        AUTO_CONE_5(0.43, 0.54),
         LOW_JUNCTION(0.4,0.61),
-        TRANSFER (0.28,0.73),
-        FALLEN_CONE(0.5,0.5);
+        TRANSFER (0.26,0.75), //0.26, 0.75
+        FALLEN_CONE(0.5,0.51);
 
         private final double leftWristPosition;
         private final double rightWristPosition;
