@@ -176,7 +176,7 @@ public class AutoOpMode8 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(13, -39, Math.toRadians(270)); //13.5  .5 x
+                pickAndDropHighPose = new Pose2d(13, -41, Math.toRadians(270)); //-39
                 pickAndDropMediumPose = new Pose2d(13, -39, Math.toRadians(270));//15,33
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
@@ -185,7 +185,7 @@ public class AutoOpMode8 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(13, 39, Math.toRadians(90)); //13.5 x, 87,
+                pickAndDropHighPose = new Pose2d(13, 41, Math.toRadians(90)); //39
                 pickAndDropMediumPose = new Pose2d(13, 39, Math.toRadians(90));
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
@@ -610,7 +610,7 @@ public class AutoOpMode8 extends LinearOpMode{
                 case I8: // Move intake slides to Transfer
                     intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
                     intakeState = INTAKE_STATE.I9;
-                    if (gameTimer.time() >21000) { //27000
+                    if (gameTimer.time() >27000) { //27000
                         timeoutExit = true;
                     }
                     break;
@@ -634,7 +634,7 @@ public class AutoOpMode8 extends LinearOpMode{
 
                     if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
                             && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
-                            || intakeArmTimer.time() > 800) { //1000
+                            || intakeArmTimer.time() > 1000) { //1000
                         outtakeSenseTimer.reset();
                         intakeState = INTAKE_STATE.I12;
                     }
