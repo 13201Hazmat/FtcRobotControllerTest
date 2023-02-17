@@ -30,7 +30,7 @@ public class OuttakeArm {
         DROP(0.6,0.4), //0.6, 0.4
         LOW_JUNCTION (0.7, 0.3), //0.8,0.2
         AUTO_HIGH_JUNCTION(0.60,0.40), //0.65, 0.35
-        AUTO_MEDIUM_JUNCTION(0.8,0.2); //0.8, 0.2
+        AUTO_MEDIUM_JUNCTION(0.75,0.25); //0.7, 0.3
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -55,7 +55,7 @@ public class OuttakeArm {
         WRIST_DROP(0.54 ), //0.47 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.60),//0.54
-        WRIST_AUTO_MEDIUM_JUNCTION( 0.60),
+        WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7
         WRIST_LOW_JUNCTION(0.58), //0.64
         WRIST_MIN(0.16),
         WRIST_MAX(0.72);
@@ -147,7 +147,7 @@ public class OuttakeArm {
             if (outtakeGripColor instanceof DistanceSensor) {
                 outtakeGripDistance = ((DistanceSensor) outtakeGripColor).getDistance(DistanceUnit.MM);
             }
-            if (outtakeGripDistance < 60.0) {
+            if (outtakeGripDistance < 70.0) { //60.0
                 outtakeConeSensed = true;
             } else {
                 outtakeConeSensed = false;

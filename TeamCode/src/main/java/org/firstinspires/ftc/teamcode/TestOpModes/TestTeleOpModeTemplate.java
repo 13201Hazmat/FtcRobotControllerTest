@@ -202,7 +202,7 @@ public class TestTeleOpModeTemplate extends LinearOpMode {
                 telemetry.addData("Intake Arm Right Position", "%.2f", intakeArm.intakeArmServoRight.getPosition());
             }
 
-            telemetry.addData("Intake Wrist State", intakeArm.wristState);
+            telemetry.addData("Intake Wrist State", intakeArm.intakeWristState);
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Intake Wrist Left Position", "%.2f", intakeArm.intakeWristServoLeft.getPosition());
                 telemetry.addData("Intake Wrist Right Position", "%.2f", intakeArm.intakeWristServoRight.getPosition());

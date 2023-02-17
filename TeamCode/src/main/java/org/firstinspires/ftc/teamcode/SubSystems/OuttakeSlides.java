@@ -47,8 +47,8 @@ public class OuttakeSlides {
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (474),
         HIGH_JUNCTION (1440),
-        AUTO_MEDIUM_JUNCTION(650), //701
-        AUTO_HIGH_JUNCTION(1500), //1550
+        AUTO_MEDIUM_JUNCTION(870), //900
+        AUTO_HIGH_JUNCTION(1470), //1550
         MAX_EXTENDED(1600),
         RANDOM(0);
 
@@ -101,7 +101,7 @@ public class OuttakeSlides {
     public void initOuttakeSlides(){
         resetOuttakeMotorMode();
         outtakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        outtakeMotor.setPositionPIDFCoefficients(5.0);
+        outtakeMotor.setPositionPIDFCoefficients(10.0); //5
         outtakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
         //manualResetOuttakeMotor();
@@ -233,10 +233,10 @@ public class OuttakeSlides {
         RANDOM (0.33), //0.45
         TELEOP_LEFT(0.27),
         TELEOP_RIGHT(0.4),
-        AUTO_HIGH_LEFT(0.27), //0.27
-        AUTO_HIGH_RIGHT(0.449), //0.395
-        AUTO_MEDIUM_LEFT(0.28),
-        AUTO_MEDIUM_RIGHT(0.395);  //0.39
+        AUTO_HIGH_LEFT(0.282), //0.27
+        AUTO_HIGH_RIGHT(0.405), //0.41
+        AUTO_MEDIUM_LEFT(0.285), //0.285
+        AUTO_MEDIUM_RIGHT(0.395);  //0.398
         private final double turretPosition;
         private TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;
