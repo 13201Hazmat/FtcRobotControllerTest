@@ -43,10 +43,10 @@ public class IntakeArm {
         AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
         AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69*/
         LOW_JUNCTION(0.39,0.61,6), //Level 12 //0.39,0.59
-        INIT(0.50,0.50,7), //Level 15 //0.54, 0.45
+        INIT(0.54,0.46,7), //Level 15 //0.50, 0.50
         TRANSFER(0.70,0.30,8), //Level 20 //0.65, 0.35
 
-        PICKUP_FALLEN_CONE(0.12, 0.86,  9),
+        PICKUP_FALLEN_CONE(0.18, 0.82,  9),
         RANDOM_MAX(0.46,0.54,10); //Level 14
 
         private double leftArmPosition;
@@ -85,7 +85,7 @@ public class IntakeArm {
         AUTO_CONE_5(0.43, 0.54),
         LOW_JUNCTION(0.4,0.61),
         TRANSFER (0.26,0.75), //0.26, 0.75
-        FALLEN_CONE(0.55,0.36);
+        FALLEN_CONE(0.74,0.17);
 
         private final double leftWristPosition;
         private final double rightWristPosition;
