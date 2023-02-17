@@ -252,10 +252,10 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.addData("Outtake Grip Sensor Distance", "%.2f", ((DistanceSensor)outtakeArm.outtakeGripColor).getDistance(DistanceUnit.MM));
             }
 
-            telemetry.addData("Outtake Wrist Color Sensor", outtakeArm.senseJunction());
+            /*telemetry.addData("Outtake Wrist Color Sensor", outtakeArm.senseJunction());
             if (GameField.debugLevel == GameField.DEBUG_LEVEL.MAXIMUM) {
                 telemetry.addData("Outtake Wrist Sensor Distance", "%.2f", ((DistanceSensor)outtakeArm.outtakeWristColor).getDistance(DistanceUnit.MM));
-            }
+            }*/
 
             telemetry.addLine("=============");
 

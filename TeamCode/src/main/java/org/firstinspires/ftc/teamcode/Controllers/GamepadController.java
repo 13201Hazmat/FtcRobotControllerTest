@@ -318,13 +318,13 @@ public class GamepadController {
             outtakeArm.moveOuttakeWristDown();
         }
 
-        if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP) {
+        /*if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP) {
             if (outtakeArm.senseJunction()) {
                 lights.setPattern(Lights.REV_BLINKIN_PATTERN.OUTTAKE_JUNCTION_ALIGNED);
             } else {
                 lights.setPattern(Lights.REV_BLINKIN_PATTERN.OUTTAKE_JUNCTION_NOT_ALIGNED);
             }
-        }
+        }*/
 
         if (outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN) {
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);

@@ -436,7 +436,7 @@ public class AutoOpMode8 extends LinearOpMode{
                     break;
 
                 case O4: // Move outtake wrist to Drop
-                    if (outtakeWristTimer.time() > 300) {
+                    if (outtakeWristTimer.time() > 0) { //300 for Gobilda servo
                         outtakeArm.moveWrist(outtakeWristDropState);
                         //outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
                         outtakeState = OUTTAKE_STATE.O5;
@@ -456,13 +456,13 @@ public class AutoOpMode8 extends LinearOpMode{
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
                     if (dropConePosition == DROP_CONE_POSITION.MEDIUM) {
-                        safeWait(1000);
+                        safeWait(500); //1000
                     }
                     if ((outtakeWristTimer.time() > 500 && //TODO :
                             outtakeSlides.isOuttakeSlidesInState(outtakeSlidesDropState)
                             && outtakeArm.isOuttakeArmInState(outtakeArmDropState)
                             && outtakeArm.isOuttakeWristInState(outtakeWristDropState))
-                            || outtakeWristTimer.time() > 1000) {//750
+                            || outtakeWristTimer.time() > 1500) {//1000
                         outtakeState = OUTTAKE_STATE.O6;
                     }
                     break;

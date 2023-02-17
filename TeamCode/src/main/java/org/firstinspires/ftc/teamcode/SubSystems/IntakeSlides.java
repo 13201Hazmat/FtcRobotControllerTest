@@ -30,8 +30,8 @@ public class IntakeSlides {
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
 
-        AUTO_CONE_1(440, 1), //460
-        AUTO_CONE_2(415, 2), //445
+        AUTO_CONE_1(400, 1), //460
+        AUTO_CONE_2(380, 2), //415
         AUTO_CONE_3(362, 3), //435
         AUTO_COME_4(371, 4), //423
         AUTO_CONE_5(382, 5); //413

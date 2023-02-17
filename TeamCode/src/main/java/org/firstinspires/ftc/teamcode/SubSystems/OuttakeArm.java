@@ -21,7 +21,7 @@ public class OuttakeArm {
     //outtakeArmLeft.setPwmRange(new PwmControl.PwmRange(500, 2500));
     //outtakeArmRight.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-    public NormalizedColorSensor outtakeWristColor;
+    //public NormalizedColorSensor outtakeWristColor;
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
@@ -29,7 +29,7 @@ public class OuttakeArm {
         TRANSFER_INTERMEDIATE(0.09,0.91),
         DROP(0.6,0.4), //0.6, 0.4
         LOW_JUNCTION (0.7, 0.3), //0.8,0.2
-        AUTO_HIGH_JUNCTION(0.65,0.35), //0.65, 0.35
+        AUTO_HIGH_JUNCTION(0.60,0.40), //0.65, 0.35
         AUTO_MEDIUM_JUNCTION(0.8,0.2); //0.8, 0.2
 
         private double leftArmPosition;
@@ -100,7 +100,7 @@ public class OuttakeArm {
         outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
         outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
 
-        outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
+        //outtakeWristColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_wrist_sensor");
         outtakeGripColor = hardwareMap.get(NormalizedColorSensor.class, "outtake_grip_sensor");
 
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
@@ -191,7 +191,7 @@ public class OuttakeArm {
 
 
     public double outtakeWristDistance;
-    public boolean senseJunction(){
+    /*public boolean senseJunction(){
         boolean junctionSensed = false;
         if (outtakeWristState == OUTTAKE_WRIST_STATE.WRIST_DROP) {
             if (outtakeWristColor instanceof DistanceSensor) {
@@ -205,7 +205,7 @@ public class OuttakeArm {
             }
         }
         return junctionSensed;
-    }
+    }*/
 
     public void moveOuttakeWristUp() {
         if (outtakeWristServo.getPosition() <= outtakeWristState.WRIST_MAX.getWristPosition()) {
