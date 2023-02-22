@@ -234,7 +234,7 @@ public class OuttakeSlides {
         TELEOP_LEFT(0.27),
         TELEOP_RIGHT(0.4),
         AUTO_HIGH_LEFT(0.282), //0.27
-        AUTO_HIGH_RIGHT(0.405), //0.41
+        AUTO_HIGH_RIGHT(0.405), //0.405
         AUTO_MEDIUM_LEFT(0.285), //0.285
         AUTO_MEDIUM_RIGHT(0.395);  //0.398
         private final double turretPosition;
