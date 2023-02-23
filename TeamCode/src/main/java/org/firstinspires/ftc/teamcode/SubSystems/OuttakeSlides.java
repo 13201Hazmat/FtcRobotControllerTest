@@ -34,7 +34,8 @@ public class OuttakeSlides {
     public DcMotorEx outtakeMotor;
 
     //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
-    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 384.5;
+    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 145.1;//384.5;
+    public static final double ADJUST_RATIO = 384.5/145.1;
 
     //public DigitalChannel outtakeTouch;  // Hardware Device Object
 
@@ -45,11 +46,11 @@ public class OuttakeSlides {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
         LOW_JUNCTION (0),
-        MEDIUM_JUNCTION (474),
-        HIGH_JUNCTION (1440),
-        AUTO_MEDIUM_JUNCTION(870), //900
-        AUTO_HIGH_JUNCTION(1470), //1550
-        MAX_EXTENDED(1600),
+        MEDIUM_JUNCTION (474*ADJUST_RATIO),
+        HIGH_JUNCTION (1440*ADJUST_RATIO),
+        AUTO_MEDIUM_JUNCTION(870*ADJUST_RATIO), //900
+        AUTO_HIGH_JUNCTION(1470*ADJUST_RATIO), //1550
+        MAX_EXTENDED(1600*ADJUST_RATIO),
         RANDOM(0);
 
         public final double motorPosition;
