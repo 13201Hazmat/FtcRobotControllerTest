@@ -33,14 +33,14 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = true;
+    public static final boolean RUN_USING_ENCODER = false;
 
     /*public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));*
      */
-    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(3.5, 0, 0.03, 12.5 ); // f = 13.525017014052797
+    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(3.5, 0, 0.03, 12.5 ); // f = 13.525017014052797
     /*
      * These are physical constants that can be determined from your robot (including the track
      * width; it will be tune empirically later although a rough estimate is important). Users are
@@ -51,7 +51,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.31;//14.93;//12.25;
+    public static double TRACK_WIDTH = 11.01;//14.31;//14.93;//12.25;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -59,10 +59,12 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.01842;//1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0.001;//0.00004;
+    public static double kStatic = 0.08600;
 
+    //kV = 0.01841, kStatic = 0.10214 (R^2 = 0.97)`
+    //kV = 0.01842, kStatic = 0.08600 (R^2 = 0.98) kA = 0.00004 (R^2 = 0.01)
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
      * the constraints should never exceed ~80% of the robot's actual capabilities. While Road
@@ -89,12 +91,18 @@ public class DriveConstants {
      *
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
-
-     */
+*/
+     /*
     public static double MAX_VEL =  0.9*61.181349488079576;
     public static double MAX_ACCEL =  0.9*61.181349488079576;
     public static double MAX_ANG_VEL = 0.9*Math.toRadians(271.581981778047);
     public static double MAX_ANG_ACCEL = 0.9*Math.toRadians(271.581981778047);
+      */
+
+    public static double MAX_VEL = 52.48291908330528;
+    public static double MAX_ACCEL = 52.48291908330528;
+    public static double MAX_ANG_VEL = Math.toRadians(262.19975760259683);
+    public static double MAX_ANG_ACCEL = Math.toRadians(262.19975760259683);
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

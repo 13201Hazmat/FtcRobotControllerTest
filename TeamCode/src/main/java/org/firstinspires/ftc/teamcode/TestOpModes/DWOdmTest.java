@@ -1,0 +1,28 @@
+package org.firstinspires.ftc.teamcode.TestOpModes;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.util.Encoder;
+
+import org.firstinspires.ftc.teamcode.util.Encoder;
+
+@TeleOp(name = "DWOdom", group = "Testing")
+public class DWOdmTest extends LinearOpMode {
+    private Encoder leftEncoder, rightEncoder, frontEncoder;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+        waitForStart();
+            while (opModeIsActive()) {
+                telemetry.addData("leftFront Current Position: ", leftEncoder.getCurrentPosition());
+                telemetry.addData("rightFront Current Position: ", rightEncoder.getCurrentPosition());
+                telemetry.addData("leftRear Current Position: ", frontEncoder.getCurrentPosition());
+                telemetry.update();
+            }
+    }
+}
