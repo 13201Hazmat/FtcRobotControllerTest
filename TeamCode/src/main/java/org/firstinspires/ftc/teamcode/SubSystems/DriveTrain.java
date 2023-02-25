@@ -28,10 +28,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class DriveTrain extends SampleMecanumDrive {
     public boolean FtcDashboard_FLAG = true;
 
-    //double DriveConstants_kV = DriveConstantsDeadWheelEncoder.kV;
     double DriveConstants_kV = DriveConstants.kV;
 
-    //double DriveConstants_TRACK_WIDTH = DriveConstantsDeadWheelEncoder.TRACK_WIDTH;
     double DriveConstants_TRACK_WIDTH = DriveConstants.TRACK_WIDTH;
 
     // Declare a PIDF Controller to regulate heading

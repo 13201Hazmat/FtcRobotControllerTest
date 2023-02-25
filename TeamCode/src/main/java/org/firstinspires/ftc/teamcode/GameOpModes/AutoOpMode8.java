@@ -71,6 +71,8 @@ public class AutoOpMode8 extends LinearOpMode{
     public ElapsedTime parkTimer = new ElapsedTime(MILLISECONDS);
     public double parkTime = 0;
 
+    public AutoCorrectPosition autoCorrectPosition;
+
     @Override
     public void runOpMode() throws InterruptedException {
         GameField.opModeRunning = GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
@@ -85,6 +87,7 @@ public class AutoOpMode8 extends LinearOpMode{
 
         //Build Autonomous trajectory to be used based on starting position selected
         buildAuto();
+        autoCorrectPosition = new AutoCorrectPosition(driveTrain, this);
         driveTrain.getLocalizer().setPoseEstimate(initPose);
 
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
@@ -148,7 +151,7 @@ public class AutoOpMode8 extends LinearOpMode{
     }
 
     //Initialize any other TrajectorySequences as desired
-    TrajectorySequence trajectoryAuto, trajectoryParking ;
+    TrajectorySequence trajectoryAuto, trajectoryCorrection, trajectoryParking ;
 
     //Initialize Robot Positions (Pose2d's)
     Pose2d initPose; // Starting Pose
@@ -159,6 +162,8 @@ public class AutoOpMode8 extends LinearOpMode{
     Pose2d parkPose;
     double endPoseTurn;
     double endPoseForward;
+
+    Pose2d currentPose;
 
     OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlidesDropState;
     OuttakeSlides.TURRET_STATE pickAndDropTurretStateHigh;
@@ -391,6 +396,8 @@ public class AutoOpMode8 extends LinearOpMode{
         telemetry.setAutoClear(true);
         cycleTimer.reset();
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
+        GameField.CurrentPose = driveTrain.getPoseEstimate();
+        autoCorrectPosition.start();
         while(opModeIsActive() && !isStopRequested() &&
                 dropConeCounter < dropConeCount && !timeoutExit) {
             /*if ((outtakeState == OUTTAKE_STATE.O1 && intakeState == INTAKE_STATE.I1) //TODO : TO BE FIXED TO NEW SYNC POINT
@@ -684,6 +691,7 @@ public class AutoOpMode8 extends LinearOpMode{
             //safeWait(1000);
 
         }
+        autoCorrectPosition.exit();
     }
 
     public void parkingComplete(){
@@ -750,8 +758,6 @@ public class AutoOpMode8 extends LinearOpMode{
             }
             telemetry.update();
         }
-
-
 
         if (autoOption == AUTO_OPTION.ONLY_PARK) {
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");

@@ -14,9 +14,9 @@ public class DWOdmTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftEncoder_leftRear"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder_leftFront"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontEncoder_rightFront"));
         waitForStart();
             while (opModeIsActive()) {
                 telemetry.addData("leftFront Current Position: ", leftEncoder.getCurrentPosition());

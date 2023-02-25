@@ -46,6 +46,8 @@ public class GameField {
         LOCATION3
     }
 
+    public static Pose2d CurrentPose;
+
     /*
     public static AadiPose PRESET_PICKUP_A = new AadiPose(735,85, OldHand.WRIST_STATE.WRIST_LEVEL,1308); //Pickup
     public static AadiPose PRESET_MEDIUM_JUNCTION_B = new AadiPose(283,819, OldHand.WRIST_STATE.WRIST_UP,2354); //Medium Junction

@@ -67,10 +67,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     // One will supply a proportional gain and SMARTDAMP will...
     // use your kV and kA coefficients to solve for an optimal derivative gain
 
-    public static PIDCoefficients TRANSLATIONAL_PID = SmartdampPID.TranslationCoefficientsSMART(0);
-    public static PIDCoefficients HEADING_PID = SmartdampPID.RotationCoefficientsSMART(0);
+    public static PIDCoefficients TRANSLATIONAL_PID = SmartdampPID.TranslationCoefficientsSMART(8);
+    public static PIDCoefficients HEADING_PID = SmartdampPID.RotationCoefficientsSMART(8);
 
-    public static double LATERAL_MULTIPLIER = 0.975;//1;
+    public static double LATERAL_MULTIPLIER = 0.983;//1;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -141,12 +141,14 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
