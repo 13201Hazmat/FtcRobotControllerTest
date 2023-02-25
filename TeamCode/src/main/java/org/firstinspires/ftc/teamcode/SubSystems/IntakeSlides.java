@@ -36,8 +36,8 @@ public class IntakeSlides {
         AUTO_COME_4(341, 4), //361
         AUTO_CONE_5(327, 5); //337
 
-        public final double motorPosition;
-        public final int index;
+        public double motorPosition;
+        public int index;
         INTAKE_SLIDES_STATE(double motorPosition, int index) {
 
             this.motorPosition = motorPosition;
@@ -57,6 +57,10 @@ public class IntakeSlides {
 
     }
     public INTAKE_SLIDES_STATE intakeSlidesState = INTAKE_SLIDES_STATE.MIN_RETRACTED;
+
+    public void setIntakeSlide(INTAKE_SLIDES_STATE intakeSlidesState, int slideExtension) {
+        intakeSlidesState.motorPosition = slideExtension;
+    }
 
     public double intakeMotorCurrentPosition = intakeSlidesState.motorPosition;
     public double intakeMotorNewPosition = intakeSlidesState.motorPosition;

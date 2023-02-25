@@ -167,7 +167,10 @@ public class TeleOpMode extends LinearOpMode {
 
             //****** Drive debug ******
             telemetry.addData("Drive Mode : ", driveTrain.driveMode);
-            telemetry.addData("PoseEstimate :", driveTrain.poseEstimate);
+            telemetry.addData("PoseEstimate :", driveTrain.getPoseEstimate());
+            telemetry.addData("Left Encoder", driveTrain.leftRear.getCurrentPosition());
+            telemetry.addData("Right Encoder", driveTrain.leftFront.getCurrentPosition());
+            telemetry.addData("Front Encoder", driveTrain.rightFront.getCurrentPosition());
             telemetry.addLine("=============");
             telemetry.addData("Transfer Cylce Time :", gamepadController.transferCycleTimeVal);
             telemetry.addLine("=============");
