@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.OP_MODE_RUNNI
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -17,6 +16,7 @@ public class OuttakeArm {
     public Servo outtakeGripServo;
     public Servo outtakeArmLeft;
     public Servo outtakeArmRight;
+    public Servo outtakeGuideServo;
 
     //outtakeArmLeft.setPwmRange(new PwmControl.PwmRange(500, 2500));
     //outtakeArmRight.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -27,7 +27,7 @@ public class OuttakeArm {
     public enum OUTTAKE_ARM_STATE{
         TRANSFER(0.04, 0.96), //0.08, 0.92 --Pos from yesterday
         TRANSFER_INTERMEDIATE(0.09,0.91),
-        DROP(0.6,0.4), //0.6, 0.4
+        DROP(0.52,0.48), //0.6, 0.4
         LOW_JUNCTION (0.7, 0.3), //0.8,0.2
         AUTO_HIGH_JUNCTION(0.60,0.40), //0.65, 0.35
         AUTO_MEDIUM_JUNCTION(0.75,0.25); //0.7, 0.3
@@ -52,7 +52,7 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.30), //TODO test real, 0.36, 0.4
-        WRIST_DROP(0.54 ), //0.47 TODO test real
+        WRIST_DROP(0.30 ), //0.54 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.60),//0.54
         WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7
@@ -87,6 +87,17 @@ public class OuttakeArm {
         }
     }
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
+
+    public enum OUTTAKE_GUIDE_STATE {
+        UP(0.36),
+        DOWN(0.66);
+
+        private double guidePosition;
+        OUTTAKE_GUIDE_STATE(double guidePosition){this.guidePosition = guidePosition;}
+        public double getGuidePosition(){return guidePosition;}
+    }
+    public OUTTAKE_GUIDE_STATE outtakeGuideState = OUTTAKE_GUIDE_STATE.DOWN;
+
     //constants for Hand and grip position
     public enum OUTTAKE_GRIP_COLOR_SENSOR_STATE {
         DETECTED,
@@ -105,6 +116,8 @@ public class OuttakeArm {
 
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
         outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+
+        outtakeGuideServo = hardwareMap.get(Servo.class, "outtake_guide_servo");
 
         initOuttakeArm();
     }
@@ -168,6 +181,11 @@ public class OuttakeArm {
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
+        if (outtakeArmState == OUTTAKE_ARM_STATE.DROP) {
+            moveOuttakeGuide(OUTTAKE_GUIDE_STATE.UP);
+        } else {
+            moveOuttakeGuide(OUTTAKE_GUIDE_STATE.DOWN);
+        }
         if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
             moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
             openGrip();
@@ -207,6 +225,11 @@ public class OuttakeArm {
         return junctionSensed;
     }*/
 
+    public void moveOuttakeGuide(OUTTAKE_GUIDE_STATE guideState){
+        outtakeGuideServo.setPosition(guideState.guidePosition);
+        outtakeGuideState = guideState;
+    }
+
     public void moveOuttakeWristUp() {
         if (outtakeWristServo.getPosition() <= outtakeWristState.WRIST_MAX.getWristPosition()) {
             outtakeWristServo.setPosition(outtakeWristServo.getPosition() + OUTTAKE_WRIST_DELTA);
@@ -240,5 +263,6 @@ public class OuttakeArm {
         isOuttakeGripInStateError = Math.abs(outtakeGripServo.getPosition() - toOuttakeGripState.getGripPosition());
         return (outtakeGripState == toOuttakeGripState && isOuttakeGripInStateError <=0.03);
     }
+
 
 }

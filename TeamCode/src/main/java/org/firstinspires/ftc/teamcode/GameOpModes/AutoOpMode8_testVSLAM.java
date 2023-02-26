@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionStack;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -62,6 +63,7 @@ public class AutoOpMode8_testVSLAM extends LinearOpMode{
     public OuttakeSlides outtakeSlides;
     public Lights lights;
     public Vision vision;
+    public VisionStack visionStack;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime startTimer = new ElapsedTime(MILLISECONDS);
@@ -376,6 +378,7 @@ public class AutoOpMode8_testVSLAM extends LinearOpMode{
     ElapsedTime outtakeWristTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime outtakeGripTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime outtakeSenseTimer = new ElapsedTime(MILLISECONDS);
+    ElapsedTime vStackTimer = new ElapsedTime(MILLISECONDS);
     ElapsedTime cycleTimer = new ElapsedTime(MILLISECONDS);
     public double cycleTime = 0;
     public double timeToDropPreloadCone = 0;
@@ -395,6 +398,17 @@ public class AutoOpMode8_testVSLAM extends LinearOpMode{
     public void autoPickAndDropStateMachine(){
         telemetry.setAutoClear(true);
         cycleTimer.reset();
+        //TO DO : INSERT CAMERA POSITION READ HERE
+        visionStack.activateVuforiaTensorFlow();
+
+        while(opModeIsActive() && !isStopRequested() &&
+                vStackTimer.time() < 1000)  {
+            telemetry.addData("Left position of cone stack: ", visionStack.runVuforiaTensorFlow());
+            telemetry.update();
+        }
+
+        visionStack.deactivateVuforiaTensorFlow();
+
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
         GameField.CurrentPose = driveTrain.getPoseEstimate();
         autoCorrectPosition.start();

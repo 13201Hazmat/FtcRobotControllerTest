@@ -35,7 +35,7 @@ public class OuttakeSlides {
 
     //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
     public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 145.1;//384.5;
-    public static final double ADJUST_RATIO = 384.5/145.1;
+    public static final double ADJUST_RATIO = 145.1/384.5;
 
     //public DigitalChannel outtakeTouch;  // Hardware Device Object
 
@@ -46,11 +46,11 @@ public class OuttakeSlides {
         MIN_RETRACTED (0), //Position
         TRANSFER (0),
         LOW_JUNCTION (0),
-        MEDIUM_JUNCTION (474*ADJUST_RATIO),
-        HIGH_JUNCTION (1440*ADJUST_RATIO),
-        AUTO_MEDIUM_JUNCTION(870*ADJUST_RATIO), //900
-        AUTO_HIGH_JUNCTION(1470*ADJUST_RATIO), //1550
-        MAX_EXTENDED(1600*ADJUST_RATIO),
+        MEDIUM_JUNCTION (474),//474 //290 for 1150rpm
+        HIGH_JUNCTION (1440),//1440 //880 for 1150rpm
+        AUTO_MEDIUM_JUNCTION(870), //870 //530 for 1150rpm
+        AUTO_HIGH_JUNCTION(1470), //1470 //897 for 1150 rpm
+        MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
         RANDOM(0);
 
         public final double motorPosition;
@@ -64,8 +64,8 @@ public class OuttakeSlides {
     public double outtakeMotorCurrentPosition = outtakeSlidesState.motorPosition;
     public double outtakeMotorNewPosition = outtakeSlidesState.motorPosition;
 
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 100;//200;//200 //need tested values
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 100;//100
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;//200
 
     //Different constants of arm speed
     public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1;

@@ -16,7 +16,7 @@ public class ServoTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        masterServo = hardwareMap.get(Servo.class, "outtake_arm_left");
+        masterServo = hardwareMap.get(Servo.class, "outtake_guide_servo");
         waitForStart();
             while (opModeIsActive()) {
                 servoCurrentPosition = masterServo.getPosition();
