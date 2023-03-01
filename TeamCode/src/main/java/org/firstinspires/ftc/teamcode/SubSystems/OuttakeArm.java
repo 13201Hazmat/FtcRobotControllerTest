@@ -90,7 +90,7 @@ public class OuttakeArm {
 
     public enum OUTTAKE_GUIDE_STATE {
         UP(0.36),
-        DOWN(0.66);
+        DOWN(0.62);//0.63
 
         private double guidePosition;
         OUTTAKE_GUIDE_STATE(double guidePosition){this.guidePosition = guidePosition;}
@@ -181,7 +181,9 @@ public class OuttakeArm {
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
-        if (outtakeArmState == OUTTAKE_ARM_STATE.DROP) {
+        if (outtakeArmState == OUTTAKE_ARM_STATE.DROP ||
+            outtakeArmState == OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION ||
+            outtakeArmState == OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION) {
             moveOuttakeGuide(OUTTAKE_GUIDE_STATE.UP);
         } else {
             moveOuttakeGuide(OUTTAKE_GUIDE_STATE.DOWN);

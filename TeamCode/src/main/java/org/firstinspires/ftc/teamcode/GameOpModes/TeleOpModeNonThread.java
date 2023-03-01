@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -25,7 +26,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Hazmat TeleOp", group = "00-Teleop")
+@TeleOp(name = "Hazmat TeleOp Not Thread", group = "00-Teleop")
+@Disabled
 public class TeleOpModeNonThread extends LinearOpMode {
 
     public GamepadController gamepadController;

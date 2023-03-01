@@ -181,8 +181,8 @@ public class AutoOpMode8 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(9, -32, Math.toRadians(270)); //13.-41
-                pickAndDropMediumPose = new Pose2d(9, -32, Math.toRadians(270));//13, 41
+                pickAndDropHighPose = new Pose2d(8, -32, Math.toRadians(270)); //8.-32
+                pickAndDropMediumPose = new Pose2d(8, -32, Math.toRadians(270));//13, 41
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
