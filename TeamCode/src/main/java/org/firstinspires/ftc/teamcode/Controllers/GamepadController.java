@@ -104,7 +104,7 @@ public class GamepadController {
      */
     // RR Drive Train
     public void runDriveControl_byRRDriveModes() {
-
+/*
         //driveTrain.poseEstimate = driveTrain.getPoseEstimate();
 
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
@@ -189,7 +189,13 @@ public class GamepadController {
         }
 
         if (!gp1GetStart() && gp1GetDpad_upPress()){
-            intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION);
+            if (intakeArm.intakeArmState == IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION) {
+                if (isOuttakeAtTransfer()) {
+                    intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
+                }
+            } else {
+                intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION);
+            }
         }
 
         if(!gp1GetStart() && gp1GetDpad_upPress() && intakeArm.intakeArmState == IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION){
@@ -219,11 +225,30 @@ public class GamepadController {
         }
 
         if (gp1GetButtonYPress()) {
-            intakeArm.moveArmWristUpOneStack();
+            //intakeArm.moveArmWristUpOneStack();
+
+            if (intakeArm.intakeArmState.index < 1 || intakeArm.intakeArmState.index > 7) {
+                return;
+            } else {
+                if (intakeArm.intakeArmState.index + 1 == 8) {
+                    if (isOuttakeAtTransfer()) {
+                        assert intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index + 1) != null;
+                        intakeArm.moveArm(intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index + 1));
+                    }
+                } else {
+                    assert intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index + 1) != null;
+                    intakeArm.moveArm(intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index + 1));
+                }
+            }
         }
 
         if (!gp1GetStart() && gp1GetButtonAPress()) {
-            intakeArm.moveArmWristDownOneStack();
+            if (intakeArm.intakeArmState.index <= 1 || intakeArm.intakeArmState.index > 8) {
+                return;
+            } else {
+                assert intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index - 1) != null;
+                intakeArm.moveArm(intakeArm.intakeArmState.byIndex(intakeArm.intakeArmState.index - 1));
+            }
         }
 
         if (gp1GetLeftBumperPress() && intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED) {

@@ -7,9 +7,11 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Controllers.GamePadDriveTrainController;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.IntakeArm;
@@ -25,10 +27,11 @@ import org.firstinspires.ftc.teamcode.SubSystems.SystemState;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Hazmat TeleOp", group = "00-Teleop")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "Hazmat TeleOp Thread", group = "00-Teleop")
+public class TeleOpModeThread extends LinearOpMode {
 
     public GamepadController gamepadController;
+    public GamePadDriveTrainController gamePadDriveTrainController;
     public DriveTrain driveTrain;
     public IntakeArm intakeArm;
     public IntakeSlides intakeSlides;
@@ -67,6 +70,8 @@ public class TeleOpMode extends LinearOpMode {
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
 
+        gamePadDriveTrainController.start();
+
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
 
@@ -88,6 +93,7 @@ public class TeleOpMode extends LinearOpMode {
                 }
             }
         }
+        gamePadDriveTrainController.exit();
         GameField.poseSetInAutonomous = false;
     }
 
@@ -129,6 +135,11 @@ public class TeleOpMode extends LinearOpMode {
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intakeArm, intakeSlides, outtakeArm, outtakeSlides, lights);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
+
+        gamePadDriveTrainController = new GamePadDriveTrainController(gamepad1, driveTrain, this);
+        telemetry.addLine("Gamepad Drive Train Initialized");
+        telemetry.update();
+
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);

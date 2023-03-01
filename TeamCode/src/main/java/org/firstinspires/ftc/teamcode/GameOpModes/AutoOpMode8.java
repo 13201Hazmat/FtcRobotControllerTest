@@ -181,8 +181,8 @@ public class AutoOpMode8 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(13, -36, Math.toRadians(270)); //-41
-                pickAndDropMediumPose = new Pose2d(13, -36, Math.toRadians(270));//41
+                pickAndDropHighPose = new Pose2d(9, -32, Math.toRadians(270)); //13.-41
+                pickAndDropMediumPose = new Pose2d(9, -32, Math.toRadians(270));//13, 41
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
@@ -190,8 +190,8 @@ public class AutoOpMode8 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(13, 36, Math.toRadians(90)); //41
-                pickAndDropMediumPose = new Pose2d(13, 36, Math.toRadians(90));//41
+                pickAndDropHighPose = new Pose2d(9, 37, Math.toRadians(90)); //13,41
+                pickAndDropMediumPose = new Pose2d(9, 37, Math.toRadians(90));//13,41
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
@@ -252,9 +252,9 @@ public class AutoOpMode8 extends LinearOpMode{
             case BLUE_LEFT:
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(15, -60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2: parkPose = new Pose2d(15, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(15, -12, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(7, -60, Math.toRadians(0)); break; // 15 Location 1
+                    case LOCATION2: parkPose = new Pose2d(7, -36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION3: parkPose = new Pose2d(7, -12, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 5;
@@ -262,9 +262,9 @@ public class AutoOpMode8 extends LinearOpMode{
             case BLUE_RIGHT:
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(15, 15, Math.toRadians(0)); break; // Location 1, y=12
-                    case LOCATION2: parkPose = new Pose2d(15, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3: parkPose = new Pose2d(15, 60, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(7, 15, Math.toRadians(0)); break; // 15 Location 1, y=12
+                    case LOCATION2: parkPose = new Pose2d(7, 36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION3: parkPose = new Pose2d(7, 60, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = -90;
                 endPoseForward = 5;
@@ -434,6 +434,7 @@ public class AutoOpMode8 extends LinearOpMode{
                     break;
 
                 case O3: // Move outtake to drop Position
+                    outtakeArm.moveOuttakeGuide(OuttakeArm.OUTTAKE_GUIDE_STATE.UP);
                     outtakeSlides.moveOuttakeSlides(outtakeSlidesDropState);
                     outtakeArm.moveArm(outtakeArmDropState);
                     /*if (dropConePosition == DROP_CONE_POSITION.HIGH) {

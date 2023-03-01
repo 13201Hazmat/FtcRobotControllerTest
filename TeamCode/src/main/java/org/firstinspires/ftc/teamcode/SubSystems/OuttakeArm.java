@@ -25,7 +25,7 @@ public class OuttakeArm {
     public NormalizedColorSensor outtakeGripColor;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0.04, 0.96), //0.08, 0.92 --Pos from yesterday
+        TRANSFER(0.04, 0.96), //0.04, 0.96 --Pos from yesterday
         TRANSFER_INTERMEDIATE(0.09,0.91),
         DROP(0.52,0.48), //0.6, 0.4
         LOW_JUNCTION (0.7, 0.3), //0.8,0.2
@@ -52,7 +52,7 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         WRIST_TRANSFER(0.30), //TODO test real, 0.36, 0.4
-        WRIST_DROP(0.30 ), //0.54 TODO test real
+        WRIST_DROP(0.44 ), //0.30 //0.54 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.60),//0.54
         WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7

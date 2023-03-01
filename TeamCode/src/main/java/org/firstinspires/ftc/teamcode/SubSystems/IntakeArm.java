@@ -50,7 +50,7 @@ public class IntakeArm {
 
         private double leftArmPosition;
         private double rightArmPosition;
-        private final int index;
+        public final int index;
         INTAKE_ARM_STATE(double leftArmPosition, double rightArmPosition, int index){
             this.leftArmPosition = leftArmPosition;
             this.rightArmPosition = rightArmPosition;
@@ -73,18 +73,18 @@ public class IntakeArm {
 
     //Hand - wrist, grip state declaration
     public enum INTAKE_WRIST_STATE {
-        INIT(0.31,0.80),
-        PICKUP_AUTO_CONE_1_LEVEL(0.28, 0.73), //0.24, 0.77
+        INIT(0.27,0.75),
+        PICKUP_AUTO_CONE_1_LEVEL(0.29, 0.73), //0.24, 0.77
         /*
         AUTO_CONE_2(0.23 ,0.77),
         AUTO_CONE_3(0.26, 0.74),
         AUTO_CONE_4(0.31, 0.69),
          */
-        RANDOM (0.61,0.4),
-        AUTO_CONE_5(0.43, 0.54),
-        LOW_JUNCTION(0.4,0.61),
-        TRANSFER (0.26,0.75), //0.26, 0.75
-        FALLEN_CONE(0.74,0.17);
+        RANDOM (0.62,0.4),
+        AUTO_CONE_5(0.44, 0.54),
+        LOW_JUNCTION(0.41,0.61),
+        TRANSFER (0.27,0.75), //0.26, 0.75
+        FALLEN_CONE(0.75,0.17);
 
         private final double leftWristPosition;
         private final double rightWristPosition;
@@ -136,7 +136,7 @@ public class IntakeArm {
         moveWrist(toArmState);
     }
 
-    public void moveArmWristUpOneStack(){
+    /*public void moveArmWristUpOneStack(){
         if (intakeArmState.index < 1 || intakeArmState.index > 7) {
             return;
         } else {
@@ -152,7 +152,7 @@ public class IntakeArm {
             assert intakeArmState.byIndex(intakeArmState.index - 1) != null;
             moveArm(intakeArmState.byIndex(intakeArmState.index - 1));
         }
-    }
+    }*/
 
 
     public void continousArmRotateUp(){
