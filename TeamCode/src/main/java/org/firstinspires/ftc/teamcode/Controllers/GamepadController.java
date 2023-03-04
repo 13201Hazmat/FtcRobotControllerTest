@@ -385,7 +385,7 @@ public class GamepadController {
             moveOuttakeToTransfer();
         }
         transferTimer.reset();
-        while(transferTimer.time() < 500 /*2000*/&& (!isOuttakeAtTransfer() ||
+        while(transferTimer.time() < 500 /*2000*/&& (!isOuttakeAtTransfer() || //500
                 !intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))){
             runDriveControl_byRRDriveModes();
         }

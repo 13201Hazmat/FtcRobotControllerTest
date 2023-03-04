@@ -23,7 +23,8 @@ public class AutoCorrectPosition extends Thread{
         currentPose = GameField.CurrentPose;
         //telemetry.addData("Current Pose", currentPose);
         while (autoOpMode.opModeIsActive() && !autoOpMode.isStopRequested() && !exit) {
-            if (!currentPose.equals(driveTrain.getPoseEstimate())) {
+            //if(!currentPose.equals(driveTrain.getPoseEstimate())) {
+            if (isNotEqual(currentPose, driveTrain.getPoseEstimate())) {
                 trajectoryCorrection = driveTrain.trajectorySequenceBuilder(driveTrain.getPoseEstimate())
                         .lineToLinearHeading(currentPose)
                         .build();
@@ -36,4 +37,9 @@ public class AutoCorrectPosition extends Thread{
         exit = true;
     }
 
+    public boolean isNotEqual(Pose2d pose1, Pose2d pose2) {
+        return (pose1.getX() - pose2.getX() > 0.1 ||
+            pose1.getY() - pose2.getY() > 0.1 ||
+            pose1.getHeading() - pose2.getHeading() > Math.toRadians(0.1));
+    }
 }

@@ -238,10 +238,13 @@ public class OuttakeSlides {
         AUTO_HIGH_RIGHT(0.405), //0.405
         AUTO_MEDIUM_LEFT(0.285), //0.285
         AUTO_MEDIUM_RIGHT(0.395);  //0.398
-        private final double turretPosition;
-        private TURRET_STATE(double turretPosition){
+        public double turretPosition;
+        TURRET_STATE(double turretPosition){
             this.turretPosition = turretPosition;
         }
+    }
+    public void setTurretPosition(TURRET_STATE turretState, double turretPosition) {
+        turretState.turretPosition = turretPosition;
     }
 
     public TURRET_STATE turretState = TURRET_STATE.CENTER;

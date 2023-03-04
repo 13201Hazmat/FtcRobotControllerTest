@@ -74,7 +74,7 @@ public class IntakeArm {
     //Hand - wrist, grip state declaration
     public enum INTAKE_WRIST_STATE {
         INIT(0.27,0.75),
-        PICKUP_AUTO_CONE_1_LEVEL(0.27, 0.75), //0.29, 0.73
+        PICKUP_AUTO_CONE_1_LEVEL(0.29, 0.73), //0.29, 0.73
         /*
         AUTO_CONE_2(0.23 ,0.77),
         AUTO_CONE_3(0.26, 0.74),

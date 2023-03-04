@@ -28,7 +28,7 @@ public class OuttakeArm {
         TRANSFER(0.04, 0.96), //0.04, 0.96 --Pos from yesterday
         TRANSFER_INTERMEDIATE(0.09,0.91),
         DROP(0.52,0.48), //0.6, 0.4
-        LOW_JUNCTION (0.7, 0.3), //0.8,0.2
+        LOW_JUNCTION (0.7, 0.3), //0.7,0.3
         AUTO_HIGH_JUNCTION(0.60,0.40), //0.65, 0.35
         AUTO_MEDIUM_JUNCTION(0.75,0.25); //0.7, 0.3
 
@@ -56,7 +56,7 @@ public class OuttakeArm {
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.60),//0.54
         WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7
-        WRIST_LOW_JUNCTION(0.58), //0.64
+        WRIST_LOW_JUNCTION(0.58), //0.58
         WRIST_MIN(0.16),
         WRIST_MAX(0.72);
 
@@ -89,8 +89,8 @@ public class OuttakeArm {
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
     public enum OUTTAKE_GUIDE_STATE {
-        UP(0.36),
-        DOWN(0.62);//0.63
+        UP(0.22),
+        DOWN(0.55);//0.63
 
         private double guidePosition;
         OUTTAKE_GUIDE_STATE(double guidePosition){this.guidePosition = guidePosition;}
@@ -160,7 +160,7 @@ public class OuttakeArm {
             if (outtakeGripColor instanceof DistanceSensor) {
                 outtakeGripDistance = ((DistanceSensor) outtakeGripColor).getDistance(DistanceUnit.MM);
             }
-            if (outtakeGripDistance < 70.0) { //60.0
+            if (outtakeGripDistance < 50.0) { //70.0
                 outtakeConeSensed = true;
             } else {
                 outtakeConeSensed = false;
