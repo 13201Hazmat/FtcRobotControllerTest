@@ -40,6 +40,6 @@ public class AutoCorrectPosition extends Thread{
     public boolean isNotEqual(Pose2d pose1, Pose2d pose2) {
         return (pose1.getX() - pose2.getX() > 0.1 ||
             pose1.getY() - pose2.getY() > 0.1 ||
-            pose1.getHeading() - pose2.getHeading() > Math.toRadians(0.1));
+            pose1.getHeading() - pose2.getHeading() > Math.toRadians(0.3));
     }
 }
