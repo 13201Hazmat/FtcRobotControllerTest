@@ -172,6 +172,7 @@ public class AutoOpMode9 extends LinearOpMode{
 
     OuttakeArm.OUTTAKE_ARM_STATE outtakeArmDropState;
     OuttakeArm.OUTTAKE_WRIST_STATE outtakeWristDropState;
+    int intakeSlideBaseCount;
 
 
     //Set all position based on selected staring location and Build Autonomous Trajectory
@@ -181,9 +182,9 @@ public class AutoOpMode9 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(16, -36, Math.toRadians(270)); //8.-32
-                pickAndDropMediumPose = new Pose2d(16, -36, Math.toRadians(270));//13, 41
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.39);
+                pickAndDropHighPose = new Pose2d(11, -36, Math.toRadians(274)); //8.-32
+                pickAndDropMediumPose = new Pose2d(11, -36, Math.toRadians(270));//13, 41
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.40);
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
@@ -191,8 +192,9 @@ public class AutoOpMode9 extends LinearOpMode{
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(16, 37, Math.toRadians(90)); //13,41
-                pickAndDropMediumPose = new Pose2d(16, 37, Math.toRadians(90));//13,41
+                pickAndDropHighPose = new Pose2d(11, 36, Math.toRadians(86)); //13,41
+                pickAndDropMediumPose = new Pose2d(11, 36, Math.toRadians(90));//13,41
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.265);
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
@@ -220,11 +222,16 @@ public class AutoOpMode9 extends LinearOpMode{
                 pickAndDropTurretState = pickAndDropTurretStateMedium;
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_MEDIUM_JUNCTION;
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, 375 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, 345 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_3, 322 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, 341 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, 327 + 116 );
+                if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
+                    intakeSlideBaseCount = 470;
+                } else{
+                    intakeSlideBaseCount = 500;
+                }
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, intakeSlideBaseCount + 0 );
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, intakeSlideBaseCount + 12 );//10
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_3, intakeSlideBaseCount + 21 );//23
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, intakeSlideBaseCount + 40 );//38
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, intakeSlideBaseCount + 61 );//60
                 break;
             case HIGH:
                 outtakeSlidesDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.AUTO_HIGH_JUNCTION;
@@ -232,18 +239,23 @@ public class AutoOpMode9 extends LinearOpMode{
                 pickAndDropTurretState = pickAndDropTurretStateHigh;
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION;
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, 375 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, 345 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_3, 322 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, 341 + 116 );
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, 327 + 116 );
+                if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
+                    intakeSlideBaseCount = 470;
+                } else{
+                    intakeSlideBaseCount = 500;
+                }
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, intakeSlideBaseCount + 0 );
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, intakeSlideBaseCount + 12 );//10
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_3, intakeSlideBaseCount + 21 );//23
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, intakeSlideBaseCount + 40 );//38
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, intakeSlideBaseCount + 61 );//60
                 break;
         }
 
         //Move forward to midWayPose, rotate turret to 0 and reset turret
 
         trajectoryAuto = driveTrain.trajectorySequenceBuilder(initPose)
-                .addTemporalMarker(0.1 ,() -> {
+                .addTemporalMarker(0.3 ,() -> {
                     outtakeSlides.moveTurret(pickAndDropTurretState);
                 })
                 .lineToLinearHeading(midWayPose)
@@ -262,9 +274,9 @@ public class AutoOpMode9 extends LinearOpMode{
             case BLUE_LEFT:
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(7, -60, Math.toRadians(0)); break; // 15 Location 1
-                    case LOCATION2: parkPose = new Pose2d(7, -36, Math.toRadians(0)); break; // 15 Location 2
-                    case LOCATION3: parkPose = new Pose2d(7, -12, Math.toRadians(0)); break; // 15 Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, -60, Math.toRadians(0)); break; // 15 Location 1
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 5;
@@ -272,9 +284,9 @@ public class AutoOpMode9 extends LinearOpMode{
             case BLUE_RIGHT:
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(7, 15, Math.toRadians(0)); break; // 15 Location 1, y=12
-                    case LOCATION2: parkPose = new Pose2d(7, 36, Math.toRadians(0)); break; // 15 Location 2
-                    case LOCATION3: parkPose = new Pose2d(7, 60, Math.toRadians(0)); break; // 15 Location 3
+                    case LOCATION1: parkPose = new Pose2d(12, 15, Math.toRadians(0)); break; // 15 Location 1, y=12
+                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION3: parkPose = new Pose2d(12, 60, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = -90;
                 endPoseForward = 5;
@@ -447,6 +459,7 @@ public class AutoOpMode9 extends LinearOpMode{
                     outtakeArm.moveOuttakeGuide(OuttakeArm.OUTTAKE_GUIDE_STATE.UP);
                     outtakeSlides.moveOuttakeSlides(outtakeSlidesDropState);
                     outtakeArm.moveArm(outtakeArmDropState);
+                    //outtakeArm.moveWrist(outtakeWristDropState);
                     /*if (dropConePosition == DROP_CONE_POSITION.HIGH) {
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION);
                     } else { // dropConePosition == DROP_CONE_POSITION.MEDIUM
@@ -457,12 +470,12 @@ public class AutoOpMode9 extends LinearOpMode{
                     break;
 
                 case O4: // Move outtake wrist to Drop
-                    if (outtakeWristTimer.time() > 0) { //300 for Gobilda servo
+                    //if (outtakeWristTimer.time() > 0) { //300 for Gobilda servo
                         outtakeArm.moveWrist(outtakeWristDropState);
                         //outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
                         outtakeState = OUTTAKE_STATE.O5;
                         outtakeWristTimer.reset();
-                    }
+                    //}
                     break;
 
                 case O5: // Verify that Outtake slide, Arm and Wrist are in position to drop

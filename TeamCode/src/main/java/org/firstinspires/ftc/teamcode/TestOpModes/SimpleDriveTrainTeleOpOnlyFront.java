@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name = "Front DriveTrainTestTeleOp", group = "Testing")
+@Disabled
 public class SimpleDriveTrainTeleOpOnlyFront extends LinearOpMode {
     public DcMotorEx leftFront, leftRear, rightRear, rightFront;
 

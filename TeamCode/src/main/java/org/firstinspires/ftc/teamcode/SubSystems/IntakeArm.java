@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class IntakeArm {
     public Servo intakeArmServoLeft, intakeArmServoRight;
@@ -259,12 +260,17 @@ public class IntakeArm {
      */
     public boolean senseIntakeCone(){
         boolean intakeConeSensed = false;
+        int senseDistance = 35;
         if (intakeArmState != INTAKE_ARM_STATE.TRANSFER) {
             if (intakeGripColor instanceof DistanceSensor) {
                 intakeGripDistance = ((DistanceSensor) intakeGripColor).getDistance(DistanceUnit.MM);
             }
-
-            if (intakeGripDistance < 35) { //40
+            if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+                senseDistance = 25;
+            } else {
+                senseDistance = 35;
+            }
+            if (intakeGripDistance < senseDistance) { //40
                 intakeConeSensed = true;
             } else {
                 intakeConeSensed = false;

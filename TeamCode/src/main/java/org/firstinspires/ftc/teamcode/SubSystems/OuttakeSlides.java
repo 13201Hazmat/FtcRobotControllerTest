@@ -48,8 +48,8 @@ public class OuttakeSlides {
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (474),//474 //290 for 1150rpm
         HIGH_JUNCTION (1440),//1440 //880 for 1150rpm
-        AUTO_MEDIUM_JUNCTION(870), //870 //530 for 1150rpm
-        AUTO_HIGH_JUNCTION(1470), //1470 //897 for 1150 rpm
+        AUTO_MEDIUM_JUNCTION(474), //870 //530 for 1150rpm
+        AUTO_HIGH_JUNCTION(1560), //1470 //897 for 1150 rpm
         MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
         RANDOM(0);
 
@@ -229,7 +229,7 @@ public class OuttakeSlides {
     public enum TURRET_STATE{
         MAX_LEFT (0.21), //0.20
         CENTER(0.33), //0.35
-        MAX_RIGHT (0.45), //0.66
+        MAX_RIGHT (0.42), //0.66
         INIT(0.33), //0.5
         RANDOM (0.33), //0.45
         TELEOP_LEFT(0.27),

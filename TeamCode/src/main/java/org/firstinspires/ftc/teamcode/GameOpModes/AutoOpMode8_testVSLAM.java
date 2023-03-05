@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive.getVelocit
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +28,7 @@ import java.util.Objects;
  * FTC WIRES Autonomous Example
  */
 @Autonomous(name = "Hazmat Auto 8 VSLAM", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+@Disabled
 public class AutoOpMode8_testVSLAM extends LinearOpMode{
 
     //Define and declare Robot Starting Locations

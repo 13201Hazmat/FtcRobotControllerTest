@@ -30,11 +30,11 @@ public class IntakeSlides {
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
 
-        AUTO_CONE_1(375+116, 1), //375
-        AUTO_CONE_2(345+116, 2), //345
-        AUTO_CONE_3(322+116, 3), //322
-        AUTO_COME_4(341+116, 4), //341
-        AUTO_CONE_5(327+116, 5); //327
+        AUTO_CONE_1(500+61, 1), //375
+        AUTO_CONE_2(500+40, 2), //345
+        AUTO_CONE_3(500+21, 3), //322
+        AUTO_COME_4(500+12, 4), //341
+        AUTO_CONE_5(500+0, 5); //327
 
         public double motorPosition;
         public int index;
@@ -68,8 +68,8 @@ public class IntakeSlides {
     //Different constants of arm speed
     public static double INTAKE_MOTOR_DELTA_COUNT_RESET = 200;
     public static final double INTAKE_MOTOR_POWER_TELEOP = 1.0;
-    public static final double INTAKE_MOTOR_POWER_RESET = 0.8;
-    public static final double INTAKE_MOTOR_POWER_AUTO = 0.75;
+    public static final double INTAKE_MOTOR_POWER_RESET = 1.0;
+    public static final double INTAKE_MOTOR_POWER_AUTO = 0.9;
     public enum INTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT

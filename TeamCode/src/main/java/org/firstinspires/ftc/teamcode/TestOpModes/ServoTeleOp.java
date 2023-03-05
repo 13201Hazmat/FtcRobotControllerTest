@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 
 @TeleOp(name = "ServoTeleOp", group = "Testing")
+@Disabled
 public class ServoTeleOp extends LinearOpMode {
     Servo masterServo;
     //double servoSetPosition;

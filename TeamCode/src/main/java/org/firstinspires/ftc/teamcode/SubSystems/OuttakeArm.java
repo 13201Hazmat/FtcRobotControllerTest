@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static org.firstinspires.ftc.teamcode.GameOpModes.GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
 
+import android.view.animation.AnimationUtils;
+
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -29,8 +31,8 @@ public class OuttakeArm {
         TRANSFER_INTERMEDIATE(0.09,0.91),
         DROP(0.52,0.48), //0.6, 0.4
         LOW_JUNCTION (0.7, 0.3), //0.7,0.3
-        AUTO_HIGH_JUNCTION(0.60,0.40), //0.65, 0.35
-        AUTO_MEDIUM_JUNCTION(0.75,0.25); //0.7, 0.3
+        AUTO_HIGH_JUNCTION(0.52,0.48), //0.65, 0.35
+        AUTO_MEDIUM_JUNCTION(0.52,0.48); //0.7, 0.3
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -54,7 +56,7 @@ public class OuttakeArm {
         WRIST_TRANSFER(0.30), //TODO test real, 0.36, 0.4
         WRIST_DROP(0.44 ), //0.30 //0.54 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
-        WRIST_AUTO_HIGH_JUNCTION(0.60),//0.54
+        WRIST_AUTO_HIGH_JUNCTION(0.44),//0.54
         WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7
         WRIST_LOW_JUNCTION(0.58), //0.58
         WRIST_MIN(0.16),
@@ -89,7 +91,7 @@ public class OuttakeArm {
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
     public enum OUTTAKE_GUIDE_STATE {
-        UP(0.22),
+        UP(0.23),
         DOWN(0.55);//0.63
 
         private double guidePosition;
@@ -181,16 +183,39 @@ public class OuttakeArm {
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
+        /*if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
+            moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
+            openGrip();
+        }*/
+
+        switch(outtakeArmState) {
+            case LOW_JUNCTION:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_LOW_JUNCTION);
+                break;
+            case AUTO_HIGH_JUNCTION:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
+                break;
+            case AUTO_MEDIUM_JUNCTION:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_AUTO_MEDIUM_JUNCTION);
+                break;
+            case TRANSFER:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
+                openGrip();
+                break;
+            case DROP:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_DROP);
+                break;
+            case TRANSFER_INTERMEDIATE:
+                moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
+                break;
+        }
+
         if (outtakeArmState == OUTTAKE_ARM_STATE.DROP ||
-            outtakeArmState == OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION ||
-            outtakeArmState == OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION) {
+                outtakeArmState == OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION ||
+                outtakeArmState == OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION) {
             moveOuttakeGuide(OUTTAKE_GUIDE_STATE.UP);
         } else {
             moveOuttakeGuide(OUTTAKE_GUIDE_STATE.DOWN);
-        }
-        if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
-            moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
-            openGrip();
         }
         runWristInDropFlag = true;
     }

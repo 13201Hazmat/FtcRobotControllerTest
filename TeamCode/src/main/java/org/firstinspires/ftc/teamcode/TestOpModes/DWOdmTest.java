@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @TeleOp(name = "DWOdom", group = "Testing")
+@Disabled
 public class DWOdmTest extends LinearOpMode {
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
