@@ -182,20 +182,22 @@ public class AutoOpMode9 extends LinearOpMode{
             case RED_LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(11, -36, Math.toRadians(274)); //8.-32
-                pickAndDropMediumPose = new Pose2d(11, -36, Math.toRadians(270));//13, 41
+                pickAndDropHighPose = new Pose2d(11, -36, Math.toRadians(274)); //11,-36
+                pickAndDropMediumPose = new Pose2d(15, -36, Math.toRadians(265));//11, -36
                 outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.40);
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT,0.29);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
             case BLUE_RIGHT:
             case RED_RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
-                pickAndDropHighPose = new Pose2d(11, 36, Math.toRadians(86)); //13,41
-                pickAndDropMediumPose = new Pose2d(11, 36, Math.toRadians(90));//13,41
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.265);
+                pickAndDropHighPose = new Pose2d(11, 35, Math.toRadians(86)); //11,35
+                pickAndDropMediumPose = new Pose2d(15, 35, Math.toRadians(95));//11,35
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.25);
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.37);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
 
@@ -490,7 +492,7 @@ public class AutoOpMode9 extends LinearOpMode{
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
                     if (dropConePosition == DROP_CONE_POSITION.MEDIUM) {
-                        safeWait(500); //1000
+                        safeWait(1000); //1000
                     }
                     if ((outtakeWristTimer.time() > 500 && //TODO :
                             outtakeSlides.isOuttakeSlidesInState(outtakeSlidesDropState)

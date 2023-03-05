@@ -29,6 +29,7 @@ public class IntakeSlides {
         TRANSFER (0, 0),
         MAX_EXTENDED(666, 6), //1760
         RANDOM(0, 7),
+        AUTO_IN_TELEOP(0,8),
 
         AUTO_CONE_1(500+61, 1), //375
         AUTO_CONE_2(500+40, 2), //345

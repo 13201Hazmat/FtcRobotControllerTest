@@ -141,6 +141,9 @@ public class GamepadController {
         }*/
     }
 
+    public int autoInTeleOpIntakeSlideCount = 0;
+    public boolean autoInTeleOpRunning = false;
+    public OuttakeSlides.OUTTAKE_SLIDE_STATE autoInTeleOpOuttakeState = OuttakeSlides.OUTTAKE_SLIDE_STATE.HIGH_JUNCTION;
     public void runIntakeSlides(){
         if (!gp1GetStart() && gp1GetB()) {
             intakeSlides.modifyIntakeSlidesLength(0.33 * (1.0 + 1.0 * gp1GetLeftTrigger()));
@@ -155,6 +158,12 @@ public class GamepadController {
         if(gp1GetStart() && gp1GetX()){
             intakeSlides.moveIntakeSlidesToMinRetracted();
         }
+
+        if (gp1GetStart() && gp1GetDpad_leftPress()) {
+            autoInTeleOpRunning = true;
+            autoInTeleOp();
+        }
+
     }
 
     ElapsedTime tempAutoCloseDisableTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -180,7 +189,7 @@ public class GamepadController {
                 intakeArm.intakeArmState != IntakeArm.INTAKE_ARM_STATE.INIT) {
             if(intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
-                if (gp1GetDpad_left()) {
+                if (!gp1GetStart() && gp1GetDpad_left() && !autoInTeleOpRunning) {
                     tempAutoCloseDisableTimer.reset();
                     tempAutoCloseDisableFlag = true;
                 }
@@ -446,301 +455,52 @@ public class GamepadController {
         }
     }
 
-    /* Auto In TeleOp
 
-    public enum INTAKE_STATE{
-        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, IExit;
-    }
-    public INTAKE_STATE intakeState = INTAKE_STATE.I0;
+    public void autoInTeleOp(){
+        int autoInTeleOpCycle = 7;
+        int autoInTeleOpCount = 0;
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
 
-    public enum OUTTAKE_STATE{
-        O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11;
-    }
-    public OUTTAKE_STATE outtakeState = OUTTAKE_STATE.O0;
-
-    public void teleOpAutoPickAndDropStateMachine(){
-        //telemetry.setAutoClear(true);
-        cycleTimer.reset();
-        intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-        while(opModeIsActive() && !isStopRequested() &&
-                dropConeCounter < dropConeCount && !timeoutExit) {
-            stateMachineLoopCounter ++;
-            switch (outtakeState) {
-                case O0: // Start of State machine
-                    outtakeState = AutoOpMode9.OUTTAKE_STATE.O1;
-                    break;
-
-                case O1: // Cone is sensed, close grip
-                    if (dropConeCounter == 0 && !intakeGripClosed) {
-                        outtakeArm.closeGrip();
-                        outtakeGripClosed = true;
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O3;
-                    } else if (intakeState == AutoOpMode9.INTAKE_STATE.I13) {
-                        outtakeArm.closeGrip();
-                        outtakeGripClosed = true;
-                        outtakeGripTimer.reset();
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O2;
-                    }
-                    break;
-
-                case O2: // If Intake Arm is not in transfer, proceed to move outttake to drop position
-                    if((intakeState == AutoOpMode9.INTAKE_STATE.I1 || intakeState == AutoOpMode9.INTAKE_STATE.I2 || intakeState == AutoOpMode9.INTAKE_STATE.I3)
-                            && outtakeGripTimer.time() > 200 &&
-                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O3;
-                    }
-                    break;
-
-                case O3: // Move outtake to drop Position
-                    outtakeArm.moveOuttakeGuide(OuttakeArm.OUTTAKE_GUIDE_STATE.UP);
-                    outtakeSlides.moveOuttakeSlides(outtakeSlidesDropState);
-                    outtakeArm.moveArm(outtakeArmDropState);
-                    outtakeWristTimer.reset();
-                    outtakeState = AutoOpMode9.OUTTAKE_STATE.O4;
-                    break;
-
-                case O4: // Move outtake wrist to Drop
-                    //if (outtakeWristTimer.time() > 0) { //300 for Gobilda servo
-                    outtakeArm.moveWrist(outtakeWristDropState);
-                    //outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION);
-                    outtakeState = AutoOpMode9.OUTTAKE_STATE.O5;
-                    outtakeWristTimer.reset();
-                    //}
-                    break;
-
-                case O5: // Verify that Outtake slide, Arm and Wrist are in position to drop
-                    if (dropConePosition == AutoOpMode9.DROP_CONE_POSITION.MEDIUM) {
-                        safeWait(500); //1000
-                    }
-                    if ((outtakeWristTimer.time() > 500 && //TODO :
-                            outtakeSlides.isOuttakeSlidesInState(outtakeSlidesDropState)
-                            && outtakeArm.isOuttakeArmInState(outtakeArmDropState)
-                            && outtakeArm.isOuttakeWristInState(outtakeWristDropState))
-                            || outtakeWristTimer.time() > 1500) {//1000
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O6;
-                    }
-                    break;
-
-                case O6: // Open Grip and Drop Cone
-                    outtakeArm.openGrip();
-                    outtakeGripTimer.reset();
-                    outtakeState = AutoOpMode9.OUTTAKE_STATE.O7;
-                    break;
-
-                case O7: // Wait for cone to be dropped completely
-                    if (outtakeGripTimer.time() > 200) {
-                        outtakeGripClosed = false;
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O8;
-                    }
-                    break;
-
-                case O8: // Check if intake is in Transfer, else Move outtake to transfer
-                    if (!intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)) {
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O9;
-                    }
-                    break;
-
-                case O9: // Move outtake to Transfer
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-                    outtakeGripTimer.reset();
-                    switch (dropConeCounter) {
-                        case 0:
-                            timeToDropPreloadCone = gameTimer.time();
-                            break;
-                        case 1:
-                            timeToDropCone1 = gameTimer.time();
-                            break;
-                        case 2:
-                            timeToDropCone2 = gameTimer.time();
-                            break;
-                        case 3:
-                            timeToDropCone3 = gameTimer.time();
-                            break;
-                        case 4:
-                            timeToDropCone4 = gameTimer.time();
-                            break;
-                        case 5:
-                            timeToDropCone5 = gameTimer.time();
-                            break;
-                    }
-                    dropConeCounter++;
-                    outtakeState = AutoOpMode9.OUTTAKE_STATE.O10;
-
-                case O10: // Check if outtake is at transfer
-                    //telemetry.addData("outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)", outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER));
-                    //telemetry.addData("outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)", outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER));
-                    if((outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)
-                            && outtakeArm.isOuttakeWristInState(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_TRANSFER)
-                            && outtakeArm.outtakeGripState == OuttakeArm.OUTTAKE_GRIP_STATE.OPEN
-                            && outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER))
-                            || outtakeGripTimer.time()>300) { //650
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O11;
-                    }
-                    break;
-
-                case O11: // Wait till Intake drops cone
-                    //telemetry.addData("outtakeArm.senseOuttakeCone()", outtakeArm.senseOuttakeCone());
-                    if (dropConeCounter < dropConeCount) {
-                        if (intakeState == AutoOpMode9.INTAKE_STATE.I12) {
-                            if (outtakeArm.senseOuttakeCone() || outtakeSenseTimer.time() > 500) { //500
-                                outtakeState = AutoOpMode9.OUTTAKE_STATE.O1;
-                                cycleTime = cycleTimer.time();
-                                cumulativeCycleTime +=cycleTime;
-                                cycleTimer.reset();
-                            }
-                        }
-                    } else {
-                        outtakeState = AutoOpMode9.OUTTAKE_STATE.O1;
-                        cycleTime = cycleTimer.time();
-                        cumulativeCycleTime +=cycleTime;
-                        cycleTimer.reset();
-                    }
-                    break;
+        autoInTeleOpIntakeSlideCount = intakeSlides.intakeMotorRight.getCurrentPosition();
+        autoInTeleOpOuttakeState = outtakeSlides.outtakeSlidesState;
+        intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_IN_TELEOP, autoInTeleOpIntakeSlideCount);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+        safeWait(500);
+        for (autoInTeleOpCount = 0; autoInTeleOpCount < autoInTeleOpCycle; autoInTeleOpCount++) {
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            timer.reset();
+            while (!intakeArm.senseIntakeCone() && timer.time() <1500) {
+                if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+                runDriveControl_byRRDriveModes();
             }
-
-            switch (intakeState) {
-                case I0: // Start of State Machine
-                    intakeState = AutoOpMode9.INTAKE_STATE.I1;
-                    break;
-
-                case I1: // Start fo next round of intake sequence, if stack is not empty
-                    // if only drop preloaded, Intake state machine wont move forward
-                    if(stackConeCounter < stackConeCount) {
-                        intakeState = AutoOpMode9.INTAKE_STATE.I2;
-                    }
-                    break;
-
-                case I2: //Move Intake arm and slides to stack current cone level
-                    intakeArm.moveArm(Objects.requireNonNull(intakeArm.intakeArmState.byIndex(5 - stackConeCounter)));
-                    if (5-stackConeCounter <=2) {
-                        safeWait(300);
-                    }
-                    intakeSlides.moveIntakeSlides(Objects.requireNonNull(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter)));
-                    intakeSlides.runIntakeMotorToLevel();
-                    intakeGripTimer.reset();
-                    intakeState = AutoOpMode9.INTAKE_STATE.I3;
-                    break;
-
-                case I3: // Wait for Outtake grip to be open, and hold position minimum for 500 to stabilize
-                    if( (intakeSlides.isIntakeSlidesInState(intakeSlides.intakeSlidesState.byIndex(5 - stackConeCounter))
-                            && outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
-                            && !outtakeGripClosed
-                            && intakeGripTimer.time() > 300)
-                            || intakeGripTimer.time() > 1000) {//400
-                        intakeState = AutoOpMode9.INTAKE_STATE.I4;
-                    }
-                    break;
-
-                case I4: // Close grip on stack
-                    if (outtakeArm.isOuttakeGripInState(OuttakeArm.OUTTAKE_GRIP_STATE.OPEN)
-                            && !outtakeGripClosed) {
-                        intakeArm.closeGrip();
-                        intakeGripClosed = true;
-                        intakeGripTimer.reset();
-                        intakeState = AutoOpMode9.INTAKE_STATE.I5;
-                    }
-                    break;
-
-                case I5 : // Wait for grip to be closed completely
-                    if (intakeGripTimer.time() > 400 && intakeArm.isIntakeGripInState(IntakeArm.INTAKE_GRIP_STATE.CLOSED)) {
-                        intakeState = AutoOpMode9.INTAKE_STATE.I6;
-                    }
-                    break;
-
-                case I6: // Move Arm up to clear stack
-                    intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.LOW_JUNCTION);
-                    intakeArm.moveIntakeWristToTransfer();
-                    intakeArmTimer.reset();
-                    intakeState = AutoOpMode9.INTAKE_STATE.I7;
-                    break;
-
-                case I7: // Wait for Arm to be completely moved up of stack
-                    if (intakeArmTimer.time() > 300) {
-                        intakeState = AutoOpMode9.INTAKE_STATE.I8;
-                    }
-                    break;
-                case I8: // Move intake slides to Transfer
-                    intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-                    intakeArm.moveIntakeWristToTransfer();
-                    intakeState = AutoOpMode9.INTAKE_STATE.I9;
-                    if (gameTimer.time() >27000) { //27000
-                        timeoutExit = true;
-                    }
-                    break;
-
-                case I9: // Wait till Outtake is ready to accept cone
-                    if(outtakeState == AutoOpMode9.OUTTAKE_STATE.O11){
-                        intakeState = AutoOpMode9.INTAKE_STATE.I10;
-                    }
-                    break;
-
-                case I10: // Move intake Arm to transfer
-                    intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
-                    intakeArm.moveIntakeWristToTransfer();
-                    intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.TRANSFER);
-                    intakeArmTimer.reset();
-                    intakeState = AutoOpMode9.INTAKE_STATE.I11;
-                    break;
-
-                case I11: // Check if intake Arm and Slides are in Transfer
-                    //telemetry.addData("intakeArm.isIntakeArmInTransfer", intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER) );
-                    //telemetry.addData("intakeSlides.isIntakeSlidesInTransfer", intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER));
-
-                    if((intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.TRANSFER)
-                            && intakeArm.isIntakeWristInState(IntakeArm.INTAKE_WRIST_STATE.TRANSFER)
-                            && intakeSlides.isIntakeSlidesInState(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER))
-                            || intakeArmTimer.time() > 650) { //850
-                        outtakeSenseTimer.reset();
-                        intakeState = AutoOpMode9.INTAKE_STATE.I12;
-                    }
-                    break;
-
-                case I12: // Open Intake Grip to drop cone to Transfer
-                    if (outtakeState == AutoOpMode9.OUTTAKE_STATE.O1) {
-                        intakeArm.openGrip();
-                        safeWait(300);
-                        intakeGripClosed = false;
-                        intakeState = AutoOpMode9.INTAKE_STATE.I13;
-                    }
-                    break;
-                case I13:
-                    intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.INIT);
-                    intakeArmTimer.reset();
-                    while (intakeArmTimer.time() < 700 &&
-                            !intakeArm.isIntakeArmInState(IntakeArm.INTAKE_ARM_STATE.INIT)) {}
-                    stackConeCounter++;
-                    intakeState = AutoOpMode9.INTAKE_STATE.I1;
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (intakeArm.senseIntakeCone()) {
+                intakeArm.closeGrip();
+                safeWait(300);
+                runTransferSequence();
+            } else {
+                autoInTeleOpRunning = false;
+                return;
             }
-            telemetry.addData("dropConeCounter", dropConeCounter);
-            telemetry.addData("stackConeCounter", stackConeCounter);
-            telemetry.addData("cycleTime", cycleTime);
-            telemetry.addData(" --- OuttakeState", outtakeState);
-            telemetry.addData(" --- IntakeState", intakeState);
-            //telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)));
-            //telemetry.addData("Stack Position", intakeSlides.intakeSlidesState.byIndex(5 - (stackConeCounter-1)).motorPosition);
-            //telemetry.addData("Intake Slide Left Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
-            //telemetry.addData("Intake Slide Right Motor", intakeSlides.intakeMotorLeft.getCurrentPosition());
-            //telemetry.addData("Intake touch Pressed", intakeSlides.intakeTouch.isPressed());
-            telemetry.addData("Outtake Slides", outtakeSlides.outtakeMotor.getCurrentPosition());
-
-            telemetry.addData("Pose Estimate", driveTrain.getPoseEstimate());
-
-            telemetry.update();
-            if (startPosition == AutoOpMode9.START_POSITION.TEST_POSE) {
-                safeWait(0);
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            outtakeSlides.moveOuttakeSlides(autoInTeleOpOuttakeState);
+            safeWait(500);
+            timer.reset();
+            while (timer.time() < 600 && !outtakeSlides.isOuttakeSlidesInState(autoInTeleOpOuttakeState)) {
+                runDriveControl_byRRDriveModes();
             }
-            //safeWait(1000);
-
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1);
+            intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_IN_TELEOP);
+            intakeSlides.runIntakeMotorToLevel();
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            outtakeArm.openGrip();
+            safeWait(300);
+            moveOuttakeToTransfer();
+            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
         }
-        autoCorrectPosition.exit();
-    }*/
-
-
-
-
-
-
+    }
 
     //*********** KEY PAD MODIFIERS BELOW ***********
 

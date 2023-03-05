@@ -57,7 +57,7 @@ public class OuttakeArm {
         WRIST_DROP(0.44 ), //0.30 //0.54 TODO test real
         WRIST_OUTTAKE_INTERMEDIATE(0.26),
         WRIST_AUTO_HIGH_JUNCTION(0.44),//0.54
-        WRIST_AUTO_MEDIUM_JUNCTION( 0.8), //0.7
+        WRIST_AUTO_MEDIUM_JUNCTION( 0.44), //0.7
         WRIST_LOW_JUNCTION(0.58), //0.58
         WRIST_MIN(0.16),
         WRIST_MAX(0.72);
