@@ -48,7 +48,7 @@ public class OuttakeSlides {
         LOW_JUNCTION (0),
         MEDIUM_JUNCTION (474),//474 //290 for 1150rpm
         HIGH_JUNCTION (1440),//1440 //880 for 1150rpm
-        AUTO_MEDIUM_JUNCTION(600), //870 //530 for 1150rpm
+        AUTO_MEDIUM_JUNCTION(580), //870 //530 for 1150rpm
         AUTO_HIGH_JUNCTION(1600), //1470 //897 for 1150 rpm
         MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
         RANDOM(0);

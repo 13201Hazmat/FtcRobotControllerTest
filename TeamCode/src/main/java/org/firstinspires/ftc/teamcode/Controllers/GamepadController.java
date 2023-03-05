@@ -464,8 +464,9 @@ public class GamepadController {
         autoInTeleOpIntakeSlideCount = intakeSlides.intakeMotorRight.getCurrentPosition();
         autoInTeleOpOuttakeState = outtakeSlides.outtakeSlidesState;
         intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_IN_TELEOP, autoInTeleOpIntakeSlideCount);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+        outtakeArm.openGrip();
+        safeWait(300);
+        moveOuttakeToTransfer();
         safeWait(500);
         for (autoInTeleOpCount = 0; autoInTeleOpCount < autoInTeleOpCycle; autoInTeleOpCount++) {
             if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
