@@ -32,21 +32,20 @@ public class IntakeArm {
 
     public enum INTAKE_ARM_STATE {
         RANDOM(0,0.97,0), //0.94
-        PICKUP_AUTO_CONE_1(0.00,0.98,1), //0.04, 0.93
-
-        AUTO_CONE_2(0.06, 0.92, 2), //0.08, 0.90
-        AUTO_CONE_3(0.10, 0.88, 3), //0.12,0.86
-        AUTO_CONE_4(0.15, 0.85, 4), //0.18,0.82
-        AUTO_CONE_5(0.18, 0.82, 5), //0.22, 0.78
+        PICKUP_AUTO_CONE_1(0.845,0.165,1), //0.04, 0.93
+        AUTO_CONE_2(0.79, 0.22, 2), //0.08, 0.90
+        AUTO_CONE_3(0.76, 0.26, 3), //0.12,0.86
+        AUTO_CONE_4(0.72, 0.30, 4), //0.18,0.82
+        AUTO_CONE_5(0.675, 0.335, 5), //0.22, 0.78
         /*AUTO_CONE_2(0.14, 0.82, 2), //0.15, 0.81
         AUTO_CONE_3(0.19, 0.77, 3), //0.18,0.78
         AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
         AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69*/
-        LOW_JUNCTION(0.39,0.61,6), //Level 12 //0.39,0.59
-        INIT(0.54,0.46,7), //Level 15 //0.50, 0.50
-        TRANSFER(0.70,0.30,8), //Level 20 //0.65, 0.35
+        LOW_JUNCTION(0.505,0.505,6), //Level 12 //0.39,0.59
+        INIT(0.32,0.68,7), //Level 15 //0.50, 0.50
+        TRANSFER(0.165,0.845,8), //Level 20 //0.65, 0.35
 
-        PICKUP_FALLEN_CONE(0.18, 0.82,  9),
+        PICKUP_FALLEN_CONE(0.69, 0.32,  9),
         RANDOM_MAX(0.46,0.54,10); //Level 14
 
         private double leftArmPosition;
@@ -75,17 +74,17 @@ public class IntakeArm {
     //Hand - wrist, grip state declaration
     public enum INTAKE_WRIST_STATE {
         INIT(0.27,0.75),
-        PICKUP_AUTO_CONE_1_LEVEL(0.29, 0.73), //0.29, 0.73
+        PICKUP_AUTO_CONE_1_LEVEL(0.34, 0.34), //0.29, 0.73
         /*
         AUTO_CONE_2(0.23 ,0.77),
         AUTO_CONE_3(0.26, 0.74),
         AUTO_CONE_4(0.31, 0.69),
          */
         RANDOM (0.62,0.4),
-        AUTO_CONE_5(0.42, 0.56), //0.44,0.54
-        LOW_JUNCTION(0.41,0.61),
-        TRANSFER (0.27,0.75), //0.26, 0.75
-        FALLEN_CONE(0.75,0.17);
+        AUTO_CONE_5(0.46, 0.46), //0.44,0.54
+        LOW_JUNCTION(0.48,0.48),
+        TRANSFER (0.27,0.27), //0.26, 0.75
+        FALLEN_CONE(0.81,0.81);
 
         private final double leftWristPosition;
         private final double rightWristPosition;
@@ -157,8 +156,8 @@ public class IntakeArm {
 
 
     public void continousArmRotateUp(){
-        double deltaArmIntakeLeft = intakeArmServoLeft.getPosition() + ARM_DELTA;
-        double deltaArmIntakeRight = intakeArmServoRight.getPosition() - ARM_DELTA;
+        double deltaArmIntakeLeft = intakeArmServoLeft.getPosition() - ARM_DELTA;
+        double deltaArmIntakeRight = intakeArmServoRight.getPosition() + ARM_DELTA;
         if(deltaArmIntakeLeft > INTAKE_ARM_STATE.RANDOM_MAX.leftArmPosition){
             deltaArmIntakeLeft = INTAKE_ARM_STATE.RANDOM_MAX.leftArmPosition;
             deltaArmIntakeRight = INTAKE_ARM_STATE.RANDOM_MAX.rightArmPosition;
@@ -172,8 +171,8 @@ public class IntakeArm {
 
     public void continousArmRotateDown(){
         intakeArmState = INTAKE_ARM_STATE.RANDOM;
-        intakeArmState.leftArmPosition = intakeArmServoLeft.getPosition() - ARM_DELTA;
-        intakeArmState.rightArmPosition = intakeArmServoRight.getPosition() + ARM_DELTA;
+        intakeArmState.leftArmPosition = intakeArmServoLeft.getPosition() + ARM_DELTA;
+        intakeArmState.rightArmPosition = intakeArmServoRight.getPosition() - ARM_DELTA;
         intakeArmServoLeft.setPosition(intakeArmState.leftArmPosition);
         intakeArmServoRight.setPosition(intakeArmState.rightArmPosition);
         intakeArmState = INTAKE_ARM_STATE.RANDOM;

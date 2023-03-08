@@ -159,7 +159,8 @@ public class GamepadController {
             intakeSlides.moveIntakeSlidesToMinRetracted();
         }
 
-        if (gp1GetStart() && gp1GetDpad_leftPress()) {
+        //if (gp1GetStart() && gp1GetDpad_leftPress()) {
+        if(gp2GetStart() && gp2GetLeftBumper()){
             autoInTeleOpRunning = true;
             autoInTeleOp();
         }
@@ -189,7 +190,7 @@ public class GamepadController {
                 intakeArm.intakeArmState != IntakeArm.INTAKE_ARM_STATE.INIT) {
             if(intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED){
                 intakeArm.openGrip();
-                if (!gp1GetStart() && gp1GetDpad_left() && !autoInTeleOpRunning) {
+                if (!gp1GetStart() && gp1GetDpad_left()) {
                     tempAutoCloseDisableTimer.reset();
                     tempAutoCloseDisableFlag = true;
                 }
@@ -469,13 +470,13 @@ public class GamepadController {
         moveOuttakeToTransfer();
         safeWait(500);
         for (autoInTeleOpCount = 0; autoInTeleOpCount < autoInTeleOpCycle; autoInTeleOpCount++) {
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
             timer.reset();
             while (!intakeArm.senseIntakeCone() && timer.time() <1500) {
-                if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+                if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
                 runDriveControl_byRRDriveModes();
             }
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
             if (intakeArm.senseIntakeCone()) {
                 intakeArm.closeGrip();
                 safeWait(300);
@@ -484,22 +485,22 @@ public class GamepadController {
                 autoInTeleOpRunning = false;
                 return;
             }
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
             outtakeSlides.moveOuttakeSlides(autoInTeleOpOuttakeState);
             safeWait(500);
             timer.reset();
             while (timer.time() < 600 && !outtakeSlides.isOuttakeSlidesInState(autoInTeleOpOuttakeState)) {
                 runDriveControl_byRRDriveModes();
             }
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
             intakeArm.moveArm(IntakeArm.INTAKE_ARM_STATE.PICKUP_AUTO_CONE_1);
             intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_IN_TELEOP);
             intakeSlides.runIntakeMotorToLevel();
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
             outtakeArm.openGrip();
             safeWait(300);
             moveOuttakeToTransfer();
-            if (autoInTeleOpRunning && gp1GetDpad_leftPress()) { autoInTeleOpRunning = false; return; }
+            if (autoInTeleOpRunning && gp2GetLeftBumper()) { autoInTeleOpRunning = false; return; }
         }
     }
 

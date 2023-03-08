@@ -25,8 +25,8 @@ import java.util.Objects;
 /**
  * FTC WIRES Autonomous Example
  */
-@Autonomous(name = "Hazmat Auto 9", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-public class AutoOpMode9 extends LinearOpMode{
+@Autonomous(name = "Hazmat Auto BackUp9", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutoOpModeBackUp9 extends LinearOpMode{
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -194,10 +194,10 @@ public class AutoOpMode9 extends LinearOpMode{
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(11, 34, Math.toRadians(86)); //11,35
-                pickAndDropMediumPose = new Pose2d(16.5, 34, Math.toRadians(97.5));//11,35, 97
+                pickAndDropMediumPose = new Pose2d(16.5, 34, Math.toRadians(99));//11,35
                 outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT,0.271); //0.269
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_LEFT;
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT,0.363); //0.359
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT,0.356);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_RIGHT;
                 break;
 
@@ -225,7 +225,7 @@ public class AutoOpMode9 extends LinearOpMode{
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_MEDIUM_JUNCTION;
                 if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
-                    intakeSlideBaseCount = 498;//503
+                    intakeSlideBaseCount = 503;
                 } else{
                     intakeSlideBaseCount = 505;
                 }
@@ -242,7 +242,7 @@ public class AutoOpMode9 extends LinearOpMode{
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION;
                 if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
-                    intakeSlideBaseCount = 492; //498
+                    intakeSlideBaseCount = 505;
                 } else{
                     intakeSlideBaseCount = 520;
                 }
@@ -286,7 +286,7 @@ public class AutoOpMode9 extends LinearOpMode{
             case BLUE_RIGHT:
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1: parkPose = new Pose2d(11, 10, Math.toRadians(0)); break; // 15 Location 1, y=12
+                    case LOCATION1: parkPose = new Pose2d(11, 12, Math.toRadians(0)); break; // 15 Location 1, y=12
                     case LOCATION2: parkPose = new Pose2d(11, 36, Math.toRadians(0)); break; // 15 Location 2
                     case LOCATION3: parkPose = new Pose2d(11, 60, Math.toRadians(0)); break; // 15 Location 3
                 }
