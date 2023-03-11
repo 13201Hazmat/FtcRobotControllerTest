@@ -32,8 +32,8 @@ public class AutoOpMode9 extends LinearOpMode{
     public enum START_POSITION{
         BLUE_LEFT,
         BLUE_RIGHT,
-        RED_LEFT,
-        RED_RIGHT,
+        LEFT,
+        RIGHT,
         TEST_POSE
     }
     public static START_POSITION startPosition;
@@ -81,6 +81,13 @@ public class AutoOpMode9 extends LinearOpMode{
 
         //Key Pay inputs to selecting Starting Position of robot
         selectStartingPosition();
+        /*
+        startPosition = START_POSITION.RED_LEFT;
+        autoOption = AUTO_OPTION.FULL_AUTO;
+        dropConePosition = DROP_CONE_POSITION.HIGH;
+        dropConeCount = 6;
+         */
+
 
         // Initiate Camera on Init.
         vision.activateVuforiaTensorFlow();
@@ -100,10 +107,12 @@ public class AutoOpMode9 extends LinearOpMode{
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position", startPosition);
             telemetry.addData("AutoOption Selected", autoOption);
+            telemetry.addData("Selected dropCone Position", dropConePosition);
             telemetry.addData("Vision identified Parking Location", vision.visionIdentifiedTarget);
             telemetry.addData("Drop Cone Count", dropConeCount);
             telemetry.update();
         }
+
 
         //Game Play Button  is pressed
         if (opModeIsActive() && !isStopRequested()) {
@@ -159,7 +168,7 @@ public class AutoOpMode9 extends LinearOpMode{
     Pose2d pickAndDropHighPose;
     Pose2d pickAndDropMediumPose;
     Pose2d pickAndDropPose;
-    Pose2d parkPose;
+    Pose2d parkPose = new Pose2d();
     double endPoseTurn;
     double endPoseForward;
 
@@ -179,18 +188,18 @@ public class AutoOpMode9 extends LinearOpMode{
     public void buildAuto() {
         switch (startPosition) {
             case BLUE_LEFT:
-            case RED_LEFT:
+            case LEFT:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(11, -36, Math.toRadians(274)); //11,-36
+                pickAndDropHighPose = new Pose2d(11, -36, Math.toRadians(275)); //11,-36, 274
                 pickAndDropMediumPose = new Pose2d(16, -37, Math.toRadians(261));//11, -36, 260
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.40);
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.40);//0.40
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT,0.29);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
                 break;
             case BLUE_RIGHT:
-            case RED_RIGHT:
+            case RIGHT:
                 initPose = new Pose2d(64, 36, Math.toRadians(180)); //Starting pose
                 midWayPose = new Pose2d(17, 36, Math.toRadians(180)); //Choose the pose to move forward towards signal cone
                 pickAndDropHighPose = new Pose2d(11, 34, Math.toRadians(86)); //11,35
@@ -224,7 +233,7 @@ public class AutoOpMode9 extends LinearOpMode{
                 pickAndDropTurretState = pickAndDropTurretStateMedium;
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_MEDIUM_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_MEDIUM_JUNCTION;
-                if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
+                if (startPosition == START_POSITION.RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
                     intakeSlideBaseCount = 498;//503
                 } else{
                     intakeSlideBaseCount = 505;
@@ -241,16 +250,16 @@ public class AutoOpMode9 extends LinearOpMode{
                 pickAndDropTurretState = pickAndDropTurretStateHigh;
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION;
-                if (startPosition == START_POSITION.RED_RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
+                if (startPosition == START_POSITION.RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
                     intakeSlideBaseCount = 492; //498
                 } else{
-                    intakeSlideBaseCount = 520;
+                    intakeSlideBaseCount = 525;//520
                 }
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, intakeSlideBaseCount + 0 );
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, intakeSlideBaseCount + 6 );//12
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_3, intakeSlideBaseCount + 15 );//21
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, intakeSlideBaseCount + 30 );//36
-                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, intakeSlideBaseCount + 50 );//56
+                intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, intakeSlideBaseCount + 55 );//50
                 break;
         }
 
@@ -274,20 +283,20 @@ public class AutoOpMode9 extends LinearOpMode{
     public void buildParking(){
         switch (startPosition) {
             case BLUE_LEFT:
-            case RED_LEFT:
+            case LEFT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(11, -60, Math.toRadians(0)); break; // 15 Location 1
-                    case LOCATION2: parkPose = new Pose2d(11, -36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION2: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // 15 Location 2
                     case LOCATION3: parkPose = new Pose2d(11, -12, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 5;
                 break;
             case BLUE_RIGHT:
-            case RED_RIGHT:
+            case RIGHT:
                 switch(vision.visionIdentifiedTarget){
                     case LOCATION1: parkPose = new Pose2d(11, 10, Math.toRadians(0)); break; // 15 Location 1, y=12
-                    case LOCATION2: parkPose = new Pose2d(11, 36, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION2: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // 15 Location 2
                     case LOCATION3: parkPose = new Pose2d(11, 60, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = -90;
@@ -361,11 +370,11 @@ public class AutoOpMode9 extends LinearOpMode{
         intakeSlides.moveIntakeSlides(IntakeSlides.INTAKE_SLIDES_STATE.TRANSFER);
         switch (startPosition) {
             case BLUE_LEFT:
-            case RED_LEFT:
+            case LEFT:
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_LEFT);
                 break;
             case BLUE_RIGHT:
-            case RED_RIGHT:
+            case RIGHT:
                 outtakeSlides.moveTurret(OuttakeSlides.TURRET_STATE.TELEOP_RIGHT);
                 break;
             case TEST_POSE:
@@ -734,25 +743,25 @@ public class AutoOpMode9 extends LinearOpMode{
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X / Square)");
-            telemetry.addData("    Blue Right ", "(Y / Triangle)");
-            telemetry.addData("    Red Left    ", "(A / Cross)");
-            telemetry.addData("    Red Right  ", "(B / Circle)");
+            //telemetry.addData("    Blue Left   ", "(X / Square)");
+            //telemetry.addData("    Blue Right ", "(Y / Triangle)");
+            telemetry.addData("    Left    ", "(A / Cross)");
+            telemetry.addData("    Right  ", "(B / Circle)");
             telemetry.addData("      TEST POSE", "Right Bumper");
-            if(gamepadController.gp1GetButtonXPress()){
+            /*if(gamepadController.gp1GetButtonXPress()){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
             }
             if(gamepadController.gp1GetButtonYPress()){
                 startPosition = START_POSITION.BLUE_RIGHT;
                 break;
-            }
+            }*/
             if(gamepadController.gp1GetButtonAPress()){
-                startPosition = START_POSITION.RED_LEFT;
+                startPosition = START_POSITION.LEFT;
                 break;
             }
             if(gamepadController.gp1GetButtonBPress()){
-                startPosition = START_POSITION.RED_RIGHT;
+                startPosition = START_POSITION.RIGHT;
                 break;
             }
             if (gamepadController.gp1GetRightBumperPress()){
