@@ -268,7 +268,8 @@ public class GamepadController {
 
         if (gp1GetLeftBumperPress()
                 && intakeArm.intakeGripState == IntakeArm.INTAKE_GRIP_STATE.CLOSED
-                && intakeArm.senseIntakeCone()) {
+                /*&& intakeArm.senseIntakeCone()*/) {
+
             runTransferSequence();
         }
 
