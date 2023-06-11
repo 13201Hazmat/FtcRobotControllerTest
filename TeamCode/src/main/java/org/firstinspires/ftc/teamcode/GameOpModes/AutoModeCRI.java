@@ -46,7 +46,6 @@ public class AutoModeCRI extends LinearOpMode{
     public static AUTO_OPTION autoOption;
 
     public enum DROP_CONE_POSITION {
-        MEDIUM,
         HIGH
     }
     public static DROP_CONE_POSITION dropConePosition = DROP_CONE_POSITION.HIGH;
@@ -227,6 +226,7 @@ public class AutoModeCRI extends LinearOpMode{
         }
 
         switch (dropConePosition) {
+            /*
             case MEDIUM:
                 outtakeSlidesDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.AUTO_MEDIUM_JUNCTION;
                 pickAndDropPose = pickAndDropMediumPose;
@@ -244,6 +244,7 @@ public class AutoModeCRI extends LinearOpMode{
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_2, intakeSlideBaseCount + 40 );//38
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_1, intakeSlideBaseCount + 61 );//60
                 break;
+             */
             case HIGH:
                 outtakeSlidesDropState = OuttakeSlides.OUTTAKE_SLIDE_STATE.AUTO_HIGH_JUNCTION;
                 pickAndDropPose = pickAndDropHighPose;
@@ -500,9 +501,11 @@ public class AutoModeCRI extends LinearOpMode{
                     telemetry.addData("isOuttakeWristInStateError", outtakeArm.isOuttakeWristInStateError);
                     telemetry.addData("outtakeWristServo.getPosition()", outtakeArm.outtakeWristServo.getPosition());
                     telemetry.addData("WRIST_DROP position",OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_DROP.getWristPosition() );*/
+                    /*
                     if (dropConePosition == DROP_CONE_POSITION.MEDIUM) {
                         safeWait(1000); //1000
                     }
+                     */
                     if ((outtakeWristTimer.time() > 500 && //TODO :
                             outtakeSlides.isOuttakeSlidesInState(outtakeSlidesDropState)
                             && outtakeArm.isOuttakeArmInState(outtakeArmDropState)
@@ -808,14 +811,16 @@ public class AutoModeCRI extends LinearOpMode{
                 telemetry.addData("Selected Starting Position", startPosition);
                 telemetry.addData("Selected Auto Option", autoOption);
                 telemetry.addLine("Select dropCone Postition");
-                telemetry.addData("    Medium          ", "Y / Triangle");
+                //telemetry.addData("    Medium          ", "Y / Triangle");
                 telemetry.addData("    High            ", "B / Circle");
                 dropConeCount = 1;
                 stackConeCount = 0;
+                /*
                 if (gamepadController.gp1GetButtonYPress()) {
                     dropConePosition = DROP_CONE_POSITION.MEDIUM;
                     break;
                 }
+                */
                 if (gamepadController.gp1GetButtonBPress()) {
                     dropConePosition = DROP_CONE_POSITION.HIGH;
                     break;
