@@ -287,18 +287,18 @@ public class AutoModeCRI extends LinearOpMode{
             case BLUE_LEFT:
             case LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1M: parkPose = new Pose2d(24, -36, Math.toRadians(0)); break; // 15 Location 1
-                    case LOCATION2M: parkPose = new Pose2d(11, -12, Math.toRadians(0)); break; // 15 Location 2
-                    case LOCATION3M: parkPose = new Pose2d(11, 12, Math.toRadians(0)); break; // 15 Location 3
+                    case LOCATION1M: parkPose = new Pose2d(11, -36, Math.toRadians(0)); break; // 15 Location 1
+                    case LOCATION2M: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 2
+                    case LOCATION3M: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 5;
                 break;
             case MIDDLE:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1C: parkPose = new Pose2d(11, 34, Math.toRadians(0)); break;
-                    case LOCATION2C: parkPose = new Pose2d(11, -12, Math.toRadians(0)); break;
-                    case LOCATION3C: parkPose = new Pose2d(11, 12, Math.toRadians(0)); break;
+                    case LOCATION1C: parkPose = new Pose2d(64, -36, Math.toRadians(0)); break;
+                    case LOCATION2C: parkPose = new Pose2d(14, -36, Math.toRadians(0)); break;
+                    case LOCATION3C: parkPose = new Pose2d(38, -36, Math.toRadians(0)); break;
 
                 }
             case BLUE_RIGHT:
