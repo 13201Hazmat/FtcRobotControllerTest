@@ -164,7 +164,7 @@ public class Vision {
 
     private TFObjectDetector tfod;
     private List<Recognition> recognitions;
-    public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
+    public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1M;
 
     ACTIVE_WEBCAM activeWebcam;
     /**
@@ -269,17 +269,17 @@ public class Vision {
                         switch(detectedLabel){
                             //case "1 Bolt":
                             case "Green":
-                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1M;
                                 break;
                             //case "2 Bulb":
                             case "Yellow":
                                 //Adjusted to match to recogonition by Hazmat Model
-                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION3M;
                                 break;
                             //case "3 Panel":
                             case "Purple":
                                 //Adjusted to match to recogonition by Hazmat Model
-                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2;
+                                visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION2M;
                                 break;
                         }
                     }

@@ -156,52 +156,52 @@ public class AutoOpModeFTCWires extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
                 switch (vision.visionIdentifiedTarget) {
-                    case LOCATION1:
+                    case LOCATION1M:
                         parkPose = new Pose2d(-12, 60, Math.toRadians(180));
                         break; // Location 1
-                    case LOCATION2:
+                    case LOCATION2M:
                         parkPose = new Pose2d(-12, 36, Math.toRadians(180));
                         break; // Location 2
-                    case LOCATION3:
+                    case LOCATION3M:
                         parkPose = new Pose2d(-12, 11, Math.toRadians(180));
                         break; // Location 3
                 }
                 break;
             case BLUE_RIGHT:
                 switch (vision.visionIdentifiedTarget) {
-                    case LOCATION1:
+                    case LOCATION1M:
                         parkPose = new Pose2d(-12, -11, Math.toRadians(180));
                         break; // Location 1
-                    case LOCATION2:
+                    case LOCATION2M:
                         parkPose = new Pose2d(-12, -36, Math.toRadians(180));
                         break; // Location 2
-                    case LOCATION3:
+                    case LOCATION3M:
                         parkPose = new Pose2d(-12, -60, Math.toRadians(180));
                         break; // Location 3
                 }
                 break;
             case RED_LEFT:
                 switch (vision.visionIdentifiedTarget) {
-                    case LOCATION1:
+                    case LOCATION1M:
                         parkPose = new Pose2d(12, -60, Math.toRadians(0));
                         break; // Location 1
-                    case LOCATION2:
+                    case LOCATION2M:
                         parkPose = new Pose2d(12, -36, Math.toRadians(0));
                         break; // Location 2
-                    case LOCATION3:
+                    case LOCATION3M:
                         parkPose = new Pose2d(12, -11, Math.toRadians(0));
                         break; // Location 3
                 }
                 break;
             case RED_RIGHT:
                 switch (vision.visionIdentifiedTarget) {
-                    case LOCATION1:
+                    case LOCATION1M:
                         parkPose = new Pose2d(12, 11, Math.toRadians(0));
                         break; // Location 1
-                    case LOCATION2:
+                    case LOCATION2M:
                         parkPose = new Pose2d(12, 36, Math.toRadians(0));
                         break; // Location 2
-                    case LOCATION3:
+                    case LOCATION3M:
                         parkPose = new Pose2d(12, 60, Math.toRadians(0));
                         break; // Location 3
                 }
