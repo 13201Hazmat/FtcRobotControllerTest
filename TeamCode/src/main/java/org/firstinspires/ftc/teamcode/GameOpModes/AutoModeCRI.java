@@ -296,27 +296,27 @@ public class AutoModeCRI extends LinearOpMode{
             case LEFT:
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR){
                     switch(vision.visionIdentifiedTarget){
-                        case LOCATION1: parkPose = new Pose2d(-11, -36, Math.toRadians(0)); break; // 15 Location 1
-                        case LOCATION2: parkPose = new Pose2d(-11, -12, Math.toRadians(0)); break; // 15 Location 2
-                        case LOCATION3: parkPose = new Pose2d(-11, 12, Math.toRadians(0)); break; // 15 Location 3
+                        case LOCATION1: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break; // 15 Location 1
+                        case LOCATION2: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // 15 Location 3
                     }
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
                     switch (vision.visionIdentifiedTarget) {
-                        case LOCATION1: parkPose = new Pose2d(11, -36, Math.toRadians(0)); break; // 15 Location 1
+                        case LOCATION1: parkPose = new Pose2d(12, -36, Math.toRadians(0)); break; // 15 Location 1
                         case LOCATION2: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 2
                         case LOCATION3: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 3
                     }
                 }
                 endPoseTurn = 90;
-                endPoseForward = 0;
+                endPoseForward = 1;
                 break;
             case MIDDLE:
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR) {
                     switch (vision.visionIdentifiedTarget) {
-                        case LOCATION1: parkPose = new Pose2d(-11, -12, Math.toRadians(0)); break;
-                        case LOCATION2: parkPose = new Pose2d(-11, -60, Math.toRadians(0)); break;
-                        case LOCATION3: parkPose = new Pose2d(-11, -36, Math.toRadians(0)); break;
+                        case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break;
+                        case LOCATION2: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break;
+                        case LOCATION3: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break;
                     }
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.CLOSE) {
@@ -326,6 +326,9 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION3: parkPose = new Pose2d(36, -36, Math.toRadians(0)); break;
                     }
                 }
+                endPoseTurn = 90;
+                endPoseForward = 1;
+                break;
             case BLUE_RIGHT:
             case RIGHT:
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR) {
@@ -343,7 +346,7 @@ public class AutoModeCRI extends LinearOpMode{
                     }
                 }
                 endPoseTurn = -90;
-                endPoseForward = 6;
+                endPoseForward = 1;
                 break;
             case TEST_POSE:
                 break;
@@ -942,10 +945,13 @@ public class AutoModeCRI extends LinearOpMode{
 
                 if(gamepadController.gp1GetButtonYPress()){
                     autoParkingDistance = AUTO_PARKING_DISTANCE.FAR;
+                    break;
                 }
                 if(gamepadController.gp1GetButtonBPress()){
                     autoParkingDistance = AUTO_PARKING_DISTANCE.MIDDLE;
+                    break;
                 }
+
 
             } else {
                 telemetry.addLine("Far: Y (Triangle)");
@@ -953,9 +959,11 @@ public class AutoModeCRI extends LinearOpMode{
 
                 if(gamepadController.gp1GetButtonYPress()){
                     autoParkingDistance = AUTO_PARKING_DISTANCE.FAR;
+                    break;
                 }
                 if(gamepadController.gp1GetButtonAPress()){
                     autoParkingDistance = AUTO_PARKING_DISTANCE.CLOSE;
+                    break;
                 }
             }
 
