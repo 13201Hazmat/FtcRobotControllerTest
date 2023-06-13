@@ -44,6 +44,14 @@ public class AutoModeCRI extends LinearOpMode{
         DROP_PRELOAD_AND_PARK,
         ONLY_PARK
     }
+
+    public enum AUTO_PARKING_DISTANCE{
+        FAR,
+        MIDDLE,
+        CLOSE
+    }
+    public static AUTO_PARKING_DISTANCE autoParkingDistance;
+
     public static AUTO_OPTION autoOption;
 
     public enum DROP_CONE_POSITION {
@@ -286,27 +294,53 @@ public class AutoModeCRI extends LinearOpMode{
         switch (startPosition) {
             case BLUE_LEFT:
             case LEFT:
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1M: parkPose = new Pose2d(11, -36, Math.toRadians(0)); break; // 15 Location 1
-                    case LOCATION2M: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 2
-                    case LOCATION3M: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 3
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR){
+                    switch(vision.visionIdentifiedTarget){
+                        case LOCATION1: parkPose = new Pose2d(-11, -36, Math.toRadians(0)); break; // 15 Location 1
+                        case LOCATION2: parkPose = new Pose2d(-11, -12, Math.toRadians(0)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(-11, 12, Math.toRadians(0)); break; // 15 Location 3
+                    }
+                }
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
+                    switch (vision.visionIdentifiedTarget) {
+                        case LOCATION1: parkPose = new Pose2d(11, -36, Math.toRadians(0)); break; // 15 Location 1
+                        case LOCATION2: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 3
+                    }
                 }
                 endPoseTurn = 90;
-                endPoseForward = 5;
+                endPoseForward = 0;
                 break;
             case MIDDLE:
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1C: parkPose = new Pose2d(64, -36, Math.toRadians(0)); break;
-                    case LOCATION2C: parkPose = new Pose2d(14, -36, Math.toRadians(0)); break;
-                    case LOCATION3C: parkPose = new Pose2d(38, -36, Math.toRadians(0)); break;
-
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR) {
+                    switch (vision.visionIdentifiedTarget) {
+                        case LOCATION1: parkPose = new Pose2d(-11, -12, Math.toRadians(0)); break;
+                        case LOCATION2: parkPose = new Pose2d(-11, -60, Math.toRadians(0)); break;
+                        case LOCATION3: parkPose = new Pose2d(-11, -36, Math.toRadians(0)); break;
+                    }
+                }
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.CLOSE) {
+                    switch (vision.visionIdentifiedTarget) {
+                        case LOCATION1: parkPose = new Pose2d(36, -12, Math.toRadians(0)); break;
+                        case LOCATION2: parkPose = new Pose2d(36, -60, Math.toRadians(0)); break;
+                        case LOCATION3: parkPose = new Pose2d(36, -36, Math.toRadians(0)); break;
+                    }
                 }
             case BLUE_RIGHT:
             case RIGHT:
-                switch(vision.visionIdentifiedTarget){
-                    case LOCATION1M: parkPose = new Pose2d(11, 34, Math.toRadians(0)); break; // 15 Location 1, y=12
-                    case LOCATION2M: parkPose = new Pose2d(12, 60, Math.toRadians(0)); break; // 15 Location 2
-                    case LOCATION3M: parkPose = new Pose2d(11, 84, Math.toRadians(0)); break; // 15 Location 3
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR) {
+                    switch (vision.visionIdentifiedTarget) { //CHANGE THESE VALUES
+                        case LOCATION1: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // 15 Location 1, y=12
+                        case LOCATION2: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // 15 Location 3
+                    }
+                }
+                if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
+                    switch (vision.visionIdentifiedTarget) {
+                        case LOCATION1: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 1, y=12
+                        case LOCATION2: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // 15 Location 3
+                    }
                 }
                 endPoseTurn = -90;
                 endPoseForward = 6;
@@ -756,7 +790,8 @@ public class AutoModeCRI extends LinearOpMode{
             telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
             //telemetry.addData("    Blue Left   ", "(X / Square)");
             //telemetry.addData("    Blue Right ", "(Y / Triangle)");
-            telemetry.addData("    Left    ", "(A / Cross)");
+            telemetry.addData("    Left    ", "(X / Square)");
+            telemetry.addData("    Middle  ", "(Y / Triangle)");
             telemetry.addData("    Right  ", "(B / Circle)");
             telemetry.addData("      TEST POSE", "Right Bumper");
             /*if(gamepadController.gp1GetButtonXPress()){
@@ -767,8 +802,12 @@ public class AutoModeCRI extends LinearOpMode{
                 startPosition = START_POSITION.BLUE_RIGHT;
                 break;
             }*/
-            if(gamepadController.gp1GetButtonAPress()){
+            if(gamepadController.gp1GetButtonXPress()){
                 startPosition = START_POSITION.LEFT;
+                break;
+            }
+            if(gamepadController.gp1GetButtonYPress()){
+                startPosition = START_POSITION.MIDDLE;
                 break;
             }
             if(gamepadController.gp1GetButtonBPress()){
@@ -783,26 +822,30 @@ public class AutoModeCRI extends LinearOpMode{
         }
 
         while(!isStopRequested()){
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------","");
-            telemetry.addData("Selected Starting Position",startPosition);
-            telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Full Autonomous                ","X / Square");
-            telemetry.addData("    Drop Preloaded and Park   ","Y / Triangle");
-            telemetry.addData("    Only Park                      ","B / Circle");
-            if(gamepadController.gp1GetButtonXPress()){
-                autoOption = AUTO_OPTION.FULL_AUTO;
-                break;
-            }
-            if(gamepadController.gp1GetButtonYPress()){
+            if(startPosition == START_POSITION.LEFT || startPosition == START_POSITION.RIGHT) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", startPosition);
+                telemetry.addLine("Select Auto Options");
+                telemetry.addData("    Full Autonomous                ", "X / Square");
+                telemetry.addData("    Drop Preloaded and Park   ", "Y / Triangle");
+                telemetry.addData("    Only Park                      ", "B / Circle");
+                if (gamepadController.gp1GetButtonXPress()) {
+                    autoOption = AUTO_OPTION.FULL_AUTO;
+                    break;
+                }
+                if (gamepadController.gp1GetButtonYPress()) {
+                    autoOption = AUTO_OPTION.DROP_PRELOAD_AND_PARK;
+                    break;
+                }
+                if (gamepadController.gp1GetButtonBPress()) {
+                    autoOption = AUTO_OPTION.ONLY_PARK;
+                    break;
+                }
+                telemetry.update();
+            } else { //startPosition == START_POSITION.MIDDLE
                 autoOption = AUTO_OPTION.DROP_PRELOAD_AND_PARK;
-                break;
             }
-            if(gamepadController.gp1GetButtonBPress()){
-                autoOption = AUTO_OPTION.ONLY_PARK;
-                break;
-            }
-            telemetry.update();
         }
 
         if (autoOption == AUTO_OPTION.ONLY_PARK) {
@@ -813,7 +856,9 @@ public class AutoModeCRI extends LinearOpMode{
             dropConeCount = 0;
             stackConeCount = 0;
         } else {
+            /*
             while (!isStopRequested()) {
+
                 telemetry.addLine("Initializing Hazmat Autonomous Mode ");
                 telemetry.addData("---------------------------------------", "");
                 telemetry.addData("Selected Starting Position", startPosition);
@@ -823,18 +868,24 @@ public class AutoModeCRI extends LinearOpMode{
                 telemetry.addData("    High            ", "B / Circle");
                 dropConeCount = 1;
                 stackConeCount = 0;
-                /*
+
                 if (gamepadController.gp1GetButtonYPress()) {
                     dropConePosition = DROP_CONE_POSITION.MEDIUM;
                     break;
                 }
-                */
+
                 if (gamepadController.gp1GetButtonBPress()) {
                     dropConePosition = DROP_CONE_POSITION.HIGH;
                     break;
                 }
+
                 telemetry.update();
+
             }
+            */
+            dropConePosition = DROP_CONE_POSITION.HIGH;
+            dropConeCount = 1;
+            stackConeCount = 0;
         }
 
         if (autoOption == AUTO_OPTION.FULL_AUTO) {
@@ -874,6 +925,44 @@ public class AutoModeCRI extends LinearOpMode{
 
                 telemetry.update();
             }
+        }
+        while (!isStopRequested()) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            telemetry.addData("Selected dropCone Position", dropConePosition);
+            telemetry.addData("Selected number of cones to pick and drop: ", dropConeCount);
+
+            telemetry.addLine("Select location to park");
+
+            if(startPosition == START_POSITION.LEFT || startPosition == START_POSITION.RIGHT){
+                telemetry.addLine("Far: Y (Triangle)");
+                telemetry.addLine("Middle: B (Circle)");
+
+                if(gamepadController.gp1GetButtonYPress()){
+                    autoParkingDistance = AUTO_PARKING_DISTANCE.FAR;
+                }
+                if(gamepadController.gp1GetButtonBPress()){
+                    autoParkingDistance = AUTO_PARKING_DISTANCE.MIDDLE;
+                }
+
+            } else {
+                telemetry.addLine("Far: Y (Triangle)");
+                telemetry.addLine("Close: A (Cross)");
+
+                if(gamepadController.gp1GetButtonYPress()){
+                    autoParkingDistance = AUTO_PARKING_DISTANCE.FAR;
+                }
+                if(gamepadController.gp1GetButtonAPress()){
+                    autoParkingDistance = AUTO_PARKING_DISTANCE.CLOSE;
+                }
+            }
+
+            telemetry.addData("Selected Parking Distance", autoParkingDistance);
+
+
+            telemetry.update();
         }
 
         telemetry.clearAll();

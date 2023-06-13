@@ -90,7 +90,7 @@ public class VisionStack {
 
     private TFObjectDetector tfod;
     private Recognition recognition;
-    public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1M;
+    public GameField.VISION_IDENTIFIED_TARGET visionIdentifiedTarget = GameField.VISION_IDENTIFIED_TARGET.LOCATION1;
 
     Vision.ACTIVE_WEBCAM activeWebcam;
     /**

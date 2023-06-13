@@ -41,15 +41,9 @@ public class GameField {
     public static Pose2d currentPose = new Pose2d();
 
     public enum VISION_IDENTIFIED_TARGET {
-        LOCATION1M,
-        LOCATION2M,
-        LOCATION3M,
-        LOCATION1F,
-        LOCATION2F,
-        LOCATION3F,
-        LOCATION1C,
-        LOCATION2C,
-        LOCATION3C,
+        LOCATION1,
+        LOCATION2,
+        LOCATION3
 
     }
 

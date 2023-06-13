@@ -256,9 +256,9 @@ public class AutoOpMode8_testVSLAM extends LinearOpMode{
             case BLUE_LEFT:
             case RED_LEFT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1M: parkPose = new Pose2d(15, -60, Math.toRadians(0)); break; // Location 1
-                    case LOCATION2M: parkPose = new Pose2d(15, -36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3M: parkPose = new Pose2d(15, -12, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(15, -60, Math.toRadians(0)); break; // Location 1
+                    case LOCATION2: parkPose = new Pose2d(15, -36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(15, -12, Math.toRadians(0)); break; // Location 3
                 }
                 endPoseTurn = 90;
                 endPoseForward = 5;
@@ -266,9 +266,9 @@ public class AutoOpMode8_testVSLAM extends LinearOpMode{
             case BLUE_RIGHT:
             case RED_RIGHT:
                 switch(vision.visionIdentifiedTarget){
-                    case LOCATION1M: parkPose = new Pose2d(15, 15, Math.toRadians(0)); break; // Location 1, y=12
-                    case LOCATION2M: parkPose = new Pose2d(15, 36, Math.toRadians(0)); break; // Location 2
-                    case LOCATION3M: parkPose = new Pose2d(15, 60, Math.toRadians(0)); break; // Location 3
+                    case LOCATION1: parkPose = new Pose2d(15, 15, Math.toRadians(0)); break; // Location 1, y=12
+                    case LOCATION2: parkPose = new Pose2d(15, 36, Math.toRadians(0)); break; // Location 2
+                    case LOCATION3: parkPose = new Pose2d(15, 60, Math.toRadians(0)); break; // Location 3
                 }
                 endPoseTurn = -90;
                 endPoseForward = 5;
