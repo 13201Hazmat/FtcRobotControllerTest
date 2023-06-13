@@ -176,6 +176,7 @@ public class AutoModeCRI extends LinearOpMode{
     Pose2d pickAndDropHighPose;
     Pose2d pickAndDropMediumPose;
     Pose2d pickAndDropPose;
+    Pose2d parkInterimPose = new Pose2d();
     Pose2d parkPose = new Pose2d();
     double endPoseTurn;
     double endPoseForward;
@@ -300,6 +301,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(-12, -12, Math.toRadians(0)); break; // 15 Location 2
                         case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // 15 Location 3
                     }
+                    parkInterimPose = new Pose2d(-11, -36, Math.toRadians(0));
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
                     switch (vision.visionIdentifiedTarget) {
@@ -307,6 +309,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(12, -12, Math.toRadians(0)); break; // 15 Location 2
                         case LOCATION3: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 3
                     }
+                    parkInterimPose = new Pose2d(11, -36, Math.toRadians(0));
                 }
                 endPoseTurn = 90;
                 endPoseForward = 1;
@@ -318,6 +321,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(-12, -60, Math.toRadians(0)); break;
                         case LOCATION3: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break;
                     }
+                    parkInterimPose = new Pose2d(-11,-36, Math.toRadians(0));
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.CLOSE) {
                     switch (vision.visionIdentifiedTarget) {
@@ -325,6 +329,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(36, -60, Math.toRadians(0)); break;
                         case LOCATION3: parkPose = new Pose2d(36, -36, Math.toRadians(0)); break;
                     }
+                    parkInterimPose = new Pose2d(35,-36, Math.toRadians(0));
                 }
                 endPoseTurn = 90;
                 endPoseForward = 1;
@@ -337,6 +342,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(-12, 12, Math.toRadians(0)); break; // 15 Location 2
                         case LOCATION3: parkPose = new Pose2d(-12, 36, Math.toRadians(0)); break; // 15 Location 3
                     }
+                    parkInterimPose = new Pose2d(-11, 36, Math.toRadians(0));
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
                     switch (vision.visionIdentifiedTarget) {
@@ -344,6 +350,7 @@ public class AutoModeCRI extends LinearOpMode{
                         case LOCATION2: parkPose = new Pose2d(12, 12, Math.toRadians(0)); break; // 15 Location 2
                         case LOCATION3: parkPose = new Pose2d(12, 36, Math.toRadians(0)); break; // 15 Location 3
                     }
+                    parkInterimPose = new Pose2d(11, 36, Math.toRadians(0));
                 }
                 endPoseTurn = -90;
                 endPoseForward = 1;
@@ -353,6 +360,7 @@ public class AutoModeCRI extends LinearOpMode{
         }
 
         trajectoryParking = driveTrain.trajectorySequenceBuilder(pickAndDropPose)
+                .lineToLinearHeading(parkInterimPose)
                 .lineToLinearHeading(parkPose)
                 /*.addTemporalMarker(()-> {
                     telemetry.addData("Park Pose estimate", driveTrain.getPoseEstimate());
