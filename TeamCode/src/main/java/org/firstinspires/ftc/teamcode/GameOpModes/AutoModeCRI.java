@@ -201,9 +201,9 @@ public class AutoModeCRI extends LinearOpMode{
             case MIDDLE:
                 initPose = new Pose2d(64, -36, Math.toRadians(180));//Starting pose
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
-                pickAndDropHighPose = new Pose2d(6, -35, Math.toRadians(276)); //12,-36, 271
+                pickAndDropHighPose = new Pose2d(6, -35, Math.toRadians(279)); //12,-36, 276
                 pickAndDropMediumPose = new Pose2d(16, -37, Math.toRadians(261));//11, -36, 260
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.417);//0.420
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.415);//0.417
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT,0.29);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
@@ -264,7 +264,7 @@ public class AutoModeCRI extends LinearOpMode{
                 if (startPosition == START_POSITION.RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
                     intakeSlideBaseCount = 492; //498
                 } else{
-                    intakeSlideBaseCount = 514;//520
+                    intakeSlideBaseCount = 510;//514
                 }
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, intakeSlideBaseCount + 0 );
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, intakeSlideBaseCount + 6 );//12
@@ -299,10 +299,10 @@ public class AutoModeCRI extends LinearOpMode{
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.FAR){
                     switch(vision.visionIdentifiedTarget){
                         case LOCATION1: parkPose = new Pose2d(-12, -36, Math.toRadians(0)); break; // 15 Location 1
-                        case LOCATION2: parkPose = new Pose2d(-12, -11.5, Math.toRadians(271)); break; // 15 Location 2
-                        case LOCATION3: parkPose = new Pose2d(-12, 12, Math.toRadians(271)); break; // 15 Location 3
+                        case LOCATION2: parkPose = new Pose2d(-13, -11.5, Math.toRadians(271)); break; // 15 Location 2
+                        case LOCATION3: parkPose = new Pose2d(-13, 12, Math.toRadians(271)); break; // 15 Location 3
                     }
-                    parkInterimPose = new Pose2d(-11, -35, Math.toRadians(271));
+                    parkInterimPose = new Pose2d(-13, -35, Math.toRadians(271));
                 }
                 if(autoParkingDistance == AUTO_PARKING_DISTANCE.MIDDLE) {
                     switch (vision.visionIdentifiedTarget) {
