@@ -17,7 +17,7 @@ public class IntakeArm {
 
     //Initialization of GRIP_STATE
     public enum INTAKE_GRIP_STATE { //state of the Hand Grip
-        OPEN(0.65),
+        OPEN(0.69),//0.65
         OPEN_AUTO(0.65),
         CLOSED(1.0);
 
@@ -43,7 +43,7 @@ public class IntakeArm {
         AUTO_CONE_5(0.25, 0.71, 5), //0.27, 0.69*/
         LOW_JUNCTION(0.505,0.505,6), //Level 12 //0.39,0.59
         INIT(0.32,0.68,7), //Level 15 //0.50, 0.50
-        TRANSFER(0.165,0.845,8), //Level 20 //0.65, 0.35
+        TRANSFER(0.188,0.822,8), //Level 20 //0.198, 0.812
 
         PICKUP_FALLEN_CONE(0.69, 0.32,  9),
         RANDOM_MAX(0.46,0.54,10); //Level 14
