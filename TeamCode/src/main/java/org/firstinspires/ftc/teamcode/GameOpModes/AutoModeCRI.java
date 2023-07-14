@@ -264,7 +264,7 @@ public class AutoModeCRI extends LinearOpMode{
                 if (startPosition == START_POSITION.RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
                     intakeSlideBaseCount = 492; //498
                 } else{
-                    intakeSlideBaseCount = 510;//514
+                    intakeSlideBaseCount = 486;//495
                 }
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_CONE_5, intakeSlideBaseCount + 0 );
                 intakeSlides.setIntakeSlide(IntakeSlides.INTAKE_SLIDES_STATE.AUTO_COME_4, intakeSlideBaseCount + 6 );//12

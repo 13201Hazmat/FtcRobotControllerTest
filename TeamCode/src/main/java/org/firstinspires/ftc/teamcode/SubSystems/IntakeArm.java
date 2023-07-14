@@ -32,11 +32,11 @@ public class IntakeArm {
 
     public enum INTAKE_ARM_STATE {
         RANDOM(0,0.97,0), //0.94
-        PICKUP_AUTO_CONE_1(0.845,0.165,1), //0.04, 0.93
-        AUTO_CONE_2(0.79, 0.22, 2), //0.08, 0.90
-        AUTO_CONE_3(0.76, 0.26, 3), //0.12,0.86
-        AUTO_CONE_4(0.72, 0.30, 4), //0.18,0.82
-        AUTO_CONE_5(0.675, 0.335, 5), //0.22, 0.78
+        PICKUP_AUTO_CONE_1(0.833,0.177,1), //0.839, 0.171
+        AUTO_CONE_2(0.774, 0.236, 2), //0.769, 0.241
+        AUTO_CONE_3(0.754, 0.266, 3), //0.76,0.26
+        AUTO_CONE_4(0.68, 0.340, 4), //0.673,0.347
+        AUTO_CONE_5(0.669, 0.341, 5), //0.675, 0.335
         /*AUTO_CONE_2(0.14, 0.82, 2), //0.15, 0.81
         AUTO_CONE_3(0.19, 0.77, 3), //0.18,0.78
         AUTO_CONE_4(0.22, 0.74, 4), //0.18,0.78
@@ -45,7 +45,7 @@ public class IntakeArm {
         INIT(0.32,0.68,7), //Level 15 //0.50, 0.50
         TRANSFER(0.188,0.822,8), //Level 20 //0.198, 0.812
 
-        PICKUP_FALLEN_CONE(0.69, 0.32,  9),
+        PICKUP_FALLEN_CONE(0.69,0.32,  9),
         RANDOM_MAX(0.46,0.54,10); //Level 14
 
         private double leftArmPosition;
