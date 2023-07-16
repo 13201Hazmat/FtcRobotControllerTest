@@ -203,7 +203,7 @@ public class AutoModeCRI extends LinearOpMode{
                 midWayPose = new Pose2d(17, -36, Math.toRadians(180)); //15 Choose the pose to move forward towards signal cone, 180
                 pickAndDropHighPose = new Pose2d(6, -35, Math.toRadians(278)); //12,-36, 282
                 pickAndDropMediumPose = new Pose2d(16, -37, Math.toRadians(261));//11, -36, 260
-                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.375);//0.390
+                outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT,0.379);//0.375
                 pickAndDropTurretStateHigh= OuttakeSlides.TURRET_STATE.AUTO_HIGH_RIGHT;
                 outtakeSlides.setTurretPosition(OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT,0.29);
                 pickAndDropTurretStateMedium = OuttakeSlides.TURRET_STATE.AUTO_MEDIUM_LEFT;
@@ -262,7 +262,7 @@ public class AutoModeCRI extends LinearOpMode{
                 outtakeArmDropState = OuttakeArm.OUTTAKE_ARM_STATE.AUTO_HIGH_JUNCTION;
                 outtakeWristDropState = OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_AUTO_HIGH_JUNCTION;
                 if (startPosition == START_POSITION.RIGHT || startPosition == START_POSITION.BLUE_RIGHT){
-                    intakeSlideBaseCount = 486; //492
+                    intakeSlideBaseCount = 488; //486
                 } else{
                     intakeSlideBaseCount = 486;//495
                 }
