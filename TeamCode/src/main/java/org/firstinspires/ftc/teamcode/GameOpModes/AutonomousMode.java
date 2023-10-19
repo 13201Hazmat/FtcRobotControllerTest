@@ -296,10 +296,10 @@ public class AutonomousMode extends LinearOpMode {
             telemetry.addLine("Initializing Hazmat Autonomous Mode");
             telemetry.addLine("---------------------------------------");
             telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X)");
-            telemetry.addData("    Blue Right ", "(Y)");
-            telemetry.addData("    Red Left    ", "(B)");
-            telemetry.addData("    Red Right  ", "(A)");
+            telemetry.addData("    Blue Left   ", "(X / )▢)");
+            telemetry.addData("    Blue Right ", "(Y / Δ)");
+            telemetry.addData("    Red Left    ", "(B / O)");
+            telemetry.addData("    Red Right  ", "(A / X)");
             if(gamepad1.x){
                 startPosition = START_POSITION.BLUE_LEFT;
                 break;
