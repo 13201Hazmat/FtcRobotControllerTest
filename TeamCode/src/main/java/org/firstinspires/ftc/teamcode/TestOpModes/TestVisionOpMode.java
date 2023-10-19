@@ -1,0 +1,188 @@
+package org.firstinspires.ftc.teamcode.TestOpModes;
+
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
+import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+
+
+/**
+ * Ultimate Goal TeleOp mode <BR>
+ *
+ * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
+ *
+ */
+@TeleOp(name = "Hazmat Test Vision", group = "02-Test OpModes")
+public class TestVisionOpMode extends LinearOpMode {
+
+    public GamepadController gamepadController;
+    public DriveTrain driveTrain;
+    public Vision vision;
+
+
+    //Static Class for knowing system state
+
+    public Pose2d startPose = GameField.ORIGINPOSE;
+
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
+
+    @Override
+    /*
+     * Constructor for passing all the subsystems in order to make the subsystem be able to use
+     * and work/be active
+     */
+    public void runOpMode() throws InterruptedException {
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+        GameField.opModeRunning = GameField.OP_MODE_RUNNING.HAZMAT_TELEOP;
+
+        /* Set Initial State of any subsystem when OpMode is to be started*/
+        initSubsystems();
+
+        telemetry.addLine("Start Pressed");
+        telemetry.update();
+
+        /* If Stop is pressed, exit OpMode */
+        if (isStopRequested()) return;
+
+        /*If Start is pressed, enter loop and exit only when Stop is pressed */
+        while (!isStopRequested()) {
+            if (opModeInInit()) {
+                telemetry.addData("DS preview on/off","3 dots, Camera Stream");
+                telemetry.addLine();
+                telemetry.addLine("----------------------------------------");
+                telemetry.addLine(" Press A for WEBCAM1_APRILTAG");
+                telemetry.addLine(" Press B for WEBCAM2_APRILTAG");
+                telemetry.addLine(" Press X for WEBCAM1_TFOD");
+                telemetry.addLine(" Press Y for WEBCAM2_TFOD");
+            }
+
+            if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+                printDebugMessages();
+                telemetry.update();
+            }
+
+            vision.activateDoubleVision();
+
+            while (opModeIsActive()) {
+                gamepadController.runByGamepadControl();
+
+                vision.telemetryCurrentVisionPortal();
+
+                if (gamepadController.gp1GetButtonAPress()) {
+                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM1_APRILTAG);
+                }
+
+                if (gamepadController.gp1GetButtonBPress()) {
+                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM2_APRILTAG);
+                }
+
+
+                if (gamepadController.gp1GetButtonXPress()) {
+                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM1_TFOD);
+                }
+
+                if (gamepadController.gp1GetButtonYPress()) {
+                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM2_TFOD);
+                }
+
+                /*if (gamepadController.gp1GetLeftBumper()) {*/
+                    vision.streamCurrentVisionPortal();
+                /*} else {
+                    vision.stopWebcamStreaming();
+                }*/
+
+                if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+                    //printDebugMessages();
+                    telemetry.update();
+                }
+            }
+        }
+        vision.stopWebcamStreaming();
+        vision.deactivateVision();
+        GameField.poseSetInAutonomous = false;
+    }
+
+    public void initSubsystems(){
+
+        telemetry.setAutoClear(false);
+
+        //Init Pressed
+        telemetry.addLine("Robot Init Pressed");
+        telemetry.addLine("==================");
+        telemetry.update();
+
+        /* Create Subsystem Objects*/
+        driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0));
+        driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
+        telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
+        telemetry.update();
+
+        /* Create Vision */
+        vision = new Vision(hardwareMap, telemetry);
+        telemetry.addLine("Vision Initialized");
+        telemetry.update();
+
+        /* Create Controllers */
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, vision, telemetry);
+        telemetry.addLine("Gamepad Initialized");
+        telemetry.update();
+
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
+        /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        if ( GameField.poseSetInAutonomous) {
+            driveTrain.pose = GameField.currentPose;
+            //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
+        } else {
+            driveTrain.pose = startPose;
+            //driveTrain.getLocalizer().setPoseEstimate(startPose);
+        }
+
+        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+
+        telemetry.addLine("+++++++++++++++++++++++");
+        telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
+        telemetry.update();
+    }
+
+    /**
+     * Method to add debug messages. Update as telemetry.addData.
+     * Use public attributes or methods if needs to be called here.
+     */
+    public void printDebugMessages(){
+        telemetry.setAutoClear(true);
+        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
+        telemetry.addData("Robot ready to start","");
+
+        if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+
+            telemetry.addData("Game Timer : ", gameTimer.time());
+            //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
+            //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
+            //telemetry.addData("startPose : ", startPose);
+
+            //****** Drive debug ******
+            telemetry.addData("Drive Type : ", driveTrain.driveType);
+            telemetry.addData("PoseEstimateString :", driveTrain.toStringPose2d(driveTrain.pose));
+            telemetry.addData("Parallel Left Encoder", driveTrain.leftFront.getCurrentPosition());
+            telemetry.addData("Parallel Right Encoder", driveTrain.leftBack.getCurrentPosition());
+            telemetry.addData("Perpendicular Encoder", driveTrain.rightFront.getCurrentPosition());
+
+            telemetry.addLine("=============");
+
+        }
+        telemetry.update();
+    }
+
+}
