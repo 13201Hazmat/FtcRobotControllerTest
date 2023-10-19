@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
 
@@ -26,7 +27,7 @@ public class TestVisionOpMode extends LinearOpMode {
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
     public Vision vision;
-
+    public Lights lights;
 
     //Static Class for knowing system state
 
@@ -130,6 +131,11 @@ public class TestVisionOpMode extends LinearOpMode {
         telemetry.addLine("Vision Initialized");
         telemetry.update();
 
+        /* Create Lights */
+        lights = new Lights(hardwareMap, telemetry);
+        telemetry.addLine("Lights Initialized");
+        telemetry.update();
+
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, vision, telemetry);
         telemetry.addLine("Gamepad Initialized");
@@ -174,6 +180,7 @@ public class TestVisionOpMode extends LinearOpMode {
 
             driveTrain.printDebugMessages();
             vision.printDebugMessages();
+            lights.printDebugMessages();
         }
         telemetry.update();
     }
