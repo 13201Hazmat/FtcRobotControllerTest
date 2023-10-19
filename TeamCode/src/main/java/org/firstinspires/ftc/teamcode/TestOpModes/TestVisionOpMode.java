@@ -120,7 +120,7 @@ public class TestVisionOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0));
+        driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0), telemetry);
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
         telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
         telemetry.update();
@@ -172,17 +172,9 @@ public class TestVisionOpMode extends LinearOpMode {
             //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
             //telemetry.addData("startPose : ", startPose);
 
-            //****** Drive debug ******
-            telemetry.addData("Drive Type : ", driveTrain.driveType);
-            telemetry.addData("PoseEstimateString :", driveTrain.toStringPose2d(driveTrain.pose));
-            telemetry.addData("Parallel Left Encoder", driveTrain.leftFront.getCurrentPosition());
-            telemetry.addData("Parallel Right Encoder", driveTrain.leftBack.getCurrentPosition());
-            telemetry.addData("Perpendicular Encoder", driveTrain.rightFront.getCurrentPosition());
-
-            telemetry.addLine("=============");
-
+            driveTrain.printDebugMessages();
+            vision.printDebugMessages();
         }
         telemetry.update();
     }
-
 }
