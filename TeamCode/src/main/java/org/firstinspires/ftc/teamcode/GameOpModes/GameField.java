@@ -48,4 +48,6 @@ public class GameField {
 
     public static boolean testVision = false;
 
+    public static Pose2d CurrentPose;
+
 }

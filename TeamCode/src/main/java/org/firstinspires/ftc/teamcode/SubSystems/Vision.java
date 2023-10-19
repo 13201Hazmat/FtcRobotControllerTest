@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.GameOpModes.FTCWiresAutonomous;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -134,10 +135,17 @@ public class Vision {
     }   // end method telemetryAprilTag()
 
 
+    public enum IDENTIFIED_SPIKE_MARK_LOCATION {
+        LEFT,
+        MIDDLE,
+        RIGHT
+    }
+    public static FTCWiresAutonomous.IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation = FTCWiresAutonomous.IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+
     /**
      * Initialize the TensorFlow Object Detection processor.
      */
-    private void initTfod() {
+    public void initTfod() {
 
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
@@ -198,6 +206,10 @@ public class Vision {
 
     }   // end method initTfod()
 
+    public void runTfodTensorFlow(){
+        telemetryTfod();
+    }
+
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
@@ -214,6 +226,17 @@ public class Vision {
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+
+            if (x < 100) {
+                identifiedSpikeMarkLocation = FTCWiresAutonomous.IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+            } else if (x>100 && x <200) {
+                identifiedSpikeMarkLocation = FTCWiresAutonomous.IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+            } else { //x > 200
+                identifiedSpikeMarkLocation = FTCWiresAutonomous.IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+            }
+
+            telemetry.addData("Vision identified Spike Mark location",identifiedSpikeMarkLocation);
+
         }   // end for() loop
 
     }   // end method telemetryTfod()
