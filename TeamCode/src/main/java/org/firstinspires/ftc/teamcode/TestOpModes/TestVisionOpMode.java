@@ -179,7 +179,7 @@ public class TestVisionOpMode extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            vision.printDebugMessages();
+            //vision.printDebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

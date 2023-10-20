@@ -294,7 +294,7 @@ public class Vision {
         switch(visionType) {
             case WEBCAM1_APRILTAG:
             case WEBCAM2_APRILTAG:
-                telemetryAprilTag();
+                //telemetryAprilTag(); //TODO Uncomment later
                 break;
             case WEBCAM1_TFOD:
             case WEBCAM2_TFOD:
