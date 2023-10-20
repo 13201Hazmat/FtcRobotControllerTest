@@ -39,18 +39,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Vision;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 /**
  * Hazmat Autonomous
@@ -60,7 +53,7 @@ public class AutonomousMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
-    public Vision vision;
+    public VisionTfod visionTfod;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -83,7 +76,7 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.addData("Selected Starting Position", GameField.startPosition);
 
         // Initiate Camera on Init.
-        vision.initTfod();
+        visionTfod.initTfod();
 
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
@@ -97,8 +90,8 @@ public class AutonomousMode extends LinearOpMode {
             telemetry.addData("Selected Starting Position", GameField.startPosition);
 
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
-            vision.runTfodTensorFlow();
-            telemetry.addData("Vision identified Parking Location", vision.identifiedSpikeMarkLocation);
+            visionTfod.runTfodTensorFlow();
+            telemetry.addData("Vision identified Parking Location", visionTfod.identifiedSpikeMarkLocation);
             telemetry.update();
         }
 
@@ -137,7 +130,7 @@ public class AutonomousMode extends LinearOpMode {
             case BLUE_LEFT:
                 initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch(vision.identifiedSpikeMarkLocation){
+                switch(visionTfod.identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(29, 36, Math.toRadians(-90));
@@ -159,7 +152,7 @@ public class AutonomousMode extends LinearOpMode {
             case RED_RIGHT:
                 initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch(vision.identifiedSpikeMarkLocation){
+                switch(visionTfod.identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(31, -3, Math.toRadians(-45));
                         dropYellowPixelPose = new Pose2d(29, -36, Math.toRadians(90));
@@ -180,7 +173,7 @@ public class AutonomousMode extends LinearOpMode {
             case BLUE_RIGHT:
                 initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch(vision.identifiedSpikeMarkLocation){
+                switch(visionTfod.identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(27, 9, Math.toRadians(45));
                         dropYellowPixelPose = new Pose2d(29, 86, Math.toRadians(-90));
@@ -205,7 +198,7 @@ public class AutonomousMode extends LinearOpMode {
             case RED_LEFT:
                 initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch(vision.identifiedSpikeMarkLocation){
+                switch(visionTfod.identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
@@ -348,8 +341,8 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Vision */
-        vision = new Vision(hardwareMap, telemetry);
-        telemetry.addLine("Vision Initialized");
+        visionTfod = new VisionTfod(hardwareMap, telemetry);
+        telemetry.addLine("VisionTfod Initialized");
         telemetry.update();
 
         /* Create Lights */
@@ -358,7 +351,7 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, vision, telemetry);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, visionTfod, telemetry);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -400,7 +393,6 @@ public class AutonomousMode extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            //vision.printDebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();
