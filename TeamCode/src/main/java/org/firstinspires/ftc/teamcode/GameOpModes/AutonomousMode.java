@@ -58,15 +58,6 @@ import java.util.List;
 @Autonomous(name = "HazmatAutonomous Mode", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
 public class AutonomousMode extends LinearOpMode {
 
-    //Define and declare Robot Starting Locations
-    public enum START_POSITION{
-        BLUE_LEFT,
-        BLUE_RIGHT,
-        RED_LEFT,
-        RED_RIGHT
-    }
-    public static START_POSITION startPosition;
-
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
     public Vision vision;
@@ -89,17 +80,21 @@ public class AutonomousMode extends LinearOpMode {
 
         //Key Pay inputs to selecting Starting Position of robot
         selectStartingPosition();
-        telemetry.addData("Selected Starting Position", startPosition);
+        telemetry.addData("Selected Starting Position", GameField.startPosition);
 
         // Initiate Camera on Init.
         vision.initTfod();
 
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
-        waitForStart();
+        // Wait for the DS start button to be touched.
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch Play to start OpMode");
+        telemetry.update();
+        //waitForStart();
 
         while (!isStopRequested() && !opModeIsActive()) {
-            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
 
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
             vision.runTfodTensorFlow();
@@ -115,7 +110,6 @@ public class AutonomousMode extends LinearOpMode {
 
         //Game Play Button  is pressed
         if (opModeIsActive() && !isStopRequested()) {
-
             gameTimer.reset();
             startTimer.reset();
             //Turn Lights Green
@@ -131,106 +125,106 @@ public class AutonomousMode extends LinearOpMode {
         Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
         Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
         Pose2d midwayPose1 = new Pose2d(0,0,0);
-        Pose2d midwayPose2 = new Pose2d(0,0,0);
+        Pose2d midwayPose1a = new Pose2d(0,0,0);
         Pose2d intakeStack = new Pose2d(0,0,0);
+        Pose2d midwayPose2 = new Pose2d(0,0,0);
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
         Pose2d parkPose = new Pose2d(0, 0, 0);
         double waitSecondsBeforeDrop = 0;
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        switch (startPosition) {
+        switch (GameField.startPosition) {
             case BLUE_LEFT:
-                initPose = new Pose2d(12, 60, Math.toRadians(-90)); //Starting pose
+                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(vision.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(17, 35, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(48, 40, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(29, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(12, 32, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(48, 36,  Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(33, 3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(7, 35, Math.toRadians(-135));
-                        dropYellowPixelPose = new Pose2d(48, 32, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(30, -9, Math.toRadians(-45));
+                        dropYellowPixelPose = new Pose2d(37, 36, Math.toRadians(-90));
                         break;
                 }
-                midwayPose1 = new Pose2d(12, 50, Math.toRadians(-90));
-                midwayPose2 = new Pose2d(36, 50, Math.toRadians(0));
+                midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, 60, Math.toRadians(0));
+                parkPose = new Pose2d(8, 30, Math.toRadians(-90));
                 break;
 
             case RED_RIGHT:
-                initPose = new Pose2d(12, -60, Math.toRadians(90)); //Starting pose
+                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(vision.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(7, -35, Math.toRadians(135));
-                        dropYellowPixelPose = new Pose2d(48, -32, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(31, -3, Math.toRadians(-45));
+                        dropYellowPixelPose = new Pose2d(29, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(12, -32, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(48, 36,  Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, -36,  Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(17, -35, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(48, -40, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                         break;
                 }
-                midwayPose1 = new Pose2d(12, -50, Math.toRadians(90));
-                midwayPose2 = new Pose2d(36, -50, Math.toRadians(0));
+                midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, -60, Math.toRadians(0));
+                parkPose = new Pose2d(8, -30, Math.toRadians(90));
                 break;
-
             case BLUE_RIGHT:
-                initPose = new Pose2d(-36, 60, Math.toRadians(-90)); //Starting pose
+                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(vision.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(-31, 15, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(48, 40, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(27, 9, Math.toRadians(45));
+                        dropYellowPixelPose = new Pose2d(29, 86, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(-36, 8, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(48, 36, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, 86, Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(-41, 15, Math.toRadians(135));
-                        dropYellowPixelPose = new Pose2d(48, 32, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(37, 86, Math.toRadians(-90));
                         break;
                 }
-                intakeStack = new Pose2d(-54, 12,Math.toRadians(180));
-                midwayPose1 = new Pose2d(-18, 12, Math.toRadians(0));
-                midwayPose2 = new Pose2d(36, 12, Math.toRadians(0));
+                midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
+                midwayPose1a = new Pose2d(18, -18, Math.toRadians(-90));
+                intakeStack = new Pose2d(52, -19,Math.toRadians(-90));
+                midwayPose2 = new Pose2d(52, 62, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, 12, Math.toRadians(0));
+                parkPose = new Pose2d(46, 84, Math.toRadians(-90));
                 break;
 
             case RED_LEFT:
-                initPose = new Pose2d(-36, -60, Math.toRadians(90)); //Starting pose
+                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(vision.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(-41, -15, Math.toRadians(135));
-                        dropYellowPixelPose = new Pose2d(48, -32, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(-36, -8, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(48, -36, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, -86, Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(-31, -15, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(48, -40, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(27, -9, Math.toRadians(-45));
+                        dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
                         break;
                 }
-                intakeStack = new Pose2d(-54, -12,Math.toRadians(-180));
-                midwayPose1 = new Pose2d(-18, -12, Math.toRadians(0));
-                midwayPose2 = new Pose2d(36, -12, Math.toRadians(0));
+                midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
+                midwayPose1a = new Pose2d(18, 18, Math.toRadians(90));
+                intakeStack = new Pose2d(52, 19,Math.toRadians(90));
+                midwayPose2 = new Pose2d(52, -62, Math.toRadians(90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, -12, Math.toRadians(0));
+                parkPose = new Pose2d(46, -84, Math.toRadians(90));
                 break;
         }
 
@@ -245,33 +239,38 @@ public class AutonomousMode extends LinearOpMode {
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
 
-        //For Blue Right and Red Left, intake pixel from stack
-        if (startPosition == START_POSITION.BLUE_RIGHT ||
-            startPosition == START_POSITION.RED_LEFT) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
-                            .build());
-
-            //TODO : Code to intake pixel from stack
-            safeWaitSeconds(1);
-        }
-
         //Move robot to midwayPose1
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
                         .build());
 
-        //TODO: For Blue Right and Red Left, Add code to raise Stage Door to pass through
-        safeWaitSeconds(1);
+        //For Blue Right and Red Left, intake pixel from stack
+        if (GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT ||
+                GameField.startPosition == GameField.START_POSITION.RED_LEFT) {
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
+                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+                            .build());
+
+            //TODO : Code to intake pixel from stack
+            safeWaitSeconds(1);
+
+            //Move robot to midwayPose2 and to dropYellowPixelPose
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
+                            .build());
+        }
+
+        safeWaitSeconds(waitSecondsBeforeDrop);
 
         //Move robot to midwayPose2 and to dropYellowPixelPose
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
-                        .waitSeconds(waitSecondsBeforeDrop)
-                        .splineToLinearHeading(dropYellowPixelPose,Math.toRadians(90))
+                        .setReversed(true)
+                        .splineToLinearHeading(dropYellowPixelPose,0)
                         .build());
 
 
@@ -293,27 +292,31 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.clearAll();
         //******select start pose*****
         while(!isStopRequested()){
-            telemetry.addLine("Initializing Hazmat Autonomous Mode");
-            telemetry.addLine("---------------------------------------");
-            telemetry.addData("Select Starting Position using XYAB Keys on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X / )▢)");
+            telemetry.addLine("Initializing Hazmat Autonomous Mode:");
+            telemetry.addData("---------------------------------------","");
+            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
+            telemetry.addData("    Blue Left   ", "(X / ▢)");
             telemetry.addData("    Blue Right ", "(Y / Δ)");
             telemetry.addData("    Red Left    ", "(B / O)");
             telemetry.addData("    Red Right  ", "(A / X)");
             if(gamepad1.x){
-                startPosition = START_POSITION.BLUE_LEFT;
+                GameField.startPosition = GameField.START_POSITION.BLUE_LEFT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
                 break;
             }
             if(gamepad1.y){
-                startPosition = START_POSITION.BLUE_RIGHT;
+                GameField.startPosition = GameField.START_POSITION.BLUE_RIGHT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
                 break;
             }
             if(gamepad1.b){
-                startPosition = START_POSITION.RED_LEFT;
+                GameField.startPosition = GameField.START_POSITION.RED_LEFT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
                 break;
             }
             if(gamepad1.a){
-                startPosition = START_POSITION.RED_RIGHT;
+                GameField.startPosition = GameField.START_POSITION.RED_RIGHT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
                 break;
             }
             telemetry.update();
@@ -397,7 +400,7 @@ public class AutonomousMode extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            vision.printDebugMessages();
+            //vision.printDebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

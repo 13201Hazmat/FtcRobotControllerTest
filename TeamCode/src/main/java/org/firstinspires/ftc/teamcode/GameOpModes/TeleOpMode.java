@@ -64,11 +64,6 @@ public class TeleOpMode extends LinearOpMode {
                 telemetry.update();
             }
 
-            if (GameField.testVision) {
-                //vision.activateAprilTag();
-                vision.activateDoubleVision();
-            }
-
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
@@ -78,7 +73,6 @@ public class TeleOpMode extends LinearOpMode {
                 }
             }
         }
-        vision.deactivateVision();
         GameField.poseSetInAutonomous = false;
     }
 
@@ -150,7 +144,6 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            vision.printDebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

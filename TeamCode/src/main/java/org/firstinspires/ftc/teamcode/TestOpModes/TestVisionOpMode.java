@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Vision;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionDual;
 
 
 /**
@@ -26,7 +26,7 @@ public class TestVisionOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
-    public Vision vision;
+    public VisionDual vision;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -78,20 +78,20 @@ public class TestVisionOpMode extends LinearOpMode {
                 vision.telemetryCurrentVisionPortal();
 
                 if (gamepadController.gp1GetButtonAPress()) {
-                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM1_APRILTAG);
+                    vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM1_APRILTAG);
                 }
 
                 if (gamepadController.gp1GetButtonBPress()) {
-                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM2_APRILTAG);
+                    vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM2_APRILTAG);
                 }
 
 
                 if (gamepadController.gp1GetButtonXPress()) {
-                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM1_TFOD);
+                    vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM1_TFOD);
                 }
 
                 if (gamepadController.gp1GetButtonYPress()) {
-                    vision.switchWebcamAction(Vision.VISION_TYPE.WEBCAM2_TFOD);
+                    vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM2_TFOD);
                 }
 
                 /*if (gamepadController.gp1GetLeftBumper()) {*/
@@ -127,7 +127,7 @@ public class TestVisionOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Vision */
-        vision = new Vision(hardwareMap, telemetry);
+        vision = new VisionDual(hardwareMap, telemetry);
         telemetry.addLine("Vision Initialized");
         telemetry.update();
 
@@ -137,7 +137,7 @@ public class TestVisionOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, vision, telemetry);
+        //gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, vision, telemetry);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
