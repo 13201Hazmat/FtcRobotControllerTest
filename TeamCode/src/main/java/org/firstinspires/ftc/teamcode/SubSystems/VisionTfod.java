@@ -40,10 +40,12 @@ public class VisionTfod {
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
+    public String webcamName;
 
-    public VisionTfod(HardwareMap hardwareMap, Telemetry telemetry){
+    public VisionTfod(HardwareMap hardwareMap, Telemetry telemetry, String webcamName){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
+        this.webcamName = webcamName;
     }
 
     /**
@@ -77,7 +79,7 @@ public class VisionTfod {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
@@ -116,7 +118,7 @@ public class VisionTfod {
     public void runTfodTensorFlow() {
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
+        telemetry.addData("Camera and # Objects Detected", webcamName, currentRecognitions.size());
 
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
@@ -136,21 +138,23 @@ public class VisionTfod {
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
 
-            if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
-                    GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 100) {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-                    } else {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+            if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+                if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
+                        GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
+                    if (recognition.getLabel() == "Pixel") {
+                        if (x < 100) {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+                        } else {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                        }
                     }
-                }
-            } else { //RED_RIGHT or BLUE_RIGHT
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 100) {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                    } else {
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+                } else { //RED_RIGHT or BLUE_RIGHT
+                    if (recognition.getLabel() == "Pixel") {
+                        if (x < 100) {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                        } else {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+                        }
                     }
                 }
             }

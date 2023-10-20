@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 
 /**
@@ -21,8 +20,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Hazmat TeleOp", group = "00-Teleop")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "Hazmat TeleOp AprilTag", group = "00-Teleop")
+public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -46,6 +45,16 @@ public class TeleOpMode extends LinearOpMode {
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
+
+        // Initiate Camera on Init.
+        visionAprilTagFront.initAprilTag();
+
+        // Wait for the DS start button to be touched.
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch Play to start OpMode");
+        telemetry.update();
+
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();

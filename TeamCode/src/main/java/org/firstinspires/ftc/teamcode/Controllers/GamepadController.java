@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 
@@ -52,7 +53,6 @@ public class GamepadController {
     //Create object reference to objects to systems passed from TeleOp
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
-    public VisionTfod visionTfod;
     public Telemetry telemetry;
 
 
@@ -63,13 +63,11 @@ public class GamepadController {
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
                              DriveTrain driveTrain,
-                             VisionTfod visionTfod,
                              Telemetry telemetry
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
-        this.visionTfod = visionTfod;
         this.telemetry = telemetry;
     }
 
