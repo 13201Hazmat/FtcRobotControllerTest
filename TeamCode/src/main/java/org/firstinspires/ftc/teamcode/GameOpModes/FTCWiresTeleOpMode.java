@@ -47,7 +47,7 @@ public class FTCWiresTeleOpMode extends LinearOpMode {
 
                 telemetry.addData("x", drive.pose.position.x);
                 telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", drive.pose.heading);
+                telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
                 telemetry.update();
             }
         } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
@@ -68,7 +68,7 @@ public class FTCWiresTeleOpMode extends LinearOpMode {
 
                 telemetry.addData("x", drive.pose.position.x);
                 telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", drive.pose.heading);
+                telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
                 telemetry.update();
             }
         } else {

@@ -118,6 +118,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
     public void runAutonoumousMode() {
         //Initialize Pose2d as desired
         Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
+        Pose2d moveBeyondTrussPose = new Pose2d(0,0,0);
         Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
         Pose2d midwayPose1 = new Pose2d(0,0,0);
         Pose2d midwayPose1a = new Pose2d(0,0,0);
@@ -128,18 +129,20 @@ public class FTCWiresAutonomous extends LinearOpMode {
         double waitSecondsBeforeDrop = 0;
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
+        initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
+        moveBeyondTrussPose = new Pose2d(15,0,0);
+
         switch (startPosition) {
             case BLUE_LEFT:
-                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(29, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(33, 3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(33, 36,  Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(30, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(30, -9, Math.toRadians(-45));
@@ -152,16 +155,15 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 break;
 
             case RED_RIGHT:
-                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(31, -3, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(29, -36, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(30, 9, Math.toRadians(45));
+                        dropYellowPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(33, -36,  Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(29, -36,  Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
@@ -172,21 +174,21 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(8, -30, Math.toRadians(90));
                 break;
+
             case BLUE_RIGHT:
-                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(27, 9, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(29, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(27, 86, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(33, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(34, 86, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(37, 86, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(43, 86, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
@@ -194,11 +196,10 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 intakeStack = new Pose2d(52, -19,Math.toRadians(-90));
                 midwayPose2 = new Pose2d(52, 62, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, 84, Math.toRadians(-90));
+                parkPose = new Pose2d(50, 84, Math.toRadians(-90));
                 break;
 
             case RED_LEFT:
-                initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
@@ -207,11 +208,11 @@ public class FTCWiresAutonomous extends LinearOpMode {
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(33, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(27, -9, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(21, -86, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
@@ -228,6 +229,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         .build());
 
