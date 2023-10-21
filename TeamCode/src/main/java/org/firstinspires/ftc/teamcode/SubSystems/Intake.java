@@ -1,0 +1,93 @@
+package org.firstinspires.ftc.teamcode.SubSystems;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
+public class Intake {
+
+    //Initialization of intakemotor
+    public DcMotor intakeMotor = null;
+    public Servo rollerLiftLeft;
+    public Servo rollerLiftRight;
+
+    public enum INTAKE_MOTOR_STATE{
+        INTAKE_MOTOR_RUNNING,
+        INTAKE_MOTOR_STOPPED,
+        INTAKE_MOTOR_REVERSING
+    }
+    public INTAKE_MOTOR_STATE intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
+
+    public enum INTAKE_ROLLER_HEIGHT{
+        INTAKE_ROLLER_LIFTED(0,0), //UPDATE FOR THIS YEAR
+        INTAKE_ROLLER_DROPPED(0,0);
+
+        private double liftLeftPosition;
+        private double liftRightPosition;
+
+
+        INTAKE_ROLLER_HEIGHT(double moveLeftPosition, double moveRightPosition){
+            this.liftLeftPosition = moveLeftPosition;
+            this.liftRightPosition = moveRightPosition;
+        }
+        public double getLiftLeftPosition(){
+            return liftLeftPosition;
+        }
+        public double getLiftRightPosition(){
+            return liftRightPosition;
+        }
+    }
+    public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED;
+
+    public double intakeMotorPower = 1.0;
+
+    public Intake(HardwareMap hardwareMap) {
+        intakeMotor = hardwareMap.dcMotor.get("intake_motor");
+        rollerLiftLeft = hardwareMap.get(Servo.class, "lift_left");
+        rollerLiftRight = hardwareMap.get(Servo.class, "lift_right");
+        initIntake();
+    }
+
+    public void initIntake(){
+        intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
+        intakeMotor.setPower(0);
+        moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+    }
+
+    public void moveRollerHeight(INTAKE_ROLLER_HEIGHT intakeRollerHeight){
+        rollerLiftLeft.setPosition(intakeRollerHeight.liftLeftPosition);
+        rollerLiftRight.setPosition(intakeRollerHeight.liftRightPosition);
+        intakeRollerHeightState = intakeRollerHeight;
+    }
+
+    public void startIntakeInward(){
+        if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING){
+            runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
+            intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING;
+        }
+    }
+
+    public void reverseIntake() {
+        if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
+            intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING;
+        }
+    }
+
+    public void stopIntakeMotor() {
+        if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) {
+            runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
+            intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
+        }
+    }
+
+    public void runIntakeMotor(DcMotor.Direction direction, double intakePower) {
+        intakeMotor.setDirection(direction);
+        intakeMotor.setPower(intakePower);
+    }
+
+    public INTAKE_MOTOR_STATE getIntakeState() {
+        return intakeMotorState;
+    }
+}
