@@ -102,7 +102,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
         telemetry.update();
 
         /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
+        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 2");
         telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 

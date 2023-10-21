@@ -145,7 +145,7 @@ public class TeleOpMode extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            visionAprilTagFront.printdebugMessages();
+            //visionAprilTagFront.printdebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

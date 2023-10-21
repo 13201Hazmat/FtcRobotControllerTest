@@ -105,7 +105,7 @@ public class VisionTfod {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.20f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
@@ -142,7 +142,7 @@ public class VisionTfod {
                 if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                         GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
                     if (recognition.getLabel() == "Pixel") {
-                        if (x < 100) {
+                        if (x < 200) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
                         } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
@@ -150,7 +150,7 @@ public class VisionTfod {
                     }
                 } else { //RED_RIGHT or BLUE_RIGHT
                     if (recognition.getLabel() == "Pixel") {
-                        if (x < 100) {
+                        if (x < 200) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                         } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
