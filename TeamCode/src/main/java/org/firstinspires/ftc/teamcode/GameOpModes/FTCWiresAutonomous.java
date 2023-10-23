@@ -224,6 +224,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 break;
         }
 
+
         //drive.pose = initPose;
 
         //Move robot to dropPurplePixel based on identified Spike Mark Location
