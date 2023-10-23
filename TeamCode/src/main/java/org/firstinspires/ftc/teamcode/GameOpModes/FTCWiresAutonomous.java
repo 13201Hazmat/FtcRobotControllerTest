@@ -141,7 +141,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(33, 3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(30, 3, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(30, 36,  Math.toRadians(-90));
                         break;
                     case RIGHT:
@@ -162,7 +162,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(29, -36,  Math.toRadians(90));
                         break;
                     case RIGHT:
@@ -183,7 +183,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(27, 86, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(34, 86, Math.toRadians(-90));
                         break;
                     case RIGHT:
@@ -207,7 +207,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(29, -86, Math.toRadians(90));
                         break;
                     case RIGHT:
@@ -220,7 +220,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 intakeStack = new Pose2d(52, 19,Math.toRadians(90));
                 midwayPose2 = new Pose2d(52, -62, Math.toRadians(90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(46, -84, Math.toRadians(90));
+                parkPose = new Pose2d(50, -84, Math.toRadians(90));
                 break;
         }
 
