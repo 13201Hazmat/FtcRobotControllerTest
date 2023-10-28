@@ -61,7 +61,7 @@ public class TestClimberOpMode extends LinearOpMode {
 
     public void runClimber(){
         if (gamepadController.gp1GetY()){
-            climber.modifyClimberSlidesLength(0.33 * (1.0 + 2.0 * gamepadController.gp1GetLeftTrigger()));
+            climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.MAX_EXTENDED);
         } else {
             climber.modifyClimberSlidesLength(0);
         }
