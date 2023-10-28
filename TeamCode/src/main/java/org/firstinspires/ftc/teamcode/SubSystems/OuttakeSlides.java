@@ -67,10 +67,6 @@ public class OuttakeSlides {
 
     //Method is able to initialize the arm
     public void initOuttakeSlides(){
-        resetOuttakeMotorMode();
-        outtakeMotor1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        outtakeMotor1.setPositionPIDFCoefficients(10.0); //5
-        outtakeMotor1.setDirection(DcMotorEx.Direction.FORWARD);
         outtakeMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotor2.setPositionPIDFCoefficients(10.0); //5
         outtakeMotor2.setDirection(DcMotorEx.Direction.REVERSE);

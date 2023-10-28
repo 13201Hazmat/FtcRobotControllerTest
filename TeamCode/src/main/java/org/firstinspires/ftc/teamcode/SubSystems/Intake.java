@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
 
     //Initialization of intakemotor
-    public DcMotor intakeMotor = null;
+    public DcMotorEx intakeMotor = null;
     public Servo rollerLiftLeft;
     public Servo rollerLiftRight;
 
@@ -43,9 +44,9 @@ public class Intake {
     public double intakeMotorPower = 1.0;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = hardwareMap.dcMotor.get("intake_motor");
-        rollerLiftLeft = hardwareMap.get(Servo.class, "lift_left");
-        rollerLiftRight = hardwareMap.get(Servo.class, "lift_right");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
+        rollerLiftLeft = hardwareMap.get(Servo.class, "intake_lift_left");
+        rollerLiftRight = hardwareMap.get(Servo.class, "intake_lift_right");
         initIntake();
     }
 
