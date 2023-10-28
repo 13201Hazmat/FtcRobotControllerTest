@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
@@ -54,6 +55,7 @@ public class GamepadController {
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
     public Telemetry telemetry;
+    public Climber climber;
 
 
     /**
@@ -63,12 +65,14 @@ public class GamepadController {
     public GamepadController(Gamepad hzGamepad1,
                              Gamepad hzGamepad2,
                              DriveTrain driveTrain,
-                             Telemetry telemetry
+                             Telemetry telemetry,
+                             Climber climber
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
         this.telemetry = telemetry;
+        this.climber = climber;
     }
 
 
@@ -78,6 +82,7 @@ public class GamepadController {
      */
     public void runByGamepadControl(){
         runDriveControl_byRRDriveModes();
+        runClimber();
       }
 
     /**
@@ -118,6 +123,16 @@ public class GamepadController {
         }
 
         driveTrain.driveNormal();
+    }
+
+    public void runClimber(){
+        if (gp1GetY()){
+            climber.modifyClimberSlidesLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
+        } else if (gp1GetA()){
+            climber.modifyClimberSlidesLength(-0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
+        } else {
+            climber.modifyClimberSlidesLength(0);
+        }
     }
 
 

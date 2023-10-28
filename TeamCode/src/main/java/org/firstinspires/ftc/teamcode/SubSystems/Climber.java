@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -138,6 +139,19 @@ public class Climber {
             resetOuttakeMotorMode();
         }
          */
+    }
+
+    public void modifyClimberSlidesLength(double power){
+        climberMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turnClimberBrakeModeOn();
+
+        double climberMotorCurrentPosition = climberMotor.getCurrentPosition();
+        if((power > 0.01 && climberMotorCurrentPosition < CLIMBER_MOTOR_STATE.MAX_EXTENDED.motorPosition) ||
+                (power < -0.01 && climberMotorCurrentPosition > CLIMBER_MOTOR_STATE.MIN_RETRACTED.motorPosition)){
+            climberMotor.setPower(power);
+        } else {
+            climberMotor.setPower(0);
+        }
     }
 
     //Resets the arm
