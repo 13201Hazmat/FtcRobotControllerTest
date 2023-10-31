@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Launcher {
     public Servo launcherServo;
 
@@ -21,7 +23,9 @@ public class Launcher {
     }
     public LAUNCHER_STATE launcherState = LAUNCHER_STATE.LAUNCHER_PULLED_BACK;
 
-    public Launcher(HardwareMap hardwareMap){
+    public Telemetry telemetry;
+    public Launcher(HardwareMap hardwareMap, Telemetry telemetry){
+        this.telemetry = telemetry;
         launcherServo = hardwareMap.get(Servo.class, "launcher");
         initLauncher();
     }
@@ -29,5 +33,11 @@ public class Launcher {
     public void initLauncher(){
         launcherServo.setPosition(LAUNCHER_STATE.LAUNCHER_PULLED_BACK.getLauncherPosition());
         launcherState = LAUNCHER_STATE.LAUNCHER_PULLED_BACK;
+    }
+
+    public void printDebugMessages(){
+        //******  debug ******
+        //telemetry.addData("xx", xx);
+        telemetry.addLine("=============");
     }
 }

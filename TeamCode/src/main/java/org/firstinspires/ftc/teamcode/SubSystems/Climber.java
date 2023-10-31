@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Climber {
     //Initialization of intakemotor
     public DcMotorEx climberMotor = null;
-    public Servo climberLiftLeft;
-    public Servo climberLiftRight;
+    //public Servo climberLiftLeft;
+    //public Servo climberLiftRight;
+    /*
 
     public enum CLIMBER_SLIDES_HEIGHT{
         CLIMBER_SLIDES_LIFTED(0,0), //UPDATE FOR THIS YEAR
@@ -33,7 +33,7 @@ public class Climber {
         }
     }
     public CLIMBER_SLIDES_HEIGHT climberSlidesHeightState = CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED;
-
+*/
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {
         MIN_RETRACTED (0), //Position
@@ -58,10 +58,12 @@ public class Climber {
 
     public double climberMotorPower = CLIMBER_MOTOR_POWER_TELEOP;
 
-    public Climber(HardwareMap hardwareMap) {
-        climberMotor = hardwareMap.get(DcMotorEx.class, "climber_motor");
-        climberLiftLeft = hardwareMap.get(Servo.class, "climber_lift_left");
-        climberLiftRight = hardwareMap.get(Servo.class, "climber_lift_right");
+    public Telemetry telemetry;
+    public Climber(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+        climberMotor = hardwareMap.get(DcMotorEx.class, "leftBack");//climber_motor
+        //climberLiftLeft = hardwareMap.get(Servo.class, "climber_lift_left");
+        //climberLiftRight = hardwareMap.get(Servo.class, "climber_lift_right");
         initIntake();
     }
 
@@ -70,15 +72,15 @@ public class Climber {
         climberMotor.setPositionPIDFCoefficients(10.0); //5
         climberMotor.setDirection(DcMotorEx.Direction.REVERSE);
         turnClimberBrakeModeOff();
-        climberSlidesHeightState = CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED;
-        moveRollerHeight(CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED);
+        //climberSlidesHeightState = CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED;
+        //moveRollerHeight(CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED);
     }
 
-    public void moveRollerHeight(CLIMBER_SLIDES_HEIGHT climberSlidesHeight){
+    /*public void moveRollerHeight(CLIMBER_SLIDES_HEIGHT climberSlidesHeight){
         climberLiftLeft.setPosition(climberSlidesHeight.liftLeftPosition);
         climberLiftRight.setPosition(climberSlidesHeight.liftRightPosition);
         climberSlidesHeightState = climberSlidesHeight;
-    }
+    }*/
 
     public void initClimberSlides(){
         climberMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -141,7 +143,7 @@ public class Climber {
          */
     }
 
-    public void modifyClimberSlidesLength(double power){
+    public void modifyClimberMotorLength(double power){
         climberMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turnClimberBrakeModeOn();
 
@@ -168,5 +170,10 @@ public class Climber {
         return (climberMotorState == toClimberMotorState && isClimberMotorInStateError <= 30);
     }
 
+    public void printDebugMessages(){
+        //******  debug ******
+        //telemetry.addData("xx", xx);
+        telemetry.addLine("=============");
+    }
 
 }

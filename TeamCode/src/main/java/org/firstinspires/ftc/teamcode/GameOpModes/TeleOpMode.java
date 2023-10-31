@@ -9,8 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
@@ -26,6 +31,11 @@ public class TeleOpMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
+    public Intake intake;
+    public OuttakeSlides outtakeSlides;
+    public OuttakeArm outtakeArm;
+    public Climber climber;
+    public Launcher launcher;
     public VisionAprilTag visionAprilTagFront;
     public Lights lights;
 
@@ -103,7 +113,8 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, telemetry);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake,
+                outtakeSlides, outtakeArm, climber, launcher, telemetry);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -140,11 +151,13 @@ public class TeleOpMode extends LinearOpMode {
         if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
             telemetry.addLine("Running Hazmat TeleOpMode");
             telemetry.addData("Game Timer : ", gameTimer.time());
-            //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
+            intake.printDebugMessages();
+            outtakeSlides.printDebugMessages();
+            outtakeArm.printDebugMessages();
+            climber.printDebugMessages();
+            launcher.printDebugMessages();
             //visionAprilTagFront.printdebugMessages();
             lights.printDebugMessages();
         }

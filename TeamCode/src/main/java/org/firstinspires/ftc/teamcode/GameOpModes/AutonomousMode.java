@@ -41,8 +41,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
@@ -54,6 +59,11 @@ public class AutonomousMode extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
+    public Intake intake;
+    public OuttakeSlides outtakeSlides;
+    public OuttakeArm outtakeArm;
+    public Climber climber;
+    public Launcher launcher;
     public VisionTfod visionTfodFront;
     public Lights lights;
 
@@ -353,7 +363,8 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, telemetry);
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake,
+                outtakeSlides, outtakeArm, climber, launcher, telemetry);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

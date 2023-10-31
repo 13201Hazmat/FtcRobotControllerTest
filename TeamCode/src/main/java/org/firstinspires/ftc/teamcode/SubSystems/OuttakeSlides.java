@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
         import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.ElapsedTime;
 
+        import org.firstinspires.ftc.robotcore.external.Telemetry;
         import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 
@@ -16,6 +17,7 @@ public class OuttakeSlides {
     //Initialization of outtakemotor
     public DcMotorEx outtakeMotor1;
     public DcMotorEx outtakeMotor2;
+
 
     //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
     public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 145.1;//384.5;
@@ -57,9 +59,10 @@ public class OuttakeSlides {
 
     public boolean runOuttakeMotorToLevelState = false;
 
+    public Telemetry telemetry;
     //Constructor`
-    public OuttakeSlides(HardwareMap hardwareMap){
-
+    public OuttakeSlides(HardwareMap hardwareMap, Telemetry telemetry){
+        this.telemetry = telemetry;
         outtakeMotor1 = hardwareMap.get(DcMotorEx.class, "outtake_motor1");
         outtakeMotor2 = hardwareMap.get(DcMotorEx.class, "outtake_motor2");
         initOuttakeSlides();
@@ -211,6 +214,12 @@ public class OuttakeSlides {
         isOuttakeSlidesInStateError = Math.abs(outtakeMotor1.getCurrentPosition() - toOuttakeSlideState.motorPosition);
         isOuttakeSlidesInStateError = Math.abs(outtakeMotor2.getCurrentPosition() - toOuttakeSlideState.motorPosition);
         return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 30);
+    }
+
+    public void printDebugMessages(){
+        //******  debug ******
+        //telemetry.addData("xx", xx);
+        telemetry.addLine("=============");
     }
 
 }

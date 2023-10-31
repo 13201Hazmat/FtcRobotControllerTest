@@ -1,16 +1,12 @@
-package org.firstinspires.ftc.teamcode.Controllers;
+package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
-import org.firstinspires.ftc.teamcode.SubSystems.Intake;
-import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
-import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
-import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 
 
 /**
@@ -51,16 +47,11 @@ import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
  *
  */
 
-public class GamepadController {
+public class TestGamepadController {
 
     //Create object reference to objects to systems passed from TeleOp
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
-    public Intake intake;
-    public OuttakeSlides outtakeSlides;
-    public OuttakeArm outtakeArm;
-    public Climber climber;
-    public Launcher launcher;
     public Telemetry telemetry;
 
 
@@ -68,37 +59,24 @@ public class GamepadController {
      * Constructor for HzGamepad1 and HzGamepad2 class that extends gamepad.
      * Assign the gamepad1 and gamepad2 given in OpMode to the gamepad used here.
      */
-    public GamepadController(Gamepad hzGamepad1,
-                             Gamepad hzGamepad2,
-                             DriveTrain driveTrain,
-                             Intake intake,
-                             OuttakeSlides outtakeSlides,
-                             OuttakeArm outtakeArm,
-                             Climber climber,
-                             Launcher launcher,
-                             Telemetry telemetry
+    public TestGamepadController(Gamepad hzGamepad1,
+                                 Gamepad hzGamepad2,
+                                 DriveTrain driveTrain,
+                                 Telemetry telemetry
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
-        this.intake = intake;
-        this.outtakeSlides = outtakeSlides;
-        this.outtakeArm = outtakeArm;
-        this.climber = climber;
-        this.launcher = launcher;
         this.telemetry = telemetry;
     }
+
+
 
     /**
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
-        runDriveControl_byRRDriveModes();
-        runIntake();
-        runOuttakeSlides();
-        runOuttakeArm();
-        runClimber();
-        runLauncher();
+        //runDriveControl_byRRDriveModes();
       }
 
     /**
@@ -128,39 +106,17 @@ public class GamepadController {
             };
 
             if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) { // Blue Alliance
+                /*driveTrain.gamepadInput = driveTrain.rotateFieldCentric(
+                        -gp1TurboMode(gp1GetLeftStickY()),
+                        -gp1TurboMode(gp1GetLeftStickX()),
+                        -driveTrain.pose.heading.log()
+                );*/
                 driveTrain.gamepadInput = driveTrain.pose.heading.plus(Math.PI).inverse().times(
                         new Vector2d(-driveTrain.gamepadInput.x, driveTrain.gamepadInput.y));
             }
         }
 
         driveTrain.driveNormal();
-    }
-
-    public void runIntake(){
-        //Intake Code
-    }
-
-    public void runOuttakeSlides(){
-        //Outtake Slides code
-    }
-
-    public void runOuttakeArm(){
-        //Outtake Arm code
-    }
-
-    public void runClimber(){
-        //Climber code
-        if (gp1GetY()){
-            climber.modifyClimberMotorLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
-        } else if (gp1GetA()){
-            climber.modifyClimberMotorLength(-0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
-        } else {
-            climber.modifyClimberMotorLength(0);
-        }
-    }
-
-    public void runLauncher(){
-        //Launcher code
     }
 
     //*********** KEY PAD MODIFIERS BELOW ***********

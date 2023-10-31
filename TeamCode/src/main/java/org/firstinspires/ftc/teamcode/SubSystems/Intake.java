@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Intake {
 
     //Initialization of intakemotor
@@ -43,7 +45,9 @@ public class Intake {
 
     public double intakeMotorPower = 1.0;
 
-    public Intake(HardwareMap hardwareMap) {
+    public Telemetry telemetry;
+    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
         rollerLiftLeft = hardwareMap.get(Servo.class, "intake_lift_left");
         rollerLiftRight = hardwareMap.get(Servo.class, "intake_lift_right");
@@ -91,4 +95,11 @@ public class Intake {
     public INTAKE_MOTOR_STATE getIntakeState() {
         return intakeMotorState;
     }
+
+    public void printDebugMessages(){
+        //******  debug ******
+        //telemetry.addData("xx", xx);
+        telemetry.addLine("=============");
+    }
+
 }
