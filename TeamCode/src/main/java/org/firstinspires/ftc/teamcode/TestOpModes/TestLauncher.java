@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
@@ -22,13 +22,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Test Climber 2", group = "02-Test OpModes")
-public class TestClimber2 extends LinearOpMode {
+@TeleOp(name = "Test Launcher", group = "02-Test OpModes")
+public class TestLauncher extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
     public VisionAprilTag visionAprilTagFront;
-    public Climber climber;
+    public Launcher launcher;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -75,13 +75,10 @@ public class TestClimber2 extends LinearOpMode {
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetY()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.MAX_EXTENDED);
+                if (gamepadController.gp1GetRightBumper()){
+                    launcher.launchDrone();
                 }
 
-                if (gamepadController.gp1GetA()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.MIN_RETRACTED);
-                }
             }
         }
         GameField.poseSetInAutonomous = false;
@@ -112,8 +109,8 @@ public class TestClimber2 extends LinearOpMode {
         telemetry.addLine("Lights Initialized");
         telemetry.update();
 
-        climber = new Climber(hardwareMap, telemetry);
-        telemetry.addLine("Climber Initialized");
+        launcher = new Climber(hardwareMap, telemetry);
+        telemetry.addLine("Launcher Initialized");
         telemetry.update();
 
         /* Create Controllers */

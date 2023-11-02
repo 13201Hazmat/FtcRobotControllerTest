@@ -10,8 +10,8 @@ public class Launcher {
     public Servo launcherServo;
 
     public enum LAUNCHER_STATE{
-        LAUNCHER_PULLED_BACK(0),
-        LAUNCHER_LAUNCHED(0);
+        LAUNCHER_PULLED_BACK(0), //UPDATE
+        LAUNCHER_LAUNCHED(0); //UPDATE
 
         private double launcherPosition;
 
@@ -33,6 +33,11 @@ public class Launcher {
     public void initLauncher(){
         launcherServo.setPosition(LAUNCHER_STATE.LAUNCHER_PULLED_BACK.getLauncherPosition());
         launcherState = LAUNCHER_STATE.LAUNCHER_PULLED_BACK;
+    }
+
+    public void launchDrone(){
+        launcherServo.setPosition(LAUNCHER_STATE.LAUNCHER_LAUNCHED.getLauncherPosition());
+        launcherState = LAUNCHER_STATE.LAUNCHER_LAUNCHED;
     }
 
     public void printDebugMessages(){
