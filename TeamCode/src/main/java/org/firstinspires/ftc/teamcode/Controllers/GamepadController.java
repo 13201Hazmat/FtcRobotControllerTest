@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
+import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 
@@ -57,6 +58,7 @@ public class GamepadController {
     public Gamepad hzGamepad1, hzGamepad2;
     public DriveTrain driveTrain;
     public Intake intake;
+    public Magazine magazine;
     public OuttakeSlides outtakeSlides;
     public OuttakeArm outtakeArm;
     public Climber climber;
@@ -72,6 +74,7 @@ public class GamepadController {
                              Gamepad hzGamepad2,
                              DriveTrain driveTrain,
                              Intake intake,
+                             Magazine magazine,
                              OuttakeSlides outtakeSlides,
                              OuttakeArm outtakeArm,
                              Climber climber,
@@ -82,6 +85,7 @@ public class GamepadController {
         this.hzGamepad2 = hzGamepad2;
         this.driveTrain = driveTrain;
         this.intake = intake;
+        this.magazine = magazine;
         this.outtakeSlides = outtakeSlides;
         this.outtakeArm = outtakeArm;
         this.climber = climber;
@@ -95,6 +99,7 @@ public class GamepadController {
     public void runByGamepadControl(){
         runDriveControl_byRRDriveModes();
         runIntake();
+        runMagazine();
         runOuttakeSlides();
         runOuttakeArm();
         runClimber();
@@ -138,6 +143,37 @@ public class GamepadController {
 
     public void runIntake(){
         //Intake Code
+        //Intake Code
+        if (gp1GetLeftBumperPress()){
+            if(intake.intakeRollerHeightState != Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED){
+                intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+            } else {
+                intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED);
+            }
+        }
+
+        if(gp1GetDpad_down()){
+            if(intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED){
+                intake.startIntakeInward();
+            }
+            if(((magazine.senseMagazinePixel1() && magazine.senseMagazinePixel2()) &&
+                    intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) ||
+                    ((intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED &&
+                            outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER))){
+                intake.reverseIntake();
+            }
+            if(intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING){
+                intake.stopIntakeMotor();
+            }
+        }
+
+        if(gp1GetDpad_upPress()){
+            intake.reverseIntake();
+        }
+    }
+
+    public void runMagazine(){
+        //Magazine code
     }
 
     public void runOuttakeSlides(){

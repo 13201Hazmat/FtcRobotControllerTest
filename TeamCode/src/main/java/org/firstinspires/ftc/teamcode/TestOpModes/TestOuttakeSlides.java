@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
@@ -22,13 +22,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Test Launcher", group = "02-Test OpModes")
-public class TestLauncher extends LinearOpMode {
+@TeleOp(name = "Test OuttakeSlides", group = "02-Test OpModes")
+public class TestOuttakeSlides extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
     public VisionAprilTag visionAprilTagFront;
-    public Launcher launcher;
+    public OuttakeSlides outtakeSlides;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -75,14 +75,21 @@ public class TestLauncher extends LinearOpMode {
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetRightBumper()){
-                    launcher.launchDrone();
+                if (gamepadController.gp1GetButtonAPress()){
+                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.MIN_RETRACTED);
                 }
 
-                if(gamepadController.gp1GetLeftBumper()){
-                    launcher.initLauncher();
+                if (gamepadController.gp1GetButtonXPress()){
+                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LEVEL_LOW);
                 }
 
+                if (gamepadController.gp1GetButtonYPress()){
+                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LEVEL_MID);
+                }
+
+                if (gamepadController.gp1GetButtonBPress()){
+                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.LEVEL_HIGH);
+                }
 
             }
         }
@@ -114,8 +121,8 @@ public class TestLauncher extends LinearOpMode {
         telemetry.addLine("Lights Initialized");
         telemetry.update();
 
-        launcher = new Launcher(hardwareMap, telemetry);
-        telemetry.addLine("Launcher Initialized");
+        outtakeSlides = new OuttakeSlides(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
         /* Create Controllers */

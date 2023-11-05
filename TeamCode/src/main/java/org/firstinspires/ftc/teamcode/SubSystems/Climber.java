@@ -1,44 +1,26 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Climber {
     //Initialization of intakemotor
     public DcMotorEx climberMotor = null;
-    //public Servo climberLiftLeft;
-    //public Servo climberLiftRight;
-    /*
+    public CRServo climberLiftServo;
 
-    public enum CLIMBER_SLIDES_HEIGHT{
-        CLIMBER_SLIDES_LIFTED(0,0), //UPDATE FOR THIS YEAR
-        CLIMBER_SLIDES_DROPPED(0,0);
+    public double CLIMBER_SERVO_POWER = 1.0;
+    public boolean climberServoRunning = false;
 
-        private double liftLeftPosition;
-        private double liftRightPosition;
-
-
-        CLIMBER_SLIDES_HEIGHT(double moveLeftPosition, double moveRightPosition){
-               this.liftLeftPosition = moveLeftPosition;
-                this.liftRightPosition = moveRightPosition;
-        }
-        public double getLiftLeftPosition(){
-            return liftLeftPosition;
-        }
-        public double getLiftRightPosition(){
-            return liftRightPosition;
-        }
-    }
-    public CLIMBER_SLIDES_HEIGHT climberSlidesHeightState = CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED;
-*/
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {
-        MIN_RETRACTED (0), //Position
-        MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
-        RANDOM(0);
+        INITIAL_STATE(0), //Position
+        CLIMBED_STATE(-3000); //117 rpm motor
 
         public final double motorPosition;
         CLIMBER_MOTOR_STATE(double motorPosition) {
@@ -46,7 +28,7 @@ public class Climber {
         }
 
     }
-    public CLIMBER_MOTOR_STATE climberMotorState = CLIMBER_MOTOR_STATE.MIN_RETRACTED;
+    public CLIMBER_MOTOR_STATE climberMotorState = CLIMBER_MOTOR_STATE.INITIAL_STATE;
 
     public double climberMotorCurrentPosition = climberMotorState.motorPosition;
     public double climberMotorNewPosition = climberMotorState.motorPosition;
@@ -57,37 +39,38 @@ public class Climber {
     public boolean runClimberMotorToLevelState = false;
 
     public double climberMotorPower = CLIMBER_MOTOR_POWER_TELEOP;
+    public double startCurrentPosition;
 
     public Telemetry telemetry;
     public Climber(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         climberMotor = hardwareMap.get(DcMotorEx.class, "leftBack");//climber_motor
-        //climberLiftLeft = hardwareMap.get(Servo.class, "climber_lift_left");
-        //climberLiftRight = hardwareMap.get(Servo.class, "climber_lift_right");
-        initIntake();
+        climberLiftServo = hardwareMap.get(CRServo.class, "climber_lift");
+
+        initClimber();
     }
 
-    public void initIntake(){
+    public void initClimber(){
         climberMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         climberMotor.setPositionPIDFCoefficients(10.0); //5
         climberMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        startCurrentPosition = climberMotor.getCurrentPosition();
         turnClimberBrakeModeOff();
-        //climberSlidesHeightState = CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED;
-        //moveRollerHeight(CLIMBER_SLIDES_HEIGHT.CLIMBER_SLIDES_DROPPED);
     }
 
-    /*public void moveRollerHeight(CLIMBER_SLIDES_HEIGHT climberSlidesHeight){
-        climberLiftLeft.setPosition(climberSlidesHeight.liftLeftPosition);
-        climberLiftRight.setPosition(climberSlidesHeight.liftRightPosition);
-        climberSlidesHeightState = climberSlidesHeight;
-    }*/
+    public void moveClimberSlidesUp(){
+        climberLiftServo.setPower(CLIMBER_SERVO_POWER);
+        climberServoRunning = true;
+    }
 
-    public void initClimberSlides(){
-        climberMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        climberMotor.setPositionPIDFCoefficients(10.0); //5
-        climberMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        turnClimberBrakeModeOff();
-        //manualResetOuttakeMotor();
+    public void moveClimberSlidesDown(){
+        climberLiftServo.setPower(-CLIMBER_SERVO_POWER);
+        climberServoRunning = true;
+    }
+
+    public void stopClimberSlides(){
+        climberLiftServo.setPower(0);
+        climberServoRunning = false;
     }
 
     //Turns on the brake for Outtake motor
@@ -110,7 +93,7 @@ public class Climber {
             outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.RETRACT;
         }
          */
-        climberMotor.setTargetPosition((int)toClimberMotorState.motorPosition);
+        climberMotor.setTargetPosition((int)(toClimberMotorState.motorPosition + startCurrentPosition));
         climberMotorState = toClimberMotorState;
         runClimberMotorToLevelState = true;
         runClimberMotorToLevel();
@@ -119,7 +102,7 @@ public class Climber {
     //sets the Outtake motor power
     public void runClimberMotorToLevel(){
         double power = 0;
-        if (climberMotorState == CLIMBER_MOTOR_STATE.MIN_RETRACTED) {
+        if (climberMotorState == CLIMBER_MOTOR_STATE.INITIAL_STATE) {
             turnClimberBrakeModeOff();
         } else {
             turnClimberBrakeModeOn();
@@ -134,13 +117,6 @@ public class Climber {
         } else{
             climberMotor.setPower(0.0);
         }
-        /*if ((armState == ARM_STATE.MIN_RETRACTED) && (armTouchSensor.getState())){
-            manualResetArm();
-        } Overheating arm? TODO
-        if (!outtakeTouch.getState()) {
-            resetOuttakeMotorMode();
-        }
-         */
     }
 
     public void modifyClimberMotorLength(double power){
@@ -148,8 +124,8 @@ public class Climber {
         turnClimberBrakeModeOn();
 
         double climberMotorCurrentPosition = climberMotor.getCurrentPosition();
-        if((power > 0.01 && climberMotorCurrentPosition < CLIMBER_MOTOR_STATE.MAX_EXTENDED.motorPosition) ||
-                (power < -0.01 && climberMotorCurrentPosition > CLIMBER_MOTOR_STATE.MIN_RETRACTED.motorPosition)){
+        if((power > 0.01 && climberMotorCurrentPosition < CLIMBER_MOTOR_STATE.CLIMBED_STATE.motorPosition) ||
+                (power < -0.01 && climberMotorCurrentPosition > CLIMBER_MOTOR_STATE.INITIAL_STATE.motorPosition)){
             climberMotor.setPower(power);
         } else {
             climberMotor.setPower(0);

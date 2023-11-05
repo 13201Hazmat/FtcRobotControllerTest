@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
@@ -22,13 +22,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Test Climber 2", group = "02-Test OpModes")
-public class TestClimber2 extends LinearOpMode {
+@TeleOp(name = "Test Intake", group = "02-Test OpModes")
+public class TestIntake extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
     public VisionAprilTag visionAprilTagFront;
-    public Climber climber;
+    public Intake intake;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -68,20 +68,41 @@ public class TestClimber2 extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+                //gamepadController.runByGamepadControl();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetY()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.MAX_EXTENDED);
+                if (gamepadController.gp1GetLeftBumperPress()) {
+                    intake.toggleRollerHeight();
                 }
 
-                if (gamepadController.gp1GetA()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.MIN_RETRACTED);
+                if (gamepadController.gp1GetDpad_downPress()){
+                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                            intake.startIntakeInward();
+                        } else {
+                            intake.stopIntakeMotor();
+                        }
+                    } else {
+                        if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                            intake.startIntakeInward();
+                        } else {
+                            intake.stopIntakeMotor();
+                        }
+                    }
                 }
+
+                if (gamepadController.gp1GetDpad_up()) {
+                    intake.reverseIntake();
+                } else {
+                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                        intake.stopIntakeMotor();
+                    }
+                }
+
             }
         }
         GameField.poseSetInAutonomous = false;
@@ -97,9 +118,13 @@ public class TestClimber2 extends LinearOpMode {
         telemetry.update();
 
         /* Create Subsystem Objects*/
-        driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0), telemetry);
-        driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
-        telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
+        //driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0), telemetry);
+        //driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
+        //telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
+        telemetry.update();
+
+        intake = new Intake(hardwareMap, telemetry);
+        telemetry.addLine("Intake Initialized");
         telemetry.update();
 
         /* Create VisionAprilTag */
@@ -110,10 +135,6 @@ public class TestClimber2 extends LinearOpMode {
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
         telemetry.addLine("Lights Initialized");
-        telemetry.update();
-
-        climber = new Climber(hardwareMap, telemetry);
-        telemetry.addLine("Climber Initialized");
         telemetry.update();
 
         /* Create Controllers */
@@ -127,10 +148,10 @@ public class TestClimber2 extends LinearOpMode {
 
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous) {
-            driveTrain.pose = GameField.currentPose;
+            //driveTrain.pose = GameField.currentPose;
             //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
-            driveTrain.pose = startPose;
+            //driveTrain.pose = startPose;
             //driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
@@ -158,7 +179,8 @@ public class TestClimber2 extends LinearOpMode {
             //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
             //telemetry.addData("startPose : ", startPose);
 
-            driveTrain.printDebugMessages();
+            //driveTrain.printDebugMessages();
+            intake.printDebugMessages();
             //visionAprilTagFront.printdebugMessages();
             lights.printDebugMessages();
         }

@@ -46,6 +46,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
@@ -60,6 +61,7 @@ public class AutonomousMode extends LinearOpMode {
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
     public Intake intake;
+    public Magazine magazine;
     public OuttakeSlides outtakeSlides;
     public OuttakeArm outtakeArm;
     public Climber climber;
@@ -352,6 +354,30 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
         telemetry.update();
 
+        intake = new Intake(hardwareMap, telemetry);
+        telemetry.addLine("Intake Initialized");
+        telemetry.update();
+
+        magazine = new Magazine(hardwareMap, telemetry);
+        telemetry.addLine("Magazine Initialized");
+        telemetry.update();
+
+        outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeArm Initialized");
+        telemetry.update();
+
+        outtakeSlides = new OuttakeSlides(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeSlides Initialized");
+        telemetry.update();
+
+        climber = new Climber(hardwareMap, telemetry);
+        telemetry.addLine("Climber Initialized");
+        telemetry.update();
+
+        launcher = new Launcher(hardwareMap, telemetry);
+        telemetry.addLine("Launcher Initialized");
+        telemetry.update();
+
         /* Create Vision */
         visionTfodFront = new VisionTfod(hardwareMap, telemetry, "Webcam 1");
         telemetry.addLine("VisionTfod Initialized");
@@ -363,7 +389,7 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake,
+        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, magazine,
                 outtakeSlides, outtakeArm, climber, launcher, telemetry);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();

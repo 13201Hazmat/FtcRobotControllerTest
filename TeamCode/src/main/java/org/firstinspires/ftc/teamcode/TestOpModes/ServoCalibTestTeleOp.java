@@ -1,21 +1,17 @@
 package org.firstinspires.ftc.teamcode.TestOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
-
-@TeleOp(name = "ServoTeleOp", group = "Testing")
-public class ServoTestTeleOp extends LinearOpMode{
+@TeleOp(name = "ServoCalibTestTeleOp", group = "Testing")
+public class ServoCalibTestTeleOp extends LinearOpMode{
     Servo masterServo;
     //double servoSetPosition;
     double servoCurrentPosition;
 
     public void runOpMode() throws InterruptedException {
-        masterServo = hardwareMap.get(Servo.class, "outtake_guide_servo");
+        masterServo = hardwareMap.get(Servo.class, "launcher_servo");
         waitForStart();
         while (opModeIsActive()) {
             servoCurrentPosition = masterServo.getPosition();

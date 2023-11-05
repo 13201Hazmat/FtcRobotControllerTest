@@ -76,7 +76,7 @@ public class TestGamepadController {
      *runByGamepad is the main controller function that runs each subsystem controller based on states
      */
     public void runByGamepadControl(){
-        //runDriveControl_byRRDriveModes();
+        runDriveControl_byRRDriveModes();
       }
 
     /**

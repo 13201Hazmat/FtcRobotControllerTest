@@ -10,8 +10,8 @@ public class Launcher {
     public Servo launcherServo;
 
     public enum LAUNCHER_STATE{
-        LAUNCHER_PULLED_BACK(0), //UPDATE
-        LAUNCHER_LAUNCHED(0); //UPDATE
+        LAUNCHER_PULLED_BACK(0.26), //UPDATE
+        LAUNCHER_LAUNCHED(0.5); //UPDATE
 
         private double launcherPosition;
 
@@ -26,7 +26,7 @@ public class Launcher {
     public Telemetry telemetry;
     public Launcher(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
-        launcherServo = hardwareMap.get(Servo.class, "launcher");
+        launcherServo = hardwareMap.get(Servo.class, "launcher_servo");
         initLauncher();
     }
 

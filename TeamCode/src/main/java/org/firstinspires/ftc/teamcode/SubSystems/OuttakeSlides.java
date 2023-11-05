@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-        import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
         import com.qualcomm.robotcore.hardware.DcMotorEx;
         import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -29,6 +29,9 @@ public class OuttakeSlides {
     //Outtake Motor states
     public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
+        LEVEL_LOW(500),
+        LEVEL_MID(1000),
+        LEVEL_HIGH(1500),
         MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
         RANDOM(0);
 
