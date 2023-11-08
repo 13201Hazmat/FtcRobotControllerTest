@@ -7,5 +7,9 @@ public class SystemState {
 
     public static double ArmRadians = 0;
     public static double WristRadians = 0;
-    public static double slides
+    public static double SlidesExtensionMM = 0; //in millimeters
+
+    public static final double SLIDES_LENGTH_TO_MM_RATIO = 1;
+
+
 }
