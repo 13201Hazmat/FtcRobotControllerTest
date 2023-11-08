@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.geometry.Pose2dKt;
+import com.acmerobotics.roadrunner.geometry.Vector2dKt;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,7 +15,7 @@ public class DriveTrain extends MecanumDrive{
     Telemetry telemetry;
 
     public DriveTrain(HardwareMap hardwareMap, Pose2d pose, Telemetry telemetry) {
-        super(hardwareMap, pose);
+        super(hardwareMap, p/ose);
         this.telemetry = telemetry;
     }
 
