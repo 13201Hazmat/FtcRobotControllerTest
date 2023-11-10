@@ -45,14 +45,14 @@ public class Magazine {
     }
 
     public void initMagazine(){
-        closeTransfer();
+        closeMagazine();
     }
 
     /**
      * Moving the box wall down
      */
     //UPDATE FOR THIS YEAR!!
-    public void openTransfer(){
+    public void ejectPixel(){
         magazineServo.setPosition(MAGAZINE_STATE.EJECTED.magazinePosition);
         transferState = TRANSFER_STATE.EJECTED;
     }
@@ -61,7 +61,7 @@ public class Magazine {
      * Moving the box wall up
      */
     //UPDATE FOR THIS YEAR!!
-    public void closeTransfer(){
+    public void closeMagazine(){
         magazineServo.setPosition(MAGAZINE_STATE.CLOSED.magazinePosition);
         transferState = TRANSFER_STATE.UP;
     }
