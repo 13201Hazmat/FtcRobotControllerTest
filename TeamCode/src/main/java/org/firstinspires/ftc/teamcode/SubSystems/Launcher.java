@@ -10,8 +10,8 @@ public class Launcher {
     public Servo launcherServo;
 
     public enum LAUNCHER_STATE{
-        LAUNCHER_PULLED_BACK(0.26), //UPDATE
-        LAUNCHER_LAUNCHED(0.5); //UPDATE
+        LAUNCHER_PULLED_BACK(0.26), //TODO : Update Value
+        LAUNCHER_LAUNCHED(0.5); //TODO : Update Value
 
         private double launcherPosition;
 
@@ -43,6 +43,8 @@ public class Launcher {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
+        telemetry.addData("Launcher state", launcherState);
+        telemetry.addData("Launcher servo position", launcherServo.getPosition());
         telemetry.addLine("=============");
     }
 }

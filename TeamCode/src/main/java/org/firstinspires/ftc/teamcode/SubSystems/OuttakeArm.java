@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class OuttakeArm {
     //Initialization of <outtake arm servo's>
@@ -13,8 +14,8 @@ public class OuttakeArm {
     public Servo outtakeArmRight;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0,0), //UPDATE FOR THIS YEAR!!
-        DROP(0,0),
+        TRANSFER(0,1), //TODO : Update
+        DROP(0,1),
 
         READY_FOR_PICKUP(0,0);
 
@@ -57,8 +58,8 @@ public class OuttakeArm {
 
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
-        OPEN(0.0), //UPDATE FOR THIS YEAR!!
-        CLOSED(0.0);
+        OPEN(0.47),
+        CLOSED(0.8);
 
         private double gripPosition;
 
@@ -86,12 +87,13 @@ public class OuttakeArm {
     //initialize outtakeArm
     public void initOuttakeArm() {//UPDATE FOR THIS YEAR!!
         moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-        /*
-        if (GameField.opModeRunning == HAZMAT_AUTONOMOUS) {
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
             closeGrip();
+        } else {
+            moveArm(OUTTAKE_ARM_STATE.READY_FOR_PICKUP);
+            openGrip();
         }
-
-        */
     }
 
     /**
@@ -116,6 +118,13 @@ public class OuttakeArm {
         outtakeWristState = toWristState;
     }
 
+    public void rotateWrist(double direction) {
+        double newWristPosition = outtakeWristServo.getPosition() + direction*0.01;
+        if (newWristPosition >=0.0 && newWristPosition <=1.0) {
+            outtakeWristServo.setPosition(newWristPosition);
+        }
+    }
+
     public void moveArm(OUTTAKE_ARM_STATE toArmState) { //UPDATE FOR THIS YEAR!!
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
@@ -135,6 +144,17 @@ public class OuttakeArm {
                 break;
         }
     }
+
+    public void rotateArm(double direction) {
+        double newPositionLeft = outtakeArmLeft.getPosition() + direction *0.01;
+        double newPositionRight = outtakeArmRight.getPosition() - direction *0.01;
+        if (newPositionLeft >= 0.0 && newPositionLeft <= 1.0 &&
+                newPositionRight >= 0.0 && newPositionRight <= 1.0) {
+            outtakeArmLeft.setPosition(newPositionLeft);
+            outtakeArmRight.setPosition(newPositionRight);
+        }
+    }
+
 
     public void printDebugMessages() {
         //******  debug ******

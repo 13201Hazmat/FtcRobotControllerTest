@@ -10,10 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.Intake;
-import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
@@ -25,14 +22,14 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Test OuttakeArm", group = "02-Test OpModes")
-public class    TestOuttakeArm extends LinearOpMode {
+@TeleOp(name = "CalibrateOuttakeArmSlides", group = "02-Test OpModes")
+public class CalibrateOuttakeArmSlides extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
     public VisionAprilTag visionAprilTagFront;
+    public OuttakeSlides outtakeSlides;
     public OuttakeArm outtakeArm;
-    public Intake intake;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -79,27 +76,45 @@ public class    TestOuttakeArm extends LinearOpMode {
                     telemetry.update();
                 }
 
-
-
-                if (gamepadController.gp2GetDpad_upPress()){
-                    if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_MAX);
-                    }
+                //Move Slide up
+                if (gamepadController.gp1GetDpad_downPress()) {
+                    outtakeSlides.modifyOuttakeSlidesLength(-1);
                 }
 
-                if (gamepadController.gp2GetDpad_downPress()){
-                    if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_MIN);
-                    }
+                //Move Slide down
+                if (gamepadController.gp1GetDpad_upPress()) {
+                    outtakeSlides.modifyOuttakeSlidesLength(1);
                 }
 
-                //TODO: Add code
-                /* For Manual Transfer
-                if (gamepadController.gp2GetLeftBumperPress()){
-
+                //Move Arm Clockwise
+                if (gamepadController.gp1GetButtonXPress()){
+                    outtakeArm.rotateArm(-1);
                 }
-                */
 
+                //Move Arm Anti-Clockwise
+                if (gamepadController.gp1GetButtonBPress()){
+                    outtakeArm.rotateArm(1);
+                }
+
+                //Move Wrist Clockwise
+                if (gamepadController.gp1GetButtonAPress()){
+                    outtakeArm.rotateWrist(-1);
+                }
+
+                //Move Wrist Anti-Clockwise
+                if (gamepadController.gp1GetButtonYPress()){
+                    outtakeArm.rotateWrist(1);
+                }
+
+                //Open Outtake Grip
+                if (gamepadController.gp1GetRightBumper()) {
+                    outtakeArm.openGrip();
+                }
+
+                //CLose Outtake Grip
+                if (gamepadController.gp1GetLeftBumper()) {
+                    outtakeArm.closeGrip();
+                }
 
             }
         }
@@ -131,8 +146,12 @@ public class    TestOuttakeArm extends LinearOpMode {
         telemetry.addLine("Lights Initialized");
         telemetry.update();
 
-        outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        outtakeSlides = new OuttakeSlides(hardwareMap, telemetry);
         telemetry.addLine("OuttakeSlides Initialized");
+        telemetry.update();
+
+        outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
         /* Create Controllers */

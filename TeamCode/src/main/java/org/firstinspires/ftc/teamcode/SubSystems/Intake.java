@@ -104,6 +104,9 @@ public class Intake {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
+        telemetry.addData("Intake Motor State", getIntakeState());
+        telemetry.addData("Intake Roller Height State", intakeRollerHeightState);
+        telemetry.addData("Roller Lift Servo Position", rollerLiftServo.getPosition());
         telemetry.addLine("=============");
     }
 

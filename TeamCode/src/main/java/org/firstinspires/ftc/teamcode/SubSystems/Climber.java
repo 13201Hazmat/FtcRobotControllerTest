@@ -20,7 +20,7 @@ public class Climber {
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {
         INITIAL_STATE(0), //Position
-        CLIMBED_STATE(-3000); //117 rpm motor
+        CLIMBED_STATE(-3000); //117 rpm motor TODO Set value
 
         public final double motorPosition;
         CLIMBER_MOTOR_STATE(double motorPosition) {
@@ -149,6 +149,8 @@ public class Climber {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
+        telemetry.addData("Climber Motor State", climberMotorState);
+        telemetry.addData("Climber Motor Position", climberMotor.getCurrentPosition());
         telemetry.addLine("=============");
     }
 

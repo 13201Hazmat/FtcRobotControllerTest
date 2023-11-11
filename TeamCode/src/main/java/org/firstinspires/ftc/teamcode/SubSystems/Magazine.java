@@ -7,117 +7,104 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class Magazine {
-    public NormalizedColorSensor magazineSensor1;
-    public NormalizedColorSensor magazineSensor2;
-    public Servo magazineServo;
+    public NormalizedColorSensor magazineSensorBottom;
+    public NormalizedColorSensor magazineSensorTop;
+    public Servo magazineDoorServo;
 
-    public enum MAGAZINE_STATE {
+    public enum MAGAZINE_DOOR_STATE {
         CLOSED(0.0),
-        EJECTED(0.0);
+        OPEN(0.0);
 
         private double magazinePosition;
 
-        MAGAZINE_STATE(double magazinePosition){ this.magazinePosition = magazinePosition; }
+        MAGAZINE_DOOR_STATE(double magazinePosition){ this.magazinePosition = magazinePosition; }
         public double getMagazinePosition(){ return magazinePosition; }
     }
-    public MAGAZINE_STATE magazineState = MAGAZINE_STATE.CLOSED;
+    public MAGAZINE_DOOR_STATE magazineDoorState = MAGAZINE_DOOR_STATE.CLOSED;
 
     public Telemetry telemetry;
 
-    public enum TRANSFER_STATE {
-        UP(0.0),
-        EJECTED(0.0);
-
-        private double transferPosition;
-
-        TRANSFER_STATE(double transferPosition){ this.transferPosition = transferPosition; }
-        public double getTransferPosition(){ return transferPosition; }
+    public enum MAGAZINE_STATE {
+        EMPTY,
+        LOADED_ONE_PIXEL,
+        LOADED_TWO_PIXEL
     }
-    public TRANSFER_STATE transferState = TRANSFER_STATE.UP;
+    public MAGAZINE_STATE magazineState = MAGAZINE_STATE.EMPTY;
+
+    public double MAGAZINE_SENSE_DISTANCE = 100;
 
     public Magazine(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
-        magazineServo = hardwareMap.get(Servo.class, "box_servo");
+        magazineDoorServo = hardwareMap.get(Servo.class, "magazine_servo");
         initMagazine();
     }
 
     public void initMagazine(){
-        closeMagazine();
+        closeMagazineDoor();
+        senseMagazineState();
     }
 
     /**
      * Moving the box wall down
      */
     //UPDATE FOR THIS YEAR!!
-    public void ejectPixel(){
-        magazineServo.setPosition(MAGAZINE_STATE.EJECTED.magazinePosition);
-        transferState = TRANSFER_STATE.EJECTED;
+    public void openMagazineDoor(){
+        magazineDoorServo.setPosition(MAGAZINE_DOOR_STATE.OPEN.magazinePosition);
+        magazineDoorState = MAGAZINE_DOOR_STATE.OPEN;
     }
 
     /**
      * Moving the box wall up
      */
     //UPDATE FOR THIS YEAR!!
-    public void closeMagazine(){
-        magazineServo.setPosition(MAGAZINE_STATE.CLOSED.magazinePosition);
-        transferState = TRANSFER_STATE.UP;
+    public void closeMagazineDoor(){
+        magazineDoorServo.setPosition(MAGAZINE_DOOR_STATE.CLOSED.magazinePosition);
+        magazineDoorState = MAGAZINE_DOOR_STATE.CLOSED;
     }
 
-    public double magazineDistance1;
-    public double magazineDistance2;
-    public boolean senseMagazinePixel1(){
-        boolean magazinePixelSensed = false;
-        int senseDistance = 0;// need to test
-        if (magazineSensor1 instanceof DistanceSensor){
-            magazineDistance1 = ((DistanceSensor) magazineSensor1).getDistance(DistanceUnit.MM);
-        }
-        if(GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS){
-            senseDistance = 10; //CHANGE
-        } else {
-            senseDistance = 10; //CHANGE
-        }
-        if(magazineDistance1 < senseDistance){
-            magazinePixelSensed = true;
-        } else {
-            magazinePixelSensed = false;
-        }
-        return magazinePixelSensed;
-    }
+    public double magazineDistanceBottom;
+    public double magazineDistanceTop;
+    public void senseMagazineState(){
+        boolean magazinePixelBottomSensed = false;
+        boolean magazinePixelTopSensed = false;
 
-    public boolean senseMagazinePixel2(){
-        boolean magazinePixelSensed = false;
-        int senseDistance = 0;// need to test
-        if (magazineSensor2 instanceof DistanceSensor){
-            magazineDistance2 = ((DistanceSensor) magazineSensor2).getDistance(DistanceUnit.MM);
+        if (magazineSensorBottom instanceof DistanceSensor){
+            magazineDistanceBottom = ((DistanceSensor) magazineSensorBottom).getDistance(DistanceUnit.MM);
         }
-        if(GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS){
-            senseDistance = 10; //CHANGE
-        } else {
-            senseDistance = 10; //CHANGE
+        if(magazineDistanceBottom < MAGAZINE_SENSE_DISTANCE){
+            magazinePixelBottomSensed = true;
         }
-        if(magazineDistance2 < senseDistance){
-            magazinePixelSensed = true;
-        } else {
-            magazinePixelSensed = false;
-        }
-        return magazinePixelSensed;
-    }
 
-    public double getMagazineDistance1(){
-        return magazineDistance1;
-    }
+        if (magazineSensorTop instanceof DistanceSensor) {
+            magazineDistanceTop = ((DistanceSensor) magazineSensorTop).getDistance(DistanceUnit.MM);
+        }
 
-    public double getMagazineDistance2(){
-        return magazineDistance2;
+        if (magazineDistanceTop < MAGAZINE_SENSE_DISTANCE) {
+            magazinePixelTopSensed = true;
+        }
+
+        if (!magazinePixelBottomSensed) {
+            magazineState = MAGAZINE_STATE.EMPTY;
+        } else { // magazinePixelBottomSensed == true
+            if (!magazinePixelTopSensed) {
+                magazineState = MAGAZINE_STATE.LOADED_ONE_PIXEL;
+            } else { //magazinePixelTopSensed == true
+                magazineState = MAGAZINE_STATE.LOADED_TWO_PIXEL;
+            }
+        }
+
     }
 
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-
+        telemetry.addData("Magazine State", magazineState);
+        telemetry.addData("Magazine Bottom Distance Sensed", magazineDistanceBottom);
+        telemetry.addData("Magazine Top Distance Sensed", magazineDistanceTop);
+        telemetry.addData("Magazine Door State", magazineDoorState);
+        telemetry.addData("Magazine Door Servo Position", magazineDoorServo.getPosition());
         telemetry.addLine("=============");
     }
 
