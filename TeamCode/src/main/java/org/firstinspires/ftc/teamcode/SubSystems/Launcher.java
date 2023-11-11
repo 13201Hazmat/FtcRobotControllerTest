@@ -1,27 +1,37 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Launcher {
     public Servo launcherServo;
 
-    public enum LAUNCHER_STATE{
+    public enum LAUNCHER_SERVO_STATE {
         LAUNCHER_PULLED_BACK(0.26), //TODO : Update Value
         LAUNCHER_LAUNCHED(0.5); //TODO : Update Value
 
         private double launcherPosition;
 
-        LAUNCHER_STATE(double moveLauncherPosition){
+        LAUNCHER_SERVO_STATE(double moveLauncherPosition){
             this.launcherPosition = moveLauncherPosition;
         }
 
         public double getLauncherPosition(){return launcherPosition;}
     }
-    public LAUNCHER_STATE launcherState = LAUNCHER_STATE.LAUNCHER_PULLED_BACK;
+    public LAUNCHER_SERVO_STATE launcherServoState = LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK;
+
+    public enum LAUNCHER_BUTTON_STATE{
+        SAFE,
+        ARMED,
+        LAUNCHED
+    }
+    public LAUNCHER_BUTTON_STATE launcherButtonState = LAUNCHER_BUTTON_STATE.SAFE;
+    public ElapsedTime launcherClickTimer = new ElapsedTime(MILLISECONDS);
+    public double LAUNCHER_BUTTON_ARMED_THRESHOLD = 300;
 
     public Telemetry telemetry;
     public Launcher(HardwareMap hardwareMap, Telemetry telemetry){
@@ -31,19 +41,20 @@ public class Launcher {
     }
 
     public void initLauncher(){
-        launcherServo.setPosition(LAUNCHER_STATE.LAUNCHER_PULLED_BACK.getLauncherPosition());
-        launcherState = LAUNCHER_STATE.LAUNCHER_PULLED_BACK;
+        launcherServo.setPosition(LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK.getLauncherPosition());
+        launcherServoState = LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK;
     }
 
     public void launchDrone(){
-        launcherServo.setPosition(LAUNCHER_STATE.LAUNCHER_LAUNCHED.getLauncherPosition());
-        launcherState = LAUNCHER_STATE.LAUNCHER_LAUNCHED;
+        launcherServo.setPosition(LAUNCHER_SERVO_STATE.LAUNCHER_LAUNCHED.getLauncherPosition());
+        launcherServoState = LAUNCHER_SERVO_STATE.LAUNCHER_LAUNCHED;
     }
 
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addData("Launcher state", launcherState);
+        telemetry.addData("Launcher Button State", launcherButtonState);
+        telemetry.addData("Launcher Servo state", launcherServoState);
         telemetry.addData("Launcher servo position", launcherServo.getPosition());
         telemetry.addLine("=============");
     }

@@ -37,6 +37,7 @@ public class TestLauncher extends LinearOpMode {
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
 
+
     @Override
     /*
      * Constructor for passing all the subsystems in order to make the subsystem be able to use
@@ -75,8 +76,20 @@ public class TestLauncher extends LinearOpMode {
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetRightBumper()){
-                    launcher.launchDrone();
+                switch (launcher.launcherButtonState) {
+                    case SAFE:
+                        launcher.launcherClickTimer.reset();
+                        launcher.launcherClickTimer.startTime();
+                        launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
+                        break;
+                    case ARMED:
+                        if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
+                            launcher.launchDrone();
+                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
+                        } else {
+                            launcher.launcherClickTimer.reset();
+                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
+                        }
                 }
 
                 if(gamepadController.gp1GetLeftBumper()){
