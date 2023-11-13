@@ -76,20 +76,21 @@ public class TestLauncher extends LinearOpMode {
                     telemetry.update();
                 }
 
-                switch (launcher.launcherButtonState) {
-                    case SAFE:
-                        launcher.launcherClickTimer.reset();
-                        launcher.launcherClickTimer.startTime();
-                        launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
-                        break;
-                    case ARMED:
-                        if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
-                            launcher.launchDrone();
-                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
-                        } else {
+                if (gamepadController.gp1GetRightBumperPress()) {
+                    switch (launcher.launcherButtonState) {
+                        case SAFE:
                             launcher.launcherClickTimer.reset();
-                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
-                        }
+                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
+                            break;
+                        case ARMED:
+                            if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
+                                launcher.launchDrone();
+                                launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
+                            } else {
+                                launcher.launcherClickTimer.reset();
+                                launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
+                            }
+                    }
                 }
 
                 if(gamepadController.gp1GetLeftBumper()){
@@ -174,6 +175,7 @@ public class TestLauncher extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
+            launcher.printDebugMessages();
             //visionAprilTagFront.printdebugMessages();
             lights.printDebugMessages();
         }

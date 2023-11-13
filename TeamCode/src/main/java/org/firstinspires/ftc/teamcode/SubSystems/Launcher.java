@@ -43,6 +43,7 @@ public class Launcher {
     public void initLauncher(){
         launcherServo.setPosition(LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK.getLauncherPosition());
         launcherServoState = LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK;
+        launcherButtonState = LAUNCHER_BUTTON_STATE.SAFE;
     }
 
     public void launchDrone(){
@@ -53,9 +54,10 @@ public class Launcher {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addData("Launcher Button State", launcherButtonState);
-        telemetry.addData("Launcher Servo state", launcherServoState);
-        telemetry.addData("Launcher servo position", launcherServo.getPosition());
+        telemetry.addLine("Launcher");
+        telemetry.addData("    Button State", launcherButtonState);
+        telemetry.addData("    Servo state", launcherServoState);
+        telemetry.addData("    Servo position", launcherServo.getPosition());
         telemetry.addLine("=============");
     }
 }

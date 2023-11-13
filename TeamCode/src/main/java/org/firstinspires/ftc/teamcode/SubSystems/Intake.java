@@ -12,7 +12,7 @@ public class Intake {
 
     //Initialization of intakemotor
     public DcMotorEx intakeMotor = null;
-    public Servo rollerLiftServo;
+    public Servo intakeLiftServo;
 
     public enum INTAKE_MOTOR_STATE{
         INTAKE_MOTOR_RUNNING,
@@ -46,7 +46,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
-        rollerLiftServo = hardwareMap.get(Servo.class, "intake_lift_servo");
+        intakeLiftServo = hardwareMap.get(Servo.class, "intake_lift_servo");
         initIntake();
     }
 
@@ -57,7 +57,7 @@ public class Intake {
     }
 
     public void moveRollerHeight(INTAKE_ROLLER_HEIGHT intakeRollerHeight){
-        rollerLiftServo.setPosition(intakeRollerHeight.liftPosition);
+        intakeLiftServo.setPosition(intakeRollerHeight.liftPosition);
         intakeRollerHeightState = intakeRollerHeight;
     }
 
@@ -104,9 +104,10 @@ public class Intake {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addData("Intake Motor State", getIntakeState());
-        telemetry.addData("Intake Roller Height State", intakeRollerHeightState);
-        telemetry.addData("Roller Lift Servo Position", rollerLiftServo.getPosition());
+        telemetry.addLine("Intake");
+        telemetry.addData("    State", getIntakeState());
+        telemetry.addData("    Roller Height State", intakeRollerHeightState);
+        telemetry.addData("    Roller Servo Position", intakeLiftServo.getPosition());
         telemetry.addLine("=============");
     }
 

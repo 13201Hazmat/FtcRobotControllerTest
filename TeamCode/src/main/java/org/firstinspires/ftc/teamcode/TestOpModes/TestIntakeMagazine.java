@@ -10,12 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
-import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
-import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
-import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
@@ -25,14 +22,14 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Test OuttakeArm", group = "02-Test OpModes")
-public class    TestOuttakeArm extends LinearOpMode {
+@TeleOp(name = "Test IntakeMagazine", group = "02-Test OpModes")
+public class TestIntakeMagazine extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
     public VisionAprilTag visionAprilTagFront;
-    public OuttakeArm outtakeArm;
     public Intake intake;
+    public Magazine magazine;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -40,6 +37,9 @@ public class    TestOuttakeArm extends LinearOpMode {
     public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
+
+    public ElapsedTime intakeReverseTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public boolean intakeReverseStarted = false;
 
     @Override
     /*
@@ -79,27 +79,51 @@ public class    TestOuttakeArm extends LinearOpMode {
                     telemetry.update();
                 }
 
+                if (gamepadController.gp1GetLeftBumperPress()) {
+                    intake.toggleRollerHeight();
+                }
 
-
-                if (gamepadController.gp2GetDpad_upPress()){
-                    if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_MAX);
+                if (gamepadController.gp1GetDpad_downPress()){
+                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                            intake.startIntakeInward();
+                        } else {
+                            intake.stopIntakeMotor();
+                        }
+                    } else {
+                        if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                            intake.startIntakeInward();
+                        } else {
+                            intake.stopIntakeMotor();
+                        }
                     }
                 }
 
-                if (gamepadController.gp2GetDpad_downPress()){
-                    if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
-                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.WRIST_MIN);
+                magazine.senseMagazineState();
+                if(magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+                    intakeReverseStarted = true;
+                    intakeReverseTimer.reset();
+                    intake.reverseIntake();
+                }
+
+                if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
+                    intake.stopIntakeMotor();
+                    intakeReverseStarted = false;
+                }
+
+                if (gamepadController.gp1GetDpad_up()) {
+                    intake.reverseIntake();
+                } else {
+                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                        intake.stopIntakeMotor();
                     }
                 }
 
-                //TODO: Add code
-                /* For Manual Transfer
-                if (gamepadController.gp2GetLeftBumperPress()){
-
+                if (gamepadController.gp1GetLeftTriggerPersistent()) {
+                    magazine.openMagazineDoor();
+                } else  {
+                    magazine.closeMagazineDoor();
                 }
-                */
-
 
             }
         }
@@ -121,6 +145,14 @@ public class    TestOuttakeArm extends LinearOpMode {
         telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
         telemetry.update();
 
+        intake = new Intake(hardwareMap, telemetry);
+        telemetry.addLine("Intake Initialized");
+        telemetry.update();
+
+        magazine = new Magazine(hardwareMap, telemetry);
+        telemetry.addLine("Magazine Initialized");
+        telemetry.update();
+
         /* Create VisionAprilTag */
         visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
         telemetry.addLine("Vision April Tag Front Initialized");
@@ -129,10 +161,6 @@ public class    TestOuttakeArm extends LinearOpMode {
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
         telemetry.addLine("Lights Initialized");
-        telemetry.update();
-
-        outtakeArm = new OuttakeArm(hardwareMap, telemetry);
-        telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
         /* Create Controllers */
@@ -178,6 +206,8 @@ public class    TestOuttakeArm extends LinearOpMode {
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
+            intake.printDebugMessages();
+            magazine.printDebugMessages();
             //visionAprilTagFront.printdebugMessages();
             lights.printDebugMessages();
         }

@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
-        import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,8 +19,8 @@ public class OuttakeSlides {
 
 
     //Outtake Motor : 5202 Series Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 24mm Length 6mm D-Shaft, 435 RPM, ⌀36mm Gearbox, 3.3 - 5V Encoder)
-    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 145.1;//384.5;
-    public static final double ADJUST_RATIO = 145.1/384.5;
+    public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 384.5;
+    public static final double ADJUST_RATIO = 1;
 
     //public DigitalChannel outtakeTouch;  // Hardware Device Object
 
@@ -27,10 +28,15 @@ public class OuttakeSlides {
     //Outtake Motor states
     public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
-        LEVEL_LOW(500),
-        LEVEL_MID(1000),
-        LEVEL_HIGH(1500),
-        MAX_EXTENDED(1600), //1600 //975 for 1150 rpm
+        TRANSFER(0),
+        READY_FOR_TRANSFER(250),
+        DROP_BELOW_LOW(0),
+        DROP_LEVEL_LOW(500),
+        DROP_BELOW_MID(875),
+        DROP_LEVEL_MID(1250),
+        DROP_BELOW_HIGH(1625),
+        DROP_LEVEL_HIGH(2000),
+        MAX_EXTENDED(2200),
         RANDOM(0);
 
         public final double motorPosition;
@@ -39,13 +45,13 @@ public class OuttakeSlides {
         }
 
     }
-    public OUTTAKE_SLIDE_STATE outtakeSlidesState = OUTTAKE_SLIDE_STATE.MIN_RETRACTED;
+    public OUTTAKE_SLIDE_STATE outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
 
     public double outtakeMotorCurrentPosition = outtakeSlidesState.motorPosition;
     public double outtakeMotorNewPosition = outtakeSlidesState.motorPosition;
 
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 100;//100
-    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 200;//200
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_MAX = 50;//100
+    public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 50;//200
 
     //Different constants of arm speed
     public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1;
@@ -64,17 +70,22 @@ public class OuttakeSlides {
     //Constructor`
     public OuttakeSlides(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
-        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_motor1");
-        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_motor2");
+        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_slides_left");
+        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_slides_right");
         initOuttakeSlides();
     }
 
     //Method is able to initialize the arm
     public void initOuttakeSlides(){
+        resetOuttakeMotorMode();
+        outtakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        outtakeMotorLeft.setPositionPIDFCoefficients(10.0);
         outtakeMotorRight.setPositionPIDFCoefficients(10.0); //5
-        outtakeMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
+        outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
+        outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
         //manualResetOuttakeMotor();
     }
 
@@ -108,11 +119,25 @@ public class OuttakeSlides {
         runOuttakeMotorToLevel();
     }
 
-    public void modifyOuttakeSlidesLength(double direction){
+    public void modifyOuttakeSlidesLengthContinuous(double power){
+        outtakeMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turnOuttakeBrakeModeOn();
+        double intakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
+        if ((power > 0.01 && intakeMotorCurrentPosition < OUTTAKE_SLIDE_STATE.MAX_EXTENDED.motorPosition) ||
+                (power < -0.01 && intakeMotorCurrentPosition > OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition )) {
+            outtakeMotorLeft.setPower(power);
+            outtakeMotorRight.setPower(power);
+        } else {
+            outtakeMotorLeft.setPower(0);
+            outtakeMotorRight.setPower(0);
+        }
+    }
+
+    public void modifyOuttakeSlidesLengthInSteps(double direction){
         deltaCount = direction * OUTTAKE_MOTOR_DELTA_COUNT_MAX;
         if (deltaCount !=0) {
             outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
-            outtakeMotorCurrentPosition = outtakeMotorRight.getCurrentPosition();
             outtakeMotorNewPosition = (outtakeMotorCurrentPosition + deltaCount);
             if (outtakeMotorNewPosition < OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition) {
                 outtakeMotorNewPosition = OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition;
@@ -124,7 +149,6 @@ public class OuttakeSlides {
                 outtakeSlidesState = OUTTAKE_SLIDE_STATE.RANDOM;
             }
             outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
-            outtakeMotorCurrentPosition = outtakeMotorRight.getCurrentPosition();
             if (outtakeMotorCurrentPosition < outtakeMotorNewPosition ) {
                 outtakeMovementDirection = OUTTAKE_MOVEMENT_DIRECTION.EXTEND;
             } else {
@@ -136,6 +160,9 @@ public class OuttakeSlides {
                 outtakeMotorRight.setTargetPosition((int)outtakeMotorNewPosition);
                 runOuttakeMotorToLevelState = true;
             }
+        }
+        if (runOuttakeMotorToLevelState) {
+            runOuttakeMotorToLevel();
         }
     }
 
@@ -175,6 +202,11 @@ public class OuttakeSlides {
         outtakeMotorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotorLeft.setMode(runMode1);
         outtakeMotorRight.setMode(runMode2);
+        outtakeMotorLeft.setPositionPIDFCoefficients(5.0);
+        outtakeMotorRight.setPositionPIDFCoefficients(5.0); //5
+        outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
+
     }
 
     //TODO : Add logic to use Voltage Sensor to measure motor stalling and reset.
@@ -202,9 +234,10 @@ public class OuttakeSlides {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addData("Outtake Slides State", outtakeSlidesState);
-        telemetry.addData("Outtake Motor Left Position", outtakeMotorLeft.getCurrentPosition());
-        telemetry.addData("Outtake Motor Right Position", outtakeMotorRight.getCurrentPosition());
+        telemetry.addLine("Outtake Slides");
+        telemetry.addData("    State", outtakeSlidesState);
+        telemetry.addData("    Left Motor Position", outtakeMotorLeft.getCurrentPosition());
+        telemetry.addData("    Right Motor Position", outtakeMotorRight.getCurrentPosition());
         telemetry.addLine("=============");
     }
 

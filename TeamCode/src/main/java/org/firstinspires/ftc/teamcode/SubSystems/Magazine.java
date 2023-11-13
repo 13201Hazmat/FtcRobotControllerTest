@@ -38,6 +38,9 @@ public class Magazine {
     public Magazine(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
         magazineDoorServo = hardwareMap.get(Servo.class, "magazine_servo");
+        magazineSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "magazine_bottom");
+        magazineSensorTop = hardwareMap.get(NormalizedColorSensor.class, "magazine_top");
+
         initMagazine();
     }
 
@@ -100,11 +103,12 @@ public class Magazine {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addData("Magazine State", magazineState);
-        telemetry.addData("Magazine Bottom Distance Sensed", magazineDistanceBottom);
-        telemetry.addData("Magazine Top Distance Sensed", magazineDistanceTop);
-        telemetry.addData("Magazine Door State", magazineDoorState);
-        telemetry.addData("Magazine Door Servo Position", magazineDoorServo.getPosition());
+        telemetry.addLine("Magazinee");
+        telemetry.addData("    State", magazineState);
+        telemetry.addData("    Bottom Distance Sensed", magazineDistanceBottom);
+        telemetry.addData("    Top Distance Sensed", magazineDistanceTop);
+        telemetry.addData("    Door State", magazineDoorState);
+        telemetry.addData("    Door Servo Position", magazineDoorServo.getPosition());
         telemetry.addLine("=============");
     }
 

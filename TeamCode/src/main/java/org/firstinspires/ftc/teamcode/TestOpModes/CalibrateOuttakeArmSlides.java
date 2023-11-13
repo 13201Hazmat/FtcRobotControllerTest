@@ -69,7 +69,7 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+                //gamepadController.runByGamepadControl();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -77,42 +77,57 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
                 }
 
                 //Move Slide up
-                if (gamepadController.gp1GetDpad_downPress()) {
-                    outtakeSlides.modifyOuttakeSlidesLength(-1);
+                if (gamepadController.gp2GetDpad_downPress()) {
+                    outtakeSlides.modifyOuttakeSlidesLengthInSteps(-1);
+                } else  if (gamepadController.gp2GetDpad_upPress()) {
+                    outtakeSlides.modifyOuttakeSlidesLengthInSteps(1);
                 }
 
-                //Move Slide down
-                if (gamepadController.gp1GetDpad_upPress()) {
-                    outtakeSlides.modifyOuttakeSlidesLength(1);
+                if(gamepadController.gp2GetLeftStickY()>0.05|| gamepadController.gp2GetLeftStickY()<-0.05) {
+                    outtakeSlides.modifyOuttakeSlidesLengthContinuous(gamepadController.gp2TurboMode(-gamepadController.gp2GetLeftStickY()));
                 }
 
-                //Move Arm Clockwise
-                if (gamepadController.gp1GetButtonXPress()){
+                //Move Arm Upward
+                if (gamepadController.gp2GetStart()) {
+                    if (gamepadController.gp2GetButtonXPress()) {
+                        outtakeArm.zeroArm();
+                    }
+                } else {
+                    if (gamepadController.gp2GetButtonXPress()) {
+                        outtakeArm.rotateArm(1);
+                    }
+                }
+
+                //Move Arm Downward
+                if (gamepadController.gp2GetButtonBPress()){
                     outtakeArm.rotateArm(-1);
                 }
 
-                //Move Arm Anti-Clockwise
-                if (gamepadController.gp1GetButtonBPress()){
-                    outtakeArm.rotateArm(1);
-                }
+                //Move Wrist Downward
 
-                //Move Wrist Clockwise
-                if (gamepadController.gp1GetButtonAPress()){
+                if (gamepadController.gp2GetButtonAPress()) {
                     outtakeArm.rotateWrist(-1);
                 }
 
-                //Move Wrist Anti-Clockwise
-                if (gamepadController.gp1GetButtonYPress()){
-                    outtakeArm.rotateWrist(1);
+
+                //Move Wrist
+                if (gamepadController.gp2GetStart()) {
+                    if (gamepadController.gp2GetButtonYPress()) {
+                        outtakeArm.zeroWrist();
+                    }
+                } else {
+                    if (gamepadController.gp2GetButtonYPress()) {
+                        outtakeArm.rotateWrist(1);
+                    }
                 }
 
                 //Open Outtake Grip
-                if (gamepadController.gp1GetRightBumper()) {
+                if (gamepadController.gp2GetRightBumper()) {
                     outtakeArm.openGrip();
                 }
 
                 //CLose Outtake Grip
-                if (gamepadController.gp1GetLeftBumper()) {
+                if (gamepadController.gp2GetLeftBumper()) {
                     outtakeArm.closeGrip();
                 }
 
@@ -187,7 +202,6 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
     public void printDebugMessages(){
         telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
-        telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
             telemetry.addLine("Running Hazmat TeleOpMode");
@@ -196,9 +210,14 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
             //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
             //telemetry.addData("startPose : ", startPose);
 
-            driveTrain.printDebugMessages();
-            //visionAprilTagFront.printdebugMessages();
-            lights.printDebugMessages();
+            telemetry.addLine("To Zero Outtake, set Arm & Wrist to Transfer Position");
+            telemetry.addLine(" For Arm, Remove Gears, Press Start+▢, Insert Gears");
+            telemetry.addLine(" For Wrist, Remove Gear, Press Start+Δ, Insert Gear");
+            outtakeArm.printDebugMessages();
+
+            outtakeSlides.printDebugMessages();
+
+
         }
         telemetry.update();
     }

@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
@@ -14,10 +17,10 @@ public class OuttakeArm {
     public Servo outtakeArmRight;
 
     public enum OUTTAKE_ARM_STATE{
-        TRANSFER(0,1), //TODO : Update
-        DROP(0,1),
-
-        READY_FOR_PICKUP(0,0);
+        ZERO(1,0),
+        TRANSFER(1,0), //TODO : Update
+        READY_FOR_TRANSFER(0.9,0.1),
+        DROP(0,1);
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -39,10 +42,10 @@ public class OuttakeArm {
 
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
-        WRIST_TRANSFER(0), //UPDATE FOR THIS YEAR!!
-        WRIST_DROP(0),
-        WRIST_MIN(0),
-        WRIST_MAX(0);
+        ZERO(0),
+        TRANSFER(0), //UPDATE FOR THIS YEAR!!
+        READY_FOR_TRANSFER(0),
+        DROP(1);
 
         private double wristPosition;
 
@@ -53,13 +56,13 @@ public class OuttakeArm {
             return wristPosition;
         }
     }
-    public OUTTAKE_WRIST_STATE outtakeWristState = OUTTAKE_WRIST_STATE.WRIST_TRANSFER;
+    public OUTTAKE_WRIST_STATE outtakeWristState = OUTTAKE_WRIST_STATE.TRANSFER;
     public double OUTTAKE_WRIST_DELTA = 0.02; //UP
 
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
-        OPEN(0.47),
-        CLOSED(0.8);
+        OPEN(0.8),
+        CLOSED(0.47);
 
         private double gripPosition;
 
@@ -85,15 +88,9 @@ public class OuttakeArm {
     }
 
     //initialize outtakeArm
-    public void initOuttakeArm() {//UPDATE FOR THIS YEAR!!
+    public void initOuttakeArm() {
         moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
-            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-            closeGrip();
-        } else {
-            moveArm(OUTTAKE_ARM_STATE.READY_FOR_PICKUP);
-            openGrip();
-        }
+        closeGrip();
     }
 
     /**
@@ -106,11 +103,22 @@ public class OuttakeArm {
     /**
      * If state of hand grip is set to close, set position of servo's to specified
      */
-    public void closeGrip(){ //UPDATE FOR THIS YEAR!!
-        moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-        moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER); //0.36
+    public void closeGrip(){
         outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.CLOSED.gripPosition);
         outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
+    }
+
+    ElapsedTime pixelDropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public void dropOnePixel(){
+        openGrip();
+        pixelDropTimer.reset();
+        while (pixelDropTimer.time() <100) {
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        closeGrip();
+        while (pixelDropTimer.time() <200) {
+            //gamepadcontroller.runbyGamepadcontroller
+        };
     }
 
     public void moveWrist(OUTTAKE_WRIST_STATE toWristState){
@@ -125,22 +133,25 @@ public class OuttakeArm {
         }
     }
 
+    public void zeroWrist(){
+        moveWrist(OUTTAKE_WRIST_STATE.ZERO);
+    }
+
     public void moveArm(OUTTAKE_ARM_STATE toArmState) { //UPDATE FOR THIS YEAR!!
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
-        /*if(outtakeArmState == OUTTAKE_ARM_STATE.TRANSFER){
-            moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
-            openGrip();
-        }*/
 
-        switch (outtakeArmState) { //UPDATE FOR THIS YEAR!!
+        switch (outtakeArmState) {
             case TRANSFER:
-                moveWrist(OUTTAKE_WRIST_STATE.WRIST_TRANSFER);
                 openGrip();
+                moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
+                break;
+            case READY_FOR_TRANSFER:
+                moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
                 break;
             case DROP:
-                moveWrist(OUTTAKE_WRIST_STATE.WRIST_DROP);
+                moveWrist(OUTTAKE_WRIST_STATE.DROP);
                 break;
         }
     }
@@ -155,10 +166,37 @@ public class OuttakeArm {
         }
     }
 
+    public void zeroArm(){
+        moveArm(OUTTAKE_ARM_STATE.ZERO);
+    }
+
+    public double isOuttakeArmInStateError = 0;
+    public boolean isOuttakeArmInState(OUTTAKE_ARM_STATE toOuttakeArmState) {
+        isOuttakeArmInStateError = Math.abs(outtakeArmLeft.getPosition() - toOuttakeArmState.leftArmPosition);
+        return (outtakeArmState == toOuttakeArmState && isOuttakeArmInStateError <= 0.02);
+    }
+
+    public double isOuttakeWristInStateError = 0;
+    public boolean isOuttakeWristInState(OUTTAKE_WRIST_STATE toOuttakeWristState) {
+        isOuttakeWristInStateError = Math.abs(outtakeWristServo.getPosition() - toOuttakeWristState.getWristPosition());
+        return (outtakeWristState == toOuttakeWristState && isOuttakeWristInStateError <= 0.02);
+    }
+
 
     public void printDebugMessages() {
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addLine("=============");
+        telemetry.addLine("Outtake Arm");
+        telemetry.addData("   State", outtakeArmState);
+        telemetry.addData("   Left Servo position", outtakeArmLeft.getPosition());
+        telemetry.addData("   Right Servo position", outtakeArmRight.getPosition());
+        telemetry.addLine("Outtake Wrist");
+        telemetry.addData("   State", outtakeWristState);
+        telemetry.addData("   Wrist Servo position", outtakeWristServo.getPosition());
+        telemetry.addLine("Outtake Grip");
+        telemetry.addData("   State", outtakeWristState);
+        telemetry.addData("   Grip Servo position", outtakeGripServo.getPosition());
+
+
     }
 }

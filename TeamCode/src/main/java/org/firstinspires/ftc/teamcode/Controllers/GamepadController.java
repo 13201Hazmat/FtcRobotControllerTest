@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
@@ -141,9 +142,30 @@ public class GamepadController {
         driveTrain.driveNormal();
     }
 
+    public ElapsedTime intakeReverseTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public boolean intakeReverseStarted = false;
     public void runIntake(){
         //Intake Code
-        //Intake Code
+
+        if (gp1GetLeftBumperPress()) {
+            intake.toggleRollerHeight();
+        }
+
+        if (gp1GetDpad_downPress()){
+            if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                    intake.startIntakeInward();
+                } else {
+                    intake.stopIntakeMotor();
+                }
+            } else {
+                if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                    intake.startIntakeInward();
+                } else {
+                    intake.stopIntakeMotor();
+                }
+            }
+        }
         if (gp1GetLeftBumperPress()){
             if(intake.intakeRollerHeightState != Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED){
                 intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
@@ -152,23 +174,24 @@ public class GamepadController {
             }
         }
 
-        if(gp1GetDpad_down()){
-            if(intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED){
-                intake.startIntakeInward();
-            }
-            if(((magazine.senseMagazinePixel1() && magazine.senseMagazinePixel2()) &&
-                    intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) ||
-                    ((intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED &&
-                            outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER))){
-                intake.reverseIntake();
-            }
-            if(intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING){
-                intake.stopIntakeMotor();
-            }
+        magazine.senseMagazineState();
+        if(magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            intakeReverseStarted = true;
+            intakeReverseTimer.reset();
+            intake.reverseIntake();
         }
 
-        if(gp1GetDpad_upPress()){
+        if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
+            intake.stopIntakeMotor();
+            intakeReverseStarted = false;
+        }
+
+        if (gp1GetDpad_up()) {
             intake.reverseIntake();
+        } else {
+            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                intake.stopIntakeMotor();
+            }
         }
     }
 
