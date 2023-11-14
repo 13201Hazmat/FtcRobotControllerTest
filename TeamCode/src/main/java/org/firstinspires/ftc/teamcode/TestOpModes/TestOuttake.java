@@ -90,6 +90,7 @@ public class TestOuttake extends LinearOpMode {
                     telemetry.update();
                 }
 
+                //TODO : Move to transfer before rotating arm if starting in DROP_BELOW_LOW
                 if (gamepadController.gp2GetButtonXPress()){
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
