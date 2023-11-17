@@ -99,6 +99,7 @@ public class TestIntakeMagazine extends LinearOpMode {
                     }
                 }
 
+                //TODO:REVERESE ONLY WHEN MAGAZINE CHANGES STATE FROM 1 PIXEL TO 2 PIXEL
                 magazine.senseMagazineState();
                 if(magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
                     intakeReverseStarted = true;

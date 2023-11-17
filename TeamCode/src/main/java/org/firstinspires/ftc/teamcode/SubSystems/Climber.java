@@ -19,6 +19,7 @@ public class Climber {
 
     //public double CLIMBER_SERVO_POWER = 1.0;
     //public boolean climberServoRunning = false;
+    public boolean climberActivate = false;
 
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {

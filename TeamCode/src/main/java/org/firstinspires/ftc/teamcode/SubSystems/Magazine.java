@@ -14,7 +14,7 @@ public class Magazine {
     public Servo magazineDoorServo;
 
     public enum MAGAZINE_DOOR_STATE {
-        CLOSED(0.0),
+        CLOSED(1.0),
         OPEN(0.0);
 
         private double magazinePosition;
@@ -33,7 +33,7 @@ public class Magazine {
     }
     public MAGAZINE_STATE magazineState = MAGAZINE_STATE.EMPTY;
 
-    public double MAGAZINE_SENSE_DISTANCE = 100;
+    public double MAGAZINE_SENSE_DISTANCE = 25;
 
     public Magazine(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;

@@ -80,6 +80,14 @@ public class TeleOpMode extends LinearOpMode {
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
 
+                if (gameTimer.time() > 85000 && gameTimer.time() < 90000) {
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
+                }
+                if(gameTimer.time()>90000){
+                    launcher.launcherActivate = true;
+                    climber.climberActivate = true;
+                }
+
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();

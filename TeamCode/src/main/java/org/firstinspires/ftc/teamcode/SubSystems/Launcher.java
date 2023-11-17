@@ -24,6 +24,8 @@ public class Launcher {
     }
     public LAUNCHER_SERVO_STATE launcherServoState = LAUNCHER_SERVO_STATE.LAUNCHER_PULLED_BACK;
 
+    public boolean launcherActivate= false;
+
     public enum LAUNCHER_BUTTON_STATE{
         SAFE,
         ARMED,

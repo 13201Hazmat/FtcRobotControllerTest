@@ -49,14 +49,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "HazmatAutonomous Mode", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
-public class AutonomousMode extends LinearOpMode {
+@Autonomous(name = "HazmatAutonomous Mode 1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+public class AutonomousMode1 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
