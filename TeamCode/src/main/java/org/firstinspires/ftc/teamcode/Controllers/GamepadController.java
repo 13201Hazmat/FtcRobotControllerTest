@@ -186,11 +186,14 @@ public class GamepadController {
             intakeReverseStarted = false;
         }
 
-        if (gp1GetDpad_up()) {
-            intake.reverseIntake();
-        } else {
-            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
-                intake.stopIntakeMotor();
+        magazine.senseMagazineState();
+        if(magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            if (gp1GetDpad_up()) {
+                intake.reverseIntake();
+            } else {
+                if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                    intake.stopIntakeMotor();
+                }
             }
         }
     }

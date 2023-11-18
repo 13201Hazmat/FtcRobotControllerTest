@@ -313,7 +313,7 @@ public class AutonomousMode1 extends LinearOpMode {
         while(!isStopRequested()){
             telemetry.addLine("Initializing Hazmat Autonomous Mode:");
             telemetry.addData("---------------------------------------","");
-            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
+            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstation) on gamepad 1:","");
             telemetry.addData("    Blue Left   ", "(X / ▢)");
             telemetry.addData("    Blue Right ", "(Y / Δ)");
             telemetry.addData("    Red Left    ", "(B / O)");
@@ -340,6 +340,18 @@ public class AutonomousMode1 extends LinearOpMode {
             }
             telemetry.update();
         }
+        /* UPDATE FOR THIS YEARS AUTO
+        while(!isStopRequested()){
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------","");
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addLine("Select Auto Options");
+            telemetry.addData("    Full Autonomous                ","X / Square");
+            telemetry.addData("    Drop Preloaded and Park   ","Y / Triangle");
+            telemetry.addData("    Only Park                      ","B / Circle");
+        }
+
+         */
         telemetry.clearAll();
     }
 
