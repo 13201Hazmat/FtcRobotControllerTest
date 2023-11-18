@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
@@ -75,21 +74,16 @@ public class TestClimber extends LinearOpMode {
                     telemetry.update();
                 }
 
-                /*if (gamepadController.gp1GetB()) {
+                if (gamepadController.gp1GetB()) {
                     climber.moveClimberSlidesUp();
-                }
-
-
-                if (gamepadController.gp1GetX()) {
+                } else if (gamepadController.gp1GetX()) {
                     climber.moveClimberSlidesDown();
+                } else {
+                    climber.stopClimberSlides();
                 }
 
 
-                if (climber.climberServoRunning = true && (!gamepadController.gp1GetB() || !gamepadController.gp1GetX())){
-                    climber.stopClimberSlides();
-                }*/
-
-                if (gamepadController.gp1GetButtonBPress()) {
+                /*if (gamepadController.gp1GetButtonBPress()) {
                     switch (climber.climberButtonState) {
                         case SAFE:
                             climber.climberClickTimer.reset();
@@ -97,22 +91,26 @@ public class TestClimber extends LinearOpMode {
                             break;
                         case ARMED:
                             if (climber.climberClickTimer.time() < climber.CLIMBER_BUTTON_ARMED_THRESHOLD) {
-                                climber.releaseClimber();
+                                //climber.releaseClimber();
                                 climber.climberButtonState = Climber.CLIMBER_BUTTON_STATE.RELEASED;
                             } else {
                                 climber.climberClickTimer.reset();
                                 climber.climberButtonState = Climber.CLIMBER_BUTTON_STATE.SAFE;
                             }
                     }
-                }
+                }*/
+/*
+
 
                 if (climber.climberServoState == Climber.CLIMBER_SERVO_STATE.CLIMBER_RELEASED &&
                         gamepadController.gp1GetY()){
                     climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.CLIMBED_STATE);
                 }
 
+
+ */
                 if (gamepadController.gp1GetA()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.INITIAL_STATE);
+                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.INITIAL);
                 }
             }
         }

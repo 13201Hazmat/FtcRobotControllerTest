@@ -11,7 +11,7 @@ public class ServoCalibTestTeleOp extends LinearOpMode{
     double servoCurrentPosition;
 
     public void runOpMode() throws InterruptedException {
-        masterServo = hardwareMap.get(Servo.class, "launcher_servo");
+        masterServo = hardwareMap.get(Servo.class, "intake_lift_servo");
         waitForStart();
         while (opModeIsActive()) {
             servoCurrentPosition = masterServo.getPosition();

@@ -23,17 +23,35 @@ public class Intake {
     public INTAKE_MOTOR_STATE intakeMotorPrevState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
 
     public enum INTAKE_ROLLER_HEIGHT{
-        INTAKE_ROLLER_LIFTED(0), //UPDATE FOR THIS YEAR
-        INTAKE_ROLLER_DROPPED(0);
+        INTAKE_ROLLER_LIFTED_5(0.15,5),
+        INTAKE_ROLLER_LIFTED_4(0.11,4),
+        INTAKE_ROLLER_LIFTED_3(0.08,3),
+        INTAKE_ROLLER_LIFTED_2(0.05,2),
+        INTAKE_ROLLER_DROPPED(0,1);
 
         private double liftPosition;
+        private int index;
 
-        INTAKE_ROLLER_HEIGHT(double moveLeftPosition){
-            this.liftPosition = moveLeftPosition;
+        INTAKE_ROLLER_HEIGHT(double liftPosition, int index){
+            this.liftPosition = liftPosition;
+            this.index = index;
         }
         public double getLiftPosition(){
             return liftPosition;
         }
+        public int getIndex() {return index;}
+
+        public INTAKE_ROLLER_HEIGHT byIndex(int ord) {
+            if (ord <1) ord = 1;
+            if (ord >5) ord = 5;
+            for (INTAKE_ROLLER_HEIGHT a : INTAKE_ROLLER_HEIGHT.values()) {
+                if (a.index == ord) {
+                    return a;
+                }
+            }
+            return null;
+        }
+
     }
 
 
@@ -62,11 +80,27 @@ public class Intake {
     }
 
     public void toggleRollerHeight(){
-        if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED) {
+        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5) {
             moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
         } else {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED);
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
         }
+    }
+
+    public void moveIntakeRollerOnePixelDown(){
+        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED) {
+            moveRollerHeight(intakeRollerHeightState.byIndex((intakeRollerHeightState.getIndex()-1)));
+        }
+    }
+
+    public void moveIntakeRollerToLevel(int level){
+        if (level > 5) {
+            level = 5;
+        }
+        if (level < 1) {
+            level = 1;
+        }
+        moveRollerHeight(intakeRollerHeightState.byIndex(level));
     }
 
     public void startIntakeInward(){

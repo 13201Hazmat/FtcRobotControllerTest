@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.TestOpModes.TestOuttake;
 
 
 /**
@@ -152,6 +151,10 @@ public class GamepadController {
             intake.toggleRollerHeight();
         }
 
+        if(gp1GetButtonAPress()) {
+            intake.moveIntakeRollerOnePixelDown();
+        }
+
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
             if (gp1GetDpad_downPress()) {
@@ -168,13 +171,6 @@ public class GamepadController {
                         intake.stopIntakeMotor();
                     }
                 }
-            }
-        }
-        if (gp1GetLeftBumperPress()){
-            if(intake.intakeRollerHeightState != Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED){
-                intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
-            } else {
-                intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED);
             }
         }
 
@@ -350,12 +346,23 @@ public class GamepadController {
     public void runClimber(){
         //Climber code
         if(climber.climberActivate) {
-            if (gp1GetY()) {
+            /*if (gp1GetY()) {
                 climber.modifyClimberMotorLength(0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
             } else if (gp1GetA()) {
                 climber.modifyClimberMotorLength(-0.33 * (1.0 + 2.0 * gp1GetLeftTrigger()));
             } else {
                 climber.modifyClimberMotorLength(0);
+            }*/
+            if (gp1GetB()) {
+                climber.moveClimberSlidesUp();
+            } else if (gp1GetX()) {
+                climber.moveClimberSlidesDown();
+            } else {
+                climber.stopClimberSlides();
+            }
+
+            if (gp1GetButtonYPress()) {
+                climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.CLIMBED);
             }
         }
     }

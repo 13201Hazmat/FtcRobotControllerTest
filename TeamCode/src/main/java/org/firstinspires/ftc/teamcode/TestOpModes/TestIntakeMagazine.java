@@ -83,6 +83,10 @@ public class TestIntakeMagazine extends LinearOpMode {
                     intake.toggleRollerHeight();
                 }
 
+                if(gamepadController.gp1GetButtonAPress()) {
+                    intake.moveIntakeRollerOnePixelDown();
+                }
+
                 if (gamepadController.gp1GetDpad_downPress()){
                     if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
                         if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
