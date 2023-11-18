@@ -82,6 +82,10 @@ public class TestClimber extends LinearOpMode {
                     climber.stopClimberSlides();
                 }
 
+                if (gamepadController.gp1GetButtonYPress()) {
+                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.CLIMBED);
+                }
+
 
                 /*if (gamepadController.gp1GetButtonBPress()) {
                     switch (climber.climberButtonState) {
