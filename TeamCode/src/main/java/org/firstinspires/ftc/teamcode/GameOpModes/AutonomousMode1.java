@@ -70,6 +70,30 @@ public class AutonomousMode1 extends LinearOpMode {
 
     //Static Class for knowing system state
 
+    public enum START_POSITION{
+        BLUE_LEFT,
+        BLUE_RIGHT,
+        RED_LEFT,
+        RED_RIGHT
+
+    }
+    public static START_POSITION startPosition;
+
+    public enum AUTO_OPTION{
+        FULL_AUTONOMOUS,
+        PRELOAD_AND_PARK
+    }
+    public static AUTO_OPTION autoOption;
+
+    public enum PATHWAY_OPTION{
+        RIGGING_SPIKEMARK,
+        RIGGING_WALL,
+        STAGEDOOR
+    }
+    public static PATHWAY_OPTION pathwayOption;
+
+    public int pixelLoopCount = 2;
+
     public Pose2d startPose = GameField.ORIGINPOSE;
 
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
@@ -99,11 +123,13 @@ public class AutonomousMode1 extends LinearOpMode {
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
 
         while (!isStopRequested() && !opModeIsActive()) {
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-
+            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            telemetry.addData("Selected Pathway", pathwayOption);
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
             visionTfodFront.runTfodTensorFlow();
             telemetry.addData("Vision identified Parking Location", visionTfodFront.identifiedSpikeMarkLocation);
+            telemetry.addData("Pixel Loops count", pixelLoopCount);
             telemetry.update();
         }
 
@@ -142,7 +168,7 @@ public class AutonomousMode1 extends LinearOpMode {
         initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
         moveBeyondTrussPose = new Pose2d(15,0,0);
 
-        switch (GameField.startPosition) {
+        switch (startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(visionTfodFront.identifiedSpikeMarkLocation){
@@ -318,40 +344,110 @@ public class AutonomousMode1 extends LinearOpMode {
             telemetry.addData("    Blue Right ", "(Y / Δ)");
             telemetry.addData("    Red Left    ", "(B / O)");
             telemetry.addData("    Red Right  ", "(A / X)");
-            if(gamepad1.x){
-                GameField.startPosition = GameField.START_POSITION.BLUE_LEFT;
+            if(gamepadController.gp1GetButtonXPress()){
+                startPosition = START_POSITION.BLUE_LEFT;
                 GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
                 break;
             }
-            if(gamepad1.y){
-                GameField.startPosition = GameField.START_POSITION.BLUE_RIGHT;
+            if(gamepadController.gp1GetButtonYPress()){
+                startPosition = START_POSITION.BLUE_RIGHT;
                 GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
                 break;
             }
-            if(gamepad1.b){
-                GameField.startPosition = GameField.START_POSITION.RED_LEFT;
+            if(gamepadController.gp1GetButtonBPress()){
+                startPosition = START_POSITION.RED_LEFT;
                 GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
                 break;
             }
-            if(gamepad1.a){
-                GameField.startPosition = GameField.START_POSITION.RED_RIGHT;
+            if(gamepadController.gp1GetButtonAPress()){
+                startPosition = START_POSITION.RED_RIGHT;
                 GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
                 break;
             }
             telemetry.update();
         }
-        /* UPDATE FOR THIS YEARS AUTO
+
         while(!isStopRequested()){
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");
             telemetry.addData("---------------------------------------","");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addLine("Select Pathway option");
+            telemetry.addData("  Through the spike mark Rigging  ", "X / Square");
+            telemetry.addData("Through the wall Rigging ", "Y / Triangle");
+            telemetry.addData("Through the Stage Door", "B / Circle ");
+            if(gamepadController.gp1GetButtonXPress()){
+                pathwayOption = PATHWAY_OPTION.RIGGING_SPIKEMARK;
+                break;
+            }
+            if(gamepadController.gp1GetButtonYPress()){
+                pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
+                break;
+            }
+            if(gamepadController.gp1GetButtonBPress()){
+                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
+                break;
+            }
+            telemetry.update();
+        }
+        while(!isStopRequested()){
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------","");
+            telemetry.addData("Selected Starting Position", startPosition);
             telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Full Autonomous                ","X / Square");
-            telemetry.addData("    Drop Preloaded and Park   ","Y / Triangle");
-            telemetry.addData("    Only Park                      ","B / Circle");
+            telemetry.addData("    Full autonomous                ","X / Square");
+            telemetry.addData("    Drop Preload and Park   ","Y / Triangle");
+            if(gamepadController.gp1GetButtonXPress()){
+                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                break;
+            }
+            if(gamepadController.gp1GetButtonYPress()){
+                autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
+                break;
+            }
+            telemetry.update();
+        }
+        if(autoOption == AUTO_OPTION.PRELOAD_AND_PARK){
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            pixelLoopCount = 0;
+        }
+        if(autoOption == AUTO_OPTION.FULL_AUTONOMOUS){
+            pixelLoopCount = 2;
+            while(!isStopRequested()){
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addLine("Select number of cones to pick and drop");
+                telemetry.addLine("(Use dpad up to increase and dpad down to reduce)");
+                telemetry.addLine("(Once final, press X / Square to finalize)");
+
+                telemetry.addData("    dropConeCount (including preloaded, Max 2)", pixelLoopCount);
+
+                if (gamepadController.gp1GetDpad_upPress()) {
+                    pixelLoopCount += 1;
+                    if (pixelLoopCount > 2) {
+                        pixelLoopCount = 2;
+                    }
+                }
+                if (gamepadController.gp1GetDpad_downPress()) {
+                    pixelLoopCount -= 1;
+                    if (pixelLoopCount < 1) {
+                        pixelLoopCount = 1;
+                    }
+                }
+
+                if(gamepadController.gp1GetButtonXPress()){
+                    telemetry.addData("Selected number of loop Pixels excluding preloaded", pixelLoopCount);
+                    break;
+                }
+                telemetry.update();
+            }
         }
 
-         */
+
         telemetry.clearAll();
     }
 
