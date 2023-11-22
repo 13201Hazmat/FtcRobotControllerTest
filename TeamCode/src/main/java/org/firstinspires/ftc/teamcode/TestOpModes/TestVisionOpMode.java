@@ -76,20 +76,20 @@ public class TestVisionOpMode extends LinearOpMode {
 
                 vision.telemetryCurrentVisionPortal();
 
-                if (gamepadController.gp1GetButtonAPress()) {
+                if (gamepadController.gp1GetCrossPress()) {
                     vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM1_APRILTAG);
                 }
 
-                if (gamepadController.gp1GetButtonBPress()) {
+                if (gamepadController.gp1GetCirclePress()) {
                     vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM2_APRILTAG);
                 }
 
 
-                if (gamepadController.gp1GetButtonXPress()) {
+                if (gamepadController.gp1GetSquarePress()) {
                     vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM1_TFOD);
                 }
 
-                if (gamepadController.gp1GetButtonYPress()) {
+                if (gamepadController.gp1GetTrianglePress()) {
                     vision.switchWebcamAction(VisionDual.VISION_TYPE.WEBCAM2_TFOD);
                 }
 

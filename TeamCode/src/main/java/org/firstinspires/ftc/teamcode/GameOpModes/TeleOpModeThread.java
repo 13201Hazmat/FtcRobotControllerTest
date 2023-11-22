@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.Controllers.GamepadDriveTrainController;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -18,7 +19,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 
 /**
@@ -27,10 +27,11 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@TeleOp(name = "Hazmat TeleOp", group = "00-Teleop")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "Hazmat TeleOp Thread", group = "00-Teleop")
+public class TeleOpModeThread extends LinearOpMode {
 
     public GamepadController gamepadController;
+    public GamepadDriveTrainController gamepadDriveTrainController;
     public DriveTrain driveTrain;
     public Intake intake;
     public Magazine magazine;
@@ -38,7 +39,7 @@ public class TeleOpMode extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
-    public VisionAprilTag visionAprilTagFront;
+    public VisionAprilTag visionAprilTagBack;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -69,6 +70,8 @@ public class TeleOpMode extends LinearOpMode {
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
 
+        gamepadDriveTrainController.start();
+
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
 
@@ -83,10 +86,10 @@ public class TeleOpMode extends LinearOpMode {
                 if (gameTimer.time() > 85000 && gameTimer.time() < 90000) {
                     lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
                 }
-                if(gameTimer.time()>90000){
+                //if(gameTimer.time()>90000){
                     launcher.launcherActivate = true;
-                    climber.climberActivate = true;
-                }
+                    climber.climberActivated = true;
+                //}
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -94,6 +97,7 @@ public class TeleOpMode extends LinearOpMode {
                 }
             }
         }
+        gamepadDriveTrainController.exit();
         GameField.poseSetInAutonomous = false;
     }
 
@@ -137,7 +141,7 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
+        //visionAprilTagBack = new VisionAprilTag(hardwareMap, telemetry, "Webcam 2");
         telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 
@@ -147,8 +151,12 @@ public class TeleOpMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry);
+        gamepadDriveTrainController = new GamepadDriveTrainController(gamepad1, driveTrain, this);
+        telemetry.addLine("Gamepad DriveTrain Initialized");
+        telemetry.update();
+
+        gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
+                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -193,7 +201,7 @@ public class TeleOpMode extends LinearOpMode {
             outtakeArm.printDebugMessages();
             climber.printDebugMessages();
             launcher.printDebugMessages();
-            //visionAprilTagFront.printdebugMessages();
+            //visionAprilTagBack.printdebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

@@ -402,8 +402,8 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry);
+        gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
+                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

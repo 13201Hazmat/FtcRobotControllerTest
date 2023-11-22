@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.Controllers.GamepadDriveTrainController;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
@@ -18,7 +19,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
-import org.firstinspires.ftc.teamcode.TestOpModes.TestGamepadController;
 
 
 /**
@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.TestOpModes.TestGamepadController;
 public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
     public GamepadController gamepadController;
+    public GamepadDriveTrainController gamepadDriveTrainController;
     public DriveTrain driveTrain;
     public Intake intake;
     public Magazine magazine;
@@ -38,7 +39,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
-    public VisionAprilTag visionAprilTagFront;
+    public VisionAprilTag visionAprilTagBack;
     public Lights lights;
 
     //Static Class for knowing system state
@@ -60,7 +61,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
         initSubsystems();
 
         // Initiate Camera on Init.
-        visionAprilTagFront.initAprilTag();
+        visionAprilTagBack.initAprilTag();
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -78,6 +79,8 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
         /* If Stop is pressed, exit OpMode */
         if (isStopRequested()) return;
+
+        gamepadDriveTrainController.start();
 
         /*If Start is pressed, enter loop and exit only when Stop is pressed */
         while (!isStopRequested()) {
@@ -139,7 +142,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
         telemetry.update();
 
         /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
+        visionAprilTagBack = new VisionAprilTag(hardwareMap, telemetry, "Webcam 2");
         telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 
@@ -149,8 +152,13 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
         telemetry.update();
 
         /* Create Controllers */
-        gamepadController = new GamepadController(gamepad1, gamepad2, driveTrain, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry);
+        gamepadDriveTrainController = new GamepadDriveTrainController(gamepad1, driveTrain, this);
+        telemetry.addLine("Gamepad DriveTrain Initialized");
+        telemetry.update();
+
+        /* Create Controllers */
+        gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
+                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -197,7 +205,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
             outtakeArm.printDebugMessages();
             climber.printDebugMessages();
             launcher.printDebugMessages();
-            visionAprilTagFront.printdebugMessages();
+            visionAprilTagBack.printdebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();

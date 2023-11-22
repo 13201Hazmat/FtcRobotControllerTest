@@ -29,7 +29,9 @@ public class OuttakeSlides {
     public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
         TRANSFER(0),
-        READY_FOR_TRANSFER(250),
+        PICKUP(0),
+        READY_FOR_TRANSFER(500),
+        TRAVEL(0),
         DROP_BELOW_LOW(0),
         DROP_LEVEL_LOW(500),
         DROP_BELOW_MID(875),
@@ -85,7 +87,7 @@ public class OuttakeSlides {
         outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
         outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
-        outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
+        outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRAVEL;
         //manualResetOuttakeMotor();
     }
 
@@ -123,9 +125,9 @@ public class OuttakeSlides {
         outtakeMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turnOuttakeBrakeModeOn();
-        double intakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
-        if ((power > 0.01 && intakeMotorCurrentPosition < OUTTAKE_SLIDE_STATE.MAX_EXTENDED.motorPosition) ||
-                (power < -0.01 && intakeMotorCurrentPosition > OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition )) {
+        double outtakeMotorCurrentPosition = outtakeMotorLeft.getCurrentPosition();
+        if ((power > 0.01 && outtakeMotorCurrentPosition < OUTTAKE_SLIDE_STATE.MAX_EXTENDED.motorPosition) ||
+                (power < -0.01 && outtakeMotorCurrentPosition > OUTTAKE_SLIDE_STATE.MIN_RETRACTED.motorPosition )) {
             outtakeMotorLeft.setPower(power);
             outtakeMotorRight.setPower(power);
         } else {

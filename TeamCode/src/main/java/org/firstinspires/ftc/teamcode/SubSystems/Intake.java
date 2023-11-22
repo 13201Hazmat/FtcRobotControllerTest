@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 
 public class Intake {
 
@@ -23,7 +24,9 @@ public class Intake {
     public INTAKE_MOTOR_STATE intakeMotorPrevState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
 
     public enum INTAKE_ROLLER_HEIGHT{
-        INTAKE_ROLLER_LIFTED_5(0.15,5),
+        INTAKE_ROLLER_INIT_AUTO(0.55,7),
+        INTAKE_ROLLER_HEIGHT_ABOVE_STACK(0.18,6),
+        INTAKE_ROLLER_LIFTED_5(0.145,5),
         INTAKE_ROLLER_LIFTED_4(0.11,4),
         INTAKE_ROLLER_LIFTED_3(0.08,3),
         INTAKE_ROLLER_LIFTED_2(0.05,2),
@@ -43,7 +46,7 @@ public class Intake {
 
         public INTAKE_ROLLER_HEIGHT byIndex(int ord) {
             if (ord <1) ord = 1;
-            if (ord >5) ord = 5;
+            if (ord >6) ord = 6;
             for (INTAKE_ROLLER_HEIGHT a : INTAKE_ROLLER_HEIGHT.values()) {
                 if (a.index == ord) {
                     return a;
@@ -71,19 +74,21 @@ public class Intake {
     public void initIntake(){
         intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
         intakeMotor.setPower(0);
-        moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+        }
     }
 
-    public void moveRollerHeight(INTAKE_ROLLER_HEIGHT intakeRollerHeight){
-        intakeLiftServo.setPosition(intakeRollerHeight.liftPosition);
-        intakeRollerHeightState = intakeRollerHeight;
+    public void moveRollerHeight(INTAKE_ROLLER_HEIGHT targetIntakeRollerHeight){
+        intakeLiftServo.setPosition(targetIntakeRollerHeight.liftPosition);
+        intakeRollerHeightState = targetIntakeRollerHeight;
     }
 
     public void toggleRollerHeight(){
-        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5) {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK) {
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
         } else {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
         }
     }
 
@@ -113,6 +118,7 @@ public class Intake {
 
     public void reverseIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING;
         }
@@ -142,6 +148,7 @@ public class Intake {
         telemetry.addData("    State", getIntakeState());
         telemetry.addData("    Roller Height State", intakeRollerHeightState);
         telemetry.addData("    Roller Servo Position", intakeLiftServo.getPosition());
+        telemetry.addData("    Motor Power", intakeMotorPower);
         telemetry.addLine("=============");
     }
 

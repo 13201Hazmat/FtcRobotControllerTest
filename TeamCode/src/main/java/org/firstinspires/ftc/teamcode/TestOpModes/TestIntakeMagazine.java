@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -41,12 +43,18 @@ public class TestIntakeMagazine extends LinearOpMode {
     public ElapsedTime intakeReverseTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public boolean intakeReverseStarted = false;
 
+    public final static double intakeMotorPowerDashboard = 1.0;
+
     @Override
     /*
      * Constructor for passing all the subsystems in order to make the subsystem be able to use
      * and work/be active
      */
     public void runOpMode() throws InterruptedException {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
         GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
         GameField.opModeRunning = GameField.OP_MODE_RUNNING.HAZMAT_TELEOP;
 
@@ -79,11 +87,28 @@ public class TestIntakeMagazine extends LinearOpMode {
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetLeftBumperPress()) {
-                    intake.toggleRollerHeight();
+                //Adjust Intake Power for testing
+                if (gamepadController.gp1GetSquarePress()) {
+                    if (intake.intakeMotorPower >0) {
+                        intake.intakeMotorPower -=0.01;
+                    }
                 }
 
-                if(gamepadController.gp1GetButtonAPress()) {
+                if (gamepadController.gp1GetCirclePress()) {
+                    if (intake.intakeMotorPower <=1.0) {
+                        intake.intakeMotorPower +=0.01;
+                    }
+                }
+
+                if (!gamepadController.gp1GetStart()) {
+                    if (gamepadController.gp1GetLeftBumperPress()) {
+                        intake.toggleRollerHeight();
+                    }
+                } else {
+                    intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+                }
+
+                if(gamepadController.gp1GetCrossPress()) {
                     intake.moveIntakeRollerOnePixelDown();
                 }
 
@@ -137,7 +162,7 @@ public class TestIntakeMagazine extends LinearOpMode {
 
     public void initSubsystems(){
 
-        telemetry.setAutoClear(false);
+        //telemetry.setAutoClear(false);
 
         //Init Pressed
         telemetry.addLine("Robot Init Pressed");
@@ -199,7 +224,7 @@ public class TestIntakeMagazine extends LinearOpMode {
      * Use public attributes or methods if needs to be called here.
      */
     public void printDebugMessages(){
-        telemetry.setAutoClear(true);
+        //telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
         telemetry.addData("Robot ready to start","");
 

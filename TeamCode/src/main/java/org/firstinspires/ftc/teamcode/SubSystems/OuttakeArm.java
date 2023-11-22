@@ -18,9 +18,11 @@ public class OuttakeArm {
 
     public enum OUTTAKE_ARM_STATE{
         ZERO(1,0),
-        TRANSFER(1,0), //TODO : Update
+        TRAVEL(0.85,0.15),
+        TRANSFER(1,0),
+        PICKUP(1,0),
         READY_FOR_TRANSFER(0.9,0.1),
-        DROP(0,1);
+        DROP(0.07,0.93);
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -43,9 +45,11 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRANSFER(0), //UPDATE FOR THIS YEAR!!
+        TRAVEL(0.5),
+        TRANSFER(0),
+        PICKUP(0.02),
         READY_FOR_TRANSFER(0),
-        DROP(1);
+        DROP(0.85);
 
         private double wristPosition;
 
@@ -89,7 +93,7 @@ public class OuttakeArm {
 
     //initialize outtakeArm
     public void initOuttakeArm() {
-        moveArm(OUTTAKE_ARM_STATE.TRANSFER);
+        moveArm(OUTTAKE_ARM_STATE.TRAVEL);
         closeGrip();
     }
 
@@ -106,6 +110,14 @@ public class OuttakeArm {
     public void closeGrip(){
         outtakeGripServo.setPosition(OUTTAKE_GRIP_STATE.CLOSED.gripPosition);
         outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
+    }
+
+    public void toggleGrip(){
+        if (outtakeGripState == OUTTAKE_GRIP_STATE.OPEN) {
+            closeGrip();
+        } else {
+            openGrip();
+        }
     }
 
     ElapsedTime pixelDropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -143,9 +155,17 @@ public class OuttakeArm {
         outtakeArmState = toArmState;
 
         switch (outtakeArmState) {
+            case TRAVEL:
+                openGrip();
+                moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
+                break;
             case TRANSFER:
                 openGrip();
                 moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
+                break;
+            case PICKUP:
+                moveWrist(OUTTAKE_WRIST_STATE.PICKUP);
+                closeGrip();
                 break;
             case READY_FOR_TRANSFER:
                 moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);

@@ -89,34 +89,34 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
 
                 //Move Arm Upward
                 if (gamepadController.gp2GetStart()) {
-                    if (gamepadController.gp2GetButtonXPress()) {
+                    if (gamepadController.gp2GetSquarePress()) {
                         outtakeArm.zeroArm();
                     }
                 } else {
-                    if (gamepadController.gp2GetButtonXPress()) {
+                    if (gamepadController.gp2GetSquarePress()) {
                         outtakeArm.rotateArm(1);
                     }
                 }
 
                 //Move Arm Downward
-                if (gamepadController.gp2GetButtonBPress()){
+                if (gamepadController.gp2GetCirclePress()){
                     outtakeArm.rotateArm(-1);
                 }
 
                 //Move Wrist Downward
 
-                if (gamepadController.gp2GetButtonAPress()) {
+                if (gamepadController.gp2GetCrossPress()) {
                     outtakeArm.rotateWrist(-1);
                 }
 
 
                 //Move Wrist
                 if (gamepadController.gp2GetStart()) {
-                    if (gamepadController.gp2GetButtonYPress()) {
+                    if (gamepadController.gp2GetTrianglePress()) {
                         outtakeArm.zeroWrist();
                     }
                 } else {
-                    if (gamepadController.gp2GetButtonYPress()) {
+                    if (gamepadController.gp2GetTrianglePress()) {
                         outtakeArm.rotateWrist(1);
                     }
                 }
@@ -128,7 +128,7 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
 
                 //CLose Outtake Grip
                 if (gamepadController.gp2GetLeftBumper()) {
-                    outtakeArm.closeGrip();
+                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
                 }
 
             }

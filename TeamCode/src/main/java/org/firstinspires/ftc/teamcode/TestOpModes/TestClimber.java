@@ -67,55 +67,38 @@ public class TestClimber extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                //gamepadController.runByGamepadControl();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetB()) {
+                if (gamepadController.gp1GetCirclePersistent()) {
+                    climber.climberActivated = true;
                     climber.moveClimberSlidesUp();
-                } else if (gamepadController.gp1GetX()) {
-                    climber.moveClimberSlidesDown();
+                    climber.modifyClimberLengthContinuous(-0.8);
                 } else {
-                    climber.stopClimberSlides();
-                }
-
-                if (gamepadController.gp1GetButtonYPress()) {
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.CLIMBED);
-                }
-
-
-                /*if (gamepadController.gp1GetButtonBPress()) {
-                    switch (climber.climberButtonState) {
-                        case SAFE:
-                            climber.climberClickTimer.reset();
-                            climber.climberButtonState = Climber.CLIMBER_BUTTON_STATE.ARMED;
-                            break;
-                        case ARMED:
-                            if (climber.climberClickTimer.time() < climber.CLIMBER_BUTTON_ARMED_THRESHOLD) {
-                                //climber.releaseClimber();
-                                climber.climberButtonState = Climber.CLIMBER_BUTTON_STATE.RELEASED;
-                            } else {
-                                climber.climberClickTimer.reset();
-                                climber.climberButtonState = Climber.CLIMBER_BUTTON_STATE.SAFE;
-                            }
+                    if (climber.climberActivated && !climber.climbingStarted){
+                        climber.holdClimberSlidesUp();
+                        //climber.stopClimberSlides();
+                        climber.modifyClimberLengthContinuous(0);
                     }
+
+                }
+
+                if (climber.climberActivated) {
+                    if (gamepadController.gp1GetTrianglePress()) {
+                        climber.climbingStarted = true;
+                        climber.stopClimberSlides();
+                        climber.moveClimberUpInSteps(1.0);
+                        //climber.modifyClimberLengthContinuous(1);
+                    }
+                }
+
+
+                /*if (gamepadController.gp1GetCrossPersistent()){
+                    climber.modifyClimberLengthContinuous(-1);
                 }*/
-/*
-
-
-                if (climber.climberServoState == Climber.CLIMBER_SERVO_STATE.CLIMBER_RELEASED &&
-                        gamepadController.gp1GetY()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.CLIMBED_STATE);
-                }
-
-
- */
-                if (gamepadController.gp1GetA()){
-                    climber.moveClimberMotor(Climber.CLIMBER_MOTOR_STATE.INITIAL);
-                }
             }
         }
         GameField.poseSetInAutonomous = false;

@@ -556,6 +556,24 @@ public class TestGamepadController {
         return hzGamepad2.b;
     }
 
+    //Map to PS4 Gamepad buttons
+    public boolean gp1GetSquarePress(){ return gp1GetButtonXPress();}
+    public boolean gp2GetSquarePress(){ return gp2GetButtonXPress();}
+    public boolean gp1GetSquarePersistent(){ return gp1GetX();}
+    public boolean gp2GetSquarePersistent(){ return gp2GetX();}
+    public boolean gp1GetTrianglePress(){ return gp1GetButtonYPress();}
+    public boolean gp2GetTrianglePress(){ return gp2GetButtonYPress();}
+    public boolean gp1GetTrianglePersistent(){ return gp1GetY();}
+    public boolean gp2GetTrianglePersistent(){ return gp2GetY();}
+    public boolean gp1GetCrossPress(){ return gp1GetButtonAPress();}
+    public boolean gp2GetCrossPress(){ return gp2GetButtonAPress();}
+    public boolean gp1GetCrossPersistent(){ return gp1GetA();}
+    public boolean gp2GetCrossPersistent(){ return gp2GetA();}
+    public boolean gp1GetCirclePress(){ return gp1GetButtonBPress();}
+    public boolean gp2GetCirclePress(){ return gp2GetButtonBPress();}
+    public boolean gp1GetCirclePersistent(){ return gp1GetB();}
+    public boolean gp2GetCirclePersistent(){ return gp2GetB();}
+
     /**
      * Method to track if Dpad_up was pressed
      * To ensure that the continuous holding of Dpad_up does not send continual triggers,

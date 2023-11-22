@@ -91,7 +91,7 @@ public class TestOuttake extends LinearOpMode {
                 }
 
                 //TODO : Move to transfer before rotating arm if starting in DROP_BELOW_LOW
-                if (gamepadController.gp2GetButtonXPress()){
+                if (gamepadController.gp2GetSquarePress()){
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
@@ -101,7 +101,7 @@ public class TestOuttake extends LinearOpMode {
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                 }
 
-                if (gamepadController.gp2GetButtonYPress()){
+                if (gamepadController.gp2GetTrianglePress()){
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
@@ -111,7 +111,7 @@ public class TestOuttake extends LinearOpMode {
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                 }
 
-                if (gamepadController.gp2GetButtonBPress()){
+                if (gamepadController.gp2GetCrossPress()){
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
@@ -122,11 +122,13 @@ public class TestOuttake extends LinearOpMode {
                 }
 
                 //if (!gamepadController.gp2GetStart()) {
-                    if (gamepadController.gp2GetButtonAPress()) {
+                    if (gamepadController.gp2GetCirclePress()) {
                         if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) {
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-
+                            while (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
+                                    outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)) {}
+                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
                         } else {
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
