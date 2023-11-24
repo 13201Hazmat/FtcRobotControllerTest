@@ -52,6 +52,7 @@ public class VisionTfod {
      * Initialize the TensorFlow Object Detection processor.
      */
     public void initTfod() {
+        /*
 
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
@@ -110,16 +111,18 @@ public class VisionTfod {
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
 
+
+         */
     }   // end method initTfod()
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
     public void runTfodTensorFlow() {
-
+/*
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("Camera and # Objects Detected", webcamName, currentRecognitions.size());
-
+ */
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
@@ -127,7 +130,7 @@ public class VisionTfod {
         } else { //RED_RIGHT or BLUE_RIGHT
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
         }
-
+/*
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
@@ -160,6 +163,8 @@ public class VisionTfod {
             }
 
         }   // end for() loop
+
+ */
 
     }   // end method runTfodTensorFlow()
 

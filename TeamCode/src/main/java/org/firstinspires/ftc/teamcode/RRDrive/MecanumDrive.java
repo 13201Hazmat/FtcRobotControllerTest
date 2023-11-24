@@ -48,26 +48,26 @@ import java.util.List;
 public class MecanumDrive {
     public static class Params {
         // drive model parameters
-        //TODO Step 5 Set value of inPerTick after running ForwardPushTest
-        public double inPerTick = 0.02224460305; //0, 127/5709.25
+        // Step 5 Set value of inPerTick after running ForwardPushTest
+        public double inPerTick = -0.031320754716981; //0, 0.02224460305 124.5/-3975
 
-        //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
-        //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
-        public double lateralInPerTick = 0.01926449306;//0.02339181286; //1, 126/5386.5
+        //Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
+        //Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
+        public double lateralInPerTick = 0.03247422680412 * 0.7979 ;//1, 0.01926449306 126/3880 * 118/148 92.5/115.7
 
-        //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
+        //Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
+        //Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
-        public double trackWidthTicks = 1140.262593390616; //0
+        public double trackWidthTicks = -879.9144120575884; //0, 1140.262593390616;
 
         // feedforward parameters (in tick units)
-        //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
-        //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
-        public double kS = 0.8533708380733858; //0
-        public double kV = 0.004293990674579394; //0
+        //Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
+        //Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
+        public double kS = 2.7455083189005567; //0, 0.8533708380733858
+        public double kV = -0.004135792257646317; //0, 0.004293990674579394
 
-        //TODO Step 12 Set value of kA after running ManualFeedforwardTuner. In this emperical process update value in increments of 0.0001
-        public double kA = 0.0003; //0
+        //Step 12 Set value of kA after running ManualFeedforwardTuner. In this emperical process update value in increments of 0.0001
+        public double kA = 0.002; //0, 0.0003
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -80,15 +80,39 @@ public class MecanumDrive {
 
         // path controller gains
         //TODO Step 12 Set value of Gains after running ManualFeedbackTuner
-        public double axialGain = 3.0; //0.0;
-        public double lateralGain = 3.0; //0.0;
-        public double headingGain = 3.0; //0.0; // shared with turn
+        public double axialGain = 5; //0.0; 3.0
+        public double lateralGain = 5; //0.0; 3.0
+        public double headingGain = 5; //0.0; 3.0// shared with turn
 
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
+        public double axialVelGain = 0.0; //generateSMARTDerivativeTerm(axialGain, false);//0.0
+        public double lateralVelGain = 0.0; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
+        public double headingVelGain = 0.0; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
         //TODO End Step 12
     }
+
+    //Hazmat added Generate damp function
+    public static double generateSMARTDerivativeTerm(double kP, boolean rotation) {
+
+        double kV = PARAMS.kV;
+        double kA = PARAMS.kA;
+
+
+        if (rotation) {
+            kV /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
+            kA /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
+        }
+
+        // anything below this will result in a non minimum phase system.
+        // non-minimum phase means the system will hesitate, similar to that of a turning bicycle or a pitching aircraft.
+        // while it would technically be faster, I have not yet proved it's stability so I will leave it out for now.
+        double criticalKp = (kV * kV) / (4 * kA);
+        if (criticalKp >= kP) {
+            return 0;
+        }
+        // the critically damped PID derivative gain.
+        return 2 * Math.sqrt(kA * kP) - kV;
+    }
+
 
     public static Params PARAMS = new Params();
 
@@ -128,13 +152,13 @@ public class MecanumDrive {
             rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
             rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
 
-            //TODO Step 4.1 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
+            //Step 4.1 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
             //Uncomment the lines for which the motorDirection need to be reversed to ensure all motors run forward in test
             //leftFront.setDirection(DcMotorEx.Direction.REVERSE);
             //leftBack.setDirection(DcMotorEx.Direction.REVERSE);
             rightBack.setDirection(DcMotorEx.Direction.REVERSE);
             rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-            //TODO End Step 4.1
+            //End Step 4.1
 
             lastLeftFrontPos = leftFront.getPositionAndVelocity().position;
             lastLeftBackPos = leftBack.getPositionAndVelocity().position;
@@ -196,12 +220,12 @@ public class MecanumDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        //TODO Step 1 Drive Classes : get basic hardware configured. Update motor names to what is used in robot configuration
+        //Step 1 Drive Classes : get basic hardware configured. Update motor names to what is used in robot configuration
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        //TODO End Step 1
+        //End Step 1
 
         //TODO Step 4 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
         //Uncomment the lines for which the motorDirection need to be reversed to ensure all motors run forward in test
@@ -219,16 +243,16 @@ public class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         imu = hardwareMap.get(IMU.class, "imu");
-        //TODO Step 2 : Update direction of IMU by updating orientation of Driver Hub below
+        //Step 2 : Update direction of IMU by updating orientation of Driver Hub below
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP, // Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD as in robot
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT)); //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT)); //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
         imu.initialize(parameters);
-        //TODO End Step 2
+        //End Step 2
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        //TODO Step 3: Specify how the robot should track its position
+        //Step 3: Specify how the robot should track its position
         //Comment this line if NOT using Drive Encoder localization
         localizer = new DriveLocalizer();
         //Uncomment next line if using Two Dead Wheel Localizer and also check TwoDeadWheelLocalizer.java for Step 3.1
@@ -236,7 +260,7 @@ public class MecanumDrive {
 
         //Uncomment next line if using Three Dead Wheel Localizer and also check ThreeDeadWheelLocalizer.java for Step 3.1
         //localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick)
-        //TODO End Step 3
+        //End Step 3
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }

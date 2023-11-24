@@ -99,6 +99,7 @@ public class TestOuttake extends LinearOpMode {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
                     }
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
                 if (gamepadController.gp2GetTrianglePress()){
@@ -109,6 +110,7 @@ public class TestOuttake extends LinearOpMode {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                     }
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
                 if (gamepadController.gp2GetCrossPress()){
@@ -119,6 +121,7 @@ public class TestOuttake extends LinearOpMode {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
                     }
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
                 //if (!gamepadController.gp2GetStart()) {
@@ -126,12 +129,15 @@ public class TestOuttake extends LinearOpMode {
                         if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) {
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
                             while (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
                                     outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)) {}
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
                         } else {
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
                         }
                     }
                 /*} else {
@@ -154,6 +160,7 @@ public class TestOuttake extends LinearOpMode {
                             break;
                         case MOVE_TO_READY_TO_TRANSFER:
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
                             outtakeArm.openGrip();
                             comboPressedState = ComboPressedState.WAIT_TILL_READY_TO_TRANSFER;
@@ -168,6 +175,7 @@ public class TestOuttake extends LinearOpMode {
                             //intake.stopIntakeMotor;
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
                             comboPressedState = ComboPressedState.WAIT_TILL_TRANFERRED;
                             break;
                         case WAIT_TILL_TRANFERRED:
@@ -180,6 +188,7 @@ public class TestOuttake extends LinearOpMode {
                         case MOVE_BACK_TO_READY_TO_TRANSFER:
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
                             comboPressedState = ComboPressedState.WAIT_TILL_BACK_TO_READY_TO_TRANSFER;
                             break;
                         case WAIT_TILL_BACK_TO_READY_TO_TRANSFER:
@@ -190,6 +199,7 @@ public class TestOuttake extends LinearOpMode {
                             break;
                         case MOVE_TO_DROP_BELOW_LOW:
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
                             comboTransferActivated = false;
                             break;
@@ -243,6 +253,7 @@ public class TestOuttake extends LinearOpMode {
         telemetry.update();
 
         outtakeArm= new OuttakeArm(hardwareMap, telemetry);
+        outtakeArm.initOuttakeArmTeleOp();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

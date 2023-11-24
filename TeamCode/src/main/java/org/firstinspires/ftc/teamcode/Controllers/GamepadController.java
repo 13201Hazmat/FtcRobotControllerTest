@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
+
+import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -64,7 +67,8 @@ public class GamepadController {
     public Climber climber;
     public Launcher launcher;
     public Telemetry telemetry;
-    LinearOpMode teleOpMode;
+    LinearOpMode currentOpMode;
+    public OuttakeController outtakeController;
 
 
     /**
@@ -80,7 +84,7 @@ public class GamepadController {
                              Climber climber,
                              Launcher launcher,
                              Telemetry telemetry,
-                             LinearOpMode teleOpMode
+                             LinearOpMode currentOpMode
                             ) {
         this.hzGamepad1 = hzGamepad1;
         this.hzGamepad2 = hzGamepad2;
@@ -91,7 +95,8 @@ public class GamepadController {
         this.climber = climber;
         this.launcher = launcher;
         this.telemetry = telemetry;
-        this.teleOpMode = teleOpMode;
+        this.currentOpMode = currentOpMode;
+        outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, currentOpMode);
     }
 
     /**
@@ -179,6 +184,9 @@ public class GamepadController {
         } else  {
             magazine.closeMagazineDoor();
         }
+
+        //TODO: ADD OVERRIDE FOR ANY LOCKS CREATED BY SENSORS
+
     }
 
     public ElapsedTime pickupTimer = new ElapsedTime(MILLISECONDS);
@@ -203,8 +211,7 @@ public class GamepadController {
                         intake.stopIntakeMotor();
                     }
                     if (gp2GetCrossPress()) {
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP);
+                        outtakeController.moveTransferToPickup();
                     }
                     if (gp2GetRightBumperPress()) {
                         outtakeArm.toggleGrip();
@@ -215,8 +222,9 @@ public class GamepadController {
                     break;
                 case PICKUP:
                     if (gp2GetCrossPress()) {
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+                        outtakeController.movePickupToTransfer();
+                        safeWaitMilliSeconds(50);
+                        outtakeController.moveTransferToReadyForTransfer();
                     }
                     if (gp2GetRightBumper()) {
                         outtakeArm.toggleGrip();
@@ -224,38 +232,27 @@ public class GamepadController {
                     break;
                 case TRAVEL:
                     if (gp2GetCrossPress()) {
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+                        outtakeController.moveTravelToReadyForTransfer();
                     }
                     break;
                 case READY_FOR_TRANSFER:
                     if (gp2GetSquarePress()) {
-                        outtakeArm.closeGrip();
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
                     }
 
                     if (gp2GetTrianglePress()) {
-                        outtakeArm.closeGrip();
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                     }
 
                     if (gp2GetCirclePress()) {
-                        outtakeArm.closeGrip();
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
                     }
 
                     if (gp2GetCrossPress()) {
                         if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) {
                             intake.stopIntakeMotor();
                         }
-                        if (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
-                            outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER)) {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-                        }
+                        outtakeController.moveReadyForTransferToTransfer();
                     }
                     break;
                 case DROP_BELOW_LOW:
@@ -267,42 +264,46 @@ public class GamepadController {
                 case MAX_EXTENDED:
                 case RANDOM:
                     if (gp2GetCrossPress()) {
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRAVEL);
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRAVEL);
+                        outtakeController.moveDropToTravel();
                     }
-                    if (outtakeSlides.isOuttakeSlidesInState(outtakeSlides.outtakeSlidesState)) {
+
+                    if (!gp2GetStart()) {
+                        if (gp2GetRightBumper()) {
+                            //protect so that drop hapopens only outside robot
+                            if (outtakeSlides.isOuttakeSlidesInStateDrop() &&
+                                outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
+                                outtakeArm.dropOnePixel();
+                            }
+                        }
+                    } else { // Override protection to drop outside robot with Start + right Bumper
                         if (gp2GetRightBumper()) {
                             outtakeArm.dropOnePixel();
                         }
                     }
+
+
                     if (gp2GetSquarePress()) {
-                        outtakeArm.closeGrip();
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
                         } else {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
                         }
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                     }
 
                     if (gp2GetTrianglePress()) {
-                        outtakeArm.closeGrip();
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
                         } else {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                         }
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                     }
 
                     if (gp2GetCirclePress()) {
-                        outtakeArm.closeGrip();
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
                         } else {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
                         }
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                     }
 
                     break;
@@ -315,7 +316,7 @@ public class GamepadController {
                 case PICKUP:
                     if (outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) &&
                             outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER)) {
-                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
+                        outtakeController.moveTransferToPickup();
                         pickupTimer.reset();
                         comboPressedState = ComboPressedState.WAIT_TILL_PICKEDUP;
                     }
@@ -326,8 +327,9 @@ public class GamepadController {
                     }
                     break;
                 case MOVE_BACK_TO_READY_TO_TRANSFER:
-                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+                    outtakeController.movePickupToTransfer();
+                    safeWaitMilliSeconds(50);
+                    outtakeController.moveTransferToReadyForTransfer();
                     comboPressedState = ComboPressedState.WAIT_TILL_BACK_TO_READY_TO_TRANSFER;
                     break;
                 case WAIT_TILL_BACK_TO_READY_TO_TRANSFER:
@@ -337,8 +339,7 @@ public class GamepadController {
                     }
                     break;
                 case MOVE_TO_DROP:
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-                    outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
+                    outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                     comboTransferActivated = false;
                     break;
             }
@@ -359,11 +360,10 @@ public class GamepadController {
         if (gp1GetCirclePersistent()) {
             climber.climberActivated = true;
             climber.moveClimberSlidesUp();
-            climber.modifyClimberLengthContinuous(-0.8);
+            climber.modifyClimberLengthContinuous(-0.75);
         } else {
             if (climber.climberActivated && !climber.climbingStarted){
                 climber.holdClimberSlidesUp();
-                //climber.stopClimberSlides();
                 climber.modifyClimberLengthContinuous(0);
             }
         }
@@ -379,23 +379,29 @@ public class GamepadController {
 
     public void runLauncher(){
         //Launcher code
-        if(launcher.launcherActivate) {
-            if (gp1GetRightBumperPress()) {
-                switch (launcher.launcherButtonState) {
-                    case SAFE:
+        if (gp1GetRightBumperPress()) {
+            switch (launcher.launcherButtonState) {
+                case SAFE:
+                    launcher.launcherClickTimer.reset();
+                    launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
+                    break;
+                case ARMED:
+                    if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
+                        launcher.launchDrone();
+                        launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
+                    } else {
                         launcher.launcherClickTimer.reset();
-                        launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
-                        break;
-                    case ARMED:
-                        if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
-                            launcher.launchDrone();
-                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
-                        } else {
-                            launcher.launcherClickTimer.reset();
-                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
-                        }
-                }
+                        launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
+                    }
             }
+        }
+
+    }
+
+    public void safeWaitMilliSeconds(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!currentOpMode.isStopRequested() && timer.time() < time) {
         }
     }
 

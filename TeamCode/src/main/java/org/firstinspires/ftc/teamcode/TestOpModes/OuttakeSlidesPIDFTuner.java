@@ -1,20 +1,18 @@
 package org.firstinspires.ftc.teamcode.TestOpModes;
 
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
-import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
-import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 
 
 /**
@@ -24,21 +22,18 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  *
  */
 @Disabled
-@TeleOp(name = "Test Launcher", group = "02-Test OpModes")
-public class TestLauncher extends LinearOpMode {
+@Config
+@TeleOp(name = "OuttakeSlidesPIDFTuner", group = "02-Test OpModes")
+public class OuttakeSlidesPIDFTuner extends LinearOpMode {
 
     public TestGamepadController gamepadController;
+    public OuttakeSlides outtakeSlides;
     public DriveTrain driveTrain;
-    public VisionAprilTag visionAprilTagFront;
-    public Launcher launcher;
-    public Lights lights;
 
-    //Static Class for knowing system state
+    public static double p = 0, i = 0, d = 0;
+    public static double f= 0;
 
-    public Pose2d startPose = GameField.ORIGINPOSE;
-
-    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
-
+    public static int target= 0;
 
     @Override
     /*
@@ -51,10 +46,10 @@ public class TestLauncher extends LinearOpMode {
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         /* Wait for Start or Stop Button to be pressed */
         waitForStart();
-        gameTimer.reset();
 
         telemetry.addLine("Start Pressed");
         telemetry.update();
@@ -71,34 +66,20 @@ public class TestLauncher extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                gamepadController.runByGamepadControl();
+                //gamepadController.runByGamepadControl();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
                     telemetry.update();
                 }
 
-                if (gamepadController.gp1GetRightBumperPress()) {
-                    switch (launcher.launcherButtonState) {
-                        case SAFE:
-                            launcher.launcherClickTimer.reset();
-                            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
-                            break;
-                        case ARMED:
-                            if (launcher.launcherClickTimer.time() < launcher.LAUNCHER_BUTTON_ARMED_THRESHOLD) {
-                                launcher.launchDrone();
-                                launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
-                            } else {
-                                launcher.launcherClickTimer.reset();
-                                launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
-                            }
-                    }
-                }
+                outtakeSlides.outtakeMotorRight.setVelocityPIDFCoefficients(p,i,d,f);
+                outtakeSlides.outtakeMotorLeft.setVelocityPIDFCoefficients(p,i,d,f);
 
-                if(gamepadController.gp1GetLeftBumper()){
-                    launcher.initLauncher();
-                }
-
+                telemetry.addData("posLeft : ", outtakeSlides.outtakeMotorLeft.getCurrentPosition());
+                telemetry.addData( "posRight : ", outtakeSlides.outtakeMotorRight.getCurrentPosition());
+                telemetry.addData("target", target);
+                telemetry.update();
 
             }
         }
@@ -107,7 +88,7 @@ public class TestLauncher extends LinearOpMode {
 
     public void initSubsystems(){
 
-        telemetry.setAutoClear(false);
+        //telemetry.setAutoClear(false);
 
         //Init Pressed
         telemetry.addLine("Robot Init Pressed");
@@ -120,18 +101,9 @@ public class TestLauncher extends LinearOpMode {
         telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
         telemetry.update();
 
-        /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
-        telemetry.addLine("Vision April Tag Front Initialized");
-        telemetry.update();
 
-        /* Create Lights */
-        lights = new Lights(hardwareMap, telemetry);
-        telemetry.addLine("Lights Initialized");
-        telemetry.update();
-
-        launcher = new Launcher(hardwareMap, telemetry);
-        telemetry.addLine("Launcher Initialized");
+        outtakeSlides = new OuttakeSlides(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeSlides Initialized");
         telemetry.update();
 
         /* Create Controllers */
@@ -148,7 +120,7 @@ public class TestLauncher extends LinearOpMode {
             driveTrain.pose = GameField.currentPose;
             //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
-            driveTrain.pose = startPose;
+            //driveTrain.pose = startPose;
             //driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
@@ -165,21 +137,22 @@ public class TestLauncher extends LinearOpMode {
      * Use public attributes or methods if needs to be called here.
      */
     public void printDebugMessages(){
-        telemetry.setAutoClear(true);
+        //telemetry.setAutoClear(true);
         telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
         telemetry.addData("Robot ready to start","");
 
         if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
             telemetry.addLine("Running Hazmat TeleOpMode");
-            telemetry.addData("Game Timer : ", gameTimer.time());
+            //telemetry.addData("Game Timer : ", gameTimer.time());
             //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
             //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
             //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
-            launcher.printDebugMessages();
             //visionAprilTagFront.printdebugMessages();
-            lights.printDebugMessages();
+            outtakeSlides.printDebugMessages();
+            //outtakeArm.printDebugMessages();
+            //lights.printDebugMessages();
         }
         telemetry.update();
     }

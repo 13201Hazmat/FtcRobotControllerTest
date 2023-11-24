@@ -322,11 +322,13 @@ public class AutonomousMode1 extends LinearOpMode {
         if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
             while (!(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)
             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER))) {
                 safeWaitSeconds(0.1);
             }
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         }
     }
@@ -483,6 +485,7 @@ public class AutonomousMode1 extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        outtakeArm.initOuttakeArmAuto();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

@@ -129,6 +129,7 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
                 //CLose Outtake Grip
                 if (gamepadController.gp2GetLeftBumper()) {
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
+                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
                 }
 
             }
@@ -166,6 +167,7 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        outtakeArm.initOuttakeArmAuto();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

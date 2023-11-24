@@ -332,6 +332,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
      * Initialize the TensorFlow Object Detection processor.
      */
     private void initTfod() {
+        /*
 
         // Create the TensorFlow processor the easy way.
         tfod = TfodProcessor.easyCreateWithDefaults();
@@ -347,23 +348,25 @@ public class FTCWiresAutonomous extends LinearOpMode {
 
         tfod.setMinResultConfidence(0.20f);
 
+
+         */
     }   // end method initTfod()
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
     private void runTfodTensorFlow() {
-
+/*
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
-
+*/
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
         } else { //RED_RIGHT or BLUE_RIGHT
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
         }
-
+/*
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
@@ -393,7 +396,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
             }
 
         }   // end for() loop
-
+*/
     }   // end method runTfodTensorFlow()
 
 }   // end class

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -45,11 +46,11 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRAVEL(0.5),
-        TRANSFER(0),
-        PICKUP(0.02),
-        READY_FOR_TRANSFER(0),
-        DROP(0.85);
+        TRAVEL(0.48),
+        TRANSFER(0.14),
+        PICKUP(0.16),
+        READY_FOR_TRANSFER(0.1),
+        DROP(0.92);
 
         private double wristPosition;
 
@@ -87,13 +88,20 @@ public class OuttakeArm {
 
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
         outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
-
-        initOuttakeArm();
     }
 
+
+
     //initialize outtakeArm
-    public void initOuttakeArm() {
+    public void initOuttakeArmTeleOp() {
         moveArm(OUTTAKE_ARM_STATE.TRAVEL);
+        moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
+        closeGrip();
+    }
+
+    public void initOuttakeArmAuto() {
+        moveArm(OUTTAKE_ARM_STATE.TRANSFER);
+        moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
         closeGrip();
     }
 
@@ -124,7 +132,7 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <200) {
+        while (pixelDropTimer.time() <150) {
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
@@ -149,10 +157,16 @@ public class OuttakeArm {
         moveWrist(OUTTAKE_WRIST_STATE.ZERO);
     }
 
+    public ElapsedTime wristTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void moveArm(OUTTAKE_ARM_STATE toArmState) { //UPDATE FOR THIS YEAR!!
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
+
+        /*if (delay >0) {
+            wristTimer.reset();
+            while (wristTimer.time()<100) {}
+        }
 
         switch (outtakeArmState) {
             case TRAVEL:
@@ -173,7 +187,7 @@ public class OuttakeArm {
             case DROP:
                 moveWrist(OUTTAKE_WRIST_STATE.DROP);
                 break;
-        }
+        }*/
     }
 
     public void rotateArm(double direction) {

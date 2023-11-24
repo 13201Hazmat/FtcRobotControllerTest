@@ -243,6 +243,10 @@ public class AutonomousMode extends LinearOpMode {
                         .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         .build());
+        telemetry.addData("Expected dropPurplePixelPose", dropPurplePixelPose.log());
+        telemetry.addData("    Actual", drive.pose);
+        telemetry.update();
+        safeWaitSeconds(5);
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
@@ -253,6 +257,12 @@ public class AutonomousMode extends LinearOpMode {
                         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
                         .build());
 
+        telemetry.addData("Expected midwayPose1", midwayPose1.log());
+        telemetry.addData("    Actual", drive.pose);
+        telemetry.update();
+        safeWaitSeconds(5);
+
+
         //For Blue Right and Red Left, intake pixel from stack
         if (GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT ||
                 GameField.startPosition == GameField.START_POSITION.RED_LEFT) {
@@ -262,6 +272,12 @@ public class AutonomousMode extends LinearOpMode {
                             .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
                             .build());
 
+            telemetry.addData("Expected intakeStack", intakeStack.log());
+            telemetry.addData("    Actual", drive.pose);
+            telemetry.update();
+            safeWaitSeconds(5);
+
+
             //TODO : Code to intake pixel from stack
             safeWaitSeconds(1);
 
@@ -270,6 +286,12 @@ public class AutonomousMode extends LinearOpMode {
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
                             .build());
+
+            telemetry.addData("Expected midwayPose2", midwayPose2.log());
+            telemetry.addData("    Actual", drive.pose);
+            telemetry.update();
+            safeWaitSeconds(5);
+
         }
 
         safeWaitSeconds(waitSecondsBeforeDrop);
@@ -279,7 +301,12 @@ public class AutonomousMode extends LinearOpMode {
                 drive.actionBuilder(drive.pose)
                         .setReversed(true)
                         .splineToLinearHeading(dropYellowPixelPose,0)
+                        //.strafeToLinearHeading(dropPurplePixelPose.position,dropPurplePixelPose.heading)
                         .build());
+        telemetry.addData("Expected dropYellowPixelPose", dropYellowPixelPose.log());
+        telemetry.addData("    Actual", drive.pose);
+        telemetry.update();
+        safeWaitSeconds(5);
 
 
         //TODO : Code to drop Pixel on Backdrop
@@ -292,18 +319,24 @@ public class AutonomousMode extends LinearOpMode {
                         //.splineToLinearHeading(parkPose,0)
                         .build());
 
+        telemetry.addData("Expected parkPose", parkPose.log());
+        telemetry.addData("    Actual", drive.pose);
+        telemetry.update();
+
+        safeWaitSeconds(10);
+
         //Endstate of Outtake has to be in TRANSFER
-        outtakeArm.openGrip();
+        /*outtakeArm.openGrip();
         if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER,0);
             while (!(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)
             && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER))) {
                 safeWaitSeconds(0.1);
             }
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
+            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER,0);
             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-        }
+        }*/
     }
 
     //Method to select starting position using X, Y, A, B buttons on gamepad
@@ -376,6 +409,7 @@ public class AutonomousMode extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        outtakeArm.initOuttakeArmAuto();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

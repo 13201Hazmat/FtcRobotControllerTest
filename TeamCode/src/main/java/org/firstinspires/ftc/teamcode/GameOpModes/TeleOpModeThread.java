@@ -86,10 +86,6 @@ public class TeleOpModeThread extends LinearOpMode {
                 if (gameTimer.time() > 85000 && gameTimer.time() < 90000) {
                     lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
                 }
-                //if(gameTimer.time()>90000){
-                    launcher.launcherActivate = true;
-                    climber.climberActivated = true;
-                //}
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -125,6 +121,7 @@ public class TeleOpModeThread extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        outtakeArm.initOuttakeArmTeleOp();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
