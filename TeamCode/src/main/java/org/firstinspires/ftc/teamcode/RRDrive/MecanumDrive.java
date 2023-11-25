@@ -49,25 +49,25 @@ public class MecanumDrive {
     public static class Params {
         // drive model parameters
         // Step 5 Set value of inPerTick after running ForwardPushTest
-        public double inPerTick = -0.031320754716981; //0, 0.02224460305 124.5/-3975
+        public double inPerTick = 0.0005351341305861622; //0, 0.02224460305 119.5/223308.5
 
         //Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
         //Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
-        public double lateralInPerTick = 0.03247422680412 * 0.7979 ;//1, 0.01926449306 126/3880 * 118/148 92.5/115.7
+        public double lateralInPerTick = 0.0003166960081989177 ;//1, 0.01926449306 114.2/3314.25
 
         //Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
-        public double trackWidthTicks = -879.9144120575884; //0, 1140.262593390616;
+        public double trackWidthTicks =  26024.513046599797; //0, 1140.262593390616;
 
         // feedforward parameters (in tick units)
         //Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
         //Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
-        public double kS = 2.7455083189005567; //0, 0.8533708380733858
-        public double kV = -0.004135792257646317; //0, 0.004293990674579394
+        public double kS = 2.1342119725585516; //0, 0.8533708380733858
+        public double kV = 0.00007805581945284488; //0, 0.004293990674579394
 
         //Step 12 Set value of kA after running ManualFeedforwardTuner. In this emperical process update value in increments of 0.0001
-        public double kA = 0.002; //0, 0.0003
+        public double kA = 0.000019; //0, 0.0003
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -80,39 +80,15 @@ public class MecanumDrive {
 
         // path controller gains
         //TODO Step 12 Set value of Gains after running ManualFeedbackTuner
-        public double axialGain = 5; //0.0; 3.0
-        public double lateralGain = 5; //0.0; 3.0
-        public double headingGain = 5; //0.0; 3.0// shared with turn
+        public double axialGain = 12.0; //0.0; 3.0
+        public double lateralGain = 10.0; //0.0; 3.0
+        public double headingGain = 20.0; //0.0; 3.0// shared with turn
 
-        public double axialVelGain = 0.0; //generateSMARTDerivativeTerm(axialGain, false);//0.0
-        public double lateralVelGain = 0.0; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
-        public double headingVelGain = 0.0; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
+        public double axialVelGain = 0.030121281921630154; //generateSMARTDerivativeTerm(axialGain, false);//0.0
+        public double lateralVelGain = 0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
+        public double headingVelGain = 0.010441577246610628; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
         //TODO End Step 12
     }
-
-    //Hazmat added Generate damp function
-    public static double generateSMARTDerivativeTerm(double kP, boolean rotation) {
-
-        double kV = PARAMS.kV;
-        double kA = PARAMS.kA;
-
-
-        if (rotation) {
-            kV /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
-            kA /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
-        }
-
-        // anything below this will result in a non minimum phase system.
-        // non-minimum phase means the system will hesitate, similar to that of a turning bicycle or a pitching aircraft.
-        // while it would technically be faster, I have not yet proved it's stability so I will leave it out for now.
-        double criticalKp = (kV * kV) / (4 * kA);
-        if (criticalKp >= kP) {
-            return 0;
-        }
-        // the critically damped PID derivative gain.
-        return 2 * Math.sqrt(kA * kP) - kV;
-    }
-
 
     public static Params PARAMS = new Params();
 
@@ -221,10 +197,10 @@ public class MecanumDrive {
         }
 
         //Step 1 Drive Classes : get basic hardware configured. Update motor names to what is used in robot configuration
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_par0");
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack_par1");
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront_perp");
         //End Step 1
 
         //TODO Step 4 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
@@ -254,12 +230,12 @@ public class MecanumDrive {
 
         //Step 3: Specify how the robot should track its position
         //Comment this line if NOT using Drive Encoder localization
-        localizer = new DriveLocalizer();
+        //localizer = new DriveLocalizer();
         //Uncomment next line if using Two Dead Wheel Localizer and also check TwoDeadWheelLocalizer.java for Step 3.1
-        //localizer = new TwoDeadWheelLocalizer(hardwareMap, imu, PARAMS.inPerTick)
+        //localizer = new TwoDeadWheelLocalizer(hardwareMap, imu, PARAMS.inPerTick);
 
         //Uncomment next line if using Three Dead Wheel Localizer and also check ThreeDeadWheelLocalizer.java for Step 3.1
-        //localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick)
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
         //End Step 3
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);

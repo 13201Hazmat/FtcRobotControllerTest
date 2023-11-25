@@ -1,9 +1,9 @@
 
 
-RC Motor 3:        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-RC Motor 0:        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+RC Motor 3:        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_par0");
+RC Motor 0:        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack_par1");
 EH Motor 0:        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
-EH Motor 3:        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+EH Motor 3:        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront_perp");
 
 RC Motor 2:        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
 RC Servo 0:        intakeLiftServo = hardwareMap.get(Servo.class, "intake_lift_servo");
