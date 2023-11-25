@@ -167,7 +167,6 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
-        outtakeArm.initOuttakeArmAuto();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

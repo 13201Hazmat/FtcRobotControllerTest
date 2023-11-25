@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
+@Disabled
 @TeleOp(name = "Test Outtake", group = "02-Test OpModes")
 public class TestOuttake extends LinearOpMode {
 
@@ -253,7 +255,6 @@ public class TestOuttake extends LinearOpMode {
         telemetry.update();
 
         outtakeArm= new OuttakeArm(hardwareMap, telemetry);
-        outtakeArm.initOuttakeArmTeleOp();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

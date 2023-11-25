@@ -88,20 +88,16 @@ public class OuttakeArm {
 
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
         outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+
+        initOuttakeArm();
     }
 
 
 
     //initialize outtakeArm
-    public void initOuttakeArmTeleOp() {
+    public void initOuttakeArm() {
         moveArm(OUTTAKE_ARM_STATE.TRAVEL);
         moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
-        closeGrip();
-    }
-
-    public void initOuttakeArmAuto() {
-        moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-        moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
         closeGrip();
     }
 

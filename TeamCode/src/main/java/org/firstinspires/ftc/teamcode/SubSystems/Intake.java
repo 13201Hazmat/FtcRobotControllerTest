@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -140,6 +143,117 @@ public class Intake {
     public INTAKE_MOTOR_STATE getIntakeState() {
         return intakeMotorState;
     }
+
+    public Action stopIntakeMotorAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                stopIntakeMotor();
+                return true;
+            }
+        };
+    }
+
+    public Action reverseIntakeAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                reverseIntake();
+                return true;
+            }
+        };
+    }
+
+
+    public Action startIntakeInwardAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                startIntakeInward();
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightAboveStackAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightLevel5Action(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightLevel4Action(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_4);
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightLevel3Action(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_3);
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightLevel2Action(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_2);
+                return true;
+            }
+        };
+    }
+
+    public Action moveRollerHeightDroppedAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+                return true;
+            }
+        };
+    }
+
+
 
     public void printDebugMessages(){
         //******  debug ******

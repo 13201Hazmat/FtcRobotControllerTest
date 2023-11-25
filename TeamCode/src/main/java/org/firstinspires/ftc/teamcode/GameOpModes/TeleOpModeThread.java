@@ -121,7 +121,6 @@ public class TeleOpModeThread extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
-        outtakeArm.initOuttakeArmTeleOp();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 

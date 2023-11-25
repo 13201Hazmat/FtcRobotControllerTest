@@ -32,6 +32,9 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -40,6 +43,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -67,6 +71,8 @@ public class AutonomousMode1 extends LinearOpMode {
     public Launcher launcher;
     public VisionTfod visionTfodFront;
     public Lights lights;
+    public OuttakeController outtakeController;
+    public TelemetryPacket telemetryPacket = new TelemetryPacket();
 
     //Static Class for knowing system state
 
@@ -106,6 +112,7 @@ public class AutonomousMode1 extends LinearOpMode {
 
         /* Set Initial State of any subsystem when OpMode is to be started*/
         initSubsystems();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         //Key Pay inputs to selecting Starting Position of robot
         selectStartingPosition();
@@ -168,7 +175,7 @@ public class AutonomousMode1 extends LinearOpMode {
         initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
         moveBeyondTrussPose = new Pose2d(15,0,0);
 
-        switch (startPosition) {
+        switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(visionTfodFront.identifiedSpikeMarkLocation){
@@ -186,7 +193,7 @@ public class AutonomousMode1 extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(8, 30, Math.toRadians(-90));
                 break;
 
@@ -231,7 +238,7 @@ public class AutonomousMode1 extends LinearOpMode {
                 midwayPose1a = new Pose2d(18, -18, Math.toRadians(-90));
                 intakeStack = new Pose2d(52, -19,Math.toRadians(-90));
                 midwayPose2 = new Pose2d(52, 62, Math.toRadians(-90));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(50, 84, Math.toRadians(-90));
                 break;
 
@@ -255,7 +262,7 @@ public class AutonomousMode1 extends LinearOpMode {
                 midwayPose1a = new Pose2d(18, 18, Math.toRadians(90));
                 intakeStack = new Pose2d(52, 19,Math.toRadians(90));
                 midwayPose2 = new Pose2d(52, -62, Math.toRadians(90));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(46, -84, Math.toRadians(90));
                 break;
         }
@@ -269,14 +276,18 @@ public class AutonomousMode1 extends LinearOpMode {
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         .build());
 
-        //TODO : Code to drop Purple Pixel on Spike Mark
-        safeWaitSeconds(1);
-
+        //Drop Purple Pixel on Spike Mark
         //Move robot to midwayPose1
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
                         .build());
+
+        telemetry.addData("Expected midwayPose1", midwayPose1.log());
+        telemetry.addData("    Actual", drive.pose);
+        telemetry.update();
+        safeWaitMilliSeconds(500);
+
 
         //For Blue Right and Red Left, intake pixel from stack
         if (GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT ||
@@ -286,29 +297,35 @@ public class AutonomousMode1 extends LinearOpMode {
                             .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
                             .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
                             .build());
+            safeWaitMilliSeconds(500);
 
-            //TODO : Code to intake pixel from stack
-            safeWaitSeconds(1);
+
+            //Code to intake pixel from stack
+            intakePixelLevel5FromStack();
 
             //Move robot to midwayPose2 and to dropYellowPixelPose
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
                             .build());
+            safeWaitMilliSeconds(1000);
+
         }
 
-        safeWaitSeconds(waitSecondsBeforeDrop);
+        safeWaitMilliSeconds(waitSecondsBeforeDrop);
 
         //Move robot to midwayPose2 and to dropYellowPixelPose
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .setReversed(true)
                         .splineToLinearHeading(dropYellowPixelPose,0)
+                        //.strafeToLinearHeading(dropPurplePixelPose.position,dropPurplePixelPose.heading)
                         .build());
+        safeWaitMilliSeconds(200);
 
 
-        //TODO : Code to drop Pixel on Backdrop
-        safeWaitSeconds(1);
+        //Code to drop Pixel on Backdrop
+        dropPixelInBackdrop();
 
         //Move robot to park in Backstage
         Actions.runBlocking(
@@ -317,19 +334,73 @@ public class AutonomousMode1 extends LinearOpMode {
                         //.splineToLinearHeading(parkPose,0)
                         .build());
 
-        //Endstate of Outtake has to be in TRANSFER
-        outtakeArm.openGrip();
-        if (outtakeArm.outtakeArmState != OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER) {
-            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-            while (!(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)
-            && outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER))) {
-                safeWaitSeconds(0.1);
-            }
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
-            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+        moveOuttakeToEndState();
+        safeWaitMilliSeconds(2000);
+    }
+
+    public void intakePixelLevel5FromStack() {
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
+        intake.startIntakeInward();
+        safeWaitMilliSeconds(200);
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
+        safeWaitMilliSeconds(1000);
+        intake.stopIntakeMotor();
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+    }
+
+    public void dropPixelInBackdrop() {
+        outtakeController.moveTravelToReadyForTransfer();
+        while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
+                !outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER)) {
+            safeWaitMilliSeconds(50);
+        }
+        outtakeController.moveReadyForTransferToTransfer();
+        safeWaitMilliSeconds(500);
+        outtakeController.moveTransferToPickup();
+        safeWaitMilliSeconds(200);
+        outtakeController.movePickupToTransfer();
+        safeWaitMilliSeconds(100);
+        outtakeController.moveTransferToReadyForTransfer();
+        safeWaitMilliSeconds(200);
+        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+        safeWaitMilliSeconds(500);
+        outtakeArm.dropOnePixel();
+        safeWaitMilliSeconds(200);
+        if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
+                GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT) {
+            outtakeArm.dropOnePixel();
+            safeWaitMilliSeconds(200);
+        }
+        outtakeController.moveDropToTravel();
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
+        safeWaitMilliSeconds(2000);
+    }
+
+    public void moveOuttakeToEndState(){
+        //End state of Outtake has to be Travel
+        switch (outtakeSlides.outtakeSlidesState) {
+            case MIN_RETRACTED:
+            case TRANSFER:
+            case PICKUP:
+                outtakeController.movePickupToTransfer();
+                outtakeController.moveTransferToReadyForTransfer();
+                while(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)) {
+                    safeWaitMilliSeconds(50);
+                }
+                outtakeController.moveReadyForTransferToTravel();
+                break;
+            case READY_FOR_TRANSFER:
+            case TRAVEL:
+            case DROP_BELOW_LOW:
+            case DROP_LEVEL_LOW:
+            case DROP_BELOW_MID:
+            case DROP_LEVEL_MID:
+            case DROP_BELOW_HIGH:
+            case DROP_LEVEL_HIGH:
+            case MAX_EXTENDED:
+            case RANDOM:
+                outtakeController.moveDropToTravel();
+                break;
         }
     }
 
@@ -374,9 +445,9 @@ public class AutonomousMode1 extends LinearOpMode {
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position", startPosition);
             telemetry.addLine("Select Pathway option");
-            telemetry.addData("  Through the spike mark Rigging  ", "X / Square");
-            telemetry.addData("Through the wall Rigging ", "Y / Triangle");
-            telemetry.addData("Through the Stage Door", "B / Circle ");
+            telemetry.addData("  Through the spike mark Rigging  ", "X / ▢");
+            telemetry.addData("Through the wall Rigging ", "Y / Δ");
+            telemetry.addData("Through the Stage Door", "B / O ");
             if(gamepadController.gp1GetButtonXPress()){
                 pathwayOption = PATHWAY_OPTION.RIGGING_SPIKEMARK;
                 break;
@@ -396,8 +467,8 @@ public class AutonomousMode1 extends LinearOpMode {
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position", startPosition);
             telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Full autonomous                ","X / Square");
-            telemetry.addData("    Drop Preload and Park   ","Y / Triangle");
+            telemetry.addData("    Full autonomous                ","X / ▢");
+            telemetry.addData("    Drop Preload and Park   ","Y / Δ");
             if(gamepadController.gp1GetButtonXPress()){
                 autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
                 break;
@@ -454,8 +525,8 @@ public class AutonomousMode1 extends LinearOpMode {
     }
 
     //method to wait safely with stop button working if needed. Use this instead of sleep
-    public void safeWaitSeconds(double time) {
-        ElapsedTime timer = new ElapsedTime(SECONDS);
+    public void safeWaitMilliSeconds(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
         while (!isStopRequested() && timer.time() < time) {
         }
@@ -485,7 +556,6 @@ public class AutonomousMode1 extends LinearOpMode {
         telemetry.update();
 
         outtakeArm = new OuttakeArm(hardwareMap, telemetry);
-        outtakeArm.initOuttakeArmAuto();
         telemetry.addLine("OuttakeArm Initialized");
         telemetry.update();
 
@@ -509,6 +579,10 @@ public class AutonomousMode1 extends LinearOpMode {
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
         telemetry.addLine("Lights Initialized");
+        telemetry.update();
+
+        outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, this);
+        telemetry.addLine("Outtake Controller Initialized");
         telemetry.update();
 
         /* Create Controllers */

@@ -22,17 +22,20 @@ public class VisionTfod {
     }
     public static IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
 
-
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "MyModelStoredAsAsset.tflite";
+    private String TFOD_MODEL_ASSET;
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
     private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/myCustomModel.tflite";
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
             "Pixel",
+            "hzblue",
+            "hzred"
     };
+
+    public String label;
 
     //Vision parameters
     private TfodProcessor tfod;
@@ -52,7 +55,14 @@ public class VisionTfod {
      * Initialize the TensorFlow Object Detection processor.
      */
     public void initTfod() {
-        /*
+
+        if (GameField.playingAlliance == GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE) {
+            TFOD_MODEL_ASSET = "hzblue.tflite";
+            label ="hzblue";
+        } else {
+            TFOD_MODEL_ASSET = "hzred.tflite";
+            label = "hzred";
+        }
 
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
@@ -112,17 +122,17 @@ public class VisionTfod {
         //visionPortal.setProcessorEnabled(tfod, true);
 
 
-         */
+
     }   // end method initTfod()
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
     public void runTfodTensorFlow() {
-/*
+
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("Camera and # Objects Detected", webcamName, currentRecognitions.size());
- */
+
         //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
@@ -130,7 +140,7 @@ public class VisionTfod {
         } else { //RED_RIGHT or BLUE_RIGHT
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
         }
-/*
+
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
@@ -144,7 +154,7 @@ public class VisionTfod {
             if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
                 if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                         GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
-                    if (recognition.getLabel() == "Pixel") {
+                    if (recognition.getLabel() == label) {
                         if (x < 200) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
                         } else {
@@ -152,7 +162,7 @@ public class VisionTfod {
                         }
                     }
                 } else { //RED_RIGHT or BLUE_RIGHT
-                    if (recognition.getLabel() == "Pixel") {
+                    if (recognition.getLabel() == label) {
                         if (x < 200) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                         } else {
@@ -164,7 +174,6 @@ public class VisionTfod {
 
         }   // end for() loop
 
- */
 
     }   // end method runTfodTensorFlow()
 
