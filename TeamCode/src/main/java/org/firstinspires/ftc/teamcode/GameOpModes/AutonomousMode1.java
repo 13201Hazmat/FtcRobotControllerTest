@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -391,8 +390,8 @@ public class AutonomousMode1 extends LinearOpMode {
                 break;
             case READY_FOR_TRANSFER:
             case TRAVEL:
-            case DROP_BELOW_LOW:
-            case DROP_LEVEL_LOW:
+            case DROP_LOWEST:
+            case DROP_LOW_LINE:
             case DROP_BELOW_MID:
             case DROP_LEVEL_MID:
             case DROP_BELOW_HIGH:

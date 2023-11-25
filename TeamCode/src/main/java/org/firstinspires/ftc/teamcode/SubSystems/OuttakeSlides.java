@@ -32,13 +32,14 @@ public class OuttakeSlides {
         PICKUP(0),
         READY_FOR_TRANSFER(500),
         TRAVEL(0),
-        DROP_BELOW_LOW(0),
-        DROP_LEVEL_LOW(500),
-        DROP_BELOW_MID(875),
-        DROP_LEVEL_MID(1250),
-        DROP_BELOW_HIGH(1625),
-        DROP_LEVEL_HIGH(1850),
-        MAX_EXTENDED(1900),
+        DROP_LOWEST(490),
+        DROP_LOW_LINE(830),
+        DROP_BELOW_MID(1168),
+        DROP_LEVEL_MID(1475),
+        DROP_BELOW_HIGH(1744),
+        DROP_LEVEL_HIGH(2077),
+        DROP_HIGHEST(2250),
+        MAX_EXTENDED(2280),
         RANDOM(0);
 
         public final double motorPosition;
@@ -57,9 +58,9 @@ public class OuttakeSlides {
     public static final double OUTTAKE_MOTOR_DELTA_COUNT_RESET = 50;//200
 
     //Different constants of arm speed
-    public static final double OUTTAKE_MOTOR_POWER_TELEOP = 0.75;
-    public static final double OUTTAKE_MOTOR_POWER_AUTO = 0.75;
-    public static final double OUTTAKE_MOTOR_POWER_TO_MAGAZINE = 0.5;
+    public static final double OUTTAKE_MOTOR_POWER_TELEOP = 1.0;//0.75
+    public static final double OUTTAKE_MOTOR_POWER_AUTO = 1.0;//0.75
+    public static final double OUTTAKE_MOTOR_POWER_TO_MAGAZINE = 1.0;//1
     public enum OUTTAKE_MOVEMENT_DIRECTION {
         EXTEND,
         RETRACT
@@ -84,8 +85,8 @@ public class OuttakeSlides {
         resetOuttakeMotorMode();
         outtakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        outtakeMotorLeft.setPositionPIDFCoefficients(5.0);
-        outtakeMotorRight.setPositionPIDFCoefficients(5.0); //5
+        outtakeMotorLeft.setPositionPIDFCoefficients(8.0);
+        outtakeMotorRight.setPositionPIDFCoefficients(8.0); //5
         outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
         outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
@@ -237,8 +238,8 @@ public class OuttakeSlides {
 
     public boolean isOuttakeSlidesInStateDrop() {
         OUTTAKE_SLIDE_STATE toOuttakeSlideState = outtakeSlidesState;
-        if (outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW ||
-                outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW ||
+        if (outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LOW_LINE ||
+                outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LOWEST ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_MID ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH ||

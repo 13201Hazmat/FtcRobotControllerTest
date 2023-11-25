@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
@@ -95,10 +94,10 @@ public class TestOuttake extends LinearOpMode {
                 //TODO : Move to transfer before rotating arm if starting in DROP_BELOW_LOW
                 if (gamepadController.gp2GetSquarePress()){
                     outtakeArm.closeGrip();
-                    if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
+                    if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
+                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                     } else {
-                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
+                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
                     }
                     outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                     outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
@@ -202,7 +201,7 @@ public class TestOuttake extends LinearOpMode {
                         case MOVE_TO_DROP_BELOW_LOW:
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
                             outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
+                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                             comboTransferActivated = false;
                             break;
                     }
@@ -213,8 +212,8 @@ public class TestOuttake extends LinearOpMode {
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) ||
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID) ||
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) ||
-                        outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW) ||
-                        outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW)) &&
+                        outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE) ||
+                        outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)) &&
                         outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
                     if (gamepadController.gp2GetRightBumper()) {
                         outtakeArm.dropOnePixel();

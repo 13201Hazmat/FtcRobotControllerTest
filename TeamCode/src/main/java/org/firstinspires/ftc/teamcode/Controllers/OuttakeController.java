@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
-
-import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -11,7 +8,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 
@@ -88,9 +84,14 @@ public class OuttakeController {
 
     public void moveReadyForTransferToTransfer(){
         outtakeArm.openGrip();
+        ElapsedTime timeoutTimer = new ElapsedTime(MILLISECONDS);
         if (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
                 outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER)) {
-            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+            timeoutTimer.reset();
+            while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
+                    timeoutTimer.time() < 2000) {
+                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
+            }
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
             outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
         } else {
@@ -137,8 +138,8 @@ public class OuttakeController {
         outtakeArm.closeGrip();
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
-        if(outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW ||
-            outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
+        if(outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE ||
+            outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
             safeWaitMilliSeconds(100);
         }
         outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);

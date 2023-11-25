@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -50,7 +49,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 /**
@@ -362,8 +360,8 @@ public class AutonomousMode extends LinearOpMode {
                 break;
             case READY_FOR_TRANSFER:
             case TRAVEL:
-            case DROP_BELOW_LOW:
-            case DROP_LEVEL_LOW:
+            case DROP_LOWEST:
+            case DROP_LOW_LINE:
             case DROP_BELOW_MID:
             case DROP_LEVEL_MID:
             case DROP_BELOW_HIGH:

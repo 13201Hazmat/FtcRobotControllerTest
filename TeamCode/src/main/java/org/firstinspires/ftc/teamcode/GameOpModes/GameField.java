@@ -41,7 +41,8 @@ public class GameField {
 
     public enum OP_MODE_RUNNING {
         HAZMAT_TELEOP,
-        HAZMAT_AUTONOMOUS
+        HAZMAT_AUTONOMOUS,
+        HAZMAT_CALIBRATE_OUTTAKE
     }
     public static OP_MODE_RUNNING opModeRunning = OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
 

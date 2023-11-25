@@ -22,8 +22,8 @@ public class OuttakeArm {
         TRAVEL(0.85,0.15),
         TRANSFER(1,0),
         PICKUP(1,0),
-        READY_FOR_TRANSFER(0.9,0.1),
-        DROP(0.07,0.93);
+        READY_FOR_TRANSFER(0.95,0.05),
+        DROP(0.06,0.98);
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -47,10 +47,10 @@ public class OuttakeArm {
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
         TRAVEL(0.48),
-        TRANSFER(0.14),
+        TRANSFER(0.12),//0.14
         PICKUP(0.16),
         READY_FOR_TRANSFER(0.1),
-        DROP(0.92);
+        DROP(0.94);
 
         private double wristPosition;
 
@@ -96,8 +96,13 @@ public class OuttakeArm {
 
     //initialize outtakeArm
     public void initOuttakeArm() {
-        moveArm(OUTTAKE_ARM_STATE.TRAVEL);
-        moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
+        if (GameField.opModeRunning != GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE) {
+            moveArm(OUTTAKE_ARM_STATE.TRAVEL);
+            moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
+        } else {
+            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
+            moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
+        }
         closeGrip();
     }
 

@@ -23,7 +23,7 @@ public class Climber {
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {
         INITIAL(0), //Position
-        CLIMBED(6000), //117 rpm motor TODO Set value
+        CLIMBED(9000), //117 rpm motor TODO Set value, 6000
         MAX(9000);
 
         public final int motorPosition;

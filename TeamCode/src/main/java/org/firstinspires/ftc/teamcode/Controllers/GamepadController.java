@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import static java.lang.Thread.sleep;
 
@@ -237,7 +236,7 @@ public class GamepadController {
                     break;
                 case READY_FOR_TRANSFER:
                     if (gp2GetSquarePress()) {
-                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
                     }
 
                     if (gp2GetTrianglePress()) {
@@ -255,12 +254,13 @@ public class GamepadController {
                         outtakeController.moveReadyForTransferToTransfer();
                     }
                     break;
-                case DROP_BELOW_LOW:
-                case DROP_LEVEL_LOW:
+                case DROP_LOWEST:
+                case DROP_LOW_LINE:
                 case DROP_BELOW_MID:
                 case DROP_LEVEL_MID:
                 case DROP_BELOW_HIGH:
                 case DROP_LEVEL_HIGH:
+                case DROP_HIGHEST:
                 case MAX_EXTENDED:
                 case RANDOM:
                     if (gp2GetCrossPress()) {
@@ -283,27 +283,30 @@ public class GamepadController {
 
 
                     if (gp2GetSquarePress()) {
-                        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW) {
-                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_LOW);
+                        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE) {
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
                         } else {
-                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_LOW);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                         }
                     }
 
                     if (gp2GetTrianglePress()) {
-                        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) {
-                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
-                        } else {
+                        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID) {
                             outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+                        } else {
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
                         }
                     }
 
                     if (gp2GetCirclePress()) {
-                        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
+                        if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_HIGHEST) {
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
+                        } else if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH) {
                             outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
                         } else {
-                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
+                            outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_HIGHEST);
                         }
+
                     }
 
                     break;
@@ -360,7 +363,7 @@ public class GamepadController {
         if (gp1GetCirclePersistent()) {
             climber.climberActivated = true;
             climber.moveClimberSlidesUp();
-            climber.modifyClimberLengthContinuous(-0.75);
+            climber.modifyClimberLengthContinuous(-0.6);
         } else {
             if (climber.climberActivated && !climber.climbingStarted){
                 climber.holdClimberSlidesUp();
