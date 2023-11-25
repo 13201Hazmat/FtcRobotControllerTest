@@ -163,8 +163,7 @@ public class AutonomousMode2 extends LinearOpMode {
         Pose2d moveBeyondTrussPose = new Pose2d(0,0,0);
         Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
         Pose2d midwayPose1 = new Pose2d(0,0,0);
-        Pose2d inter1 = new Pose2d(0,0,0);
-        Pose2d intakeStack = new Pose2d(0,0,0);
+        Pose2d stageDoorStack = new Pose2d(0,0,0);
         Pose2d midwayPose2 = new Pose2d(0,0,0);
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
         Pose2d parkPose = new Pose2d(0, 0, 0);
@@ -192,9 +191,8 @@ public class AutonomousMode2 extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
-                intakeStack = new Pose2d(0,0,0);
+                stageDoorStack = new Pose2d(0,0,0);
                 midwayPose2 = new Pose2d(0,0,0);
-                inter1 = new Pose2d(0,0,0);
                 waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(8, 30, Math.toRadians(-90));
                 break;
@@ -216,9 +214,8 @@ public class AutonomousMode2 extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
-                intakeStack = new Pose2d(0,0,0);
+                stageDoorStack = new Pose2d(0,0,0);
                 midwayPose2 = new Pose2d(0,0,0);
-                inter1 = new Pose2d(0,0,0);
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(8, -30, Math.toRadians(90));
                 break;
@@ -237,19 +234,12 @@ public class AutonomousMode2 extends LinearOpMode {
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(43, 86, Math.toRadians(-90));
-                        intakeStack = new Pose2d(0,0,0);
+                        stageDoorStack = new Pose2d(0,0,0);
                         break;
                 }
                 midwayPose1 = new Pose2d(8, -8, Math.toRadians(0));
-                if(VisionTfod.identifiedSpikeMarkLocation == VisionTfod.IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT){
-                    intakeStack = new Pose2d(0,0,0);
-                    midwayPose2 = new Pose2d(0,0,0);
-                    inter1 = new Pose2d(0,0,0);
-                } else {
-                    intakeStack = new Pose2d(0,0,0);
-                    midwayPose2 = new Pose2d(0,0,0);
-                    inter1 = new Pose2d(0,0,0);
-                }
+                stageDoorStack = new Pose2d(0,0,0);
+                midwayPose2 = new Pose2d(0,0,0);
                 waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(50, 84, Math.toRadians(-90));
                 break;
@@ -271,15 +261,8 @@ public class AutonomousMode2 extends LinearOpMode {
                         break;
                 }
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
-                if(VisionTfod.identifiedSpikeMarkLocation == VisionTfod.IDENTIFIED_SPIKE_MARK_LOCATION.LEFT){
-                    intakeStack = new Pose2d(0,0,0);
-                    midwayPose2 = new Pose2d(0,0,0);
-                    inter1 = new Pose2d(0,0,0);
-                } else {
-                    intakeStack = new Pose2d(0,0,0);
-                    midwayPose2 = new Pose2d(0,0,0);
-                    inter1 = new Pose2d(0,0,0);
-                }
+                stageDoorStack = new Pose2d(0,0,0);
+                midwayPose2 = new Pose2d(0,0,0);
                 waitSecondsBeforeDrop = 2000; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPose = new Pose2d(46, -84, Math.toRadians(90));
                 break;
@@ -309,11 +292,10 @@ public class AutonomousMode2 extends LinearOpMode {
 
 
         //For Blue Right and Red Left, intake pixel from stack
-        if (GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT ||
-                GameField.startPosition == GameField.START_POSITION.RED_LEFT) {
+        if (autoOption == AUTO_OPTION.FULL_AUTONOMOUS) {
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+                            .strafeToLinearHeading(stageDoorStack.position, stageDoorStack.heading)
                             .build());
             safeWaitMilliSeconds(500);
 
@@ -325,7 +307,6 @@ public class AutonomousMode2 extends LinearOpMode {
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
-                            .strafeToLinearHeading(inter1.position, inter1.heading)
                             .build());
             safeWaitMilliSeconds(1000);
 
