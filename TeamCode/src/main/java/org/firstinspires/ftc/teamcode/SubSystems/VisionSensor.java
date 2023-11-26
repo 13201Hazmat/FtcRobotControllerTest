@@ -14,6 +14,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class VisionSensor {
 
+    public Telemetry telemetry;
     public DistanceSensor backdropDistanceSensorLeft, backdropDistanceSensorRight;
     public HuskyLens huskyLens;
     public final int READ_PERIOD = 1;
@@ -46,13 +47,14 @@ public class VisionSensor {
     public String detectedAprilTag = "";
     public int detectedAprilTagCount = 0;
 
-    public double DISTANCE_SENSOR_THRESHOLD_AMBER = 100; //mm
-    public double DISTANCE_SENSOR_THRESHOLD_RED = 50; //mm
+    public double DISTANCE_SENSOR_THRESHOLD_AMBER = 150; //mm
+    public double DISTANCE_SENSOR_THRESHOLD_RED = 75; //mm
 
     public double backdropDistanceLeftDistance = 0;
     public double backdropDistanceRightDistance = 0;
 
     public VisionSensor(HardwareMap hardwareMap, Telemetry telemetry){
+        this.telemetry = telemetry;
         backdropDistanceSensorLeft = hardwareMap.get(DistanceSensor.class, "back_distance_left");
         backdropDistanceSensorRight = hardwareMap.get(DistanceSensor.class, "back_distance_right");
 
@@ -97,14 +99,21 @@ public class VisionSensor {
                     backdropDistanceRightState == BACKDROP_DISTANCE_SENSOR_STATE.RED) {
                 backdropDistanceState = BACKDROP_DISTANCE_STATE.RED;
             }
+        } else {
+            backdropDistanceState = BACKDROP_DISTANCE_STATE.NOT_SENSED;
         }
 
     }
 
+    String detectedAprilTagName = "";
+
     public boolean senseAprilTag(){
         HuskyLens.Block[] blocks = huskyLens.blocks();
         detectedAprilTagCount = blocks.length;
+        if (detectedAprilTagCount > 0)
+            backdropAprilTagDetected = true;
 
+        /*
         backdropAprilTagDetected = false;
         for (int i = 0; i < detectedAprilTagCount; i++) {
             for (int j = 0; (j < backdropAprilTags.length & !backdropAprilTagDetected); j++) {
@@ -113,7 +122,7 @@ public class VisionSensor {
                     detectedAprilTag = backdropAprilTags[j];
                 }
             }
-        }
+        }*/
 
         return backdropAprilTagDetected;
     }
@@ -126,7 +135,7 @@ public class VisionSensor {
         telemetry.addData("    backdrop Left Distance", backdropDistanceLeftDistance);
         telemetry.addData("    backdrop Right Distance", backdropDistanceLeftDistance);
         telemetry.addData("    HuskyLens detected AprilTag Count", detectedAprilTagCount);
-        telemetry.addData("    HuskyLens detected AprilTag", detectedAprilTag);
+        //telemetry.addData("    HuskyLens detected AprilTag", detectedAprilTag.toString());
         telemetry.addLine("=============");
     }
 

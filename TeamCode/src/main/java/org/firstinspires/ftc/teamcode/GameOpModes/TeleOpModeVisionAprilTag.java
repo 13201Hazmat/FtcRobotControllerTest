@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 
 
 /**
@@ -41,6 +42,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public VisionSensor visionSensor;
     public VisionAprilTag visionAprilTagBack;
     public Lights lights;
 
@@ -148,6 +150,11 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
         telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 
+        /* Create VisionAprilTag */
+        visionSensor = new VisionSensor(hardwareMap, telemetry);
+        telemetry.addLine("Vision Sensor Initialized");
+        telemetry.update();
+
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
         telemetry.addLine("Lights Initialized");
@@ -160,7 +167,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, visionSensor, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
@@ -207,6 +214,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
             outtakeArm.printDebugMessages();
             climber.printDebugMessages();
             launcher.printDebugMessages();
+            visionSensor.printDebugMessages();
             visionAprilTagBack.printdebugMessages();
             lights.printDebugMessages();
         }

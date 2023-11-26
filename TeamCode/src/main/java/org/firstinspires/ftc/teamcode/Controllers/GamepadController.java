@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 
 
 /**
@@ -66,6 +67,7 @@ public class GamepadController {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public VisionSensor visionSensor;
     public Lights lights;
     public Telemetry telemetry;
     LinearOpMode currentOpMode;
@@ -84,6 +86,7 @@ public class GamepadController {
                              OuttakeArm outtakeArm,
                              Climber climber,
                              Launcher launcher,
+                             VisionSensor visionSensor,
                              Lights lights,
                              Telemetry telemetry,
                              LinearOpMode currentOpMode
@@ -97,6 +100,7 @@ public class GamepadController {
         this.climber = climber;
         this.lights = lights;
         this.launcher = launcher;
+        this.visionSensor = visionSensor;
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
         outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, currentOpMode);
@@ -111,6 +115,7 @@ public class GamepadController {
         runOuttakeSlidesAndArm();
         runClimber();
         runLauncher();
+        runVisionSensor();
         runLights();
       }
 
@@ -439,17 +444,32 @@ public class GamepadController {
 
     }
 
+    public void runVisionSensor(){
+        visionSensor.senseBackdrop();
+    }
+
     public void runLights(){
-        if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
-        }
 
-        if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
-        }
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
-        if (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+        if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
+        } else if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.AMBER) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_AMBER);
+        } else {
+
+            if (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY) {
+                lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+            }
+
+            if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+                lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
+            }
+
+            if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL) {
+                lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
+            }
+
         }
 
     }

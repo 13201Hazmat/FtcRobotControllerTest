@@ -55,6 +55,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 /**
@@ -71,6 +72,7 @@ public class AutonomousMode3 extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public VisionSensor visionSensor;
     public VisionTfod visionTfodFront;
     public Lights lights;
     public OuttakeController outtakeController;
@@ -876,6 +878,11 @@ public class AutonomousMode3 extends LinearOpMode {
         telemetry.addLine("Launcher Initialized");
         telemetry.update();
 
+        /* Create VisionSensor */
+        visionSensor = new VisionSensor(hardwareMap, telemetry);
+        telemetry.addLine("Vision Sensor Initialized");
+        telemetry.update();
+
         /* Create Vision */
         visionTfodFront = new VisionTfod(hardwareMap, telemetry, "Webcam 1");
         telemetry.addLine("VisionTfod Initialized");
@@ -892,7 +899,7 @@ public class AutonomousMode3 extends LinearOpMode {
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, visionSensor, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 
