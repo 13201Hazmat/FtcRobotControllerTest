@@ -154,16 +154,16 @@ public class VisionTfod {
             if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
                 if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                         GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
-                    if (recognition.getLabel() == label) {
-                        if (x < 200) {
+                    if (recognition.getLabel() == label || recognition.getLabel() == "Pixel") {
+                        if (x < 350) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
                         } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                         }
                     }
                 } else { //RED_RIGHT or BLUE_RIGHT
-                    if (recognition.getLabel() == label) {
-                        if (x < 200) {
+                    if (recognition.getLabel() == label || recognition.getLabel() == "Pixel"){
+                        if (x < 350) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                         } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;

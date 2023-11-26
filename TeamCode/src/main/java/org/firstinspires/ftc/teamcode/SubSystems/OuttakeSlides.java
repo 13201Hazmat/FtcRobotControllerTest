@@ -85,12 +85,16 @@ public class OuttakeSlides {
         resetOuttakeMotorMode();
         outtakeMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        outtakeMotorLeft.setPositionPIDFCoefficients(8.0);
-        outtakeMotorRight.setPositionPIDFCoefficients(8.0); //5
+        outtakeMotorLeft.setPositionPIDFCoefficients(10.0);
+        outtakeMotorRight.setPositionPIDFCoefficients(10.0); //5
         outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
         outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
         turnOuttakeBrakeModeOff();
-        outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRAVEL;
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+            outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
+        } else {
+            outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
+        }
         //manualResetOuttakeMotor();
     }
 
@@ -231,9 +235,9 @@ public class OuttakeSlides {
 
     public double isOuttakeSlidesInStateError = 0;
     public boolean isOuttakeSlidesInState(OUTTAKE_SLIDE_STATE toOuttakeSlideState) {
-        isOuttakeSlidesInStateError = Math.abs(outtakeMotorLeft.getCurrentPosition() - toOuttakeSlideState.motorPosition);
+        //isOuttakeSlidesInStateError = Math.abs(outtakeMotorLeft.getCurrentPosition() - toOuttakeSlideState.motorPosition);
         isOuttakeSlidesInStateError = Math.abs(outtakeMotorRight.getCurrentPosition() - toOuttakeSlideState.motorPosition);
-        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 30);
+        return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 15);
     }
 
     public boolean isOuttakeSlidesInStateDrop() {
@@ -243,7 +247,8 @@ public class OuttakeSlides {
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_MID ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH ||
-                outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
+                outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH ||
+                outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_HIGHEST) {
             isOuttakeSlidesInStateError = Math.abs(outtakeMotorLeft.getCurrentPosition() - toOuttakeSlideState.motorPosition);
             //isOuttakeSlidesInStateError = Math.abs(outtakeMotorRight.getCurrentPosition() - toOuttakeSlideState.motorPosition);
             return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 30);

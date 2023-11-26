@@ -27,7 +27,7 @@ public class Intake {
     public INTAKE_MOTOR_STATE intakeMotorPrevState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
 
     public enum INTAKE_ROLLER_HEIGHT{
-        INTAKE_ROLLER_INIT_AUTO(0.55,7),
+        INTAKE_ROLLER_INIT_AUTO(0.45,7),
         INTAKE_ROLLER_HEIGHT_ABOVE_STACK(0.18,6),
         INTAKE_ROLLER_LIFTED_5(0.145,5),
         INTAKE_ROLLER_LIFTED_4(0.11,4),
@@ -49,7 +49,7 @@ public class Intake {
 
         public INTAKE_ROLLER_HEIGHT byIndex(int ord) {
             if (ord <1) ord = 1;
-            if (ord >6) ord = 6;
+            if (ord >7) ord = 7;
             for (INTAKE_ROLLER_HEIGHT a : INTAKE_ROLLER_HEIGHT.values()) {
                 if (a.index == ord) {
                     return a;
@@ -77,9 +77,9 @@ public class Intake {
     public void initIntake(){
         intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED;
         intakeMotor.setPower(0);
-        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+        //if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
             moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
-        }
+        //}
     }
 
     public void moveRollerHeight(INTAKE_ROLLER_HEIGHT targetIntakeRollerHeight){
@@ -102,8 +102,8 @@ public class Intake {
     }
 
     public void moveIntakeRollerToLevel(int level){
-        if (level > 5) {
-            level = 5;
+        if (level > 6) {
+            level = 6;
         }
         if (level < 1) {
             level = 1;
@@ -121,7 +121,7 @@ public class Intake {
 
     public void reverseIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING;
         }

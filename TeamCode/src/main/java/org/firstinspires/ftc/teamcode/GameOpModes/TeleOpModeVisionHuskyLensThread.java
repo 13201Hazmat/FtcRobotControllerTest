@@ -89,14 +89,6 @@ public class TeleOpModeVisionHuskyLensThread extends LinearOpMode {
                     lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
                 }
 
-                if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
-                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
-                }
-
-                if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL) {
-                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
-                }
-
                 if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
                     lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
                 }
@@ -175,7 +167,7 @@ public class TeleOpModeVisionHuskyLensThread extends LinearOpMode {
         telemetry.update();
 
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

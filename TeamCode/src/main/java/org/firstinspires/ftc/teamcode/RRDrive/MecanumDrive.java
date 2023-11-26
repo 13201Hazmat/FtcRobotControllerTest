@@ -81,11 +81,11 @@ public class MecanumDrive {
         // path controller gains
         //TODO Step 12 Set value of Gains after running ManualFeedbackTuner
         public double axialGain = 12.0; //0.0; 3.0
-        public double lateralGain = 10.0; //0.0; 3.0
-        public double headingGain = 20.0; //0.0; 3.0// shared with turn
+        public double lateralGain = 12.0; //0.0; 3.0
+        public double headingGain = 10.0; //20.0; //0.0; 3.0// shared with turn
 
         public double axialVelGain = 0.030121281921630154; //generateSMARTDerivativeTerm(axialGain, false);//0.0
-        public double lateralVelGain = 0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
+        public double lateralVelGain = 0.030121281921630154; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
         public double headingVelGain = 0.010441577246610628; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
         //TODO End Step 12
     }

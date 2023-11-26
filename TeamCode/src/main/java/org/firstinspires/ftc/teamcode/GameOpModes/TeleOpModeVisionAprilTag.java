@@ -160,7 +160,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

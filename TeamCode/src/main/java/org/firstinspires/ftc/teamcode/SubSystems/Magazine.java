@@ -33,7 +33,7 @@ public class Magazine {
     }
     public MAGAZINE_STATE magazineState = MAGAZINE_STATE.EMPTY;
 
-    public double MAGAZINE_SENSE_DISTANCE = 25;
+    public double MAGAZINE_SENSE_DISTANCE = 9.0;
 
     public Magazine(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
@@ -65,6 +66,7 @@ public class GamepadController {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public Lights lights;
     public Telemetry telemetry;
     LinearOpMode currentOpMode;
     public OuttakeController outtakeController;
@@ -82,6 +84,7 @@ public class GamepadController {
                              OuttakeArm outtakeArm,
                              Climber climber,
                              Launcher launcher,
+                             Lights lights,
                              Telemetry telemetry,
                              LinearOpMode currentOpMode
                             ) {
@@ -92,6 +95,7 @@ public class GamepadController {
         this.outtakeSlides = outtakeSlides;
         this.outtakeArm = outtakeArm;
         this.climber = climber;
+        this.lights = lights;
         this.launcher = launcher;
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
@@ -103,13 +107,17 @@ public class GamepadController {
      */
     public void runByGamepadControl(){
         runIntake();
-        runMagazine();
+        //runMagazine();
         runOuttakeSlidesAndArm();
         runClimber();
         runLauncher();
+        runLights();
       }
 
-    public ElapsedTime intakeReverseTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
+    public ElapsedTime magazineSecondPixelTimer = new ElapsedTime(MILLISECONDS);
+    public boolean magazineSecondPixelActivated = false;
+
     public boolean intakeReverseStarted = false;
     public boolean intakeReverserEnabled = false;
     public void runIntake(){
@@ -128,6 +136,7 @@ public class GamepadController {
 
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
+            magazineSecondPixelActivated = false;
             if (gp1GetDpad_downPress()) {
                 if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
                     if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
@@ -141,22 +150,23 @@ public class GamepadController {
                         intake.stopIntakeMotor();
                     }
                 } else {
-                    /*if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
-                        intake.startIntakeInward();
-                        intakeReverserEnabled = true;
-                    } else {*/
-                        intake.stopIntakeMotor();
-                    //}
-                }
+                        intake.stopIntakeMotor();}
             }
         }
 
         if (intakeReverserEnabled) {
             if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
-                intakeReverseStarted = true;
-                intakeReverseTimer.reset();
-                intake.reverseIntake();
-                intakeReverserEnabled = false;
+                if (!magazineSecondPixelActivated) {
+                    magazineSecondPixelTimer.reset();
+                    magazineSecondPixelActivated = true;
+                } else {
+                    if (magazineSecondPixelTimer.time() > 50) {
+                        intakeReverseStarted = true;
+                        intakeReverseTimer.reset();
+                        intake.reverseIntake();
+                        intakeReverserEnabled = false;
+                    }
+                }
             }
         }
 
@@ -176,7 +186,7 @@ public class GamepadController {
 
     }
 
-    public void runMagazine(){
+    /*public void runMagazine(){
         //Magazine code
         if (gp1GetLeftTriggerPersistent()) {
             magazine.openMagazineDoor();
@@ -186,10 +196,10 @@ public class GamepadController {
 
         //TODO: ADD OVERRIDE FOR ANY LOCKS CREATED BY SENSORS
 
-    }
+    }*/
 
     public ElapsedTime pickupTimer = new ElapsedTime(MILLISECONDS);
-    public boolean comboTransferActivated = false;
+    /*public boolean comboTransferActivated = false;
     public enum ComboPressedState {
         COMBO_INACTIVE,
         PICKUP,
@@ -198,12 +208,10 @@ public class GamepadController {
         WAIT_TILL_BACK_TO_READY_TO_TRANSFER,
         MOVE_TO_DROP
     }
-    public ComboPressedState comboPressedState = ComboPressedState.COMBO_INACTIVE;
+    public ComboPressedState comboPressedState = ComboPressedState.COMBO_INACTIVE;*/
     public void runOuttakeSlidesAndArm(){
         magazine.senseMagazineState();
-
-        if (!comboTransferActivated) {
-            switch (outtakeSlides.outtakeSlidesState) {
+        switch (outtakeSlides.outtakeSlidesState) {
                 case MIN_RETRACTED:
                 case TRANSFER:
                     if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
@@ -212,14 +220,27 @@ public class GamepadController {
                     if (gp2GetCrossPress()) {
                         outtakeController.moveTransferToPickup();
                     }
+                    //TODO: Is this needed
                     if (gp2GetRightBumperPress()) {
                         outtakeArm.toggleGrip();
                     }
-                    if (gp2GetLeftBumperPress()) {
-                        comboTransferActivated = true;
-                    }
                     break;
                 case PICKUP:
+                    if (gp2GetSquarePress()) {
+                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
+                    }
+
+                    if (gp2GetTrianglePress()) {
+                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+                    }
+
+                    if (gp2GetCirclePress()) {
+                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_HIGHEST);
+                    }
+
                     if (gp2GetCrossPress()) {
                         outtakeController.movePickupToTransfer();
                         safeWaitMilliSeconds(50);
@@ -244,7 +265,7 @@ public class GamepadController {
                     }
 
                     if (gp2GetCirclePress()) {
-                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
+                        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_HIGHEST);
                     }
 
                     if (gp2GetCrossPress()) {
@@ -270,8 +291,7 @@ public class GamepadController {
                     if (!gp2GetStart()) {
                         if (gp2GetRightBumper()) {
                             //protect so that drop hapopens only outside robot
-                            if (outtakeSlides.isOuttakeSlidesInStateDrop() &&
-                                outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
+                            if (outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
                                 outtakeArm.dropOnePixel();
                             }
                         }
@@ -309,9 +329,15 @@ public class GamepadController {
 
                     }
 
+                    if (gp2GetLeftBumperPress()) {
+                        //comboTransferActivated = true;
+                        outtakeController.moveDropToReadyforTransfer();
+                    }
+
                     break;
-            }
-        } else {
+        }
+
+        /*else {
             switch (comboPressedState) {
                 case COMBO_INACTIVE:
                     comboPressedState = ComboPressedState.PICKUP;
@@ -347,8 +373,20 @@ public class GamepadController {
                     break;
             }
         }
+         */
 
-        if(gp2GetLeftStickY()>0.05|| gp2GetLeftStickY()<-0.05) {
+        if (gp2GetDpad_upPress()) {
+            outtakeArm.rotateWrist(1);
+        }
+
+        if (gp2GetDpad_downPress()) {
+            outtakeArm.rotateWrist(-1);
+        }
+
+        //TODO: Reset for Wrist
+
+
+        if(gp2GetLeftStickY()>0.15|| gp2GetLeftStickY()<-0.15) {
             outtakeSlides.modifyOuttakeSlidesLengthContinuous(gp2TurboMode(-gp2GetLeftStickY()));
         }
 
@@ -401,6 +439,21 @@ public class GamepadController {
 
     }
 
+    public void runLights(){
+        if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
+        }
+
+        if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
+        }
+
+        if (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY) {
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+        }
+
+    }
+
     public void safeWaitMilliSeconds(double time) {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);
         timer.reset();
@@ -446,7 +499,7 @@ public class GamepadController {
      * @return Cube of the stick input reduced to 25% speed
      */
     public double limitStick(double stickInput) {
-        return (stickInput * stickInput * stickInput * 0.33); //0.25
+        return (stickInput * stickInput * stickInput * 0.5); //0.25
     }
 
     /**
@@ -465,7 +518,8 @@ public class GamepadController {
 
         rightTriggerValue = gp1GetRightTrigger();
         //acceleration_factor = 1.0 + 3.0 * rightTriggerValue;
-        acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
+        //acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
+        acceleration_factor = 1.0 + 1.0 * rightTriggerValue;
         turboFactor = limitStick(stickInput) * acceleration_factor;
         return turboFactor;
     }
@@ -479,7 +533,8 @@ public class GamepadController {
 
         rightTriggerValue = gp2GetRightTrigger();
         //acceleration_factor = 1.0 + 3.0 * rightTriggerValue;
-        acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
+        //acceleration_factor = 1.0 + 2.0 * rightTriggerValue;
+        acceleration_factor = 1.0 + 1.0 * rightTriggerValue;
         turboFactor = limitStick(stickInput) * acceleration_factor;
         return turboFactor;
     }

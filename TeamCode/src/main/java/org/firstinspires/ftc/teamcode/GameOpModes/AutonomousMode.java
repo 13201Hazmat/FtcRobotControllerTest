@@ -148,7 +148,7 @@ public class AutonomousMode extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(visionTfodFront.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, -1, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
@@ -169,21 +169,24 @@ public class AutonomousMode extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(visionTfodFront.identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(30, 9, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(21, -36, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(28, 5, Math.toRadians(27));
+                        dropYellowPixelPose = new Pose2d(32, -33, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(29, -36,  Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(28, -7, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(24, -33,  Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(26, -8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(37, -36, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(26, -13, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(18, -33, Math.toRadians(90));
                         break;
                 }
-                midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
+                midwayPose1 = new Pose2d(9, -3, Math.toRadians(0));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(8, -30, Math.toRadians(90));
+                parkPose = new Pose2d(0, -27, Math.toRadians(90));
+
+                //5, 64,90 //26,72,90
+                //50,70,90, 50 - 15, 90
                 break;
 
             case BLUE_RIGHT:
@@ -250,10 +253,6 @@ public class AutonomousMode extends LinearOpMode {
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
                         .build());
-
-        telemetry.addData("Expected midwayPose1", midwayPose1.log());
-        telemetry.addData("    Actual", drive.pose);
-        telemetry.update();
         safeWaitMilliSeconds(500);
 
 
@@ -318,11 +317,6 @@ public class AutonomousMode extends LinearOpMode {
     }
 
     public void dropPixelInBackdrop() {
-        outtakeController.moveTravelToReadyForTransfer();
-        while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
-                !outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER)) {
-            safeWaitMilliSeconds(50);
-        }
         outtakeController.moveReadyForTransferToTransfer();
         safeWaitMilliSeconds(500);
         outtakeController.moveTransferToPickup();
@@ -338,11 +332,11 @@ public class AutonomousMode extends LinearOpMode {
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT) {
             outtakeArm.dropOnePixel();
-            safeWaitMilliSeconds(200);
+            safeWaitMilliSeconds(1000);
         }
         outtakeController.moveDropToTravel();
-        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
-        safeWaitMilliSeconds(2000);
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+        //safeWaitMilliSeconds(2000);
     }
 
     public void moveOuttakeToEndState(){
@@ -366,6 +360,7 @@ public class AutonomousMode extends LinearOpMode {
             case DROP_LEVEL_MID:
             case DROP_BELOW_HIGH:
             case DROP_LEVEL_HIGH:
+            case DROP_HIGHEST:
             case MAX_EXTENDED:
             case RANDOM:
                 outtakeController.moveDropToTravel();
@@ -474,7 +469,7 @@ public class AutonomousMode extends LinearOpMode {
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

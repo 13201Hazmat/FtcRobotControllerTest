@@ -77,6 +77,35 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveTransferToReadyForTransfer();
+                //safeWaitMilliSeconds(200);
+                return true;
+            }
+        };
+    }
+
+    public void movePickupToReadyForTransfer(){
+        outtakeArm.closeGrip();
+        safeWaitMilliSeconds(50);
+        movePickupToTransfer();
+        safeWaitMilliSeconds(50);
+        /*ElapsedTime timeoutTimer = new ElapsedTime(MILLISECONDS);
+        while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
+                timeoutTimer.time() < 500) {
+            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+        }*/
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+        safeWaitMilliSeconds(200);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
+    }
+
+    public Action movePickupToReadyForTransferAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                movePickupToReadyForTransfer();
                 return true;
             }
         };
@@ -145,14 +174,14 @@ public class OuttakeController {
         outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);
     }
 
-    public Action moveReadyForTransferToDropLevelMidAction(){
+    public Action moveReadyForTransferToDropLowestAction(){
         return new Action(){
 
             @Override
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+                moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                 return true;
             }
         };
@@ -196,6 +225,96 @@ public class OuttakeController {
             }
         };
     }
+
+    public void moveDropToReadyforTransfer(){
+        outtakeArm.closeGrip();
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
+        safeWaitMilliSeconds(100);
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+    }
+
+    public Action moveDropToReadyforTransferAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveDropToReadyforTransfer();
+                return true;
+            }
+        };
+    }
+
+    public void dropOnePixel() {
+        outtakeArm.dropOnePixel();
+    }
+
+    public Action dropOnePixelAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                outtakeArm.dropOnePixel();
+                safeWaitMilliSeconds(1000);
+                return true;
+            }
+        };
+    }
+
+    public void moveOuttakeToEndState(){
+        if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER &&
+            outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP) {
+            moveDropToReadyforTransfer();
+            safeWaitMilliSeconds(500);
+            moveReadyForTransferToTransfer();
+            safeWaitMilliSeconds(200);
+        }
+
+        //End state of Outtake has to be Travel
+        /*
+        switch (outtakeSlides.outtakeSlidesState) {
+            case MIN_RETRACTED:
+            case TRANSFER:
+            case PICKUP:
+                /*movePickupToReadyForTransfer();
+                while(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)) {
+                    safeWaitMilliSeconds(150);
+                }
+
+                moveReadyForTransferToTravel();
+                break;
+            case READY_FOR_TRANSFER:
+            case TRAVEL:
+            case DROP_LOWEST:
+            case DROP_LOW_LINE:
+            case DROP_BELOW_MID:
+            case DROP_LEVEL_MID:
+            case DROP_BELOW_HIGH:
+            case DROP_LEVEL_HIGH:
+            case DROP_HIGHEST:
+            case MAX_EXTENDED:
+            case RANDOM:
+                moveDropToTravel();
+                break;
+        }*/
+    }
+
+    public Action moveOuttakeToEndStateAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveOuttakeToEndState();
+                safeWaitMilliSeconds(1000);
+                return true;
+            }
+        };
+    }
+
+
 
     public void safeWaitMilliSeconds(double time) {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);

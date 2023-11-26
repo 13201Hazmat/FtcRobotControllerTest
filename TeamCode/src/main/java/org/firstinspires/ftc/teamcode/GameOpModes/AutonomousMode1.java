@@ -38,6 +38,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,6 +58,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 /**
  * Hazmat Autonomous
  */
+@Disabled
 @Autonomous(name = "HazmatAutonomous Mode 1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
 public class AutonomousMode1 extends LinearOpMode {
 
@@ -396,6 +398,7 @@ public class AutonomousMode1 extends LinearOpMode {
             case DROP_LEVEL_MID:
             case DROP_BELOW_HIGH:
             case DROP_LEVEL_HIGH:
+            case DROP_HIGHEST:
             case MAX_EXTENDED:
             case RANDOM:
                 outtakeController.moveDropToTravel();
@@ -586,7 +589,7 @@ public class AutonomousMode1 extends LinearOpMode {
 
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
-                outtakeSlides, outtakeArm, climber, launcher, telemetry, this);
+                outtakeSlides, outtakeArm, climber, launcher, lights, telemetry, this);
         telemetry.addLine("Gamepad Initialized");
         telemetry.update();
 

@@ -48,7 +48,7 @@ public class OuttakeArm {
         ZERO(0),
         TRAVEL(0.48),
         TRANSFER(0.12),//0.14
-        PICKUP(0.16),
+        PICKUP(0.14),
         READY_FOR_TRANSFER(0.1),
         DROP(0.94);
 
@@ -62,7 +62,6 @@ public class OuttakeArm {
         }
     }
     public OUTTAKE_WRIST_STATE outtakeWristState = OUTTAKE_WRIST_STATE.TRANSFER;
-    public double OUTTAKE_WRIST_DELTA = 0.02; //UP
 
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
@@ -96,9 +95,10 @@ public class OuttakeArm {
 
     //initialize outtakeArm
     public void initOuttakeArm() {
-        if (GameField.opModeRunning != GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE) {
-            moveArm(OUTTAKE_ARM_STATE.TRAVEL);
-            moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE ||
+                GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
+            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
+            moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
         } else {
             moveArm(OUTTAKE_ARM_STATE.TRANSFER);
             moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
@@ -133,7 +133,7 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <150) {
+        while (pixelDropTimer.time() <100) {
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
@@ -163,32 +163,6 @@ public class OuttakeArm {
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
         outtakeArmState = toArmState;
-
-        /*if (delay >0) {
-            wristTimer.reset();
-            while (wristTimer.time()<100) {}
-        }
-
-        switch (outtakeArmState) {
-            case TRAVEL:
-                openGrip();
-                moveWrist(OUTTAKE_WRIST_STATE.TRAVEL);
-                break;
-            case TRANSFER:
-                openGrip();
-                moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
-                break;
-            case PICKUP:
-                moveWrist(OUTTAKE_WRIST_STATE.PICKUP);
-                closeGrip();
-                break;
-            case READY_FOR_TRANSFER:
-                moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-                break;
-            case DROP:
-                moveWrist(OUTTAKE_WRIST_STATE.DROP);
-                break;
-        }*/
     }
 
     public void rotateArm(double direction) {
