@@ -210,17 +210,17 @@ public class AutonomousMode3 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(24, 13, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(18, 33, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 34, Math.toRadians(-90));//y33, x19
                         dropStackPixelPose = new Pose2d(21, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(31, 1, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(24, 33,  Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(24.5, 34,  Math.toRadians(-90));//y33, x24.5
                         dropStackPixelPose = new Pose2d(21, 36, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(28, -4, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(32, 33, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(30, 34, Math.toRadians(-90)); //y=33, x32
                         dropStackPixelPose = new Pose2d(37, 36, Math.toRadians(-90));
                         break;
                 }
@@ -232,8 +232,8 @@ public class AutonomousMode3 extends LinearOpMode {
                 stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(49, 18, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPoseWall = new Pose2d(2, -28, Math.toRadians(-90));
-                parkPoseStageDoor = new Pose2d(49, -28, Math.toRadians(90));
+                parkPoseWall = new Pose2d(2, 28, Math.toRadians(-90));
+                parkPoseStageDoor = new Pose2d(49, 28, Math.toRadians(90));
 
                 break;
 
@@ -242,17 +242,17 @@ public class AutonomousMode3 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(30));
-                        dropYellowPixelPose = new Pose2d(32, -33, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(33, -34, Math.toRadians(90)); //x=32,y=-33
                         dropStackPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(31, -1, Math.toRadians(30));
-                        dropYellowPixelPose = new Pose2d(24, -33,  Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(26, -34.5,  Math.toRadians(90));//y-34, x26
                         dropStackPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(24, -13, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(18, -33, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(16.5, -35, Math.toRadians(90));//x18, y-34.5
                         dropStackPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         break;
                 }
