@@ -274,7 +274,7 @@ public class AutonomousMode3 extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(35));
                         dropYellowPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
-                        dropStackPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
+                        dropStackPixelPose = new Pose2d(36, 89, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(4,1, Math.toRadians(-90));
                         stageMidwayStackPose = new Pose2d(43, 8, Math.toRadians(-90));
                         break;
@@ -287,7 +287,7 @@ public class AutonomousMode3 extends LinearOpMode {
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(23, -5, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(36, 89, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
                         dropStackPixelPose = new Pose2d(36, 89, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(18,-4,Math.toRadians(-30));
                         stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(-90));
