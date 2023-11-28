@@ -309,21 +309,21 @@ public class AutonomousMode3 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(23, 5, Math.toRadians(35));
-                        dropYellowPixelPose = new Pose2d(36, -89, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(43.5, -82.5, Math.toRadians(90));//x36, y-89
                         dropStackPixelPose = new Pose2d(16, -89, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(4,1, Math.toRadians(90));
                         stageMidwayStackPose = new Pose2d(43, 8, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(31, -1, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(24, -89,  Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(37, -82.5,  Math.toRadians(90)); //x24,y=-89
                         dropStackPixelPose = new Pose2d(16, -89, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));
                         stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(28, -4, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(16, -89, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(28, -82.5, Math.toRadians(90));//x16 y=-89
                         dropStackPixelPose = new Pose2d(36, -89, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));
                         stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
@@ -332,11 +332,11 @@ public class AutonomousMode3 extends LinearOpMode {
                 wallStackPose = new Pose2d(23, 20, Math.toRadians(90));
                 wallMidwayStackPose = new Pose2d(2, -5, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -73, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(49, 21, Math.toRadians(90));
-                stageMidwayBackDropPose = new Pose2d(49, -73, Math.toRadians(90));
+                stageDoorStackPose = new Pose2d(48.5, 18.7, Math.toRadians(90));//x49, y21
+                stageMidwayBackDropPose = new Pose2d(48.5, -73, Math.toRadians(90));//x49
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPoseWall = new Pose2d(2, -82, Math.toRadians(90));
-                parkPoseStageDoor = new Pose2d(49, -70, Math.toRadians(90));
+                parkPoseWall = new Pose2d(12.2, -85, Math.toRadians(90)); //x2, y-82
+                parkPoseStageDoor = new Pose2d(58, -78, Math.toRadians(90));//x49, y-70
                 break;
         }
 

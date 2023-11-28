@@ -156,9 +156,9 @@ public class VisionTfod {
                         GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
                     if (recognition.getLabel() == label || recognition.getLabel() == "Pixel") {
                         if (x < 350) {
-                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-                        } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                        } else {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
                         }
                     }
                 } else { //RED_RIGHT or BLUE_RIGHT
