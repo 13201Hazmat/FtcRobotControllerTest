@@ -23,7 +23,7 @@ public class OuttakeArm {
         TRANSFER(1,0),
         PICKUP(1,0),
         READY_FOR_TRANSFER(0.95,0.05),
-        DROP(0.06,0.98);
+        DROP(0,1); //0.06, 0.98
 
         private double leftArmPosition;
         private double rightArmPosition;

@@ -293,7 +293,7 @@ public class AutonomousMode3 extends LinearOpMode {
                         stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(-90));
                         break;
                 }
-                wallStackPose = new Pose2d(23, -20, Math.toRadians(-90));
+                wallStackPose = new Pose2d(27, -18, Math.toRadians(-90)); //x23,-20
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 73, Math.toRadians(-90));
                 stageDoorStackPose = new Pose2d(49, 21, Math.toRadians(-90));
@@ -473,6 +473,7 @@ public class AutonomousMode3 extends LinearOpMode {
             intakeAtStack(2);
             safeWaitMilliSeconds(200);
 
+            outtakeController.outtakeArm.openGrip();
             outtakeController.moveTravelToReadyForTransfer();
             safeWaitMilliSeconds(300);
             outtakeController.moveReadyForTransferToTransfer();
@@ -557,9 +558,10 @@ public class AutonomousMode3 extends LinearOpMode {
             );
 
             printDebugMessages();
+            outtakeArm.openGrip();
+
             intakeAtStack(2);
             safeWaitMilliSeconds(200);
-
             outtakeController.moveTravelToReadyForTransfer();
             safeWaitMilliSeconds(300);
             outtakeController.moveReadyForTransferToTransfer();
