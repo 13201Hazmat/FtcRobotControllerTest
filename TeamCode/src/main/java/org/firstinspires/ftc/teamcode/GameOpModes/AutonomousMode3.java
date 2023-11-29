@@ -273,34 +273,34 @@ public class AutonomousMode3 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(35));
-                        dropYellowPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(29, 89, Math.toRadians(-90));//x16
                         dropStackPixelPose = new Pose2d(36, 89, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(4,1, Math.toRadians(-90));
                         stageMidwayStackPose = new Pose2d(43, 8, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(31, 1, Math.toRadians(30));
-                        dropYellowPixelPose = new Pose2d(24, 89,  Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(36, 89,  Math.toRadians(-90)); //x24
                         dropStackPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(18,-4,Math.toRadians(-30));
                         stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(23, -5, Math.toRadians(-30));
-                        dropYellowPixelPose = new Pose2d(16, 89, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(24, -4, Math.toRadians(-43)); //x23, y-5
+                        dropYellowPixelPose = new Pose2d(44, 89, Math.toRadians(-90)); //x16
                         dropStackPixelPose = new Pose2d(36, 89, Math.toRadians(-90));
-                        afterPurplePixelPose = new Pose2d(18,-4,Math.toRadians(-30));
-                        stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(-90));
+                        afterPurplePixelPose = new Pose2d(15,5,Math.toRadians(0)); //x18, y-4, -30degrees
+                        stageMidwayStackPose = new Pose2d(44, 5, Math.toRadians(-90)); //x49, y9, 0
                         break;
                 }
                 wallStackPose = new Pose2d(27, -18, Math.toRadians(-90)); //x23,-20
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 73, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(49, 21, Math.toRadians(-90));
-                stageMidwayBackDropPose = new Pose2d(49, 73, Math.toRadians(-90));
+                stageDoorStackPose = new Pose2d(51, -16, Math.toRadians(-90));//x49, y21
+                stageMidwayBackDropPose = new Pose2d(51, 71, Math.toRadians(-90)); //x49, y73
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPoseWall = new Pose2d(2, 82, Math.toRadians(-90));
-                parkPoseStageDoor = new Pose2d(49, 70, Math.toRadians(-90));
+                parkPoseStageDoor = new Pose2d(61, 88, Math.toRadians(-90)); //x49, y70
                 break;
 
 
@@ -423,6 +423,7 @@ public class AutonomousMode3 extends LinearOpMode {
                 startPosition == START_POSITION.BLUE_LEFT) {
             actionForRedRightBlueLeft();
         } else {
+            outtakeArm.openGrip();
             actionForRedLeftBlueRight();
         }
     }
@@ -512,8 +513,7 @@ public class AutonomousMode3 extends LinearOpMode {
                         trajMidwayStackPoseToStackPose
                 )
         );
-
-        outtakeController.moveTransferToReadyForTransfer();
+        outtakeController.moveTransferToReadyForTransferAuto();
         safeWaitMilliSeconds(200);
         intakeAtStack(1);
         safeWaitMilliSeconds(200);
@@ -528,6 +528,7 @@ public class AutonomousMode3 extends LinearOpMode {
                 )
         );
 
+        outtakeArm.closeGrip();
         outtakeController.moveTransferToReadyForTransfer();
         safeWaitMilliSeconds(300);
         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
@@ -558,7 +559,6 @@ public class AutonomousMode3 extends LinearOpMode {
             );
 
             printDebugMessages();
-            outtakeArm.openGrip();
 
             intakeAtStack(2);
             safeWaitMilliSeconds(200);

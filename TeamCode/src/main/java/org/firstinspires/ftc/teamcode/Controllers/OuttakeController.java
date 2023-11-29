@@ -69,6 +69,13 @@ public class OuttakeController {
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
     }
+    public void moveTransferToReadyForTransferAuto(){
+        //outtakeArm.closeGrip();
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+        safeWaitMilliSeconds(100);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
+    }
 
     public Action moveTransferToReadyForTransferAction(){
         return new Action(){
