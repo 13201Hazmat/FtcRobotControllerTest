@@ -464,7 +464,7 @@ public class AutonomousMode4 extends LinearOpMode {
         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
         safeWaitMilliSeconds( 800);
         outtakeController.dropOnePixel();
-        safeWaitMilliSeconds(800);
+        safeWaitMilliSeconds(500);
 
         telemetry.addLine("After second Action");
         telemetry.update();

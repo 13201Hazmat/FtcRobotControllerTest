@@ -133,11 +133,11 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <175) { //100
+        while (pixelDropTimer.time() <100) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
-        while (pixelDropTimer.time() <150) { //200
+        while (pixelDropTimer.time() <350) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
     }
