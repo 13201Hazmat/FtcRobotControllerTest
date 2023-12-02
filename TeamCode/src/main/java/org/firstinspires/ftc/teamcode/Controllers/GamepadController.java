@@ -426,7 +426,9 @@ public class GamepadController {
     public void runLauncher(){
         //Launcher code
         if (gp1GetRightBumperPress()) {
-            switch (launcher.launcherButtonState) {
+            launcher.launchDrone();
+            launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.LAUNCHED;
+            /*switch (launcher.launcherButtonState) {
                 case SAFE:
                     launcher.launcherClickTimer.reset();
                     launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.ARMED;
@@ -440,6 +442,8 @@ public class GamepadController {
                         launcher.launcherButtonState = Launcher.LAUNCHER_BUTTON_STATE.SAFE;
                     }
             }
+
+             */
         }
 
     }
@@ -448,9 +452,12 @@ public class GamepadController {
         visionSensor.senseBackdrop();
     }
 
+
     public void runLights(){
 
+
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+
 
         if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
@@ -473,6 +480,7 @@ public class GamepadController {
         }
 
     }
+
 
     public void safeWaitMilliSeconds(double time) {
         ElapsedTime timer = new ElapsedTime(MILLISECONDS);

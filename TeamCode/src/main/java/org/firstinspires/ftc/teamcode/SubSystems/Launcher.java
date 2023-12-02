@@ -31,7 +31,7 @@ public class Launcher {
     }
     public LAUNCHER_BUTTON_STATE launcherButtonState = LAUNCHER_BUTTON_STATE.SAFE;
     public ElapsedTime launcherClickTimer = new ElapsedTime(MILLISECONDS);
-    public double LAUNCHER_BUTTON_ARMED_THRESHOLD = 300;
+    public double LAUNCHER_BUTTON_ARMED_THRESHOLD = 700;
 
     public Telemetry telemetry;
     public Launcher(HardwareMap hardwareMap, Telemetry telemetry){

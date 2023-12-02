@@ -20,7 +20,7 @@ public class VisionTfod {
         MIDDLE,
         RIGHT
     }
-    public static IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+    public static IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation ;//= IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
@@ -137,8 +137,12 @@ public class VisionTfod {
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+            //telemetry.addLine("INSIDE BLUERED_LEFT DEFAULT SHOULD BE RIGHT");
+            //telemetry.update();
         } else { //RED_RIGHT or BLUE_RIGHT
             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+            //telemetry.addLine("INSIDE BLUERED_RIGHT DEFAULT SHOULD BE LEFT");
+            //telemetry.update();
         }
 
         // Step through the list of recognitions and display info for each one.
@@ -155,18 +159,26 @@ public class VisionTfod {
                 if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                         GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
                     if (recognition.getLabel() == label || recognition.getLabel() == "Pixel") {
-                        if (x < 350) {
-                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                        } else {
+                        if (x < 200) { //350
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+                            //telemetry.addLine("INSIDE BLUERED_LEFT LEFT SHOULD BE LEFT");
+                            //telemetry.update();
+                        } else {
+                            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                            //telemetry.addLine("INSIDE BLUERED_LEFT LEFT SHOULD BE MIDDLE");
+                            //telemetry.update();
                         }
                     }
                 } else { //RED_RIGHT or BLUE_RIGHT
                     if (recognition.getLabel() == label || recognition.getLabel() == "Pixel"){
                         if (x < 350) {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                            //telemetry.addLine("INSIDE BLUERED_RIGHT MIDDLE SHOULD BE MIDDLE");
+                            //telemetry.update();
                         } else {
                             identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+                            //telemetry.addLine("INSIDE BLUERED_LEFT RIGHT SHOULD BE RIGHT");
+                            //telemetry.update();
                         }
                     }
                 }
