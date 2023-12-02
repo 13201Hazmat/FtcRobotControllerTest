@@ -108,10 +108,14 @@ public class VisionSensor {
     String detectedAprilTagName = "";
 
     public boolean senseAprilTag(){
-        HuskyLens.Block[] blocks = huskyLens.blocks();
+        backdropAprilTagDetected = true;
+
+        /*HuskyLens.Block[] blocks = huskyLens.blocks();
         detectedAprilTagCount = blocks.length;
         if (detectedAprilTagCount > 0)
             backdropAprilTagDetected = true;
+
+         */
 
         /*
         backdropAprilTagDetected = false;

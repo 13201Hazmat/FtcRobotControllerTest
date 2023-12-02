@@ -459,10 +459,12 @@ public class GamepadController {
         lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
 
-        if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
-        } else if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.AMBER) {
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_AMBER);
+        if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP) {
+            if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
+                lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
+            } else if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.AMBER) {
+                lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_AMBER);
+            }
         } else {
 
             if (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY) {
