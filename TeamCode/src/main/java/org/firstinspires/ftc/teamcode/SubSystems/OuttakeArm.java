@@ -49,7 +49,7 @@ public class OuttakeArm {
         TRAVEL(0.48),
         TRANSFER(0.12),//0.14
         PICKUP(0.14),
-        READY_FOR_TRANSFER(0.1),
+        READY_FOR_TRANSFER(0.09),//0.1
         DROP(0.94);
 
         private double wristPosition;
@@ -134,6 +134,18 @@ public class OuttakeArm {
         openGrip();
         pixelDropTimer.reset();
         while (pixelDropTimer.time() <100) { //100
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        closeGrip();
+        while (pixelDropTimer.time() <350) { //200
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+    }
+
+    public void autoDropOnePixel(){
+        openGrip();
+        pixelDropTimer.reset();
+        while (pixelDropTimer.time() <250) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();

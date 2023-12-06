@@ -241,21 +241,21 @@ public class AutonomousMode4 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(30));
-                        dropYellowPixelPose = new Pose2d(33, -34, Math.toRadians(90)); //x=32,y=-33
+                        dropYellowPixelPose = new Pose2d(33, -35.5, Math.toRadians(90)); //x=33,y=-34
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33,-30, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(37,-32,Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(31, -1, Math.toRadians(30));
-                        dropYellowPixelPose = new Pose2d(26, -34.5,  Math.toRadians(90));//y-34, x26
+                        dropYellowPixelPose = new Pose2d(26, -35.5,  Math.toRadians(90));//y-34, x26
                         beforeParkAfterDropYellowPixelPose = new Pose2d(26,-30, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(21,-32,Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(24, -13, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(16.5, -35, Math.toRadians(90));//x18, y-34.5
+                        dropYellowPixelPose = new Pose2d(16.5, -35.5, Math.toRadians(90));//x18, y-34.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(16.5,-30, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(21, -36, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(21,-32,Math.toRadians(90));
@@ -321,7 +321,7 @@ public class AutonomousMode4 extends LinearOpMode {
                 switch (visionTfodFront.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(24, 8, Math.toRadians(37)); //x23, y5, 43
-                        dropYellowPixelPose = new Pose2d(34, -89, Math.toRadians(90));//x30, y-88
+                        dropYellowPixelPose = new Pose2d(28, -91, Math.toRadians(90));//x30, y-90.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(34,-85, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(16, -89, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(36,-85, Math.toRadians(90));
@@ -330,7 +330,7 @@ public class AutonomousMode4 extends LinearOpMode {
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(27, 0, Math.toRadians(-5)); //x31, y-1. -30
-                        dropYellowPixelPose = new Pose2d(27, -89,  Math.toRadians(90)); //x28,y=-89
+                        dropYellowPixelPose = new Pose2d(22, -91,  Math.toRadians(90)); //x20,y=-90
                         beforeParkAfterDropYellowPixelPose = new Pose2d(27,-85, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(16, -89, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(36,-85, Math.toRadians(90));
@@ -339,7 +339,7 @@ public class AutonomousMode4 extends LinearOpMode {
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(29, -4, Math.toRadians(-23)); //x30, y-2, -30
-                        dropYellowPixelPose = new Pose2d(17, -89, Math.toRadians(90));//x28 y=-82.5
+                        dropYellowPixelPose = new Pose2d(13, -91, Math.toRadians(90));//x14.5 y=-89
                         beforeParkAfterDropYellowPixelPose = new Pose2d(17,-85, Math.toRadians(90));
                         dropStackPixelPose = new Pose2d(36, -89, Math.toRadians(90));
                         beforeParkAfterDropStackPixelPose = new Pose2d(36,-85, Math.toRadians(90));
@@ -433,6 +433,7 @@ public class AutonomousMode4 extends LinearOpMode {
                 .build();
 
         trajMidwayBackDropPoseToDropYellowPixekPose = drive.actionBuilder(midwayBackDropPose)
+                .waitSeconds(3.5)
                 .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
                 .build();
 
@@ -534,12 +535,14 @@ public class AutonomousMode4 extends LinearOpMode {
                         trajMidwayStackPoseToStackPose
                 )
         );
+        /*
         outtakeController.moveTransferToReadyForTransferAuto();
         safeWaitMilliSeconds(200);
         intakeAtStack(1);
         safeWaitMilliSeconds(200);
         outtakeController.moveReadyForTransferToTransfer();
         safeWaitMilliSeconds(200);
+         */
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -684,9 +687,9 @@ public class AutonomousMode4 extends LinearOpMode {
         safeWaitMilliSeconds(500);
         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
         safeWaitMilliSeconds(800);
-        outtakeArm.dropOnePixel();
-        safeWaitMilliSeconds(150); //200
-        outtakeArm.dropOnePixel();
+        outtakeArm.autoDropOnePixel();
+        safeWaitMilliSeconds(600); //300
+        outtakeArm.autoDropOnePixel();
         safeWaitMilliSeconds(500);
     }
     public Action outtakeTransfertoDropPixel(){
