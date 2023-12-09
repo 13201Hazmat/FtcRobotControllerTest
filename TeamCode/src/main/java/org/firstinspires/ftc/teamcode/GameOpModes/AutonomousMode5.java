@@ -183,7 +183,7 @@ public class AutonomousMode5 extends LinearOpMode {
     Pose2d parkPose = new Pose2d(0, 0, 0);
 
 
-    Action trajInitToDropPurplePixel, trajDropPurplePixelTodropYellowPixel, trajDropYellowPixelToPark;
+    Action trajInitToDropPurplePixel, trajDropPurplePixelToDropYellowPixel, trajDropYellowPixelToPark;
     Action trajDropYellowPixelPoseToMidwayBackDropPose, trajMidwayBackDropPoseToMidwayStackPose, trajAfterPurplePixelPoseToStackPose;
     Action trajStackPoseToMidwayStackPose, trajMidwayStackPoseToMidwayBackDropPose,
             trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixelToPark;
@@ -385,7 +385,7 @@ public class AutonomousMode5 extends LinearOpMode {
                 .build();
 
         //For RED_RIGHT & BLUE_LEFT
-        trajDropPurplePixelTodropYellowPixel = drive.actionBuilder(dropPurplePixelPose)
+        trajDropPurplePixelToDropYellowPixel = drive.actionBuilder(dropPurplePixelPose)
                 .setReversed(true)
                 .splineToLinearHeading(dropYellowPixelPose, 0)
                 .build();
@@ -451,7 +451,7 @@ public class AutonomousMode5 extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajInitToDropPurplePixel,
-                        trajDropPurplePixelTodropYellowPixel
+                        trajDropPurplePixelToDropYellowPixel
                 )
         );
         telemetry.addLine("After first Action");
