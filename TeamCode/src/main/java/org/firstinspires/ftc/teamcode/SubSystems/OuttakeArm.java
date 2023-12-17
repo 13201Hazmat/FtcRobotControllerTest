@@ -18,12 +18,12 @@ public class OuttakeArm {
     public Servo outtakeArmRight;
 
     public enum OUTTAKE_ARM_STATE{
-        ZERO(1,0),
-        TRAVEL(0.85,0.15),
-        TRANSFER(1,0),
-        PICKUP(1,0),
-        READY_FOR_TRANSFER(0.95,0.05),
-        DROP(0,1); //0.06, 0.98
+        ZERO(0.93,0.07),
+        TRAVEL(0.76,0.24),
+        TRANSFER(0.93,0.07),
+        PICKUP(0.93,0.07),
+        READY_FOR_TRANSFER(0.76,0.24),
+        DROP(0.21,0.78); //1,0
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -46,11 +46,11 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRAVEL(0.48),
-        TRANSFER(0.12),//0.14
-        PICKUP(0.14),
-        READY_FOR_TRANSFER(0.09),//0.1
-        DROP(0.94);
+        TRAVEL(0.04), //0.48
+        TRANSFER(0.04),//0.12
+        PICKUP(0.02), //0.16
+        READY_FOR_TRANSFER(0.04),//0.09
+        DROP(0.88); //0.94
 
         private double wristPosition;
 
