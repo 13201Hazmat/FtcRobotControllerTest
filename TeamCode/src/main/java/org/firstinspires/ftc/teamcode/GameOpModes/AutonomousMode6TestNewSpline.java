@@ -435,7 +435,7 @@ public class AutonomousMode6TestNewSpline extends LinearOpMode {
                 .build();
 
         trajDropYellowPixelToPark = drive.actionBuilder(dropYellowPixelPose)
-                .strafeToSplineHeading(parkPose.position, parkPose.heading)
+                .splineToSplineHeading(parkPose, 0)
                 .build();
 
         /*
