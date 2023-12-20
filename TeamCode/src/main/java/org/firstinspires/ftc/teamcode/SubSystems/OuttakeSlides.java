@@ -32,14 +32,14 @@ public class OuttakeSlides {
         PICKUP(0),
         READY_FOR_TRANSFER(0), //500
         TRAVEL(0),
-        DROP_LOWEST(570), //490
-        DROP_LOW_LINE(830),
-        DROP_BELOW_MID(1168),
-        DROP_LEVEL_MID(1475),
-        DROP_BELOW_HIGH(1744),
-        DROP_LEVEL_HIGH(2077),
-        DROP_HIGHEST(2250),
-        MAX_EXTENDED(2280),
+        DROP_LOWEST(570), //570//88
+        DROP_LOW_LINE(830), //830//190
+        DROP_BELOW_MID(1168),//1168//292
+        DROP_LEVEL_MID(1475),//1475//394
+        DROP_BELOW_HIGH(1744),//1744//496
+        DROP_LEVEL_HIGH(2077),//2077//598
+        DROP_HIGHEST(2250),//2250//700
+        MAX_EXTENDED(2280),//2280//700
         RANDOM(0);
 
         public final double motorPosition;

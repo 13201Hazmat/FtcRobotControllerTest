@@ -13,6 +13,7 @@ public class GamepadDriveTrainController extends Thread{
     DriveTrain driveTrain;
     LinearOpMode teleOpMode;
 
+
     public GamepadDriveTrainController(Gamepad hzGamepad1, DriveTrain driveTrain, LinearOpMode teleOpMode) {
         this.hzGamepad1 = hzGamepad1;
         this.driveTrain = driveTrain;
@@ -33,11 +34,14 @@ public class GamepadDriveTrainController extends Thread{
     public void runDriveControl_byRRDriveModes() {
 
         driveTrain.gamepadInputTurn = gp1TurboMode(-gp1GetRightStickX());
+        //driveTrain.gamepadInputTurn = gp1TurboMode(-gp1GetLeftStickX());
 
         if (driveTrain.driveType == DriveTrain.DriveType.ROBOT_CENTRIC){
             driveTrain.gamepadInput = new Vector2d(
                     -gp1TurboMode(gp1GetLeftStickY()),
                     -gp1TurboMode(gp1GetLeftStickX()));
+                    //-gp1TurboMode(gp1GetRightStickY()),
+                    //-gp1TurboMode(gp1GetRightStickX()));
         }
 
         if (driveTrain.driveType == DriveTrain.DriveType.FIELD_CENTRIC){
@@ -121,6 +125,10 @@ public class GamepadDriveTrainController extends Thread{
      */
     public double gp1GetRightStickX() {
         return hzGamepad1.right_stick_x;
+    }
+
+    public double gp1GetRightStickY() {
+        return hzGamepad1.right_stick_y;
     }
 
     /**

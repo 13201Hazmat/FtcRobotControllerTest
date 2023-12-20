@@ -172,8 +172,9 @@ public class OuttakeController {
 
     public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
         outtakeArm.closeGrip();
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
+        safeWaitMilliSeconds(200);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
         if(outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE ||
             outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
             safeWaitMilliSeconds(100);

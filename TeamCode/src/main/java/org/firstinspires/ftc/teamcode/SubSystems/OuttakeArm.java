@@ -46,10 +46,10 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRAVEL(0.04), //0.48
-        TRANSFER(0.04),//0.12
+        TRAVEL(0.03), //0.48
+        TRANSFER(0.03),//0.12
         PICKUP(0.02), //0.16
-        READY_FOR_TRANSFER(0.04),//0.09
+        READY_FOR_TRANSFER(0.03),//0.09
         DROP(0.88); //0.94
 
         private double wristPosition;

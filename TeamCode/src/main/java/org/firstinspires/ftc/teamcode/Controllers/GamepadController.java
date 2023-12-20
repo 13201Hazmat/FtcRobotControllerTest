@@ -126,7 +126,7 @@ public class GamepadController {
     public boolean intakeReverseStarted = false;
     public boolean intakeReverserEnabled = false;
     public void runIntake(){
-        magazine.senseMagazineState();
+        //magazine.senseMagazineState();
         if (!gp1GetStart()) {
             if (gp1GetLeftBumperPress()) {
                 intake.toggleRollerHeight();
@@ -138,6 +138,7 @@ public class GamepadController {
         if(gp1GetCrossPress()) {
             intake.moveIntakeRollerOnePixelDown();
         }
+
 
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
@@ -449,7 +450,8 @@ public class GamepadController {
     }
 
     public void runVisionSensor(){
-        visionSensor.senseBackdrop();
+
+        //visionSensor.senseBackdrop();
     }
 
 
