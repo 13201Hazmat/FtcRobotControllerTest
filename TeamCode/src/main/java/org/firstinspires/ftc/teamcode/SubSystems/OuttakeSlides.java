@@ -31,7 +31,7 @@ public class OuttakeSlides {
         TRANSFER(0),
         PICKUP(0),
         READY_FOR_TRANSFER(0), //500
-        TRAVEL(0),
+        //TRAVEL(0),
         DROP_LOWEST(570), //570//88
         DROP_LOW_LINE(830), //830//190
         DROP_BELOW_MID(1168),//1168//292
@@ -93,7 +93,7 @@ public class OuttakeSlides {
         if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
             outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
         } else {
-            outtakeSlidesState = OUTTAKE_SLIDE_STATE.TRANSFER;
+            outtakeSlidesState = OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER;
         }
         //manualResetOuttakeMotor();
     }

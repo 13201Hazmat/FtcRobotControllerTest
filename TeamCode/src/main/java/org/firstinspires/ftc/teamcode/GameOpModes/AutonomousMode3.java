@@ -63,7 +63,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
  * Hazmat Autonomous
  */
 @Disabled
-@Autonomous(name = "HazmatAutonomous Mode 3", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+@Autonomous(name = "HazmatAutonomous Mode 3", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
 public class AutonomousMode3 extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -453,7 +453,8 @@ public class AutonomousMode3 extends LinearOpMode {
 
             printDebugMessages();
         } else { // FULL AUTONOMOUS
-            outtakeController.moveDropToTravel();
+            //outtakeController.moveDropToTravel();
+            outtakeController.moveDropToReadyforTransfer();
             safeWaitMilliSeconds(500);
 
             printDebugMessages();
@@ -470,8 +471,8 @@ public class AutonomousMode3 extends LinearOpMode {
             safeWaitMilliSeconds(200);
 
             outtakeController.outtakeArm.openGrip();
-            outtakeController.moveTravelToReadyForTransfer();
-            safeWaitMilliSeconds(300);
+            //outtakeController.moveTravelToReadyForTransfer();
+            //safeWaitMilliSeconds(300);
             outtakeController.moveReadyForTransferToTransfer();
             safeWaitMilliSeconds(200);
             printDebugMessages();
@@ -541,7 +542,8 @@ public class AutonomousMode3 extends LinearOpMode {
 
             printDebugMessages();
         } else { // FULL AUTONOMOUS
-            outtakeController.moveDropToTravel();
+            //outtakeController.moveDropToTravel();
+            outtakeController.movePickupToReadyForTransfer();
 
             printDebugMessages();
             Actions.runBlocking(
@@ -556,8 +558,8 @@ public class AutonomousMode3 extends LinearOpMode {
 
             intakeAtStack(2);
             safeWaitMilliSeconds(200);
-            outtakeController.moveTravelToReadyForTransfer();
-            safeWaitMilliSeconds(300);
+            //outtakeController.moveTravelToReadyForTransfer();
+            //safeWaitMilliSeconds(300);
             outtakeController.moveReadyForTransferToTransfer();
             safeWaitMilliSeconds(200);
             printDebugMessages();
@@ -627,7 +629,7 @@ public class AutonomousMode3 extends LinearOpMode {
         };
     }
 
-    public Action outtakeTravelToReadyForTransfer(){
+    /*public Action outtakeTravelToReadyForTransfer(){
         return new Action(){
             @Override
             public void preview(Canvas canvas){}
@@ -640,6 +642,8 @@ public class AutonomousMode3 extends LinearOpMode {
             }
         };
     }
+
+     */
 
     public Action outtakeReadyForTransferToTransfer(){
         return new Action(){

@@ -57,7 +57,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
  * Hazmat Autonomous
  */
 @Disabled
-@Autonomous(name = "HazmatAutonomous Mode", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp")
+@Autonomous(name = "HazmatAutonomous Mode", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
 public class AutonomousMode extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -338,7 +338,8 @@ public class AutonomousMode extends LinearOpMode {
             outtakeArm.dropOnePixel();
             safeWaitMilliSeconds(1000);
         }
-        outtakeController.moveDropToTravel();
+        //outtakeController.moveDropToTravel();
+        outtakeController.moveDropToReadyforTransfer();
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
         //safeWaitMilliSeconds(2000);
     }
@@ -351,13 +352,13 @@ public class AutonomousMode extends LinearOpMode {
             case PICKUP:
                 outtakeController.movePickupToTransfer();
                 outtakeController.moveTransferToReadyForTransfer();
-                while(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)) {
+                /*while(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)) {
                     safeWaitMilliSeconds(50);
                 }
-                outtakeController.moveReadyForTransferToTravel();
+                outtakeController.moveReadyForTransferToTravel();*/
                 break;
             case READY_FOR_TRANSFER:
-            case TRAVEL:
+            //case TRAVEL:
             case DROP_LOWEST:
             case DROP_LOW_LINE:
             case DROP_BELOW_MID:
@@ -367,7 +368,8 @@ public class AutonomousMode extends LinearOpMode {
             case DROP_HIGHEST:
             case MAX_EXTENDED:
             case RANDOM:
-                outtakeController.moveDropToTravel();
+                //outtakeController.moveDropToTravel();
+                outtakeController.moveDropToReadyforTransfer();
                 break;
         }
     }

@@ -3,6 +3,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.opencv.dnn.DetectionModel;
 
 /**
  * Definition of Subsystem Class <BR>
@@ -25,8 +26,6 @@ public class Lights {
 
     public Telemetry telemetry;
     public RevBlinkinLedDriver blinkinLedDriver;
-    public RevBlinkinLedDriver.BlinkinPattern currentPattern;
-    public RevBlinkinLedDriver.BlinkinPattern patternDemo = RevBlinkinLedDriver.BlinkinPattern.CP2_BREATH_SLOW;
 
     public enum REV_BLINKIN_PATTERN {
         DEMO(RevBlinkinLedDriver.BlinkinPattern.CP2_BREATH_SLOW),
@@ -48,13 +47,14 @@ public class Lights {
     public Lights(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-        blinkinLedDriver.setPattern(patternDemo);
-        currentPattern = patternDemo;
+        setPattern(REV_BLINKIN_PATTERN.DEMO);
     }
 
     public void setPattern(REV_BLINKIN_PATTERN revBlinkinPattern) {
-        blinkinLedDriver.setPattern(revBlinkinPattern.blinkinPattern);
-        currentRevBlinkinPattern = revBlinkinPattern;
+        if (revBlinkinPattern != currentRevBlinkinPattern) {
+            blinkinLedDriver.setPattern(revBlinkinPattern.blinkinPattern);
+            currentRevBlinkinPattern = revBlinkinPattern;
+        }
     }
 
     public void printDebugMessages(){

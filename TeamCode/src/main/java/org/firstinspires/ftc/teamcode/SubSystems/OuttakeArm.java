@@ -18,10 +18,10 @@ public class OuttakeArm {
     public Servo outtakeArmRight;
 
     public enum OUTTAKE_ARM_STATE{
-        ZERO(0.93,0.07),
-        TRAVEL(0.76,0.24),
-        TRANSFER(0.93,0.07),
-        PICKUP(0.93,0.07),
+        ZERO(0.94,0.06),
+        //TRAVEL(0.76,0.24),
+        TRANSFER(0.95,0.05),
+        PICKUP(0.95,0.05),
         READY_FOR_TRANSFER(0.76,0.24),
         DROP(0.21,0.78); //1,0
 
@@ -46,10 +46,10 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRAVEL(0.03), //0.48
-        TRANSFER(0.03),//0.12
-        PICKUP(0.02), //0.16
-        READY_FOR_TRANSFER(0.03),//0.09
+        //TRAVEL(0.03), //0.48
+        TRANSFER(0.02),//0.12
+        PICKUP(0.04), //0.16
+        READY_FOR_TRANSFER(0.02),//0.09
         DROP(0.88); //0.94
 
         private double wristPosition;
@@ -100,8 +100,8 @@ public class OuttakeArm {
             moveArm(OUTTAKE_ARM_STATE.TRANSFER);
             moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
         } else {
-            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-            moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
+            moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+            moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
         }
         closeGrip();
     }
@@ -133,11 +133,11 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <100) { //100
+        while (pixelDropTimer.time() <160) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
-        while (pixelDropTimer.time() <350) { //200
+        while (pixelDropTimer.time() <250) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
     }
@@ -145,11 +145,11 @@ public class OuttakeArm {
     public void autoDropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <250) { //100
+        while (pixelDropTimer.time() <160) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
-        while (pixelDropTimer.time() <350) { //200
+        while (pixelDropTimer.time() <250) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
     }

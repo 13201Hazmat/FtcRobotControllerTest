@@ -12,6 +12,7 @@ public class Magazine {
     public NormalizedColorSensor magazineSensorBottom;
     public NormalizedColorSensor magazineSensorTop;
     public Servo magazineDoorServo;
+    public boolean magazineSensorActivated = true;
 
     public enum MAGAZINE_DOOR_STATE {
         CLOSED(1.0),
@@ -70,6 +71,11 @@ public class Magazine {
     public double magazineDistanceBottom;
     public double magazineDistanceTop;
     public void senseMagazineState(){
+        if (!magazineSensorActivated) {
+            magazineState = MAGAZINE_STATE.EMPTY;
+            return;
+        }
+
         boolean magazinePixelBottomSensed = false;
         boolean magazinePixelTopSensed = false;
 
@@ -103,7 +109,8 @@ public class Magazine {
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
-        telemetry.addLine("Magazinee");
+        telemetry.addLine("Magazine");
+        telemetry.addData("    SensorActivated", magazineSensorActivated);
         telemetry.addData("    State", magazineState);
         telemetry.addData("    Bottom Distance Sensed", magazineDistanceBottom);
         telemetry.addData("    Top Distance Sensed", magazineDistanceTop);

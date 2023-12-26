@@ -28,6 +28,7 @@ public class OuttakeController {
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP);
+        safeWaitMilliSeconds(100);
     }
 
     public Action moveTransferToPickupAction(){
@@ -149,6 +150,7 @@ public class OuttakeController {
         };
     }
 
+    /*
     public void moveTravelToReadyForTransfer(){
         outtakeArm.closeGrip();
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
@@ -169,6 +171,8 @@ public class OuttakeController {
             }
         };
     }
+
+     */
 
     public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
         outtakeArm.closeGrip();
@@ -196,6 +200,7 @@ public class OuttakeController {
     }
 
 
+    /*
     public void moveReadyForTransferToTravel(){
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRAVEL);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRAVEL);
@@ -215,6 +220,9 @@ public class OuttakeController {
         };
     }
 
+     */
+
+    /*
     public void moveDropToTravel(){
         outtakeArm.closeGrip();
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRAVEL);
@@ -233,6 +241,7 @@ public class OuttakeController {
             }
         };
     }
+     */
 
     public void moveDropToReadyforTransfer(){
         outtakeArm.closeGrip();

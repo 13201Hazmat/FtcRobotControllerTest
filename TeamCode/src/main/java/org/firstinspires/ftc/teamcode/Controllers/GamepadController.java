@@ -126,7 +126,6 @@ public class GamepadController {
     public boolean intakeReverseStarted = false;
     public boolean intakeReverserEnabled = false;
     public void runIntake(){
-        //magazine.senseMagazineState();
         if (!gp1GetStart()) {
             if (gp1GetLeftBumperPress()) {
                 intake.toggleRollerHeight();
@@ -138,6 +137,13 @@ public class GamepadController {
         if(gp1GetCrossPress()) {
             intake.moveIntakeRollerOnePixelDown();
         }
+
+        //Disable or enable magazine sensor
+        if (gp1GetStart() && gp1GetDpad_downPress()) {
+            magazine.magazineSensorActivated = !magazine.magazineSensorActivated;
+        }
+
+        magazine.senseMagazineState();
 
 
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
@@ -216,39 +222,47 @@ public class GamepadController {
     }
     public ComboPressedState comboPressedState = ComboPressedState.COMBO_INACTIVE;*/
     public void runOuttakeSlidesAndArm(){
-        magazine.senseMagazineState();
+
         switch (outtakeSlides.outtakeSlidesState) {
                 case MIN_RETRACTED:
                 case TRANSFER:
+                case PICKUP:
                     if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
                         intake.stopIntakeMotor();
                     }
-                    if (gp2GetCrossPress()) {
+                    /*if (gp2GetCrossPress()) {
                         outtakeController.moveTransferToPickup();
-                    }
+                    }*/
                     //TODO: Is this needed
                     if (gp2GetRightBumperPress()) {
                         outtakeArm.toggleGrip();
                     }
-                    break;
-                case PICKUP:
+                    //break;
+                //case PICKUP:
                     if (gp2GetSquarePress()) {
-                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveTransferToPickup();
+                        safeWaitMilliSeconds(50);
+                        outtakeController.moveTransferToReadyForTransfer();
                         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
                     }
 
                     if (gp2GetTrianglePress()) {
-                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveTransferToPickup();
+                        safeWaitMilliSeconds(50);
+                        outtakeController.moveTransferToReadyForTransfer();
                         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                     }
 
                     if (gp2GetCirclePress()) {
-                        outtakeController.movePickupToReadyForTransfer();
+                        outtakeController.moveTransferToPickup();
+                        safeWaitMilliSeconds(50);
+                        outtakeController.moveTransferToReadyForTransfer();
                         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_HIGHEST);
                     }
 
                     if (gp2GetCrossPress()) {
-                        outtakeController.movePickupToTransfer();
+                        outtakeController.moveTransferToPickup();
+                        //outtakeController.movePickupToTransfer();
                         safeWaitMilliSeconds(50);
                         outtakeController.moveTransferToReadyForTransfer();
                     }
@@ -256,11 +270,11 @@ public class GamepadController {
                         outtakeArm.toggleGrip();
                     }
                     break;
-                case TRAVEL:
+                /*case TRAVEL:
                     if (gp2GetCrossPress()) {
                         outtakeController.moveTravelToReadyForTransfer();
                     }
-                    break;
+                    break;*/
                 case READY_FOR_TRANSFER:
                     if (gp2GetSquarePress()) {
                         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
@@ -291,7 +305,8 @@ public class GamepadController {
                 case MAX_EXTENDED:
                 case RANDOM:
                     if (gp2GetCrossPress()) {
-                        outtakeController.moveDropToTravel();
+                        //outtakeController.moveDropToTravel();
+                        outtakeController.moveDropToReadyforTransfer();
                     }
 
                     if (!gp2GetStart()) {
@@ -458,7 +473,7 @@ public class GamepadController {
     public void runLights(){
 
 
-        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+        //lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
 
         if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP) {
