@@ -66,7 +66,7 @@ public class VisionSensor {
 
     public void senseBackdrop(){
         backdropDistanceLeftDistance = backdropDistanceSensorLeft.getDistance(DistanceUnit.MM);
-        backdropDistanceLeftDistance = backdropDistanceSensorRight.getDistance(DistanceUnit.MM);
+        backdropDistanceRightDistance = backdropDistanceSensorRight.getDistance(DistanceUnit.MM);
 
         if (senseAprilTag()) {
             if (backdropDistanceLeftDistance < DISTANCE_SENSOR_THRESHOLD_AMBER) {
@@ -137,7 +137,7 @@ public class VisionSensor {
         telemetry.addLine("VisionSensor");
         telemetry.addData("    backdropDistanceState", backdropDistanceState);
         telemetry.addData("    backdrop Left Distance", backdropDistanceLeftDistance);
-        telemetry.addData("    backdrop Right Distance", backdropDistanceLeftDistance);
+        telemetry.addData("    backdrop Right Distance", backdropDistanceRightDistance);
         telemetry.addData("    HuskyLens detected AprilTag Count", detectedAprilTagCount);
         //telemetry.addData("    HuskyLens detected AprilTag", detectedAprilTag.toString());
         telemetry.addLine("=============");

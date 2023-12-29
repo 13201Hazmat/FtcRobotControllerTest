@@ -31,28 +31,33 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.List;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
  */
-@Disabled
-@Autonomous(name = "FTC Wires Autonomous Mode", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
-public class FTCWiresAutonomous extends LinearOpMode {
+@Autonomous(name = "FTC Wires Auto Open CV Vision", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+public class FTCWiresAutoVisionOpenCV extends LinearOpMode {
 
     public static String TEAM_NAME = "EDIT TEAM NAME"; //TODO: Enter team Name
     public static int TEAM_NUMBER = 0; //TODO: Enter team Number
@@ -60,8 +65,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     //Vision parameters
-    private TfodProcessor tfod;
-    private VisionPortal visionPortal;
+    private VisionOpenCV visionOpenCV;
 
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
@@ -86,11 +90,17 @@ public class FTCWiresAutonomous extends LinearOpMode {
         selectStartingPosition();
         telemetry.addData("Selected Starting Position", startPosition);
 
-        //Activate Camera Vision that uses TensorFlow for pixel detection
-        initTfod();
+        //Activate Camera Vision that uses Open CV Vision processor for Team Element detection
+        initOpenCV();
 
         // Wait for the DS start button to be touched.
+        telemetry.addLine("Open CV Vision for Red/Blue Team Element Detection");
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addLine("The starting point of the robot is assumed to be on the starting tile, " +
+                "and along the edge farther from the truss legs. ");
+        telemetry.addLine("You should also have a webcam connected and positioned in a way to see " +
+                "the middle spike mark and the spike mark away from the truss (and ideally nothing else). " +
+                "We assumed the camera to be in the center of the robot. ");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         //waitForStart();
@@ -98,17 +108,9 @@ public class FTCWiresAutonomous extends LinearOpMode {
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("Selected Starting Position", startPosition);
 
-            //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
-            runTfodTensorFlow();
-            telemetry.addData("Vision identified Parking Location", identifiedSpikeMarkLocation);
-            telemetry.update();
+            //Run Open CV Object Detection and keep watching for the identifier in the Signal Cone.
+            runOpenCVObjectDetection();
         }
-
-        //Stop Vision process
-        /*if (visionPortal.getCameraState() != CAMERA_DEVICE_CLOSED) {
-            //visionPortal.stopStreaming();
-            visionPortal.close();
-        }*/
 
         //Game Play Button  is pressed
         if (opModeIsActive() && !isStopRequested()) {
@@ -127,7 +129,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
         Pose2d intakeStack = new Pose2d(0,0,0);
         Pose2d midwayPose2 = new Pose2d(0,0,0);
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
-        Pose2d parkPose = new Pose2d(0, 0, 0);
+        Pose2d parkPose = new Pose2d(0,0, 0);
         double waitSecondsBeforeDrop = 0;
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
@@ -226,9 +228,6 @@ public class FTCWiresAutonomous extends LinearOpMode {
                 break;
         }
 
-
-        //drive.pose = initPose;
-
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -295,6 +294,7 @@ public class FTCWiresAutonomous extends LinearOpMode {
             telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous adopted for Team:",
                     TEAM_NAME, " ", TEAM_NUMBER);
             telemetry.addData("---------------------------------------","");
+            telemetry.addLine("This Auto program uses Open CV Vision Processor for Team Element detection");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
             telemetry.addData("    Blue Left   ", "(X / ▢)");
             telemetry.addData("    Blue Right ", "(Y / Δ)");
@@ -329,75 +329,151 @@ public class FTCWiresAutonomous extends LinearOpMode {
         }
     }
 
-
     /**
-     * Initialize the TensorFlow Object Detection processor.
+     * Initialize the Open CV Object Detection processor.
      */
-    private void initTfod() {
-        /*
+    public Rect rectLeftOfCameraMid, rectRightOfCameraMid;
+    private void initOpenCV() {
+        visionOpenCV = new VisionOpenCV(hardwareMap);
 
-        // Create the TensorFlow processor the easy way.
-        tfod = TfodProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-        if (USE_WEBCAM) {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
-        } else {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    BuiltinCameraDirection.BACK, tfod);
-        }
-
-        tfod.setMinResultConfidence(0.20f);
-
-
-         */
-    }   // end method initTfod()
-
-    /**
-     * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
-     */
-    private void runTfodTensorFlow() {
-
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
-
-        //Camera placed between Left and Right Spike Mark on RED_LEFT and BLUE_LEFT If pixel not visible, assume Right spike Mark
-        if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
-            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+        if (startPosition == START_POSITION.RED_LEFT ||
+                startPosition == START_POSITION.BLUE_LEFT) {
+            rectLeftOfCameraMid = new Rect(10, 40, 150, 240);
+            rectRightOfCameraMid = new Rect(160, 40, 470, 160);
         } else { //RED_RIGHT or BLUE_RIGHT
-            identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+            rectLeftOfCameraMid = new Rect(10, 40, 470, 160);
+            rectRightOfCameraMid = new Rect(480, 40, 150, 240);
+        }
+    }
+
+    /**
+     * Add telemetry about Object Detection recognitions.
+     */
+    private void runOpenCVObjectDetection() {
+        visionOpenCV.getSelection();
+        telemetry.addLine("Open CV based Vision Processor for Team Element Detection");
+        telemetry.addData("Identified Parking Location", identifiedSpikeMarkLocation);
+        telemetry.addData("SatLeftOfCameraMid", visionOpenCV.satRectLeftOfCameraMid);
+
+        telemetry.addData("SatRightOfCameraMid", visionOpenCV.satRectRightOfCameraMid);
+        telemetry.addData("SatRectNone", visionOpenCV.satRectNone);
+        telemetry.update();
+    }
+
+    public class VisionOpenCV implements VisionProcessor {
+
+        CameraSelectedAroundMid selectionAroundMid = CameraSelectedAroundMid.NONE;
+
+        public VisionPortal visionPortal;
+
+        Mat submat = new Mat();
+        Mat hsvMat = new Mat();
+
+        public double satRectLeftOfCameraMid, satRectRightOfCameraMid;
+        public double satRectNone = 40.0;
+
+        public VisionOpenCV(HardwareMap hardwareMap){
+            visionPortal = VisionPortal.easyCreateWithDefaults(
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), this);
         }
 
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+        @Override
+        public void init(int width, int height, CameraCalibration calibration) {
+        }
 
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+        @Override
+        public Object processFrame(Mat frame, long captureTimeNanos) {
+            Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
 
-            if (startPosition == START_POSITION.RED_LEFT || startPosition == START_POSITION.BLUE_LEFT) {
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 200) {
+            satRectLeftOfCameraMid = getAvgSaturation(hsvMat, rectLeftOfCameraMid);
+            satRectRightOfCameraMid = getAvgSaturation(hsvMat, rectRightOfCameraMid);
+
+            if ((satRectLeftOfCameraMid > satRectRightOfCameraMid) && (satRectLeftOfCameraMid > satRectNone)) {
+                return CameraSelectedAroundMid.LEFT_OF_CAMERA_MID;
+            } else if ((satRectRightOfCameraMid > satRectLeftOfCameraMid) && (satRectRightOfCameraMid > satRectNone)) {
+                return CameraSelectedAroundMid.RIGHT_OF_CAMERA_MID;
+            }
+            return CameraSelectedAroundMid.NONE;
+        }
+
+        protected double getAvgSaturation(Mat input, Rect rect) {
+            submat = input.submat(rect);
+            Scalar color = Core.mean(submat);
+            return color.val[1];
+        }
+
+        private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
+            int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
+            int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
+            int right = left + Math.round(rect.width * scaleBmpPxToCanvasPx);
+            int bottom = top + Math.round(rect.height * scaleBmpPxToCanvasPx);
+
+            return new android.graphics.Rect(left, top, right, bottom);
+        }
+
+        @Override
+        public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+            Paint selectedPaint = new Paint();
+            selectedPaint.setColor(Color.RED);
+            selectedPaint.setStyle(Paint.Style.STROKE);
+            selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
+
+            Paint nonSelectedPaint = new Paint(selectedPaint);
+            nonSelectedPaint.setColor(Color.GREEN);
+
+            android.graphics.Rect drawRectangleLeft = makeGraphicsRect(rectLeftOfCameraMid, scaleBmpPxToCanvasPx);
+            android.graphics.Rect drawRectangleMiddle = makeGraphicsRect(rectRightOfCameraMid, scaleBmpPxToCanvasPx);
+
+            selectionAroundMid = (CameraSelectedAroundMid) userContext;
+            switch (selectionAroundMid) {
+                case LEFT_OF_CAMERA_MID:
+                    canvas.drawRect(drawRectangleLeft, selectedPaint);
+                    canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
+                    break;
+                case RIGHT_OF_CAMERA_MID:
+                    canvas.drawRect(drawRectangleLeft, nonSelectedPaint);
+                    canvas.drawRect(drawRectangleMiddle, selectedPaint);
+                    break;
+                case NONE:
+                    canvas.drawRect(drawRectangleLeft, nonSelectedPaint);
+                    canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
+                    break;
+            }
+        }
+
+        public void getSelection() {
+            if (startPosition == START_POSITION.RED_LEFT ||
+                    startPosition == START_POSITION.BLUE_LEFT) {
+                switch (selectionAroundMid) {
+                    case NONE:
+                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+                        break;
+                    case LEFT_OF_CAMERA_MID:
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-                    } else {
+                        break;
+                    case RIGHT_OF_CAMERA_MID:
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                    }
+                        break;
                 }
             } else { //RED_RIGHT or BLUE_RIGHT
-                if (recognition.getLabel() == "Pixel") {
-                    if (x < 200) {
+                switch (selectionAroundMid) {
+                    case NONE:
+                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+                        break;
+                    case LEFT_OF_CAMERA_MID:
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
-                    } else {
+                        break;
+                    case RIGHT_OF_CAMERA_MID:
                         identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
-                    }
+                        break;
                 }
             }
+        }
+    }
 
-        }   // end for() loop
-    }   // end method runTfodTensorFlow()
-
+    public enum CameraSelectedAroundMid {
+        NONE,
+        LEFT_OF_CAMERA_MID,
+        RIGHT_OF_CAMERA_MID
+    }
 }   // end class

@@ -14,33 +14,33 @@ public class TestVisionOpenCV extends OpMode{
     @Override
 
     public void init() {
-        visionOpenCV = new VisionOpenCV(hardwareMap);
+        visionOpenCV = new VisionOpenCV(hardwareMap, telemetry, "Webcam 1");
         /*visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), visionOpenCV);*/
-        }
+    }
 
-        @Override
-        public void init_loop() {
-            telemetry.addData("Identified", visionOpenCV.getSelection());
-            telemetry.addData("SatLeftOfCameraMid", visionOpenCV.satRectLeftOfCameraMid);
+    @Override
+    public void init_loop() {
+        telemetry.addData("Identified", visionOpenCV.getSelection());
+        telemetry.addData("SatLeftOfCameraMid", visionOpenCV.satRectLeftOfCameraMid);
 
-            telemetry.addData("SatRightOfCameraMid", visionOpenCV.satRectRightOfCameraMid);
-            telemetry.addData("SatRectNone", visionOpenCV.satRectNone);
-            telemetry.update();
-        }
+        telemetry.addData("SatRightOfCameraMid", visionOpenCV.satRectRightOfCameraMid);
+        telemetry.addData("SatRectNone", visionOpenCV.satRectNone);
+        telemetry.update();
+    }
 
-        @Override
-        public void start() {
+    @Override
+    public void start() {
             visionPortal.stopStreaming();
         }
 
-        @Override
-        public void loop() {
-            telemetry.addData("Identified", visionOpenCV.getSelection());
-            telemetry.addData("SatLeftOfCameraMid", visionOpenCV.satRectLeftOfCameraMid);
+    @Override
+    public void loop() {
+        telemetry.addData("Identified", visionOpenCV.getSelection());
+        telemetry.addData("SatLeftOfCameraMid", visionOpenCV.satRectLeftOfCameraMid);
 
-            telemetry.addData("SatRightOfCameraMid", visionOpenCV.satRectRightOfCameraMid);
-            telemetry.addData("SatRectNone", visionOpenCV.satRectNone);
-            telemetry.update();
-        }
+        telemetry.addData("SatRightOfCameraMid", visionOpenCV.satRectRightOfCameraMid);
+        telemetry.addData("SatRectNone", visionOpenCV.satRectNone);
+        telemetry.update();
+    }
 }

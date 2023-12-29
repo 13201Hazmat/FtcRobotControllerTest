@@ -38,7 +38,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveTransferToPickup();
-                return true;
+                return false;
             }
         };
     }
@@ -57,7 +57,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 movePickupToTransfer();
-                return true;
+                return false;
             }
         };
     }
@@ -86,7 +86,7 @@ public class OuttakeController {
             public boolean run(TelemetryPacket packet){
                 moveTransferToReadyForTransfer();
                 //safeWaitMilliSeconds(200);
-                return true;
+                return false;
             }
         };
     }
@@ -114,7 +114,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 movePickupToReadyForTransfer();
-                return true;
+                return false;
             }
         };
     }
@@ -145,7 +145,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveReadyForTransferToTransfer();
-                return true;
+                return false;
             }
         };
     }
@@ -178,11 +178,32 @@ public class OuttakeController {
         outtakeArm.closeGrip();
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
         safeWaitMilliSeconds(200);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
-        if(outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE ||
-            outtakeSlideStateDropLevel == OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
-            safeWaitMilliSeconds(100);
+        switch (outtakeSlideStateDropLevel) {
+            case DROP_LOWEST:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
+                safeWaitMilliSeconds(100);
+                break;
+            case DROP_LOW_LINE:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE);
+                safeWaitMilliSeconds(100);
+                break;
+            case DROP_BELOW_MID:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID);
+                break;
+            case DROP_LEVEL_MID:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID);
+                break;
+            case DROP_BELOW_HIGH:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH);
+                break;
+            case DROP_LEVEL_HIGH:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH);
+                break;
+            case DROP_HIGHEST:
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST);
+                break;
         }
+
         outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);
     }
 
@@ -194,11 +215,22 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
-                return true;
+                return false;
             }
         };
     }
 
+    public Action moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideState){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                moveReadyForTransferToDropLevel(outtakeSlideState);
+                return false;
+            }
+        };
+    }
 
     /*
     public void moveReadyForTransferToTravel(){
@@ -258,7 +290,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveDropToReadyforTransfer();
-                return true;
+                return false;
             }
         };
     }
@@ -275,7 +307,7 @@ public class OuttakeController {
             public boolean run(TelemetryPacket packet){
                 outtakeArm.dropOnePixel();
                 safeWaitMilliSeconds(1000);
-                return true;
+                return false;
             }
         };
     }
@@ -326,7 +358,7 @@ public class OuttakeController {
             public boolean run(TelemetryPacket packet){
                 moveOuttakeToEndState();
                 safeWaitMilliSeconds(1000);
-                return true;
+                return false;
             }
         };
     }

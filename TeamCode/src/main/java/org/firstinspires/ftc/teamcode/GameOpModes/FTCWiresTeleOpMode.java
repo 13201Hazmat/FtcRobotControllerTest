@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,12 +10,12 @@ import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RRDrive.TankDrive;
 import org.firstinspires.ftc.teamcode.RRDrive.tuning.TuningOpModes;
 
+
 /**
  * FTC WIRES TeleOp Example
  *
  */
 
-@Disabled
 @TeleOp(name = "FTC Wires TeleOp", group = "00-Teleop")
 public class FTCWiresTeleOpMode extends LinearOpMode {
     @Override
@@ -47,6 +46,7 @@ public class FTCWiresTeleOpMode extends LinearOpMode {
                 //telemetry.addData("RF Encoder", drive.rightFront.getCurrentPosition());
                 //telemetry.addData("RB Encoder", drive.rightBack.getCurrentPosition());
 
+                telemetry.addLine("Current Pose");
                 telemetry.addData("x", drive.pose.position.x);
                 telemetry.addData("y", drive.pose.position.y);
                 telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
@@ -70,7 +70,7 @@ public class FTCWiresTeleOpMode extends LinearOpMode {
 
                 telemetry.addData("x", drive.pose.position.x);
                 telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
+                telemetry.addData("heading", drive.pose.heading);
                 telemetry.update();
             }
         } else {

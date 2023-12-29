@@ -33,7 +33,7 @@ public class Intake {
         INTAKE_ROLLER_LIFTED_4(0.32,4),
         INTAKE_ROLLER_LIFTED_3(0.28,3),
         INTAKE_ROLLER_LIFTED_2(0.24,2),
-        INTAKE_ROLLER_DROPPED(0.20,1);
+        INTAKE_ROLLER_DROPPED(0.19,1);
 
         private double liftPosition;
         private int index;
@@ -98,6 +98,12 @@ public class Intake {
     public void moveIntakeRollerOnePixelDown(){
         if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED) {
             moveRollerHeight(intakeRollerHeightState.byIndex((intakeRollerHeightState.getIndex()-1)));
+        }
+    }
+
+    public void moveIntakeRollerOnePixelUp(){
+        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED) {
+            moveRollerHeight(intakeRollerHeightState.byIndex((intakeRollerHeightState.getIndex()+1)));
         }
     }
 

@@ -96,10 +96,12 @@ public class TestOuttake extends LinearOpMode {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE);
                     }
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+
                     outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
@@ -107,10 +109,12 @@ public class TestOuttake extends LinearOpMode {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID);
                     }
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+
                     outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
@@ -118,10 +122,12 @@ public class TestOuttake extends LinearOpMode {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH);
                     }
-                    outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+
                     outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
@@ -199,7 +205,7 @@ public class TestOuttake extends LinearOpMode {
                             }
                             break;
                         case MOVE_TO_DROP_BELOW_LOW:
-                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP);
+                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
                             outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                             comboTransferActivated = false;
@@ -214,7 +220,7 @@ public class TestOuttake extends LinearOpMode {
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) ||
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE) ||
                         outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)) &&
-                        outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP)) {
+                        outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST)) {
                     if (gamepadController.gp2GetRightBumper()) {
                         outtakeArm.dropOnePixel();
                     }

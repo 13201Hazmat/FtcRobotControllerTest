@@ -8,8 +8,10 @@ import android.graphics.Paint;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.GameOpModes.FTCWiresAutoVisionOpenCV;
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -21,9 +23,6 @@ import org.opencv.imgproc.Imgproc;
 
 
 public class VisionOpenCV implements VisionProcessor {
-    public Rect rectLeftOfCameraMid = new Rect(10, 40, 150, 240);
-    public Rect rectRightOfCameraMid = new Rect(160, 40, 470, 160);
-    CameraSelectedAroundMid selectionAroundMid = CameraSelectedAroundMid.NONE;
 
     public enum IDENTIFIED_SPIKE_MARK_LOCATION {
         LEFT,
@@ -34,6 +33,9 @@ public class VisionOpenCV implements VisionProcessor {
 
     public VisionPortal visionPortal;
 
+    public Rect rectLeftOfCameraMid = new Rect(0,0,0,0);
+    public Rect rectRightOfCameraMid = new Rect(0,0,0,0);
+    CameraSelectedAroundMid selectionAroundMid = CameraSelectedAroundMid.NONE;
 
     Mat submat = new Mat();
     Mat hsvMat = new Mat();
@@ -41,9 +43,40 @@ public class VisionOpenCV implements VisionProcessor {
     public double satRectLeftOfCameraMid, satRectRightOfCameraMid;
     public double satRectNone = 40.0;
 
-    public VisionOpenCV(HardwareMap hardwareMap){
+    public HardwareMap hardwareMap;
+    public Telemetry telemetry;
+    public String webcamName;
+
+    public VisionOpenCV(HardwareMap hardwareMap, Telemetry telemetry, String webcamName){
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        this.webcamName = webcamName;
         visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), this);
+                hardwareMap.get(WebcamName.class, webcamName), this);
+    }
+
+    public void initOpenCV() {
+        if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
+                GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
+            rectLeftOfCameraMid = new Rect(10, 40, 150, 240);
+            rectRightOfCameraMid = new Rect(160, 40, 470, 160);
+        } else { //RED_RIGHT or BLUE_RIGHT
+            rectLeftOfCameraMid = new Rect(10, 40, 470, 160);
+            rectRightOfCameraMid = new Rect(480, 40, 150, 240);
+        }
+    }
+
+    /**
+     * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
+     */
+    public void runOpenCVObjectDetection() {
+        getSelection();
+        telemetry.addLine("Vision Tensor Flow for White Pixel Detection");
+        telemetry.addData("Identified Parking Location", identifiedSpikeMarkLocation);
+        telemetry.addData("SatLeftOfCameraMid", satRectLeftOfCameraMid);
+        telemetry.addData("SatRightOfCameraMid", satRectRightOfCameraMid);
+        telemetry.addData("SatRectNone", satRectNone);
+        telemetry.update();
     }
 
     @Override
