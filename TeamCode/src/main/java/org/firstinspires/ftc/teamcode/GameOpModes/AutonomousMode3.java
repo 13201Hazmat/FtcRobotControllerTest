@@ -509,7 +509,7 @@ public class AutonomousMode3 extends LinearOpMode {
                         trajMidwayStackPoseToStackPose
                 )
         );
-        outtakeController.moveTransferToReadyForTransferAuto();
+        outtakeController.moveTransferToReadyForTransfer();
         safeWaitMilliSeconds(200);
         intakeAtStack(1);
         safeWaitMilliSeconds(200);

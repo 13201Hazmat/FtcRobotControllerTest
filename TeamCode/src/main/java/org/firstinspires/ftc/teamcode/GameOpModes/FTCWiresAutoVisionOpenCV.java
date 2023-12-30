@@ -38,6 +38,7 @@ import android.graphics.Paint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,6 +58,7 @@ import org.opencv.imgproc.Imgproc;
  * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
  */
 @Autonomous(name = "FTC Wires Auto Open CV Vision", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Disabled
 public class FTCWiresAutoVisionOpenCV extends LinearOpMode {
 
     public static String TEAM_NAME = "EDIT TEAM NAME"; //TODO: Enter team Name

@@ -66,16 +66,9 @@ public class OuttakeController {
     public void moveTransferToReadyForTransfer(){
         outtakeArm.closeGrip();
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-        safeWaitMilliSeconds(200);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-    }
-    public void moveTransferToReadyForTransferAuto(){
-        //outtakeArm.closeGrip();
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
         safeWaitMilliSeconds(200);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
     }
 
     public Action moveTransferToReadyForTransferAction(){
@@ -85,7 +78,6 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveTransferToReadyForTransfer();
-                //safeWaitMilliSeconds(200);
                 return false;
             }
         };
@@ -96,15 +88,10 @@ public class OuttakeController {
         safeWaitMilliSeconds(50);
         movePickupToTransfer();
         safeWaitMilliSeconds(50);
-        /*ElapsedTime timeoutTimer = new ElapsedTime(MILLISECONDS);
-        while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
-                timeoutTimer.time() < 500) {
-            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-        }*/
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-        safeWaitMilliSeconds(200);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
+        safeWaitMilliSeconds(200);
     }
 
     public Action movePickupToReadyForTransferAction(){
@@ -121,21 +108,10 @@ public class OuttakeController {
 
     public void moveReadyForTransferToTransfer(){
         outtakeArm.openGrip();
-        ElapsedTime timeoutTimer = new ElapsedTime(MILLISECONDS);
-        if (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) &&
-                outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER)) {
-            timeoutTimer.reset();
-            while (!outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
-                    timeoutTimer.time() < 1000) {
-                outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-            }
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
-        } else {
-            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-        }
+        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
+        safeWaitMilliSeconds(200);
     }
 
     public Action moveReadyForTransferToTransferAction(){
@@ -149,30 +125,6 @@ public class OuttakeController {
             }
         };
     }
-
-    /*
-    public void moveTravelToReadyForTransfer(){
-        outtakeArm.closeGrip();
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-        safeWaitMilliSeconds(200);
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-        safeWaitMilliSeconds(100);
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-    }
-
-    public Action moveTravelToReadyForTransferAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveTravelToReadyForTransfer();
-                return true;
-            }
-        };
-    }
-
-     */
 
     public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
         outtakeArm.closeGrip();
@@ -207,19 +159,6 @@ public class OuttakeController {
         outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);
     }
 
-    public Action moveReadyForTransferToDropLowestAction(){
-        return new Action(){
-
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
-                return false;
-            }
-        };
-    }
-
     public Action moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideState){
         return new Action(){
             @Override
@@ -231,49 +170,6 @@ public class OuttakeController {
             }
         };
     }
-
-    /*
-    public void moveReadyForTransferToTravel(){
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRAVEL);
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRAVEL);
-        safeWaitMilliSeconds(100);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRAVEL);
-    }
-
-    public Action moveReadyForTransferToTravelAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveReadyForTransferToTravel();
-                return true;
-            }
-        };
-    }
-
-     */
-
-    /*
-    public void moveDropToTravel(){
-        outtakeArm.closeGrip();
-        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRAVEL);
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRAVEL);
-        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRAVEL);
-    }
-
-    public Action moveDropToTravelAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveDropToTravel();
-                return true;
-            }
-        };
-    }
-     */
 
     public void moveDropToReadyforTransfer(){
         outtakeArm.closeGrip();
@@ -317,37 +213,7 @@ public class OuttakeController {
             outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP) {
             moveDropToReadyforTransfer();
             safeWaitMilliSeconds(500);
-            moveReadyForTransferToTransfer();
-            safeWaitMilliSeconds(200);
         }
-
-        //End state of Outtake has to be Travel
-        /*
-        switch (outtakeSlides.outtakeSlidesState) {
-            case MIN_RETRACTED:
-            case TRANSFER:
-            case PICKUP:
-                /*movePickupToReadyForTransfer();
-                while(outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER)) {
-                    safeWaitMilliSeconds(150);
-                }
-
-                moveReadyForTransferToTravel();
-                break;
-            case READY_FOR_TRANSFER:
-            case TRAVEL:
-            case DROP_LOWEST:
-            case DROP_LOW_LINE:
-            case DROP_BELOW_MID:
-            case DROP_LEVEL_MID:
-            case DROP_BELOW_HIGH:
-            case DROP_LEVEL_HIGH:
-            case DROP_HIGHEST:
-            case MAX_EXTENDED:
-            case RANDOM:
-                moveDropToTravel();
-                break;
-        }*/
     }
 
     public Action moveOuttakeToEndStateAction(){
@@ -357,7 +223,6 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveOuttakeToEndState();
-                safeWaitMilliSeconds(1000);
                 return false;
             }
         };

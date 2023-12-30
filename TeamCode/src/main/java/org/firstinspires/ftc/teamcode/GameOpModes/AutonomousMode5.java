@@ -38,7 +38,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -60,7 +59,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionOpenCV;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
 
 /**
  * Hazmat Autonomous
@@ -185,9 +183,11 @@ public class AutonomousMode5 extends LinearOpMode {
 
 
     Action trajInitToDropPurplePixel, trajDropPurplePixelTodropYellowPixel, trajDropYellowPixelToPark;
-    Action trajDropYellowPixelPoseToMidwayBackDropPose, trajMidwayBackDropPoseToMidwayStackPose, trajMidwayStackPoseToStackPose;
-    Action trajStackPoseToMidwayStackPose, trajMidwayStackPoseToMidwayBackDropPose,
-            trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixelToPark;
+    Action trajDropYellowPixelPoseToMidwayBackDropPose, trajMidwayBackDropPoseToMidwayStackPose, trajMidwayStackPoseToStackPose,
+            trajDropYellowPixelPoseToStackPose, trajMidwayBackDropPoseToStackPose;
+    Action trajStackPoseToMidwayStackPose, trajMidwayStackPoseToMidwayBackDropPose,trajStackPosetoMidwayBackDropPose,
+            trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixeltoMidWayBackDropPose, trajDropStackPixelToPark,
+            trajDropStackPixelPosetoStackPose;
     Action trajDropPurplePixelToAfterPurplePixelPose, trajAfterPurplePixelToMidwayStackPose;
     Action trajMidwayBackDropPoseToDropYellowPixekPose, trajDropYellowPixelPoseToDropStackPixelPose;
 
@@ -221,15 +221,15 @@ public class AutonomousMode5 extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(31.5, 34.5, Math.toRadians(-90)); //y=33.5, x35.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33.5,30, Math.toRadians(-90));
                         dropStackPixelPose = new Pose2d(37, 36, Math.toRadians(-90));
-                        beforeParkAfterDropStackPixelPose = new Pose2d(37,32, Math.toRadians(-90));
+                        //beforeParkAfterDropStackPixelPose = new Pose2d(37,32, Math.toRadians(-90));
                         break;
                 }
-                afterPurplePixelPose = new Pose2d(8,-14,Math.toRadians(-30));
-                wallStackPose = new Pose2d(13, -73, Math.toRadians(-90));
-                wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
+                //afterPurplePixelPose = new Pose2d(8,-14,Math.toRadians(-30));
+                wallStackPose = new Pose2d(2, -60, Math.toRadians(-90));
+                //wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(49, -73, Math.toRadians(-90));
-                stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
+                stageDoorStackPose = new Pose2d(49, -60, Math.toRadians(-90));
+                //stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(49, 18, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPoseWall = new Pose2d(2.5, 27, Math.toRadians(-90)); //x2, x26
@@ -239,7 +239,7 @@ public class AutonomousMode5 extends LinearOpMode {
 
             case RED_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch (visionOpenCV.identifiedSpikeMarkLocation) {
+                /*switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(30));
                         dropYellowPixelPose = new Pose2d(33, -35.5, Math.toRadians(90)); //x=33,y=-34
@@ -275,9 +275,11 @@ public class AutonomousMode5 extends LinearOpMode {
                 parkPoseStageDoor = new Pose2d(49, -28, Math.toRadians(90));
                 break;
 
+                 */
+
             case BLUE_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch (visionOpenCV.identifiedSpikeMarkLocation) {
+                /*switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(28, 4, Math.toRadians(35));
                         dropYellowPixelPose = new Pose2d(22.7, 87, Math.toRadians(-90));//x24, y86
@@ -316,10 +318,12 @@ public class AutonomousMode5 extends LinearOpMode {
                 parkPoseStageDoor = new Pose2d(46, 83.5, Math.toRadians(-90)); //x54.5, y77
                 break;
 
+                 */
+
 
             case RED_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                switch (visionOpenCV.identifiedSpikeMarkLocation) {
+                /*switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(24, 8, Math.toRadians(37)); //x23, y5, 43
                         dropYellowPixelPose = new Pose2d(28, -91, Math.toRadians(90));//x30, y-90.5
@@ -357,15 +361,17 @@ public class AutonomousMode5 extends LinearOpMode {
                 parkPoseWall = new Pose2d(-1, -81, Math.toRadians(90)); //x12.2, y-85
                 parkPoseStageDoor = new Pose2d(46, -79, Math.toRadians(90));//x58, y-78
                 break;
+
+                 */
         }
 
         if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
                 stackPose = wallStackPose;
-                midwayStackPose = wallMidwayStackPose;
+                //midwayStackPose = wallMidwayStackPose;
                 midwayBackDropPose = wallMidwayBackDropPose;
         } else {
                 stackPose = stageDoorStackPose;
-                midwayStackPose = stageMidwayStackPose;
+                //midwayStackPose = stageMidwayStackPose;
                 midwayBackDropPose = stageMidwayBackDropPose;
         }
 
@@ -380,8 +386,6 @@ public class AutonomousMode5 extends LinearOpMode {
         telemetry.update();
 
         trajInitToDropPurplePixel = drive.actionBuilder(drive.pose)
-                //.strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
-                //.strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                 .splineToLinearHeading(dropPurplePixelPose,0)
                 .build();
 
@@ -396,28 +400,50 @@ public class AutonomousMode5 extends LinearOpMode {
                 .strafeToLinearHeading(parkPose.position, parkPose.heading)
                 .build();
 
-        trajDropYellowPixelPoseToMidwayBackDropPose = drive.actionBuilder(dropYellowPixelPose)
+        /*trajDropYellowPixelPoseToMidwayBackDropPose = drive.actionBuilder(dropYellowPixelPose)
                 .strafeToLinearHeading(midwayBackDropPose.position, midwayBackDropPose.heading)
+                .build();*/
+
+        trajDropYellowPixelPoseToStackPose = drive.actionBuilder(dropYellowPixelPose)
+                .splineToLinearHeading(midwayBackDropPose,0)
+                .splineToLinearHeading(stackPose, 0)
                 .build();
 
-        trajMidwayBackDropPoseToMidwayStackPose = drive.actionBuilder(midwayBackDropPose)
+        /*trajMidwayBackDropPoseToMidwayStackPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeTo(midwayStackPose.position)
-                .build();
+                .build();*/
 
-        trajMidwayStackPoseToStackPose = drive.actionBuilder(midwayStackPose)
+        /*trajMidwayBackDropPoseToStackPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeTo(stackPose.position)
-                .build();
+                .build();*/
 
-        trajStackPoseToMidwayStackPose = drive.actionBuilder(stackPose)
+        /*trajMidwayStackPoseToStackPose = drive.actionBuilder(midwayStackPose)
+                .strafeTo(stackPose.position)
+                .build();*/
+
+        /*trajStackPoseToMidwayStackPose = drive.actionBuilder(stackPose)
                 .strafeTo(midwayStackPose.position)
-                .build();
+                .build();*/
 
-        trajMidwayStackPoseToMidwayBackDropPose = drive.actionBuilder(midwayStackPose)
+        /*trajMidwayStackPoseToMidwayBackDropPose = drive.actionBuilder(midwayStackPose)
                 .strafeTo(midwayBackDropPose.position)
+                .build();*/
+
+        trajStackPosetoMidwayBackDropPose = drive.actionBuilder(stackPose)
+                .strafeToLinearHeading(midwayBackDropPose.position, midwayBackDropPose.heading)
                 .build();
 
         trajMidwayBackDropPoseToDropStackPixelPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeToLinearHeading(dropStackPixelPose.position, dropStackPixelPose.heading)
+                .build();
+
+        /*trajDropStackPixeltoMidWayBackDropPose = drive.actionBuilder(dropStackPixelPose)
+                .strafeTo(stackPose.position)
+                .build();*/
+
+        trajDropStackPixelPosetoStackPose = drive.actionBuilder(dropStackPixelPose)
+                .splineToLinearHeading(midwayBackDropPose,0)
+                .splineToLinearHeading(stackPose, 0)
                 .build();
 
         trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
@@ -425,22 +451,21 @@ public class AutonomousMode5 extends LinearOpMode {
                 .strafeToLinearHeading(parkPose.position, parkPose.heading)
                 .build();
 
-        trajDropPurplePixelToAfterPurplePixelPose = drive.actionBuilder(dropPurplePixelPose)
+        /*trajDropPurplePixelToAfterPurplePixelPose = drive.actionBuilder(dropPurplePixelPose)
                 .strafeToLinearHeading(afterPurplePixelPose.position, afterPurplePixelPose.heading)
-                .build();
+                .build();*/
 
-        trajAfterPurplePixelToMidwayStackPose = drive.actionBuilder(afterPurplePixelPose)
+        /*trajAfterPurplePixelToMidwayStackPose = drive.actionBuilder(afterPurplePixelPose)
                 .strafeToLinearHeading(midwayStackPose.position, midwayStackPose.heading)
-                .build();
+                .build();*/
 
-        trajMidwayBackDropPoseToDropYellowPixekPose = drive.actionBuilder(midwayBackDropPose)
-                .waitSeconds(3.5)
+        /*trajMidwayBackDropPoseToDropYellowPixekPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
-                .build();
+                .build();*/
 
-        trajDropYellowPixelPoseToDropStackPixelPose = drive.actionBuilder(dropYellowPixelPose)
+        /*trajDropYellowPixelPoseToDropStackPixelPose = drive.actionBuilder(dropYellowPixelPose)
                 .strafeToLinearHeading(dropStackPixelPose.position, dropStackPixelPose.heading)
-                .build();
+                .build();*/
 
         if (GameField.startPosition == GameField.START_POSITION.RED_RIGHT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
@@ -460,14 +485,11 @@ public class AutonomousMode5 extends LinearOpMode {
                                 trajDropPurplePixelTodropYellowPixel,
                                 new SequentialAction(
                                         outtakeController.moveTransferToReadyForTransferAction(),
-                                        new SleepAction(0.2),
-                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                                        new SleepAction(0.8)
+                                        new SleepAction(0.5),
+                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
                                 )
                         ),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.2),
-                        trajDropYellowPixelToPark
+                        outtakeController.dropOnePixelAction()
                 )
         );
 
@@ -479,118 +501,71 @@ public class AutonomousMode5 extends LinearOpMode {
                     )
             );
         } else { //FULL AUTO
-            for (int pixelLoopCounter = 0; pixelLoopCounter < pixelLoopCount; pixelLoopCounter++){
+            Actions.runBlocking(
+                    new SequentialAction(
+                            new SequentialAction(
+                                    new ParallelAction(
+                                            outtakeController.moveDropToReadyforTransferAction(),
+                                            /*new SequentialAction(
+                                                    trajDropYellowPixelPoseToMidwayBackDropPose,
+                                                    trajMidwayBackDropPoseToStackPose
+                                            )*/
+                                            trajDropYellowPixelPoseToStackPose
+                                    ),
+                                    intakeAtStackAction(2)
+                            ),
+                            new ParallelAction(
+                                    trajStackPosetoMidwayBackDropPose,
+                                    new SequentialAction(
+                                        outtakeController.moveReadyForTransferToTransferAction(),
+                                        outtakeController.moveTransferToReadyForTransferAction()
+                                    )
+                            ),
+                            new ParallelAction(
+                                    trajMidwayBackDropPoseToDropStackPixelPose,
+                                    outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID)
+                            ),
+                            outtakeController.dropOnePixelAction(),
+                            outtakeController.dropOnePixelAction()
+                    )
+                );
+
+            if(pixelLoopCount == 2)
                 Actions.runBlocking(
                         new SequentialAction(
                                 new SequentialAction(
                                         new ParallelAction(
-                                                new SequentialAction(
-                                                        trajDropYellowPixelPoseToMidwayBackDropPose,
-                                                        trajMidwayBackDropPoseToMidwayStackPose
-                                                ),
-                                                outtakeController.moveDropToReadyforTransferAction()
+                                                outtakeController.moveDropToReadyforTransferAction(),
+                                            /*new SequentialAction(
+                                                    trajDropYellowPixelPoseToMidwayBackDropPose,
+                                                    trajMidwayBackDropPoseToStackPose
+                                            )*/
+                                                trajDropStackPixelPosetoStackPose
                                         ),
-                                        trajMidwayStackPoseToStackPose,
-                                        intakeAtStackAction(2),
-                                        new SleepAction(0.2)
+                                        intakeAtStackAction(2)
                                 ),
                                 new ParallelAction(
-                                        outtakeController.moveReadyForTransferToTransferAction(),
-                                        trajStackPoseToMidwayStackPose
-                                ),
-                                new ParallelAction(
-                                        trajMidwayStackPoseToMidwayBackDropPose,
-                                        outtakeController.moveTransferToReadyForTransferAction()
+                                        trajStackPosetoMidwayBackDropPose,
+                                        new SequentialAction(
+                                                outtakeController.moveReadyForTransferToTransferAction(),
+                                                outtakeController.moveTransferToReadyForTransferAction()
+                                        )
                                 ),
                                 new ParallelAction(
                                         trajMidwayBackDropPoseToDropStackPixelPose,
                                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID)
                                 ),
                                 outtakeController.dropOnePixelAction(),
-                                new SleepAction(0.2),
-                                outtakeController.dropOnePixelAction(),
-                                new SleepAction(0.2)
+                                outtakeController.dropOnePixelAction()
                         )
-                );
-                Actions.runBlocking(
-                        new ParallelAction(
-                                trajDropStackPixelToPark,
-                                outtakeController.moveOuttakeToEndStateAction()
-                        )
-                );
-            }
+            );
+            Actions.runBlocking(
+                    outtakeController.moveOuttakeToEndStateAction()
+            );
         }
-
-        /*
-        outtakeController.moveTransferToReadyForTransfer();
-        safeWaitMilliSeconds(200);
-        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
-        safeWaitMilliSeconds( 800);
-        outtakeController.dropOnePixel();
-        safeWaitMilliSeconds(500);
-
-        telemetry.addLine("After second Action");
-        telemetry.update();
-
-        if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
-            Actions.runBlocking(
-                    //trajDropYellowPixelToPark
-                    drive.actionBuilder(dropYellowPixelPose)
-                            .strafeToLinearHeading(parkPose.position, parkPose.heading)
-                            .build()
-            );
-
-            printDebugMessages();
-        } else { // FULL AUTONOMOUS
-            //outtakeController.moveDropToTravel();
-            outtakeController.moveDropToReadyforTransfer();
-            safeWaitMilliSeconds(500);
-
-            printDebugMessages();
-            Actions.runBlocking(
-                    new SequentialAction(
-                            trajDropYellowPixelPoseToMidwayBackDropPose,
-                            trajMidwayBackDropPoseToMidwayStackPose,
-                            trajMidwayStackPoseToStackPose
-                    )
-            );
-
-            printDebugMessages();
-            intakeAtStack(2);
-            safeWaitMilliSeconds(200);
-
-            outtakeController.outtakeArm.openGrip();
-            //outtakeController.moveTravelToReadyForTransfer();
-            //safeWaitMilliSeconds(300);
-            outtakeController.moveReadyForTransferToTransfer();
-            safeWaitMilliSeconds(200);
-            printDebugMessages();
-            Actions.runBlocking(
-                    new SequentialAction(
-                            trajStackPoseToMidwayStackPose,
-                            trajMidwayStackPoseToMidwayBackDropPose,
-                            trajMidwayBackDropPoseToDropStackPixelPose
-                    )
-            );
-            printDebugMessages();
-            outtakeTransfertoDropTwoPixels();
-
-            Actions.runBlocking(
-                    trajDropStackPixelToPark
-            );
-            printDebugMessages();
-        }
-
-        outtakeController.moveOuttakeToEndState();
-        printDebugMessages();
-        safeWaitMilliSeconds(3000);
-
-        telemetry.addLine("After third Action");
-        telemetry.update();
-         */
     }
 
-    public void actionForRedLeftBlueRight(){
+    public void actionForRedLeftBlueRight(){/*
         Actions.runBlocking(
                 new SequentialAction(
                         trajInitToDropPurplePixel,
@@ -599,14 +574,6 @@ public class AutonomousMode5 extends LinearOpMode {
                         trajMidwayStackPoseToStackPose
                 )
         );
-        /*
-        outtakeController.moveTransferToReadyForTransferAuto();
-        safeWaitMilliSeconds(200);
-        intakeAtStack(1);
-        safeWaitMilliSeconds(200);
-        outtakeController.moveReadyForTransferToTransfer();
-        safeWaitMilliSeconds(200);
-         */
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -671,6 +638,7 @@ public class AutonomousMode5 extends LinearOpMode {
 
         telemetry.addLine("After third Action");
         telemetry.update();
+        */
 
     }
 
