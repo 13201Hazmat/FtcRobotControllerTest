@@ -56,7 +56,7 @@ public class OuttakeArm {
         //TRAVEL(0.03), //0.48
         TRANSFER(0.02),//0.12
         PICKUP(0.04), //0.16
-        READY_FOR_TRANSFER(0.02),//0.09
+        READY_FOR_TRANSFER(0.0),//0.09 //0.02
         DROP(0.90); //0.94
 
         private double wristPosition;
