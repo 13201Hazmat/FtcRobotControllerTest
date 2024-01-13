@@ -55,8 +55,8 @@ public class VisionSensor {
 
     public VisionSensor(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
-        backdropDistanceSensorLeft = hardwareMap.get(DistanceSensor.class, "back_distance_left");
-        backdropDistanceSensorRight = hardwareMap.get(DistanceSensor.class, "back_distance_right");
+        //backdropDistanceSensorLeft = hardwareMap.get(DistanceSensor.class, "back_distance_left");
+        //backdropDistanceSensorRight = hardwareMap.get(DistanceSensor.class, "back_distance_right");
 
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
@@ -64,7 +64,7 @@ public class VisionSensor {
     }
 
 
-    public void senseBackdrop(){
+    public void senseBackdrop(){/*
         backdropDistanceLeftDistance = backdropDistanceSensorLeft.getDistance(DistanceUnit.MM);
         backdropDistanceRightDistance = backdropDistanceSensorRight.getDistance(DistanceUnit.MM);
 
@@ -102,7 +102,7 @@ public class VisionSensor {
         } else {
             backdropDistanceState = BACKDROP_DISTANCE_STATE.NOT_SENSED;
         }
-
+*/
     }
 
     String detectedAprilTagName = "";

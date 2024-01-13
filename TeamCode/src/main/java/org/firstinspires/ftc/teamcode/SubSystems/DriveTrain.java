@@ -61,6 +61,15 @@ public class DriveTrain extends MecanumDrive{
        telemetry.addData("Parallel Right / LB Encoder", leftBack.getCurrentPosition());
        telemetry.addData("Perpendicular / RF Encoder", rightFront.getCurrentPosition());
        telemetry.addData("RB Encoder", rightBack.getCurrentPosition());
+       telemetry.addData("LF motor is busy", leftFront.isBusy());
+       telemetry.addData("LF motor is over current", leftFront.isOverCurrent());
+       telemetry.addData("LB motor is busy", leftBack.isBusy());
+       telemetry.addData("LB motor is over current", leftBack.isOverCurrent());
+       telemetry.addData("RF motor is busy", rightFront.isBusy());
+       telemetry.addData("RF motor is over current", rightFront.isOverCurrent());
+       telemetry.addData("RB motor is busy", rightBack.isBusy());
+       telemetry.addData("RB motor is over current", rightBack.isOverCurrent());
+
        telemetry.addLine("=============");
     }
 

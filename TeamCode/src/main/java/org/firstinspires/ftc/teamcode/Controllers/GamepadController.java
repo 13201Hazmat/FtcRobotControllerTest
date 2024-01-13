@@ -192,7 +192,7 @@ public class GamepadController {
             intakeReverseStarted = false;
         }
 
-        if (gp1GetTrianglePress()) {
+        if (gp1GetTrianglePersistent()) {
                 intake.reverseIntake();
             } else {
             if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
@@ -355,12 +355,12 @@ public class GamepadController {
 
         if (gp2GetDpad_upPress()) {
             outtakeArm.rotateWrist(1);
-            outtakeArm.rotateArm(1);
+            //outtakeArm.rotateArm(1);
         }
 
         if (gp2GetDpad_downPress()) {
             outtakeArm.rotateWrist(-1);
-            outtakeArm.rotateArm(-1);
+            //outtakeArm.rotateArm(-1);
         }
 
         if(gp2GetLeftStickY()>0.15|| gp2GetLeftStickY()<-0.15) {

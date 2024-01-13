@@ -102,10 +102,10 @@ public class OuttakeArm {
 
     //initialize outtakeArm
     public void initOuttakeArm() {
-        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE ||
-                GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
-            moveArm(OUTTAKE_ARM_STATE.TRANSFER);
-            moveWrist(OUTTAKE_WRIST_STATE.TRANSFER);
+        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE
+                /*|| GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS*/) {
+            moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+            moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
         } else {
             moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
             moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);

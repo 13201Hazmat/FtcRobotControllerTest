@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -63,6 +66,15 @@ public class GamepadDriveTrainController extends Thread{
         }
 
         driveTrain.driveNormal();
+        safeWaitMilliSeconds(10);
+
+    }
+
+    public void safeWaitMilliSeconds(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!teleOpMode.isStopRequested() && timer.time() < time) {
+        }
     }
 
     /**
