@@ -133,6 +133,14 @@ public class Intake {
         }
     }
 
+    public void reverseIntakeForPurplePixelDrop() {
+        if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
+            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
+            intakeMotorState = INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING;
+        }
+    }
+
     public void stopIntakeMotor() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) {
             runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);

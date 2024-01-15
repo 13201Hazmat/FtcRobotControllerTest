@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.*;
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Actions;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.HolonomicController;
@@ -14,7 +16,10 @@ import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.MotorFeedforward;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.PoseVelocity2dDual;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.Time;
 import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.TimeTurn;
@@ -44,13 +49,12 @@ import org.firstinspires.ftc.teamcode.RRDrive.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.MecanumEncodersMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.PoseMessage;
 
-import java.lang.Math;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 @Config
-public class MecanumDrive {
+public class MecanumDriveOriginal {
     public static class Params {
 
         //Step 2 : Update direction of IMU by updating orientation of Driver Hub below
@@ -146,10 +150,10 @@ public class MecanumDrive {
         private Rotation2d lastHeading;
 
         public DriveLocalizer() {
-            leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
-            leftBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
-            rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
-            rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
+            leftFront = new OverflowEncoder(new RawEncoder(MecanumDriveOriginal.this.leftFront));
+            leftBack = new OverflowEncoder(new RawEncoder(MecanumDriveOriginal.this.leftBack));
+            rightBack = new OverflowEncoder(new RawEncoder(MecanumDriveOriginal.this.rightBack));
+            rightFront = new OverflowEncoder(new RawEncoder(MecanumDriveOriginal.this.rightFront));
 
             //Step 4.2 Run MecanumDirectionDebugger Tuning OpMode to set motor direction correctly
             //Uncomment the lines for which the motorDirection need to be reversed to ensure all motors run forward in test
@@ -212,7 +216,7 @@ public class MecanumDrive {
         }
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+    public MecanumDriveOriginal(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
 
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
@@ -311,18 +315,7 @@ public class MecanumDrive {
                 t = Actions.now() - beginTs;
             }
 
-            /******* Moved from below for ExtraCorrection*/
-            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
-
-            PoseVelocity2d robotVelRobot = updatePoseEstimate();
-            Pose2d error = txWorldTarget.value().minusExp(pose);
-            /* End ExtraCorrection Move*/
-
-            if (t >= timeTrajectory.duration) { //Changed for Extra correct to following condition
-            /*if ((t >= timeTrajectory.duration && error.position.norm() < 2
-                    && robotVelRobot.linearVel.norm() < 0.5)
-                    || t + 1 >= timeTrajectory.duration) {*/
+            if (t >= timeTrajectory.duration) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
@@ -331,12 +324,10 @@ public class MecanumDrive {
                 return false;
             }
 
-            /**** Moved above for extra correction ***
             Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
             targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 
             PoseVelocity2d robotVelRobot = updatePoseEstimate();
-             *********/
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
@@ -367,7 +358,7 @@ public class MecanumDrive {
             p.put("y", pose.position.y);
             p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
 
-            //Pose2d error = txWorldTarget.value().minusExp(pose); Moved above for ExtraCorrection
+            Pose2d error = txWorldTarget.value().minusExp(pose);
             p.put("xError", error.position.x);
             p.put("yError", error.position.y);
             p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
