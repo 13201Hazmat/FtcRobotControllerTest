@@ -20,8 +20,8 @@ public class OuttakeArm {
     public enum OUTTAKE_ARM_STATE{
         ZERO(0.94,0.06),
         //TRAVEL(0.76,0.24),
-        TRANSFER(0.95,0.05),
-        PICKUP(0.95,0.05),
+        TRANSFER(0.97,0.03), //0.95,0.05
+        PICKUP(0.97,0.03), //0.95,0.05
         READY_FOR_TRANSFER(0.76,0.24),
         //DROP(0.21,0.79); //1,0
         DROP_LOWEST(0.21,0.79),
