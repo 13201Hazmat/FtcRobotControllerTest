@@ -645,81 +645,6 @@ public class AutonomousMode5 extends LinearOpMode {
                     outtakeController.moveOuttakeToEndStateAction()
             );
         }
-
-        /*        Actions.runBlocking(
-                new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        trajDropPurplePixelToAfterPurplePixelPose,
-                        trajAfterPurplePixelToMidwayStackPose,
-                        trajMidwayStackPoseToStackPose
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajStackPoseToMidwayStackPose,
-                        trajMidwayStackPoseToMidwayBackDropPose,
-                        trajMidwayBackDropPoseToDropYellowPixekPose
-                )
-        );
-
-        //outtakeController.moveTransferToReadyForTransfer();
-        //safeWaitMilliSeconds(300);
-        outtakeTransfertoDropTwoPixels();
-
-
-        if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
-            Actions.runBlocking(
-                    trajDropYellowPixelToPark
-            );
-
-            printDebugMessages();
-        } else { // FULL AUTONOMOUS
-            //outtakeController.moveDropToTravel();
-            outtakeController.moveDropToReadyforTransfer();
-
-            printDebugMessages();
-            Actions.runBlocking(
-                    new SequentialAction(
-                            trajDropYellowPixelPoseToMidwayBackDropPose,
-                            trajMidwayBackDropPoseToMidwayStackPose,
-                            trajMidwayStackPoseToStackPose
-                    )
-            );
-
-            printDebugMessages();
-
-            intakeAtStack(2);
-            safeWaitMilliSeconds(200);
-            //outtakeController.moveTravelToReadyForTransfer();
-            //safeWaitMilliSeconds(300);
-            outtakeController.moveReadyForTransferToTransfer();
-            safeWaitMilliSeconds(200);
-            printDebugMessages();
-            Actions.runBlocking(
-                    new SequentialAction(
-                            trajStackPoseToMidwayStackPose,
-                            trajMidwayStackPoseToMidwayBackDropPose,
-                            trajMidwayBackDropPoseToDropStackPixelPose
-                    )
-            );
-            printDebugMessages();
-            outtakeTransfertoDropTwoPixels();
-
-            Actions.runBlocking(
-                    trajDropStackPixelToPark
-            );
-            printDebugMessages();
-        }
-
-        outtakeController.moveOuttakeToEndState();
-        printDebugMessages();
-        safeWaitMilliSeconds(3000);
-
-        telemetry.addLine("After third Action");
-        telemetry.update();
-        */
-
     }
 
     public void rotateDriveCorrectly(Pose2d currentPose){
@@ -875,79 +800,57 @@ public class AutonomousMode5 extends LinearOpMode {
             telemetry.update();
         }
 
-        while(!isStopRequested()){
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------","");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Drop Preload and Park       ","(X / ▢)");
-            telemetry.addData("    Full autonomous (1 cycle)   ","(Y / Δ)");
-            telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
+        if (GameField.startPosition == GameField.START_POSITION.BLUE_RIGHT ||
+                GameField.startPosition == GameField.START_POSITION.RED_LEFT) {
+            autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
+        } else {
+            while (!isStopRequested()) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", GameField.startPosition);
+                telemetry.addLine("Select Auto Options");
+                telemetry.addData("    Drop Preload and Park       ", "(X / ▢)");
+                telemetry.addData("    Full autonomous (1 cycle)   ", "(Y / Δ)");
+                //telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
 
-            if(gamepadController.gp1GetSquarePress()){
-                autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
+                if (gamepadController.gp1GetSquarePress()) {
+                    autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
+                    break;
+                }
+                if (gamepadController.gp1GetTrianglePress()) {
+                    autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                    pixelLoopCount = 1;
+                    break;
+                }
+            /*if(gamepadController.gp1GetCirclePress()){
+                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                pixelLoopCount = 2;
+                break;
+            }*/
+                telemetry.update();
+            }
+        }
+
+        while (!isStopRequested()) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            telemetry.addLine("Select Pathway and Parking option");
+            telemetry.addData("    Wall Rigging ", "Y / Δ");
+            telemetry.addData("    Stage Door", "B / O ");
+            if (gamepadController.gp1GetButtonYPress()) {
+                pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
+                parkingOption = PARKING_OPTION.RIGGING_WALL;
                 break;
             }
-            if(gamepadController.gp1GetTrianglePress()){
-                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
-                pixelLoopCount = 1;
-                break;
-            }
-            if(gamepadController.gp1GetCirclePress()){
-                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
-                pixelLoopCount = 1;
+            if (gamepadController.gp1GetButtonBPress()) {
+                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
+                parkingOption = PARKING_OPTION.STAGEDOOR;
                 break;
             }
             telemetry.update();
         }
-
-        if (autoOption == AUTO_OPTION.FULL_AUTONOMOUS) {
-            while (!isStopRequested()) {
-                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-                telemetry.addData("---------------------------------------", "");
-                telemetry.addData("Selected Starting Position", GameField.startPosition);
-                telemetry.addData("Selected Auto Option", autoOption);
-                telemetry.addLine("Select Pathway and Parking option");
-                telemetry.addData("    Through the wall Rigging ", "Y / Δ");
-                telemetry.addData("    Through the Stage Door", "B / O ");
-                if (gamepadController.gp1GetButtonYPress()) {
-                    pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
-                    parkingOption = PARKING_OPTION.RIGGING_WALL;
-                    break;
-                }
-                if (gamepadController.gp1GetButtonBPress()) {
-                    pathwayOption = PATHWAY_OPTION.STAGEDOOR;
-                    parkingOption = PARKING_OPTION.STAGEDOOR;
-                    break;
-                }
-                telemetry.update();
-            }
-        } else {
-
-            while (!isStopRequested()) {
-                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-                telemetry.addData("---------------------------------------", "");
-                telemetry.addData("Selected Starting Position", GameField.startPosition);
-                telemetry.addData("Selected Auto Option", autoOption);
-                telemetry.addData("Selected Pathway option", pathwayOption);
-                telemetry.addLine("Select Parking Position:");
-                telemetry.addData("    Near wall Rigging ", "Y / Δ");
-                telemetry.addData("    Near Stage Door", "B / O ");
-                if (gamepadController.gp1GetButtonYPress()) {
-                    pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
-                    parkingOption = PARKING_OPTION.RIGGING_WALL;
-                    break;
-                }
-                if (gamepadController.gp1GetButtonBPress()) {
-                    pathwayOption = PATHWAY_OPTION.STAGEDOOR;
-                    parkingOption = PARKING_OPTION.STAGEDOOR;
-                    break;
-                }
-                telemetry.update();
-            }
-        }
-
-
 
         telemetry.clearAll();
     }
