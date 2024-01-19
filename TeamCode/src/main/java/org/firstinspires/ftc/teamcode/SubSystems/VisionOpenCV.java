@@ -41,7 +41,7 @@ public class VisionOpenCV implements VisionProcessor {
     Mat hsvMat = new Mat();
 
     public double satRectLeftOfCameraMid, satRectRightOfCameraMid;
-    public double satRectNone = 40.0;
+    public double satRectNone = 25.0;//40.0
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
