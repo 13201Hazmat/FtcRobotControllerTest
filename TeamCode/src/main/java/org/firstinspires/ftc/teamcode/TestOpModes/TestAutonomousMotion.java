@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.TestOpModes;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
@@ -10,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RRDrive.TankDrive;
 import org.firstinspires.ftc.teamcode.RRDrive.tuning.TuningOpModes;
 
 @Autonomous(name = "TestAutonomousMotion", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
 public final class TestAutonomousMotion extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -41,6 +41,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -62,6 +63,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionTfod;
  * Hazmat Autonomous
  */
 @Autonomous(name = "HazmatAutonomous Mode 4", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
 public class AutonomousMode4 extends LinearOpMode {
 
     public GamepadController gamepadController;
