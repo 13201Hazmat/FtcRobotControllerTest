@@ -180,7 +180,7 @@ public class GamepadController {
                     if (magazineSecondPixelTimer.time() > 50) {
                         intakeReverseStarted = true;
                         intakeReverseTimer.reset();
-                        intake.reverseIntake();
+                        intake.reverseIntakeTeleOp();
                         intakeReverserEnabled = false;
                     }
                 }
@@ -321,9 +321,11 @@ public class GamepadController {
                         }
                     }
 
+                    /*
                     if (gp2GetLeftBumperPress()) {
                         outtakeArm.toggleGrip();
                     }
+                     */
 
                     if (gp2GetSquarePress()) {
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
@@ -373,7 +375,7 @@ public class GamepadController {
     }
 
     public void runClimber(){
-        if (gp1GetCirclePersistent()) {
+        if (gp2GetRightTriggerPersistent()) {
             climber.climberActivated = true;
             climber.moveClimberSlidesUp();
             climber.modifyClimberLengthContinuous(-0.6);
@@ -385,7 +387,7 @@ public class GamepadController {
         }
 
         if (climber.climberActivated) {
-            if (gp1GetSquarePress()) {
+            if (gp2GetLeftBumperPress()) {
                 climber.climbingStarted = true;
                 climber.stopClimberSlides();
                 climber.moveClimberUpInSteps(1.0);
@@ -606,6 +608,14 @@ public class GamepadController {
         }
         gp1RightTriggerLast = (gp1GetRightTrigger()>0.7);
         return isPressedRightTrigger;
+    }
+
+    public boolean gp2GetRightTriggerPersistent() {
+        if (gp2GetRightTrigger()>0.7) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
