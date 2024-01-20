@@ -312,11 +312,11 @@ public class MecanumDrive {
             }
 
             /******* Moved from below for ExtraCorrection*/
-            //Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-            //targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 
-            //PoseVelocity2d robotVelRobot = updatePoseEstimate();
-            //Pose2d error = txWorldTarget.value().minusExp(pose);
+            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+            Pose2d error = txWorldTarget.value().minusExp(pose);
             /* End ExtraCorrection Move*/
 
             if (t >= timeTrajectory.duration) { //Changed for Extra correct to following condition
@@ -331,12 +331,12 @@ public class MecanumDrive {
                 return false;
             }
 
-            /**** Moved above for extra correction ***/
-            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+            /**** Moved above for extra correction ***
+             Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+             targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 
-            PoseVelocity2d robotVelRobot = updatePoseEstimate();
-            /*********/
+             PoseVelocity2d robotVelRobot = updatePoseEstimate();
+             *********/
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
@@ -367,7 +367,7 @@ public class MecanumDrive {
             p.put("y", pose.position.y);
             p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
 
-            Pose2d error = txWorldTarget.value().minusExp(pose); //Moved above for ExtraCorrection
+            //Pose2d error = txWorldTarget.value().minusExp(pose); Moved above for ExtraCorrection
             p.put("xError", error.position.x);
             p.put("yError", error.position.y);
             p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
