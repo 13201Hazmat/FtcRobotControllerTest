@@ -263,7 +263,7 @@ public class AutonomousMode5 extends LinearOpMode {
                 wallStackPose = new Pose2d(13, 73, Math.toRadians(90));
                 wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(55.2, 72, Math.toRadians(90));//x54, y72.3, 90
+                stageDoorStackPose = new Pose2d(53.5, 72, Math.toRadians(90));//x55.2, y72, 90
                 //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
                 stageMidwayTrussPose = new Pose2d(54,27.5,90);
                 stageMidwayBackDropPose = new Pose2d(52, -18, Math.toRadians(90));//x47
@@ -344,8 +344,8 @@ public class AutonomousMode5 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(25.4, -4.8, Math.toRadians(-51)); //x29, y-4, -23
-                        dropYellowPixelPose = new Pose2d(17, -88, Math.toRadians(90));//x13 y=-91
+                        dropPurplePixelPose = new Pose2d(24.6, -5.3, Math.toRadians(-69)); //x25.4, y-4.8 -51
+                        dropYellowPixelPose = new Pose2d(19, -88, Math.toRadians(90));//x17 y=-91
                         beforeParkAfterDropYellowPixelPose = new Pose2d(17,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
@@ -354,7 +354,7 @@ public class AutonomousMode5 extends LinearOpMode {
                 wallStackPose = new Pose2d(24.6, 19.6, Math.toRadians(90)); //x22, x17, 90
                 wallMidwayStackPose = new Pose2d(0, 0, Math.toRadians(90));//x2, y-5
                 wallMidwayBackDropPose = new Pose2d(0, -67, Math.toRadians(90));//x2, y-73
-                stageDoorStackPose = new Pose2d(50.4, 21.6, Math.toRadians(90));//x48.5, y18
+                stageDoorStackPose = new Pose2d(48.6, 21.6, Math.toRadians(90));//x48.5, y18
                 stageMidwayTrussPose = new Pose2d(50.4,-20.6,90);//x48.5, y27.5, 90
                 stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
