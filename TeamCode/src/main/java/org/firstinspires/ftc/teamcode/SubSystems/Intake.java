@@ -33,7 +33,7 @@ public class Intake {
         INTAKE_ROLLER_LIFTED_4(0.325,4), //0.32
         INTAKE_ROLLER_LIFTED_3(0.285,3), //0.28
         INTAKE_ROLLER_LIFTED_2(0.245,2), //0.24
-        INTAKE_ROLLER_DROPPED(0.17,1);//0.19, 1
+        INTAKE_ROLLER_DROPPED(0.17,1);//0.16, 1
 
         private double liftPosition;
         private int index;

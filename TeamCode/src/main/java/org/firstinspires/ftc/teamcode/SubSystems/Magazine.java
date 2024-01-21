@@ -12,7 +12,7 @@ public class Magazine {
     public NormalizedColorSensor magazineSensorBottom;
     public NormalizedColorSensor magazineSensorTop;
     public Servo magazineDoorServo;
-    public boolean magazineSensorActivated = true;
+    public boolean magazineSensorActivated = false;
 
     public enum MAGAZINE_DOOR_STATE {
         CLOSED(1.0),
