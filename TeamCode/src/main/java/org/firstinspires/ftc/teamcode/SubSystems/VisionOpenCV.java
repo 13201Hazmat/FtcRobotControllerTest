@@ -54,7 +54,6 @@ public class VisionOpenCV implements VisionProcessor {
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
-
         satRectLeftOfCameraMid = getAvgSaturation(hsvMat, rectLeftOfCameraMid);
         satRectRightOfCameraMid = getAvgSaturation(hsvMat, rectRightOfCameraMid);
 
