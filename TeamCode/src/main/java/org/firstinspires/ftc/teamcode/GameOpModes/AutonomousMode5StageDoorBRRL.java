@@ -190,7 +190,7 @@ public class AutonomousMode5StageDoorBRRL extends LinearOpMode {
     Action trajStackPoseToMidwayStackPose, trajMidwayStackPoseToMidwayBackDropPose,
             trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixelToPark;
     Action trajDropPurplePixelToAfterPurplePixelPose, trajAfterPurplePixelToMidwayStackPose;
-    Action trajMidwayBackDropPoseToDropYellowPixekPose, trajDropYellowPixelPoseToDropStackPixelPose;
+    Action trajMidwayBackDropPoseToDropYellowPixelPose, trajDropYellowPixelPoseToDropStackPixelPose;
 
 
     public void runAutonoumousMode() {
@@ -434,7 +434,7 @@ public class AutonomousMode5StageDoorBRRL extends LinearOpMode {
                 .strafeToLinearHeading(midwayStackPose.position, midwayStackPose.heading)
                 .build();
 
-        trajMidwayBackDropPoseToDropYellowPixekPose = drive.actionBuilder(midwayBackDropPose)
+        trajMidwayBackDropPoseToDropYellowPixelPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
                 .build();
 
@@ -551,7 +551,7 @@ public class AutonomousMode5StageDoorBRRL extends LinearOpMode {
                 new SequentialAction(
                         trajStackPoseToMidwayStackPose,
                         trajMidwayStackPoseToMidwayBackDropPose,
-                        trajMidwayBackDropPoseToDropYellowPixekPose
+                        trajMidwayBackDropPoseToDropYellowPixelPose
                 )
         );
 

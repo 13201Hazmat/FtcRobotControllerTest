@@ -185,12 +185,14 @@ public class AutonomousMode6 extends LinearOpMode {
     Pose2d parkPose = new Pose2d(0, 0, 0);
 
 
-    Action trajInitToDropPurplePixel, trajDropPurplePixelTodropYellowPixel, trajDropYellowPixelToPark;
-    Action trajDropYellowPixelPoseToMidwayBackDropPose, trajMidwayBackDropPoseToMidwayStackPose, trajMidwayStackPoseToStackPose;
+    Action trajInitToDropYellowPixel, trajDropYellowPixeltoDropPurplePixel, trajDropYellowPixelToPark;
+    Action trajDropPurplePixelPoseToMidwayBackDropPose, trajMidwayBackDropPoseToMidwayStackPose, trajMidwayStackPoseToStackPose;
+    Action trajDropYellowPixelPoseToMidwayBackDropPose;
     Action trajStackPoseToMidwayStackPose, trajMidwayStackPoseToMidwayBackDropPose,
             trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixelToPark;
+    Action trajInitToDropPurplePixel;
     Action trajDropPurplePixelToAfterPurplePixelPose, trajAfterPurplePixelToMidwayStackPose;
-    Action trajMidwayBackDropPoseToDropYellowPixekPose, trajDropYellowPixelPoseToDropStackPixelPose;
+    Action trajMidwayBackDropPoseToDropYellowPixelPose, trajDropYellowPixelPoseToDropStackPixelPose;
 
 
     public void runAutonoumousMode() {
@@ -380,16 +382,25 @@ public class AutonomousMode6 extends LinearOpMode {
         telemetry.addLine("+++++ After Pose Assignments ++++++");
         telemetry.update();
 
+        //For RED_LEFT & BLUE_RIGHT
         trajInitToDropPurplePixel = drive.actionBuilder(drive.pose)
-                //.strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
-                //.strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                 .splineToLinearHeading(dropPurplePixelPose,0)
                 .build();
 
+        trajDropYellowPixelPoseToMidwayBackDropPose = drive.actionBuilder(dropYellowPixelPose)
+                .strafeToLinearHeading(midwayBackDropPose.position, midwayBackDropPose.heading)
+                .build();
+
         //For RED_RIGHT & BLUE_LEFT
-        trajDropPurplePixelTodropYellowPixel = drive.actionBuilder(dropPurplePixelPose)
+        trajInitToDropYellowPixel = drive.actionBuilder(drive.pose)
+                //.strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+                //.strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
+                .splineToLinearHeading(dropYellowPixelPose,0)
+                .build();
+
+        trajDropYellowPixeltoDropPurplePixel = drive.actionBuilder(dropYellowPixelPose)
                 .setReversed(true)
-                .splineToLinearHeading(dropYellowPixelPose, 0)
+                .splineToLinearHeading(dropPurplePixelPose, 0)
                 .build();
 
         trajDropYellowPixelToPark = drive.actionBuilder(dropYellowPixelPose)
@@ -397,7 +408,7 @@ public class AutonomousMode6 extends LinearOpMode {
                 .strafeToLinearHeading(parkPose.position, parkPose.heading)
                 .build();
 
-        trajDropYellowPixelPoseToMidwayBackDropPose = drive.actionBuilder(dropYellowPixelPose)
+        trajDropPurplePixelPoseToMidwayBackDropPose = drive.actionBuilder(dropPurplePixelPose)
                 .strafeToLinearHeading(midwayBackDropPose.position, midwayBackDropPose.heading)
                 .build();
 
@@ -434,7 +445,7 @@ public class AutonomousMode6 extends LinearOpMode {
                 .strafeToLinearHeading(midwayStackPose.position, midwayStackPose.heading)
                 .build();
 
-        trajMidwayBackDropPoseToDropYellowPixekPose = drive.actionBuilder(midwayBackDropPose)
+        trajMidwayBackDropPoseToDropYellowPixelPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
                 .build();
 
@@ -454,8 +465,7 @@ public class AutonomousMode6 extends LinearOpMode {
     public void actionForRedRightBlueLeft() {
         Actions.runBlocking(
                 new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        trajDropPurplePixelTodropYellowPixel
+                        trajInitToDropYellowPixel
                 )
         );
         telemetry.addLine("After first Action");
@@ -468,13 +478,19 @@ public class AutonomousMode6 extends LinearOpMode {
         outtakeController.dropOnePixel();
         safeWaitMilliSeconds(600);
 
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajDropYellowPixeltoDropPurplePixel
+                )
+        );
+
         telemetry.addLine("After second Action");
         telemetry.update();
 
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     //trajDropYellowPixelToPark
-                    drive.actionBuilder(dropYellowPixelPose)
+                    drive.actionBuilder(dropPurplePixelPose)
                             .strafeToLinearHeading(parkPose.position, parkPose.heading)
                             .build()
             );
@@ -488,7 +504,7 @@ public class AutonomousMode6 extends LinearOpMode {
             printDebugMessages();
             Actions.runBlocking(
                     new SequentialAction(
-                            trajDropYellowPixelPoseToMidwayBackDropPose,
+                            trajDropPurplePixelPoseToMidwayBackDropPose,
                             trajMidwayBackDropPoseToMidwayStackPose,
                             trajMidwayStackPoseToStackPose
                     )
@@ -551,7 +567,7 @@ public class AutonomousMode6 extends LinearOpMode {
                 new SequentialAction(
                         trajStackPoseToMidwayStackPose,
                         trajMidwayStackPoseToMidwayBackDropPose,
-                        trajMidwayBackDropPoseToDropYellowPixekPose
+                        trajMidwayBackDropPoseToDropYellowPixelPose
                 )
         );
 
