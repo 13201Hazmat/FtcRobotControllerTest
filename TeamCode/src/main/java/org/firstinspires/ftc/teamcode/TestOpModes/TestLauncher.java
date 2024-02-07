@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
  * This code defines the TeleOp mode is done by Hazmat Robot for Freight Frenzy<BR>
  *
  */
-@Disabled
+
 @TeleOp(name = "Test Launcher", group = "02-Test OpModes")
 public class TestLauncher extends LinearOpMode {
 
