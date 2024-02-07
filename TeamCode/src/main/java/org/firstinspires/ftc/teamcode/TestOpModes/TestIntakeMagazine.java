@@ -105,25 +105,25 @@ public class TestIntakeMagazine extends LinearOpMode {
 
                 if (!gamepadController.gp1GetStart()) {
                     if (gamepadController.gp1GetLeftBumperPress()) {
-                        intake.toggleRollerHeight();
+                        intake.toggleStackIntake();
                     }
                 } else {
-                    intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+                    intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
                 }
 
                 if(gamepadController.gp1GetCrossPress()) {
-                    intake.moveIntakeRollerOnePixelDown();
+                    intake.moveIntakeLiftDown();
                 }
 
                 if (gamepadController.gp1GetDpad_downPress()){
-                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
-                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {
+                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.RUNNING) {
                             intake.startIntakeInward();
                         } else {
                             intake.stopIntakeMotor();
                         }
                     } else {
-                        if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                        if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.RUNNING) {
                             intake.startIntakeInward();
                         } else {
                             intake.stopIntakeMotor();
@@ -147,7 +147,7 @@ public class TestIntakeMagazine extends LinearOpMode {
                 if (gamepadController.gp1GetDpad_up()) {
                     intake.reverseIntake();
                 } else {
-                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
                         intake.stopIntakeMotor();
                     }
                 }

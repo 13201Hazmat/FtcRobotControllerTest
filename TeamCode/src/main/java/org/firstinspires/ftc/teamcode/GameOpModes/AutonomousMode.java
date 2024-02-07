@@ -272,7 +272,7 @@ public class AutonomousMode extends LinearOpMode {
 
 
             //TODO : Code to intake pixel from stack
-            intakePixelLevel5FromStack();
+            intakePixelFromStack();
 
             //Move robot to midwayPose2 and to dropYellowPixelPose
             Actions.runBlocking(
@@ -310,6 +310,7 @@ public class AutonomousMode extends LinearOpMode {
 
     }
 
+    /*
     public void intakePixelLevel5FromStack() {
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
         intake.startIntakeInward();
@@ -318,6 +319,15 @@ public class AutonomousMode extends LinearOpMode {
         safeWaitMilliSeconds(1000);
         intake.stopIntakeMotor();
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+    }
+     */
+
+    public void intakePixelFromStack(){
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.DROPPED);
+        intake.startIntakeInward();
+        safeWaitMilliSeconds(300);
+        intake.stopIntakeMotor();
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
     }
 
     public void dropPixelInBackdrop() {
@@ -340,7 +350,7 @@ public class AutonomousMode extends LinearOpMode {
         }
         //outtakeController.moveDropToTravel();
         outtakeController.moveDropToReadyforTransfer();
-        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
         //safeWaitMilliSeconds(2000);
     }
 

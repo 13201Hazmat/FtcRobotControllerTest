@@ -128,15 +128,17 @@ public class GamepadController {
     public void runIntake(){
         if (!gp1GetStart()) {
             if (gp1GetLeftBumperPress()) {
-                intake.toggleRollerHeight();
+                intake.toggleStackIntake();
             }
-        } else {
+        }
+        /*else {
             intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_INIT_AUTO);
         }
+         */
 
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {
-                intake.moveIntakeRollerOnePixelDown();
+                intake.moveIntakeLiftDown();
             }
         } else {
             //Disable or enable magazine sensor
@@ -146,7 +148,7 @@ public class GamepadController {
         }
 
         if (gp1GetDpad_upPress()) {
-            intake.moveIntakeRollerOnePixelUp();
+            intake.moveIntakeLiftUp();
         }
 
         magazine.senseMagazineState();
@@ -155,8 +157,8 @@ public class GamepadController {
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
             magazineSecondPixelActivated = false;
             if (gp1GetCrossPress()) {//(gp1GetDpad_downPress()) {
-                if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
-                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {
+                    if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.RUNNING) {
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER &&
                             outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP &&
                             outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.MIN_RETRACTED) {
@@ -195,7 +197,7 @@ public class GamepadController {
         if (gp1GetTrianglePersistent()) {
                 intake.reverseIntake();
             } else {
-            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_REVERSING) {
+            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
                 intake.stopIntakeMotor();
             }
         }
@@ -219,7 +221,7 @@ public class GamepadController {
                 case MIN_RETRACTED:
                 case TRANSFER:
                 case PICKUP:
-                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_RUNNING) {
+                    if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.RUNNING) {
                         intake.stopIntakeMotor();
                     }
                     /*if (gp2GetCrossPress()) {
@@ -281,7 +283,7 @@ public class GamepadController {
                     }
 
                     if (gp2GetCrossPress()) {
-                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.INTAKE_MOTOR_STOPPED) {
+                        if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.STOPPED) {
                             intake.stopIntakeMotor();
                         }
                         outtakeController.moveReadyForTransferToTransfer();
