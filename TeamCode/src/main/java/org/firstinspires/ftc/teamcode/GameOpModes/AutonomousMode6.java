@@ -192,6 +192,7 @@ public class AutonomousMode6 extends LinearOpMode {
             trajMidwayBackDropPoseToDropStackPixelPose, trajDropStackPixelToPark;
     Action trajInitToDropPurplePixel;
     Action trajDropPurplePixelToAfterPurplePixelPose, trajAfterPurplePixelToMidwayStackPose;
+    Action trajDropStackPoseToMidwayBackDropPose;
     Action trajMidwayBackDropPoseToDropYellowPixelPose, trajDropYellowPixelPoseToDropStackPixelPose;
 
 
@@ -431,6 +432,9 @@ public class AutonomousMode6 extends LinearOpMode {
         trajMidwayBackDropPoseToDropStackPixelPose = drive.actionBuilder(midwayBackDropPose)
                 .strafeToLinearHeading(dropStackPixelPose.position, dropStackPixelPose.heading)
                 .build();
+        trajDropStackPoseToMidwayBackDropPose = drive.actionBuilder(dropStackPixelPose)
+                .strafeToLinearHeading(midwayBackDropPose.position, midwayBackDropPose.heading)
+                .build();
 
         trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
                 .strafeToLinearHeading(beforeParkAfterDropStackPixelPose.position, beforeParkAfterDropStackPixelPose.heading)
@@ -476,7 +480,7 @@ public class AutonomousMode6 extends LinearOpMode {
         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
         safeWaitMilliSeconds( 700);
         outtakeController.dropOnePixel();
-        safeWaitMilliSeconds(600);
+        safeWaitMilliSeconds(350);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -511,8 +515,8 @@ public class AutonomousMode6 extends LinearOpMode {
             );
 
             printDebugMessages();
-            intakeAtStack(2);
-            safeWaitMilliSeconds(200);
+            intakeAtStack();
+            safeWaitMilliSeconds(250);
 
             outtakeController.outtakeArm.openGrip();
             //outtakeController.moveTravelToReadyForTransfer();
@@ -529,6 +533,35 @@ public class AutonomousMode6 extends LinearOpMode {
             );
             printDebugMessages();
             outtakeTransfertoDropTwoPixels();
+
+            if(pixelLoopCount == 2){
+                outtakeController.movePickupToReadyForTransfer();
+                safeWaitMilliSeconds(100);
+                printDebugMessages();
+                Actions.runBlocking(
+                        new SequentialAction(
+                                trajDropStackPoseToMidwayBackDropPose,
+                                trajMidwayBackDropPoseToMidwayStackPose,
+                                trajMidwayStackPoseToStackPose
+                        )
+                );
+                printDebugMessages();
+                intakeAtStack();
+                safeWaitMilliSeconds(250);
+                outtakeController.outtakeArm.openGrip();
+                outtakeController.moveReadyForTransferToTransfer();
+                safeWaitMilliSeconds(200);
+                printDebugMessages();
+                Actions.runBlocking(
+                        new SequentialAction(
+                                trajStackPoseToMidwayStackPose,
+                                trajMidwayStackPoseToMidwayBackDropPose,
+                                trajMidwayBackDropPoseToDropStackPixelPose
+                        )
+                );
+                printDebugMessages();
+                outtakeTransfertoDropTwoPixels();
+            }
 
             Actions.runBlocking(
                     trajDropStackPixelToPark
@@ -597,7 +630,7 @@ public class AutonomousMode6 extends LinearOpMode {
 
             printDebugMessages();
 
-            intakeAtStack(2);
+            intakeAtStack();
             safeWaitMilliSeconds(200);
             //outtakeController.moveTravelToReadyForTransfer();
             //safeWaitMilliSeconds(300);
@@ -613,6 +646,35 @@ public class AutonomousMode6 extends LinearOpMode {
             );
             printDebugMessages();
             outtakeTransfertoDropTwoPixels();
+
+            if(pixelLoopCount == 2){
+                outtakeController.movePickupToReadyForTransfer();
+                safeWaitMilliSeconds(100);
+                printDebugMessages();
+                Actions.runBlocking(
+                        new SequentialAction(
+                                trajDropStackPoseToMidwayBackDropPose,
+                                trajMidwayBackDropPoseToMidwayStackPose,
+                                trajMidwayStackPoseToStackPose
+                        )
+                );
+                printDebugMessages();
+                intakeAtStack();
+                safeWaitMilliSeconds(250);
+                outtakeController.outtakeArm.openGrip();
+                outtakeController.moveReadyForTransferToTransfer();
+                safeWaitMilliSeconds(200);
+                printDebugMessages();
+                Actions.runBlocking(
+                        new SequentialAction(
+                                trajStackPoseToMidwayStackPose,
+                                trajMidwayStackPoseToMidwayBackDropPose,
+                                trajMidwayBackDropPoseToDropStackPixelPose
+                        )
+                );
+                printDebugMessages();
+                outtakeTransfertoDropTwoPixels();
+            }
 
             Actions.runBlocking(
                     trajDropStackPixelToPark
@@ -639,22 +701,16 @@ public class AutonomousMode6 extends LinearOpMode {
     }
 
 
-    public int stackCounter = 5;
+    //public int stackCounter = 5;
 
-    public void intakeAtStack(int count){
-        intake.moveIntakeRollerToLevel(stackCounter + 1);
+    public void intakeAtStack(){
+        intake.moveIntakeLiftDown();
         intake.startIntakeInward();
-        safeWaitMilliSeconds(200);
-        intake.moveIntakeRollerToLevel(stackCounter--);
         safeWaitMilliSeconds(400);
-        if (count >= 2) {
-            intake.moveIntakeRollerToLevel(stackCounter--);
-            safeWaitMilliSeconds(400);
-        }
         intake.reverseIntake();
-        safeWaitMilliSeconds(400);
+        safeWaitMilliSeconds(200);
         intake.stopIntakeMotor();
-        intake.moveIntakeRollerToLevel(7);
+        //intake.moveIntakeLiftUp();
 
     }
 
@@ -664,7 +720,7 @@ public class AutonomousMode6 extends LinearOpMode {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                intakeAtStack(2);
+                intakeAtStack();
                 return true;
             }
         };
@@ -706,11 +762,11 @@ public class AutonomousMode6 extends LinearOpMode {
         outtakeController.moveTransferToReadyForTransfer();
         safeWaitMilliSeconds(500);
         outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
-        safeWaitMilliSeconds(800);
+        safeWaitMilliSeconds(600);
         outtakeArm.dropOnePixel();
-        safeWaitMilliSeconds(150); //200
+        safeWaitMilliSeconds(200); //200
         outtakeArm.dropOnePixel();
-        safeWaitMilliSeconds(500);
+        safeWaitMilliSeconds(300);
     }
     public Action outtakeTransfertoDropPixel(){
         return new Action(){
@@ -766,6 +822,7 @@ public class AutonomousMode6 extends LinearOpMode {
             telemetry.addData("Selected Starting Position", GameField.startPosition);
             telemetry.addLine("Select Auto Options");
             telemetry.addData("    Full autonomous                ","X / ▢");
+            telemetry.addData("Full autonomous (2 cycles)",   "B / O");
             telemetry.addData("    Drop Preload and Park   ","Y / Δ");
             if(gamepadController.gp1GetButtonXPress()){
                 autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
@@ -773,6 +830,11 @@ public class AutonomousMode6 extends LinearOpMode {
             }
             if(gamepadController.gp1GetButtonYPress()){
                 autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
+                break;
+            }
+            if(gamepadController.gp1GetCirclePress()){
+                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                pixelLoopCount = 2;
                 break;
             }
             telemetry.update();

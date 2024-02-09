@@ -626,6 +626,7 @@ public class AutonomousMode5StageDoorBRRL extends LinearOpMode {
     public int stackCounter = 5;
 
     public void intakeAtStack(int count){
+        /*
         intake.moveIntakeRollerToLevel(stackCounter + 1);
         intake.startIntakeInward();
         safeWaitMilliSeconds(200);
@@ -639,6 +640,9 @@ public class AutonomousMode5StageDoorBRRL extends LinearOpMode {
         safeWaitMilliSeconds(400);
         intake.stopIntakeMotor();
         intake.moveIntakeRollerToLevel(7);
+
+         */
+
 
     }
 
