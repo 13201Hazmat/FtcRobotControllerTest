@@ -716,6 +716,7 @@ public class AutonomousMode5 extends LinearOpMode {
     public int stackCounter = 5;
 
     public void intakeAtStack(int count){
+        /*
         intake.moveIntakeRollerToLevel(stackCounter + 1);
         intake.startIntakeInward();
         safeWaitMilliSeconds(1200); //1000
@@ -730,6 +731,8 @@ public class AutonomousMode5 extends LinearOpMode {
         safeWaitMilliSeconds(300);//400
         intake.stopIntakeMotor();
         intake.moveIntakeRollerToLevel(7);
+
+         */
     }
 
     public Action intakeAtStackAction(int count){
