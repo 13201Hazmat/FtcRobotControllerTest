@@ -17,6 +17,7 @@ public class OuttakeArm {
     public Servo outtakeArmLeft;
     public Servo outtakeArmRight;
 
+    public Servo outtakeAlignment;
     public enum OUTTAKE_ARM_STATE{
         ZERO(0.94,0.06),
         //TRAVEL(0.76,0.24),
@@ -86,6 +87,22 @@ public class OuttakeArm {
     }
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
+    public enum OUTTAKE_ALIGN_STATE{
+        UP(0.0), // TODO: Update these values
+        DOWN(0.0); // TODO: Update these values
+
+        private double alignPosition;
+
+        OUTTAKE_ALIGN_STATE(double alignPosition){
+            this.alignPosition = alignPosition;
+        }
+
+        public double getAlignPosition() {
+            return alignPosition;
+        }
+    }
+    public OUTTAKE_ALIGN_STATE outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
+
     public Telemetry telemetry;
     public OuttakeArm(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
@@ -94,6 +111,8 @@ public class OuttakeArm {
 
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
         outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+
+        outtakeAlignment = hardwareMap.get(Servo.class, "outtake_align");
 
         initOuttakeArm();
     }
@@ -111,6 +130,7 @@ public class OuttakeArm {
             moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
         }
         closeGrip();
+
     }
 
     /**
@@ -133,6 +153,24 @@ public class OuttakeArm {
             closeGrip();
         } else {
             openGrip();
+        }
+    }
+
+    public void alignUp(){
+        outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.UP.alignPosition);
+        outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
+    }
+
+    public void alignDown(){
+        outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.DOWN.alignPosition);
+        outtakeAlignState = OUTTAKE_ALIGN_STATE.DOWN;
+    }
+
+    public void toggleAlignment(){
+        if(outtakeAlignState == OUTTAKE_ALIGN_STATE.UP){
+            alignDown();
+        } else {
+            alignUp();
         }
     }
 

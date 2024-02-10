@@ -34,6 +34,7 @@ public class Intake {
     public INTAKE_MOTOR_STATE intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
     public INTAKE_MOTOR_STATE intakeMotorPrevState = INTAKE_MOTOR_STATE.STOPPED;
 
+    // TODO: Update these values
     public enum INTAKE_ROLLER_HEIGHT{
         LIFTED(0.62), //0.68
         DROPPED(0.17);//0.16, 1
@@ -154,11 +155,10 @@ public class Intake {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
-            } else {
+            }
                 //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
                 runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
                 intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
-            }
         }
     }
 
@@ -166,11 +166,10 @@ public class Intake {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
-            } else {
+            }
                 //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
                 runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
                 intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
-            }
         }
     }
 
@@ -201,15 +200,15 @@ public class Intake {
     }
     public void moveIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-            horizServo1.setPower(0.6);
-            horizServo2.setPower(-0.6);
+            horizServo1.setPower(0.6); // TODO: Update these values
+            horizServo2.setPower(-0.6); // TODO: Update these values
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
     }
     public void moveIntakeHorizToReverse(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-            horizServo1.setPower(-0.6);
-            horizServo2.setPower(0.6);
+            horizServo1.setPower(-0.6); // TODO: Update these values
+            horizServo2.setPower(0.6); // TODO: Update these values
             horizServoState = HORIZ_SERVO_STATE.REVERSE;
         }
     }

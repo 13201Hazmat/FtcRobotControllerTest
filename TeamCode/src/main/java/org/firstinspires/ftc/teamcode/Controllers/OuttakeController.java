@@ -130,6 +130,7 @@ public class OuttakeController {
     public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
         outtakeArm.closeGrip();
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
+        outtakeArm.toggleAlignment();
         safeWaitMilliSeconds(200);
         switch (outtakeSlideStateDropLevel) {
             case DROP_LOWEST:

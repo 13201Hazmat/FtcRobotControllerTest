@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,16 +11,32 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Climber {
     //Initialization of intakemotor
     public DcMotorEx climberMotor = null;
-    public CRServo climberLiftServo;
+    //public CRServo climberLiftServo;
+    public Servo climberServo;
     //public Servo climberServo;
 
 
     public double CLIMBER_SERVO_POWER = -1.0;
     public double CLIMBER_SERVO_HOLD_POWER = -0.3;
-    public boolean climberServoRunning = false;
+    //public boolean climberServoRunning = false;
     public boolean climberActivated = false;
     public boolean climbingStarted = false;
 
+    //Climber Servo States
+    public enum CLIMBER_SERVO_STATE{
+        LOCKED(0.0),//TODO: UPDATE
+        RELEASED(0.0); //TODO: UPDATE
+
+        private double climberServoPosition;
+
+        CLIMBER_SERVO_STATE(double climberServoPosition){
+            this.climberServoPosition = climberServoPosition;
+        }
+        public double getClimberServoPosition(){
+            return climberServoPosition;
+        }
+    }
+    public CLIMBER_SERVO_STATE climberServoState = CLIMBER_SERVO_STATE.LOCKED;
     //Outtake Motor states
     public enum CLIMBER_MOTOR_STATE {
         INITIAL(0), //Position
@@ -45,11 +62,17 @@ public class Climber {
     public Climber(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         climberMotor = hardwareMap.get(DcMotorEx.class, "climber_motor");
-        climberLiftServo = hardwareMap.get(CRServo.class, "climber_lift_servo");
-
+        climberServo = hardwareMap.get(Servo.class, "climber_servo");
+        initClimberServo();
         initClimber();
     }
 
+    public void moveClimberServoToUnlocked(){
+        climberServo.setPosition(CLIMBER_SERVO_STATE.RELEASED.getClimberServoPosition());
+        climberServoState = CLIMBER_SERVO_STATE.RELEASED;
+    }
+
+    /*
     public void moveClimberSlidesUp(){
         climberLiftServo.setPower(CLIMBER_SERVO_POWER);
         climberServoRunning = true;
@@ -71,6 +94,11 @@ public class Climber {
     }
     public CLIMBER_SERVO_STATE ClimberServoState = CLIMBER_SERVO_STATE.LOW;
 
+     */
+    public void initClimberServo(){
+        climberServo.setPosition(CLIMBER_SERVO_STATE.LOCKED.getClimberServoPosition());
+        climberServoState = CLIMBER_SERVO_STATE.LOCKED;
+    }
     public void initClimber(){
         climberMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         climberMotor.setPositionPIDFCoefficients(10.0); //5

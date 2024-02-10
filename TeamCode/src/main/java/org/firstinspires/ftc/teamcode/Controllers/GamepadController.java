@@ -379,11 +379,12 @@ public class GamepadController {
     public void runClimber(){
         if (gp2GetRightTriggerPersistent()) {
             climber.climberActivated = true;
-            climber.moveClimberSlidesUp();
+            climber.moveClimberServoToUnlocked();
+            //climber.moveClimberSlidesUp();
             climber.modifyClimberLengthContinuous(-0.6);
         } else {
             if (climber.climberActivated && !climber.climbingStarted){
-                climber.holdClimberSlidesUp();
+                //climber.holdClimberSlidesUp();
                 climber.modifyClimberLengthContinuous(0);
             }
         }
@@ -391,7 +392,7 @@ public class GamepadController {
         if (climber.climberActivated) {
             if (gp2GetLeftBumperPress()) {
                 climber.climbingStarted = true;
-                climber.stopClimberSlides();
+                //climber.stopClimberSlides();
                 climber.moveClimberUpInSteps(1.0);
             }
         }

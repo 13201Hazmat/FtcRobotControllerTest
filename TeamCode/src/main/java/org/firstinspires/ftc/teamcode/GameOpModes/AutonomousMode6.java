@@ -821,7 +821,7 @@ public class AutonomousMode6 extends LinearOpMode {
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Selected Starting Position", GameField.startPosition);
             telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Full autonomous                ","X / ▢");
+            telemetry.addData("    Full autonomous  (1 cycle)               ","X / ▢");
             telemetry.addData("Full autonomous (2 cycles)",   "B / O");
             telemetry.addData("    Drop Preload and Park   ","Y / Δ");
             if(gamepadController.gp1GetButtonXPress()){
