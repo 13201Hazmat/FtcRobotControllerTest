@@ -161,10 +161,10 @@ public class GamepadController {
                             intakeReverserEnabled = true;
                         }
                     } else {
-                        intake.stopIntakeMotor();
+                        intake.stopIntake();
                     }
                 } else {
-                        intake.stopIntakeMotor();}
+                        intake.stopIntake();}
             }
         }
 
@@ -185,7 +185,7 @@ public class GamepadController {
         }
 
         if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
-            intake.stopIntakeMotor();
+            intake.stopIntake();
             intakeReverseStarted = false;
         }
 
@@ -193,7 +193,7 @@ public class GamepadController {
                 intake.reverseIntake();
             } else {
             if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
-                intake.stopIntakeMotor();
+                intake.stopIntake();
             }
         }
 
@@ -217,7 +217,7 @@ public class GamepadController {
                 case TRANSFER:
                 case PICKUP:
                     if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.RUNNING) {
-                        intake.stopIntakeMotor();
+                        intake.stopIntake();
                     }
                     if (gp2GetRightBumperPress()) {
                         outtakeArm.toggleGrip();
@@ -268,7 +268,7 @@ public class GamepadController {
 
                     if (gp2GetCrossPress()) {
                         if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.STOPPED) {
-                            intake.stopIntakeMotor();
+                            intake.stopIntake();
                         }
                         outtakeController.moveReadyForTransferToTransfer();
                     }

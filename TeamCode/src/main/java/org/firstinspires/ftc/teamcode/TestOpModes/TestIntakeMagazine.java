@@ -120,13 +120,13 @@ public class TestIntakeMagazine extends LinearOpMode {
                         if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.RUNNING) {
                             intake.startIntakeInward();
                         } else {
-                            intake.stopIntakeMotor();
+                            intake.stopIntake();
                         }
                     } else {
                         if (intake.intakeMotorPrevState == Intake.INTAKE_MOTOR_STATE.RUNNING) {
                             intake.startIntakeInward();
                         } else {
-                            intake.stopIntakeMotor();
+                            intake.stopIntake();
                         }
                     }
                 }
@@ -140,7 +140,7 @@ public class TestIntakeMagazine extends LinearOpMode {
                 }
 
                 if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
-                    intake.stopIntakeMotor();
+                    intake.stopIntake();
                     intakeReverseStarted = false;
                 }
 
@@ -148,7 +148,7 @@ public class TestIntakeMagazine extends LinearOpMode {
                     intake.reverseIntake();
                 } else {
                     if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
-                        intake.stopIntakeMotor();
+                        intake.stopIntake();
                     }
                 }
 

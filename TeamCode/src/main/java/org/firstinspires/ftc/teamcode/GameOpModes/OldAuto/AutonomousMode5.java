@@ -696,7 +696,7 @@ public class AutonomousMode5 extends LinearOpMode {
         intake.reverseIntakeForPurplePixelDrop();
         //intake.reverseIntake();
         safeWaitMilliSeconds(300);//200
-        intake.stopIntakeMotor();
+        intake.stopIntake();
     }
 
     public Action dropPurplePixelUsingIntakeAction(){

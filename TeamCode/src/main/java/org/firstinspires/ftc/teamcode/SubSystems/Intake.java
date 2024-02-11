@@ -103,7 +103,7 @@ public class Intake {
         if(horizServoState != HORIZ_SERVO_STATE.COLLECT){
             startIntakeInward();
         } else {
-            stopIntakeMotor();
+            stopIntake();
         }
     }
 
@@ -180,7 +180,7 @@ public class Intake {
         }
     }
 
-    public void stopIntakeMotor() {
+    public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
             if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
                 horizServo1.setPower(0.0);
@@ -246,7 +246,7 @@ public class Intake {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                stopIntakeMotor();
+                stopIntake();
                 return false;
             }
         };

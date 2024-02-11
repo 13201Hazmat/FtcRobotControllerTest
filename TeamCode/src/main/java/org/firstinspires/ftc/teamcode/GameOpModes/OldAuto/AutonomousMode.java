@@ -326,7 +326,7 @@ public class AutonomousMode extends LinearOpMode {
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.DROPPED);
         intake.startIntakeInward();
         safeWaitMilliSeconds(300);
-        intake.stopIntakeMotor();
+        intake.stopIntake();
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
     }
 
