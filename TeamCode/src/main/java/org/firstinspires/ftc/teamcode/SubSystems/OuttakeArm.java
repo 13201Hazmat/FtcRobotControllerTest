@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 
 public class OuttakeArm {
     //Initialization of <outtake arm servo's>
@@ -55,8 +54,8 @@ public class OuttakeArm {
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
         //TRAVEL(0.03), //0.48
-        TRANSFER(0.02),//0.12
-        PICKUP(0.04), //0.16
+        TRANSFER(0.03),//0.04
+        PICKUP(0.06), //0.04
         READY_FOR_TRANSFER(0.0),//0.09 //0.02
         DROP(0.90); //0.94
 
@@ -130,6 +129,7 @@ public class OuttakeArm {
             moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
         }
         closeGrip();
+        backPlateAlignUp();
 
     }
 
@@ -156,22 +156,14 @@ public class OuttakeArm {
         }
     }
 
-    public void alignUp(){
+    public void backPlateAlignUp(){
         outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.UP.alignPosition);
         outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
     }
 
-    public void alignDown(){
+    public void backPlateAlignDown(){
         outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.DOWN.alignPosition);
         outtakeAlignState = OUTTAKE_ALIGN_STATE.DOWN;
-    }
-
-    public void toggleAlignment(){
-        if(outtakeAlignState == OUTTAKE_ALIGN_STATE.UP){
-            alignDown();
-        } else {
-            alignUp();
-        }
     }
 
     ElapsedTime pixelDropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);

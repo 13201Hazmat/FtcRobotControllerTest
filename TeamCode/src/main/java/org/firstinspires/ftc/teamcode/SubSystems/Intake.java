@@ -23,9 +23,9 @@ public class Intake {
         COLLECT,
         REVERSE,
         STOPPED
-
     }
     public HORIZ_SERVO_STATE horizServoState = HORIZ_SERVO_STATE.STOPPED;
+
     public enum INTAKE_MOTOR_STATE{
         RUNNING,
         STOPPED,
@@ -67,7 +67,7 @@ public class Intake {
 
     public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.DROPPED;
 
-    public double intakeMotorPower = 0.85;//1.0
+    public double intakeMotorPower = 0.65;//0.85
 
     public Telemetry telemetry;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -143,11 +143,11 @@ public class Intake {
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING){
             if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
                 moveIntakeHorizToCollect();
-            } else {
-                runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
-                intakeMotorPrevState = intakeMotorState;
-                intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
             }
+            runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
+            intakeMotorPrevState = intakeMotorState;
+            intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
+
         }
     }
 
@@ -156,9 +156,9 @@ public class Intake {
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
             }
-                //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
-                runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
-                intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
+            //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
+            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
+            intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
         }
     }
 
@@ -167,9 +167,9 @@ public class Intake {
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
             }
-                //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
-                runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
-                intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
+            //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
+            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
+            intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
         }
     }
 
@@ -223,7 +223,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveIntakeHorizToCollect();
-                return true;
+                return false;
             }
         };
     }
@@ -235,7 +235,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveIntakeHorizToReverse();
-                return true;
+                return false;
             }
         };
     }
@@ -247,7 +247,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 stopIntakeMotor();
-                return true;
+                return false;
             }
         };
     }
@@ -259,7 +259,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 reverseIntake();
-                return true;
+                return false;
             }
         };
     }
@@ -272,7 +272,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 startIntakeInward();
-                return true;
+                return false;
             }
         };
     }
@@ -284,7 +284,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.LIFTED);
-                return true;
+                return false;
             }
         };
     }
@@ -296,7 +296,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-                return true;
+                return false;
             }
         };
     }
@@ -309,7 +309,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
-                return true;
+                return false;
             }
         };
     }
@@ -321,7 +321,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
-                return true;
+                return false;
             }
         };
     }
@@ -333,7 +333,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_4);
-                return true;
+                return false;
             }
         };
     }
@@ -345,7 +345,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_3);
-                return true;
+                return false;
             }
         };
     }
@@ -357,7 +357,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_2);
-                return true;
+                return false;
             }
         };
     }
@@ -369,7 +369,7 @@ public class Intake {
             @Override
             public boolean run(TelemetryPacket packet){
                 moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
-                return true;
+                return false;
             }
         };
     }

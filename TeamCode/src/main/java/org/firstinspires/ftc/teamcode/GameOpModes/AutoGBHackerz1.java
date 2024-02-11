@@ -48,6 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -63,8 +64,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "HazmatAutonomous Mode 5", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-public class AutonomousMode5 extends LinearOpMode {
+@Autonomous(name = "HazmatAutonomous Mode AutoState", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+public class AutoGBHackerz1 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -155,6 +156,8 @@ public class AutonomousMode5 extends LinearOpMode {
             //Turn Lights Green
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
 
+
+
             //Build parking trajectory based on last detected target by vision
             runAutonoumousMode();
         }
@@ -197,6 +200,8 @@ public class AutonomousMode5 extends LinearOpMode {
         double waitSecondsBeforeDrop = 0;
 
         moveBeyondTrussPose = new Pose2d(9, 0, 0); //x15
+
+        outtakeArm.backPlateAlignDown();
 
         switch (GameField.startPosition) {
             case BLUE_LEFT:

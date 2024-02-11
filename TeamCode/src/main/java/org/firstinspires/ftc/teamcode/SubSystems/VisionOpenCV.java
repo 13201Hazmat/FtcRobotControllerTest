@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,8 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.GameOpModes.FTCWiresAutoVisionOpenCV;
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;

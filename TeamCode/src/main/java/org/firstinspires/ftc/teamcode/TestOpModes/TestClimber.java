@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
@@ -77,11 +77,11 @@ public class TestClimber extends LinearOpMode {
 
                 if (gamepadController.gp1GetCirclePersistent()) {
                     climber.climberActivated = true;
-                    climber.moveClimberSlidesUp();
+                    //climber.moveClimberSlidesUp();
                     climber.modifyClimberLengthContinuous(-0.8);
                 } else {
                     if (climber.climberActivated && !climber.climbingStarted){
-                        climber.holdClimberSlidesUp();
+                        //climber.holdClimberSlidesUp();
                         //climber.stopClimberSlides();
                         climber.modifyClimberLengthContinuous(0);
                     }
@@ -91,7 +91,7 @@ public class TestClimber extends LinearOpMode {
                 if (climber.climberActivated) {
                     if (gamepadController.gp1GetTrianglePress()) {
                         climber.climbingStarted = true;
-                        climber.stopClimberSlides();
+                        //climber.stopClimberSlides();
                         climber.moveClimberUpInSteps(1.0);
                         //climber.modifyClimberLengthContinuous(1);
                     }

@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 

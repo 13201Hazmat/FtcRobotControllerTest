@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
@@ -153,9 +153,9 @@ public class TestIntakeMagazine extends LinearOpMode {
                 }
 
                 if (gamepadController.gp1GetLeftTriggerPersistent()) {
-                    magazine.openMagazineDoor();
+                    //magazine.openMagazineDoor();
                 } else  {
-                    magazine.closeMagazineDoor();
+                    //magazine.closeMagazineDoor();
                 }
 
             }
