@@ -64,8 +64,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "HazmatAutonomous Mode AutoState1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-public class AutoGBHackerz1 extends LinearOpMode {
+@Autonomous(name = "HazmatAutonomous Mode AutoState2", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+public class AutoGBHackerz2 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -189,6 +189,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
 
 
     Action trajInitToDropPurplePixel, trajDropPurplePixelTodropYellowPixel, trajDropYellowPixelToPark;
+    Action trajInitToDropYellowPixel, trajDropYellowPixelToDropPurplePixel, trajDropPurplePixelToPark;
     Action trajDropYellowPixelToStack, trajStackToDropStackPixel;
     Action trajDropStackPixelToStack, trajDropStackPixelToPark;
 
@@ -408,10 +409,16 @@ public class AutoGBHackerz1 extends LinearOpMode {
 
 
         //For RED_RIGHT & BLUE_LEFT
-        trajDropPurplePixelTodropYellowPixel = drive.actionBuilder(dropPurplePixelPose)
-                .setReversed(true)
-                .splineToLinearHeading(dropYellowPixelPose, 0)
-                //.splineTo(dropYellowPixelPose.position, dropYellowPixelPose.heading)
+        trajInitToDropYellowPixel = drive.actionBuilder(initPose)
+                .splineToLinearHeading(dropYellowPixelPose,0)
+                .build();
+
+        trajDropYellowPixelToDropPurplePixel = drive.actionBuilder(dropYellowPixelPose)
+                .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
+                .build();
+
+        trajDropPurplePixelToPark = drive.actionBuilder(dropPurplePixelPose)
+                .splineToLinearHeading(parkPose, 0)
                 .build();
 
         //For RED_LEFT & BLUE_RIGHT
@@ -439,14 +446,12 @@ public class AutoGBHackerz1 extends LinearOpMode {
                     .build();
 
             //FOR BLUE_LEFT & RED_RIGHT
-            trajDropYellowPixelToStack = drive.actionBuilder(dropYellowPixelPose)
-                    .splineTo(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
-                    .strafeTo(stageMidwayTrussPose.position)
-                    //.splineTo(stageDoorStackPose.position, stageDoorStackPose.heading)
-                    //.splineToLinearHeading(stageMidwayBackDropPose, 0)
+            trajDropPurplePixelToStack = drive.actionBuilder(dropPurplePixelPose)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
+                    .strafeTo(stageMidwayStackPose.position)
                     .strafeTo(stageDoorStackPose.position)
-                    //.splineToLinearHeading(stageDoorStackPose, 0)
                     .build();
+
 
             trajStackToDropStackPixel = drive.actionBuilder(stageDoorStackPose)
                     //.splineTo(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
@@ -521,10 +526,8 @@ public class AutoGBHackerz1 extends LinearOpMode {
     public void actionForRedRightBlueLeft() {
         Actions.runBlocking(
                 new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        dropPurplePixelUsingIntakeAction(),
                         new ParallelAction(
-                                trajDropPurplePixelTodropYellowPixel,
+                                trajInitToDropYellowPixel,
                                 new SequentialAction(
                                         outtakeController.moveTransferToReadyForTransferAction(),
                                         new SleepAction(0.5),
@@ -533,14 +536,16 @@ public class AutoGBHackerz1 extends LinearOpMode {
                         ),
                         outtakeController.dropOnePixelAction(),
                         new SleepAction(0.2),
-                        outtakeController.dropOnePixelAction()
+                        outtakeController.dropOnePixelAction(),
+                        trajDropYellowPixelToDropPurplePixel,
+                        dropPurplePixelUsingIntakeAction()
                 )
         );
 
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     new ParallelAction(
-                            trajDropYellowPixelToPark,
+                            trajDropPurplePixelToPark,
                             outtakeController.moveOuttakeToEndStateAction()
                     )
             );
@@ -548,7 +553,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
             Actions.runBlocking(
                     new SequentialAction(
                             outtakeController.moveDropToReadyforTransferAction(),
-                            trajDropYellowPixelToStack,
+                            trajDropPurplePixelToStack,
                             intakeAtStackAction(2),
                             trajStackToDropStackPixel,
                             outtakeController.moveReadyForTransferToTransferAction(),
@@ -560,10 +565,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
                             outtakeController.dropOnePixelAction(),
                             new SleepAction(0.25),
                             outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.25),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.25),
-                            outtakeController.dropOnePixelAction()
+                            new SleepAction(0.25)
                     )
                 );
 
@@ -620,12 +622,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
                         outtakeController.dropOnePixelAction(),
                         new SleepAction(0.25),
                         outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction()
+                        new SleepAction(0.25)
                 )
         );
 
@@ -855,7 +852,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
                 telemetry.addLine("Select Auto Options");
                 telemetry.addData("    Drop Preload and Park       ", "(X / ▢)");
                 telemetry.addData("    Full autonomous (1 cycle)   ", "(Y / Δ)");
-                //telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
+                telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
 
                 if (gamepadController.gp1GetSquarePress()) {
                     autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
@@ -866,11 +863,11 @@ public class AutoGBHackerz1 extends LinearOpMode {
                     pixelLoopCount = 1;
                     break;
                 }
-            /*if(gamepadController.gp1GetCirclePress()){
-                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
-                pixelLoopCount = 2;
-                break;
-            }*/
+                if(gamepadController.gp1GetCirclePress()){
+                    autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                    pixelLoopCount = 2;
+                    break;
+                }
                 telemetry.update();
             }
         }

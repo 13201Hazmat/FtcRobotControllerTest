@@ -54,9 +54,9 @@ public class OuttakeArm {
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
         //TRAVEL(0.03), //0.48
-        TRANSFER(0.03),//0.04
-        PICKUP(0.06), //0.04
-        READY_FOR_TRANSFER(0.0),//0.09 //0.02
+        TRANSFER(0.03),//0.025
+        PICKUP(0.05), //0.06
+        READY_FOR_TRANSFER(0.0),//0.0
         DROP(0.90); //0.94
 
         private double wristPosition;
@@ -87,8 +87,8 @@ public class OuttakeArm {
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
     public enum OUTTAKE_ALIGN_STATE{
-        UP(0.0), // TODO: Update these values
-        DOWN(0.0); // TODO: Update these values
+        UP(0.0),
+        DOWN(0.25);
 
         private double alignPosition;
 
@@ -257,4 +257,5 @@ public class OuttakeArm {
 
 
     }
+
 }

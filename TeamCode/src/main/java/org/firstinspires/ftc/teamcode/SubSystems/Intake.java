@@ -67,7 +67,7 @@ public class Intake {
 
     public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.DROPPED;
 
-    public double intakeMotorPower = 0.65;//0.85
+    public double intakeMotorPower = 0.75;//0.65
 
     public Telemetry telemetry;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
