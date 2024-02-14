@@ -170,7 +170,7 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <150) { //100
+        while (pixelDropTimer.time() <100) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();

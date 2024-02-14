@@ -132,12 +132,9 @@ public class GamepadController {
         if (gp1GetLeftBumperPress()) {
             //intake.toggleStackIntake();
             horizIntakeCollectTimer.reset();
-            while((horizIntakeCollectTimer.time() < 700) && (intake.intakeRollerHeightState == Intake.INTAKE_ROLLER_HEIGHT.DROPPED) &&
-            (magazine.magazineState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL)){
-                intake.moveIntakeHorizToCollect();
-            }
-            intake.stopIntake();
+            intake.startIntakeHorizToCollect();
         }
+        intake.runHorizIntakeRotation();
 
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {

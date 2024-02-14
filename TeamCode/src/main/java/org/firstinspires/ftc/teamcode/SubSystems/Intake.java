@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -19,6 +20,9 @@ public class Intake {
     public Servo intakeLiftServo;
     public CRServo horizServoLeft, horizServoRight;
 
+    public boolean stackIntakeActivated = false;
+
+    public ElapsedTime horizIntakeTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public enum HORIZ_SERVO_STATE{
         COLLECT,
         REVERSE,
@@ -37,7 +41,7 @@ public class Intake {
     // TODO: Update these values
     public enum INTAKE_ROLLER_HEIGHT{
         LIFTED(0.62), //0.68
-        DROPPED(0.19);//0.17, 1
+        DROPPED(0.14);//0.15, 1
 
         private double liftPosition;
 
@@ -67,7 +71,7 @@ public class Intake {
 
     public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.DROPPED;
 
-    public double intakeMotorPower = 0.60;//0.75
+    public double intakeMotorPower = 1;//0.6
 
     public Telemetry telemetry;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -184,7 +188,7 @@ public class Intake {
     public void reverseIntakeForPurplePixelDrop() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-            moveIntakeHorizToReverse();
+            reverseIntakeHoriz();
         }
     }
 
@@ -206,21 +210,40 @@ public class Intake {
         }
     }
 
+    public void stopHorizIntake(){
+        horizServoLeft.setPower(0);
+        horizServoRight.setPower(0);
+        stackIntakeActivated = false;
+        horizServoState = HORIZ_SERVO_STATE.STOPPED;
+    }
+
     public void runIntakeMotor(DcMotor.Direction direction, double intakePower) {
         intakeMotor.setDirection(direction);
         intakeMotor.setPower(intakePower);
     }
-    public void moveIntakeHorizToCollect(){
+
+    public void runHorizIntakeRotation(){
+        if(stackIntakeActivated){
+            if(horizIntakeTimer.time() > 750){
+                stopHorizIntake();
+            }
+        }
+    }
+    public void startIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
+            horizIntakeTimer.reset();
             horizServoLeft.setPower(-1);
             horizServoRight.setPower(1);
+            stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
     }
-    public void moveIntakeHorizToReverse(){
+    public void reverseIntakeHoriz(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
+            horizIntakeTimer.reset();
             horizServoLeft.setPower(1);
             horizServoRight.setPower(-1);
+            stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.REVERSE;
         }
     }
@@ -234,7 +257,7 @@ public class Intake {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                moveIntakeHorizToCollect();
+                startIntakeHorizToCollect();
                 return false;
             }
         };
@@ -246,7 +269,7 @@ public class Intake {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                moveIntakeHorizToReverse();
+                reverseIntakeHoriz();
                 return false;
             }
         };

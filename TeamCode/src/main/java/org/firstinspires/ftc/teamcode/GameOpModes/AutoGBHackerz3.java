@@ -696,13 +696,9 @@ public class AutoGBHackerz3 extends LinearOpMode {
     }
 
     public void dropPurplePixelUsingIntake(){
-        horzOuttakePurplePixelTimer.reset();
-        while(horzOuttakePurplePixelTimer.time() < 200) {
-            intake.reverseIntakeForPurplePixelDrop();
-        }
-        /*intake.reverseIntake();
+        intake.reverseIntakeForPurplePixelDrop();
+        //intake.reverseIntake();
         safeWaitMilliSeconds(300);//200
-         */
         intake.stopIntake();
     }
 

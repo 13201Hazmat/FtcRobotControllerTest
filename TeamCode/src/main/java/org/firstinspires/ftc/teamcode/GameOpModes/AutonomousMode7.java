@@ -644,7 +644,7 @@ public class AutonomousMode7 extends LinearOpMode {
 
     public void intakeAtStack(){
         intake.startIntakeInward();
-        intake.moveIntakeHorizToCollect();
+        intake.startIntakeHorizToCollect();
         safeWaitMilliSeconds(400);
         intake.reverseIntake();
         safeWaitMilliSeconds(300);
