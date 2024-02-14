@@ -141,9 +141,11 @@ public class Intake {
 
     public void startIntakeInward(){
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING){
+            /*
             if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
                 moveIntakeHorizToCollect();
             }
+             */
             runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
             intakeMotorPrevState = intakeMotorState;
@@ -153,9 +155,11 @@ public class Intake {
 
     public void reverseIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
+            /*
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
             }
+             */
             //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
@@ -165,9 +169,11 @@ public class Intake {
 
     public void reverseIntakeTeleOp() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
+            /*
             if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
                 moveIntakeHorizToReverse();
             }
+             */
             //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
@@ -178,17 +184,18 @@ public class Intake {
     public void reverseIntakeForPurplePixelDrop() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-            reverseIntake();
+            moveIntakeHorizToReverse();
         }
     }
 
     public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
-            //if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
+            /*if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
                 horizServoLeft.setPower(0.0);
                 horizServoRight.setPower(0.0);
+             */
                 runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
-                horizServoState = HORIZ_SERVO_STATE.STOPPED;
+                //horizServoState = HORIZ_SERVO_STATE.STOPPED;
                 intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
              intakeMotorPrevState = intakeMotorState;
             /*} else {runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);

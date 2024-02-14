@@ -121,17 +121,18 @@ public class GamepadController {
 
     public ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime magazineSecondPixelTimer = new ElapsedTime(MILLISECONDS);
+    public ElapsedTime horizIntakeCollectTimer = new ElapsedTime(MILLISECONDS);
     public boolean magazineSecondPixelActivated = false;
 
     public boolean intakeReverseStarted = false;
     public boolean intakeReverserEnabled = false;
     public void runIntake(){
 
-        /*
+
         if (gp1GetLeftBumperPress()) {
-            intake.toggleStackIntake();
+            //intake.toggleStackIntake();
+            intake.moveIntakeHorizToCollect();
         }
-         */
 
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {
