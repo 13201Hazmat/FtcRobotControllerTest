@@ -112,6 +112,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
     public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime startTimer = new ElapsedTime(MILLISECONDS);
 
+    public ElapsedTime horzOuttakePurplePixelTimer = new ElapsedTime(MILLISECONDS);
+
     @Override
     public void runOpMode() throws InterruptedException {
         GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
@@ -694,9 +696,13 @@ public class AutoGBHackerz3 extends LinearOpMode {
     }
 
     public void dropPurplePixelUsingIntake(){
-        intake.reverseIntakeForPurplePixelDrop();
-        //intake.reverseIntake();
+        horzOuttakePurplePixelTimer.reset();
+        while(horzOuttakePurplePixelTimer.time() < 200) {
+            intake.reverseIntakeForPurplePixelDrop();
+        }
+        /*intake.reverseIntake();
         safeWaitMilliSeconds(300);//200
+         */
         intake.stopIntake();
     }
 
