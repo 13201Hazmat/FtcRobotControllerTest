@@ -17,7 +17,7 @@ public class Intake {
     //Initialization of intakemotor
     public DcMotorEx intakeMotor = null;
     public Servo intakeLiftServo;
-    public CRServo horizServo1, horizServo2;
+    public CRServo horizServoLeft, horizServoRight;
 
     public enum HORIZ_SERVO_STATE{
         COLLECT,
@@ -37,7 +37,7 @@ public class Intake {
     // TODO: Update these values
     public enum INTAKE_ROLLER_HEIGHT{
         LIFTED(0.62), //0.68
-        DROPPED(0.17);//0.16, 1
+        DROPPED(0.19);//0.17, 1
 
         private double liftPosition;
 
@@ -74,8 +74,8 @@ public class Intake {
         this.telemetry = telemetry;
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
         intakeLiftServo = hardwareMap.get(Servo.class, "intake_lift_servo");
-        horizServo1 = hardwareMap.get(CRServo.class, "horiz_servo1");
-        horizServo2 = hardwareMap.get(CRServo.class, "horiz_servo2");
+        horizServoLeft = hardwareMap.get(CRServo.class, "horiz_servo_left");
+        horizServoRight = hardwareMap.get(CRServo.class, "horiz_servo_right");
         initIntake();
     }
 
@@ -145,8 +145,8 @@ public class Intake {
                 moveIntakeHorizToCollect();
             }
             runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
-            intakeMotorPrevState = intakeMotorState;
             intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
+            intakeMotorPrevState = intakeMotorState;
 
         }
     }
@@ -159,6 +159,7 @@ public class Intake {
             //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
+            intakeMotorPrevState = intakeMotorState;
         }
     }
 
@@ -170,27 +171,31 @@ public class Intake {
             //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
+            intakeMotorPrevState = intakeMotorState;
         }
     }
 
     public void reverseIntakeForPurplePixelDrop() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
             moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-            moveIntakeHorizToReverse();
+            reverseIntake();
         }
     }
 
     public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
-            if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
-                horizServo1.setPower(0.0);
-                horizServo2.setPower(0.0);
-                horizServoState = HORIZ_SERVO_STATE.STOPPED;
-            } else {
+            //if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
+                horizServoLeft.setPower(0.0);
+                horizServoRight.setPower(0.0);
                 runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
+                horizServoState = HORIZ_SERVO_STATE.STOPPED;
+                intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
+             intakeMotorPrevState = intakeMotorState;
+            /*} else {runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
                 intakeMotorPrevState = intakeMotorState;
                 intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
             }
+             */
         }
     }
 
@@ -200,15 +205,15 @@ public class Intake {
     }
     public void moveIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-            horizServo1.setPower(0.6); // TODO: Update these values
-            horizServo2.setPower(-0.6); // TODO: Update these values
+            horizServoLeft.setPower(-1);
+            horizServoRight.setPower(1);
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
     }
     public void moveIntakeHorizToReverse(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-            horizServo1.setPower(-0.6); // TODO: Update these values
-            horizServo2.setPower(0.6); // TODO: Update these values
+            horizServoLeft.setPower(1);
+            horizServoRight.setPower(-1);
             horizServoState = HORIZ_SERVO_STATE.REVERSE;
         }
     }
@@ -384,8 +389,8 @@ public class Intake {
         telemetry.addData("    State", getIntakeState());
         telemetry.addData("    Roller Height State", intakeRollerHeightState);
         telemetry.addData("    Roller Servo Position", intakeLiftServo.getPosition());
-        telemetry.addData("Horizontal Servo 2:", horizServo1);
-        telemetry.addData("Horizontal Servo 2:", horizServo2);
+        telemetry.addData("Horizontal Servo 2:", horizServoLeft);
+        telemetry.addData("Horizontal Servo 2:", horizServoRight);
         telemetry.addData("    Motor Power", intakeMotorPower);
         telemetry.addLine("=============");
     }

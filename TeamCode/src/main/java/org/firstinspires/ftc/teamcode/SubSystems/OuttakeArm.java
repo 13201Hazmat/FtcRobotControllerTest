@@ -87,8 +87,8 @@ public class OuttakeArm {
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
     public enum OUTTAKE_ALIGN_STATE{
-        UP(0.0),
-        DOWN(0.25);
+        UP(0.39),//0.44
+        DOWN(0.5);//0.25
 
         private double alignPosition;
 

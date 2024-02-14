@@ -7,22 +7,25 @@ EH Motor 3:        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront_per
 
 RC Motor 2:        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
 RC Servo 0:        intakeLiftServo = hardwareMap.get(Servo.class, "intake_lift_servo");
+RC Servo 1:        horizServoLeft = hardwareMap.get(Servo.class, "horiz_servo_left");
+EH Servo 1:        horizServoRight = hardwareMap.get(Servo.class, "horiz_servo_right");
+
 
 EH Servo 4:        outtakeWristServo = hardwareMap.get(Servo.class, "outtake_wrist_servo");
 EH Servo 5:        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip_servo");
 
 EH Servo 0:        outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
 EH Servo 2:        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
+RC Servo 3:        outtakeAlign =  hardwareMap.get(Servo.class, "outtake_align");
 
 RC Motor 1:        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_slides_left");
 EH Motor 1:        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_slides_right");
 
-RC Servo 3:        magazineDoorServo = hardwareMap.get(Servo.class, "magazine_servo");
 EH I2C Bus 1:        magazineSensorBottom = hardwareMap.get(NormalizedColorSensor.class, "magazine_bottom");
 EH I2C Bus 3:        magazineSensorTop = hardwareMap.get(NormalizedColorSensor.class, "magazine_top");
 
 EH Motor 2:        climberMotor = hardwareMap.get(DcMotorEx.class, "climber_motor");
-RC Servo 4:        climberLiftServo = hardwareMap.get(CRServo.class, "climber_lift_servo");
+RC Servo 4:        climber_servo = hardwareMap.get(Servo.class, "climber_servo");
 
 RC Servo 2:        launcherServo = hardwareMap.get(Servo.class, "launcher_servo");
 

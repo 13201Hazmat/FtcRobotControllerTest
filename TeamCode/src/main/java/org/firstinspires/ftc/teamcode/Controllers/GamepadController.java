@@ -127,9 +127,11 @@ public class GamepadController {
     public boolean intakeReverserEnabled = false;
     public void runIntake(){
 
+        /*
         if (gp1GetLeftBumperPress()) {
             intake.toggleStackIntake();
         }
+         */
 
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {
