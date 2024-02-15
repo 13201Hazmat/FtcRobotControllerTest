@@ -229,11 +229,11 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         break;
                 }
                 //afterPurplePixelPose = new Pose2d(8,-14,Math.toRadians(-30));
-                wallStackPose = new Pose2d(13, -60, Math.toRadians(-90));
+                wallStackPose = new Pose2d(13, -56, Math.toRadians(-90)); //-60
                 wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
                 //stageDoorStackPose = new Pose2d(49, -60, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(51, -73.8, Math.toRadians(-90));//x53, y-70.5, -90
+                stageDoorStackPose = new Pose2d(51, -70, Math.toRadians(-90));//x53, y-73.8, -90
                 //stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
                 stageMidwayTrussPose = new Pose2d(52.5, -29, Math.toRadians(-90));//x53
                 stageMidwayBackDropPose = new Pose2d(52.5, 24, Math.toRadians(-86)); //x53
@@ -275,10 +275,10 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         break;
                 }
                 afterPurplePixelPose = new Pose2d(8,14,Math.toRadians(30));
-                wallStackPose = new Pose2d(13, 73, Math.toRadians(90));
+                wallStackPose = new Pose2d(13, 69, Math.toRadians(90));//73
                 wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(46, 72.2, Math.toRadians(90));//x55.2, y72, 90
+                stageDoorStackPose = new Pose2d(46, 68, Math.toRadians(90));//x55.2, y72.2, 90
                 //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
                 stageMidwayTrussPose = new Pose2d(52,27.5,90);
                 stageMidwayBackDropPose = new Pose2d(51, -18, Math.toRadians(90));//x47
@@ -327,10 +327,10 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(53, 7, Math.toRadians(-90)); //x44, y5, 0
                         break;
                 }
-                wallStackPose = new Pose2d(27, -18, Math.toRadians(-90)); //x26,-18
+                wallStackPose = new Pose2d(27, -14, Math.toRadians(-90)); //x26,-18
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 73, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(52, -19, Math.toRadians(-90));//x53, y-20.7
+                stageDoorStackPose = new Pose2d(52, -15, Math.toRadians(-90));//x53, y-19
                 stageMidwayTrussPose = new Pose2d(54, 26.8, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(54, 71, Math.toRadians(-90)); //x52, y73
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
@@ -378,10 +378,10 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                 }
-                wallStackPose = new Pose2d(24.6, 19.6, Math.toRadians(90)); //x22, x17, 90
+                wallStackPose = new Pose2d(24.6, 15.5, Math.toRadians(90)); //x22, x19.6, 90
                 wallMidwayStackPose = new Pose2d(2, 0, Math.toRadians(90));//x2, y-5
                 wallMidwayBackDropPose = new Pose2d(2, -67, Math.toRadians(90));//x2, y-73
-                stageDoorStackPose = new Pose2d(49.2, 19.7, Math.toRadians(90));//x48.5, y20.5
+                stageDoorStackPose = new Pose2d(49.2, 16, Math.toRadians(90));//x48.5, y19.7
                 stageMidwayTrussPose = new Pose2d(50.4,-20.6,90);//x48.5, y27.5, 90
                 stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
@@ -537,7 +537,9 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         ),
                         outtakeController.dropOnePixelAction(),
                         new SleepAction(0.2),
+                        /*
                         outtakeController.dropOnePixelAction(),
+                         */
                         trajDropYellowPixelToDropPurplePixel,
                         dropPurplePixelUsingIntakeAction()
                 )
@@ -555,7 +557,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                     new SequentialAction(
                             outtakeController.moveDropToReadyforTransferAction(),
                             trajDropPurplePixelToStack,
-                            intakeAtStackAction(2),
+                            intakeAtStackTwoPixelsAction(),
+                            new SleepAction(3),
                             trajStackToDropStackPixel,
                             outtakeController.moveReadyForTransferToTransferAction(),
                             new SleepAction(0.1),
@@ -578,7 +581,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                                 outtakeController.moveDropToReadyforTransferAction(),
                                                 trajDropStackPixelToStack
                                         ),
-                                        intakeAtStackAction(2)
+                                        intakeAtStackTwoPixelsAction(),
+                                        new SleepAction(3)
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -610,8 +614,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                 outtakeController.moveDropToReadyforTransferAction(),
                                 trajDropPurplePixelToStack
                         ),
-                        intakeAtStackAction(1),
-                        new SleepAction(5),
+                        intakeAtStackOnePixelAction(),
+                        new SleepAction(2),
                         trajStackToDropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
                         new SleepAction(0.1),
@@ -642,7 +646,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                             outtakeController.moveDropToReadyforTransferAction(),
                                             trajDropYellowPixelToStack
                                     ),
-                                    intakeAtStackAction(2)
+                                    intakeAtStackTwoPixelsAction(),
+                                    new SleepAction(3)
                             ),
                             new ParallelAction(
                                     trajStackToDropStackPixel,
@@ -665,7 +670,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                                 outtakeController.moveDropToReadyforTransferAction(),
                                                 trajDropStackPixelToStack
                                         ),
-                                        intakeAtStackAction(2)
+                                        intakeAtStackTwoPixelsAction(),
+                                        new SleepAction(3)
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -698,7 +704,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
     public void dropPurplePixelUsingIntake(){
         intake.reverseIntakeForPurplePixelDrop();
         //intake.reverseIntake();
-        safeWaitMilliSeconds(300);//200
+        safeWaitMilliSeconds(100);//200
         intake.stopIntake();
     }
 
@@ -716,35 +722,56 @@ public class AutoGBHackerz3 extends LinearOpMode {
 
 
 
-    public int stackCounter = 5;
 
-    public void intakeAtStack(int count){
-        /*
-        intake.moveIntakeRollerToLevel(stackCounter + 1);
+    public void intakeAtStackTwoPixels(){
+        intake.moveIntakeLiftDown();
         intake.startIntakeInward();
-        safeWaitMilliSeconds(1200); //1000
-        intake.moveIntakeRollerToLevel(stackCounter--);
-        intake.moveIntakeRollerToLevel(stackCounter--);//new line
-        safeWaitMilliSeconds(1000);//400
-        if (count >= 2) {
-            intake.moveIntakeRollerToLevel(stackCounter--);
-            safeWaitMilliSeconds(400);
-        }
+        safeWaitMilliSeconds(150);
+        //safeWaitMilliSeconds(150);
+        intake.startIntakeHorizToCollect();
+        safeWaitMilliSeconds(600);
         intake.reverseIntake();
-        safeWaitMilliSeconds(300);//400
-        intake.stopIntakeMotor();
-        intake.moveIntakeRollerToLevel(7);
-
-         */
+        intake.reverseIntakeHoriz();
+        safeWaitMilliSeconds(250);
+        intake.stopHorizIntake();
+        safeWaitMilliSeconds(200);
+        intake.stopIntake();
     }
 
-    public Action intakeAtStackAction(int count){
+    public void intakeAtStackOnePixel(){
+        intake.moveIntakeLiftDown();
+        intake.startIntakeInward();
+        safeWaitMilliSeconds(150);
+        //safeWaitMilliSeconds(150);
+        intake.startIntakeHorizToCollect();
+        safeWaitMilliSeconds(300);
+        intake.reverseIntake();
+        intake.reverseIntakeHoriz();
+        safeWaitMilliSeconds(250);
+        intake.stopHorizIntake();
+        safeWaitMilliSeconds(200);
+        intake.stopIntake();
+    }
+
+    public Action intakeAtStackOnePixelAction(){
         return new Action(){
             @Override
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                intakeAtStack(count);
+                intakeAtStackOnePixel();
+                return false;
+            }
+        };
+    }
+
+    public Action intakeAtStackTwoPixelsAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                intakeAtStackTwoPixels();
                 return false;
             }
         };

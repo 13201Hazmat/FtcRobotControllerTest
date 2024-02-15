@@ -177,22 +177,23 @@ public class GamepadController {
             if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
                 if (!magazineSecondPixelActivated) {
                     magazineSecondPixelTimer.reset();
+                    intake.reverseIntakeTeleOp();
                     magazineSecondPixelActivated = true;
                 } else {
-                    if (magazineSecondPixelTimer.time() > 50) {
-                        intakeReverseStarted = true;
-                        intakeReverseTimer.reset();
-                        intake.reverseIntakeTeleOp();
+                    if (magazineSecondPixelTimer.time() > 100) {
+                        intake.stopIntake();
                         intakeReverserEnabled = false;
                     }
                 }
             }
         }
 
+        /*
         if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
             intake.stopIntake();
             intakeReverseStarted = false;
         }
+         */
 
         if (gp1GetTrianglePersistent()) {
                 intake.reverseIntake();
@@ -253,6 +254,7 @@ public class GamepadController {
                         //outtakeController.movePickupToTransfer();
                         safeWaitMilliSeconds(50);
                         outtakeController.moveTransferToReadyForTransfer();
+                        intake.moveIntakeLiftUp();
                     }
                     if (gp2GetRightBumper()) {
                         outtakeArm.toggleGrip();
@@ -360,21 +362,24 @@ public class GamepadController {
     }
 
     public void runClimber(){
-        if (gp2GetRightTriggerPress()) {
+        if (gp2GetRightTriggerPersistent()) {
             climber.climberActivated = true;
-            climber.moveClimberServoToUnlocked();
+            if(climber.climberMotorState != Climber.CLIMBER_MOTOR_STATE.CLIMBED) {
+                climber.moveClimberServoToUnlocked();
+            }
             //climber.moveClimberSlidesUp();
-            //climber.modifyClimberLengthContinuous(-0.6);
-        } /*else {
+            climber.modifyClimberLengthContinuous(-0.6);
+        } else {
             if (climber.climberActivated && !climber.climbingStarted){
                 //climber.holdClimberSlidesUp();
-                //climber.modifyClimberLengthContinuous(0);
+                climber.modifyClimberLengthContinuous(0);
             }
-        }*/
+        }
 
         if (climber.climberActivated) {
             if (gp2GetLeftBumperPress()) {
                 climber.climbingStarted = true;
+                intake.moveIntakeLiftDown();
                 //climber.stopClimberSlides();
                 climber.moveClimberUpInSteps(1.0);
             }

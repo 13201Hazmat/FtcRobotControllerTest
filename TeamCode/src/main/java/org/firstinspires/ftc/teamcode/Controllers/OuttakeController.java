@@ -46,6 +46,7 @@ public class OuttakeController {
 
     public void movePickupToTransfer(){
         outtakeArm.closeGrip();
+        safeWaitMilliSeconds(50);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);

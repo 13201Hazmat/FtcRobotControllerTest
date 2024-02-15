@@ -54,8 +54,8 @@ public class OuttakeArm {
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
         //TRAVEL(0.03), //0.48
-        TRANSFER(0.03),//0.025
-        PICKUP(0.05), //0.06
+        TRANSFER(0.025),//0.02
+        PICKUP(0.045), //0.04
         READY_FOR_TRANSFER(0.0),//0.0
         DROP(0.90); //0.94
 
@@ -170,7 +170,7 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <100) { //100
+        while (pixelDropTimer.time() <100) { //70
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
@@ -182,7 +182,7 @@ public class OuttakeArm {
     public void autoDropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <150) { //100
+        while (pixelDropTimer.time() <100) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();

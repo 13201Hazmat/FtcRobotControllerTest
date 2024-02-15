@@ -40,7 +40,7 @@ public class Intake {
 
     // TODO: Update these values
     public enum INTAKE_ROLLER_HEIGHT{
-        LIFTED(0.62), //0.68
+        LIFTED(0.65), //0.63
         DROPPED(0.14);//0.15, 1
 
         private double liftPosition;
@@ -71,7 +71,7 @@ public class Intake {
 
     public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.DROPPED;
 
-    public double intakeMotorPower = 1;//0.6
+    public double intakeMotorPower = 0.75;//1
 
     public Telemetry telemetry;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -224,7 +224,7 @@ public class Intake {
 
     public void runHorizIntakeRotation(){
         if(stackIntakeActivated){
-            if(horizIntakeTimer.time() > 750){
+            if(horizIntakeTimer.time() > 1300){ //850
                 stopHorizIntake();
             }
         }
@@ -232,8 +232,8 @@ public class Intake {
     public void startIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
             horizIntakeTimer.reset();
-            horizServoLeft.setPower(-1);
-            horizServoRight.setPower(1);
+            horizServoLeft.setPower(1);
+            horizServoRight.setPower(-1);
             stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
@@ -241,8 +241,8 @@ public class Intake {
     public void reverseIntakeHoriz(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
             horizIntakeTimer.reset();
-            horizServoLeft.setPower(1);
-            horizServoRight.setPower(-1);
+            horizServoLeft.setPower(-1);
+            horizServoRight.setPower(1);
             stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.REVERSE;
         }
