@@ -152,6 +152,7 @@ public class GamepadController {
 
         if (gp1GetDpad_upPress()) {
             intake.moveIntakeLiftUp();
+            intakeOnLiftStartFlag = false;
         }
 
         magazine.senseMagazineState();
@@ -173,7 +174,7 @@ public class GamepadController {
                         intakeOnLiftStartFlag = false;
                     }
                 } else {
-                        intake.stopIntake();
+                    intake.stopIntake();
                     intakeOnLiftStartFlag = false;
                 }
             }
@@ -207,9 +208,9 @@ public class GamepadController {
         if (gp1GetTrianglePersistent()) {
                 intake.reverseIntake();
             } else {
-            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
+            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING && !intakeReverserEnabled) {
                 intake.stopIntake();
-                intakeOnLiftStartFlag = false;
+                //intakeOnLiftStartFlag = false;
             }
 
         }
@@ -394,13 +395,21 @@ public class GamepadController {
         }
 
         if (climber.climberActivated) {
-            if (gp2GetLeftBumperPress()) {
-                climber.climbingStarted = true;
-                //intake.moveIntakeLiftDown();
-                //climber.stopClimberSlides();
-                climber.moveClimberUpInSteps(1.0);
+            if (!gp2GetStart()) {
+                if (gp2GetLeftBumperPress()) {
+                    climber.climbingStarted = true;
+                    //intake.moveIntakeLiftDown();
+                    //climber.stopClimberSlides();
+                    climber.moveClimberUpInSteps(1.0);
+                }
+            } else {
+                if (gp2GetLeftBumperPress()) {
+                    climber.moveClimberDownInSteps(1.0);
+                }
             }
         }
+
+
     }
 
     public void runLauncher(){

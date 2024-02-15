@@ -161,6 +161,20 @@ public class Climber {
         }
     }
 
+    public void moveClimberDownInSteps(double power){
+        climberMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turnClimberBrakeModeOn();
+
+        int climberMotorCurrentPosition = climberMotor.getCurrentPosition();
+        if((power > 0.01 && climberMotorCurrentPosition > CLIMBER_MOTOR_STATE.INITIAL.motorPosition)){
+            climberMotor.setTargetPosition(climberMotorCurrentPosition - CLIMBER_MOTOR_STATE.CLIMBED.motorPosition);
+            climberMotor.setPositionPIDFCoefficients(10.0);
+            climberMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            climberMotor.setPower(power);
+        } else {
+            climberMotor.setPower(0);
+        }
+    }
     public void modifyClimberLengthContinuous(double power){
         climberMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turnClimberBrakeModeOn();

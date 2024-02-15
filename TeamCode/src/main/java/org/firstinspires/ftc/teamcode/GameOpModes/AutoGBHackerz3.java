@@ -441,7 +441,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                     .build();
             trajStackToDropYellowPixel = drive.actionBuilder(stageDoorStackPose)
                     .setReversed(true)
-                    .strafeTo(stageMidwayTrussPose.position)
+                    //.strafeTo(stageMidwayTrussPose.position)
                     .strafeTo(stageMidwayBackDropPose.position)
                     .splineToLinearHeading(dropYellowPixelPose, 0)
                     .build();
@@ -458,7 +458,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                     //.splineTo(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
                     //.splineTo(dropStackPixelPose.position, dropStackPixelPose.heading)
                     //.splineToLinearHeading(stageMidwayBackDropPose, 0)
-                    .strafeTo(stageMidwayTrussPose.position)
+                    //.strafeTo(stageMidwayTrussPose.position)
                     .strafeTo(stageMidwayBackDropPose.position)
                     .setReversed(true)
                     .splineToLinearHeading(dropStackPixelPose, 0)
@@ -567,7 +567,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                             new SleepAction(0.3),
                             outtakeController.moveTransferToReadyForTransferAction(),
                             outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE),
-                            outtakeController.dropOnePixelAction(),
+                            //outtakeController.dropOnePixelAction(),
                             new SleepAction(0.25),
                             outtakeController.dropOnePixelAction(),
                             new SleepAction(0.25),
@@ -618,7 +618,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                 trajDropPurplePixelToStack
                         ),
                         intakeAtStackOnePixelAction(),
-                        new SleepAction(2),
+                        new SleepAction(1),
                         intakeLiftUpAction(),
                         trajStackToDropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
