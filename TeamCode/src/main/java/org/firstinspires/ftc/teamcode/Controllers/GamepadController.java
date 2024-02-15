@@ -122,7 +122,9 @@ public class GamepadController {
     public ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime magazineSecondPixelTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime horizIntakeCollectTimer = new ElapsedTime(MILLISECONDS);
+    //public ElapsedTime horizIntakeReverseTimer = new ElapsedTime(MILLISECONDS)
     public boolean magazineSecondPixelActivated = false;
+    public boolean intakeOnLiftStartFlag = false;
 
     public boolean intakeReverseStarted = false;
     public boolean intakeReverserEnabled = false;
@@ -139,6 +141,7 @@ public class GamepadController {
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {
                 intake.moveIntakeLiftDown();
+                intakeOnLiftStartFlag = true;
             }
         } else {
             //Disable or enable magazine sensor
@@ -156,7 +159,7 @@ public class GamepadController {
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
             magazineSecondPixelActivated = false;
-            if (gp1GetCrossPress()) {//(gp1GetDpad_downPress()) {
+            if (gp1GetCrossPress() || intakeOnLiftStartFlag) {//(gp1GetDpad_downPress()) {
                 if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {
                     if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.RUNNING) {
                         if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER &&
@@ -167,9 +170,12 @@ public class GamepadController {
                         }
                     } else {
                         intake.stopIntake();
+                        intakeOnLiftStartFlag = false;
                     }
                 } else {
-                        intake.stopIntake();}
+                        intake.stopIntake();
+                    intakeOnLiftStartFlag = false;
+                }
             }
         }
 
@@ -177,16 +183,18 @@ public class GamepadController {
             if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
                 if (!magazineSecondPixelActivated) {
                     magazineSecondPixelTimer.reset();
-                    intake.reverseIntakeTeleOp();
+                    intake.reverseIntake();
                     magazineSecondPixelActivated = true;
                 } else {
-                    if (magazineSecondPixelTimer.time() > 100) {
+                    if (magazineSecondPixelTimer.time() > 1000) {
                         intake.stopIntake();
+                        intakeOnLiftStartFlag = false;
                         intakeReverserEnabled = false;
                     }
                 }
             }
         }
+
 
         /*
         if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
@@ -195,13 +203,21 @@ public class GamepadController {
         }
          */
 
+
         if (gp1GetTrianglePersistent()) {
                 intake.reverseIntake();
             } else {
             if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING) {
                 intake.stopIntake();
+                intakeOnLiftStartFlag = false;
             }
+
         }
+        /*
+        if(gp1GetSquarePress()){
+
+        }
+         */
 
     }
 
@@ -363,6 +379,7 @@ public class GamepadController {
 
     public void runClimber(){
         if (gp2GetRightTriggerPersistent()) {
+            intake.moveIntakeLiftClimber();
             climber.climberActivated = true;
             if(climber.climberMotorState != Climber.CLIMBER_MOTOR_STATE.CLIMBED) {
                 climber.moveClimberServoToUnlocked();
@@ -379,7 +396,7 @@ public class GamepadController {
         if (climber.climberActivated) {
             if (gp2GetLeftBumperPress()) {
                 climber.climbingStarted = true;
-                intake.moveIntakeLiftDown();
+                //intake.moveIntakeLiftDown();
                 //climber.stopClimberSlides();
                 climber.moveClimberUpInSteps(1.0);
             }

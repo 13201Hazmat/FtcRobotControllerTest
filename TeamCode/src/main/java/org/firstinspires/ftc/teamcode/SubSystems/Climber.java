@@ -24,8 +24,8 @@ public class Climber {
 
     //Climber Servo States
     public enum CLIMBER_SERVO_STATE{
-        LOCKED(0.0),//TODO: UPDATE
-        RELEASED(0.2); //TODO: UPDATE
+        LOCKED(0.62),
+        RELEASED(0.27);
 
         private double climberServoPosition;
 

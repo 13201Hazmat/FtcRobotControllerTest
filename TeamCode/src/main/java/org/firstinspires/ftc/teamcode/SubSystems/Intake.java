@@ -40,8 +40,9 @@ public class Intake {
 
     // TODO: Update these values
     public enum INTAKE_ROLLER_HEIGHT{
-        LIFTED(0.65), //0.63
-        DROPPED(0.14);//0.15, 1
+        LIFTED(0.62), //0.63
+        DROPPED(0.20),
+        CLIMBED(0.57);//0.50
 
         private double liftPosition;
 
@@ -101,6 +102,10 @@ public class Intake {
     }
     public void moveIntakeLiftDown(){
         moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
+    }
+
+    public void moveIntakeLiftClimber(){
+        moveRollerHeight(INTAKE_ROLLER_HEIGHT.CLIMBED);
     }
 
     public void toggleStackIntake(){

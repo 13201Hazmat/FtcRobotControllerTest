@@ -83,7 +83,7 @@ public class TeleOpModeThread extends LinearOpMode {
                 telemetry.update();
             }
 
-            outtakeArm.backPlateAlignDown();
+            //outtakeArm.backPlateAlignDown();
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();

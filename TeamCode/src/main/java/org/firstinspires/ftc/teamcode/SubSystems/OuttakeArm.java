@@ -161,6 +161,7 @@ public class OuttakeArm {
         outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
     }
 
+
     public void backPlateAlignDown(){
         outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.DOWN.alignPosition);
         outtakeAlignState = OUTTAKE_ALIGN_STATE.DOWN;
