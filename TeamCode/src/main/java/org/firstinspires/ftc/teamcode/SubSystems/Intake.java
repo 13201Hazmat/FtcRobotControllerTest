@@ -238,7 +238,7 @@ public class Intake {
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
             horizIntakeTimer.reset();
             horizServoLeft.setPower(1);
-            horizServoRight.setPower(-1);
+            horizServoRight.setPower(-0.8);
             stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
@@ -246,7 +246,7 @@ public class Intake {
     public void reverseIntakeHoriz(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
             horizIntakeTimer.reset();
-            horizServoLeft.setPower(-1);
+            horizServoLeft.setPower(-0.8);
             horizServoRight.setPower(1);
             stackIntakeActivated = true;
             horizServoState = HORIZ_SERVO_STATE.REVERSE;

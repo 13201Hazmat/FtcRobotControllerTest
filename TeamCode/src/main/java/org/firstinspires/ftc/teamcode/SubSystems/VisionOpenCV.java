@@ -55,11 +55,11 @@ public class VisionOpenCV implements VisionProcessor {
     public void initOpenCV() {
         if (GameField.startPosition == GameField.START_POSITION.RED_LEFT ||
                 GameField.startPosition == GameField.START_POSITION.BLUE_LEFT) {
-            rectLeftOfCameraMid = new Rect(10, 40, 150, 240);
-            rectRightOfCameraMid = new Rect(160, 40, 470, 160);
+            rectLeftOfCameraMid = new Rect(10, 40, 170, 240); //width 150
+            rectRightOfCameraMid = new Rect(180, 40, 450, 160);//width 470
         } else { //RED_RIGHT or BLUE_RIGHT
-            rectLeftOfCameraMid = new Rect(10, 40, 470, 160);
-            rectRightOfCameraMid = new Rect(480, 40, 150, 240);
+            rectLeftOfCameraMid = new Rect(10, 40, 450, 160);//width 470
+            rectRightOfCameraMid = new Rect(460, 40, 170, 240); //width 150
         }
     }
 

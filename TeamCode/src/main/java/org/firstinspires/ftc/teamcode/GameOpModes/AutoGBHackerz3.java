@@ -64,7 +64,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "HazmatAutonomous Mode AutoState3", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Autonomous(name = "HazmatAutonomous Mode GBHACKERZ3", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
 public class AutoGBHackerz3 extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -203,26 +203,26 @@ public class AutoGBHackerz3 extends LinearOpMode {
 
         moveBeyondTrussPose = new Pose2d(9, 0, 0); //x15
 
-        outtakeArm.backPlateAlignDown();
+        //outtakeArm.backPlateAlignDown();
 
         switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(22.2, 3.3, Math.toRadians(25)); //x23.4, 6, 32
+                        dropPurplePixelPose = new Pose2d(37.8, 18.3, Math.toRadians(-90)); //x22.2, 3.3, 25
                         dropPurplePixelPoseWall = new Pose2d(22.7, 3.0, Math.toRadians(25));
                         dropYellowPixelPose = new Pose2d(21.2, 31.5, Math.toRadians(-90));//x16.7, y34.6
                         beforeParkAfterDropYellowPixelPose = new Pose2d(18.7,30, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(28, -1.6, Math.toRadians(10.7)); //x32, y1, -30
+                        dropPurplePixelPose = new Pose2d(38.5, 11.3, Math.toRadians(-90)); //x28, y-1.6, 10.7
                         dropPurplePixelPoseWall = new Pose2d(28, -1.6, Math.toRadians(10.7));
                         dropYellowPixelPose = new Pose2d(29, 32.5,  Math.toRadians(-90));//x25, y35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25,30, Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(21.5, -8, Math.toRadians(-50)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                        dropPurplePixelPose = new Pose2d(28, -2, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
                         dropPurplePixelPoseWall = new Pose2d(21.5, -8, Math.toRadians(-50));
                         dropYellowPixelPose = new Pose2d(34.5, 32, Math.toRadians(-90)); //y=33.5, x35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33.5,30, Math.toRadians(-90));
@@ -233,7 +233,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                 wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
                 //stageDoorStackPose = new Pose2d(49, -60, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(51, -70, Math.toRadians(-90));//x53, y-73.8, -90
+                stageDoorStackPose = new Pose2d(45.5, -74, Math.toRadians(-90));//x51, y-73.8, -90
                 //stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
                 stageMidwayTrussPose = new Pose2d(52.5, -29, Math.toRadians(-90));//x53
                 stageMidwayBackDropPose = new Pose2d(52.5, 24, Math.toRadians(-86)); //x53
@@ -449,7 +449,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
             //FOR BLUE_LEFT & RED_RIGHT
             trajDropPurplePixelToStack = drive.actionBuilder(dropPurplePixelPose)
                     .strafeToLinearHeading(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
-                    .strafeTo(stageMidwayStackPose.position)
+                    //.strafeTo(stageMidwayStackPose.position)
                     .strafeTo(stageDoorStackPose.position)
                     .build();
 
@@ -558,7 +558,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                             outtakeController.moveDropToReadyforTransferAction(),
                             trajDropPurplePixelToStack,
                             intakeAtStackTwoPixelsAction(),
-                            new SleepAction(3),
+                            new SleepAction(1),
+                            intakeLiftUpAction(),
                             trajStackToDropStackPixel,
                             outtakeController.moveReadyForTransferToTransferAction(),
                             new SleepAction(0.1),
@@ -569,7 +570,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                             outtakeController.dropOnePixelAction(),
                             new SleepAction(0.25),
                             outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.25)
+                            new SleepAction(0.25),
+                            outtakeController.dropOnePixelAction()
                     )
                 );
 
@@ -582,7 +584,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                                 trajDropStackPixelToStack
                                         ),
                                         intakeAtStackTwoPixelsAction(),
-                                        new SleepAction(3)
+                                        new SleepAction(1),
+                                        intakeLiftUpAction()
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -616,6 +619,7 @@ public class AutoGBHackerz3 extends LinearOpMode {
                         ),
                         intakeAtStackOnePixelAction(),
                         new SleepAction(2),
+                        intakeLiftUpAction(),
                         trajStackToDropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
                         new SleepAction(0.1),
@@ -647,7 +651,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                             trajDropYellowPixelToStack
                                     ),
                                     intakeAtStackTwoPixelsAction(),
-                                    new SleepAction(3)
+                                    new SleepAction(1),
+                                    intakeLiftUpAction()
                             ),
                             new ParallelAction(
                                     trajStackToDropStackPixel,
@@ -671,7 +676,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
                                                 trajDropStackPixelToStack
                                         ),
                                         intakeAtStackTwoPixelsAction(),
-                                        new SleepAction(3)
+                                        new SleepAction(1),
+                                        intakeLiftUpAction()
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -704,8 +710,8 @@ public class AutoGBHackerz3 extends LinearOpMode {
     public void dropPurplePixelUsingIntake(){
         intake.reverseIntakeForPurplePixelDrop();
         //intake.reverseIntake();
-        safeWaitMilliSeconds(100);//200
-        intake.stopIntake();
+        safeWaitMilliSeconds(500);//200
+        intake.stopHorizIntake();
     }
 
     public Action dropPurplePixelUsingIntakeAction(){
@@ -729,10 +735,10 @@ public class AutoGBHackerz3 extends LinearOpMode {
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect();
-        safeWaitMilliSeconds(600);
+        safeWaitMilliSeconds(2600);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
-        safeWaitMilliSeconds(250);
+        safeWaitMilliSeconds(500);
         intake.stopHorizIntake();
         safeWaitMilliSeconds(200);
         intake.stopIntake();
@@ -744,13 +750,29 @@ public class AutoGBHackerz3 extends LinearOpMode {
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect();
-        safeWaitMilliSeconds(300);
+        safeWaitMilliSeconds(1300);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
         safeWaitMilliSeconds(250);
         intake.stopHorizIntake();
         safeWaitMilliSeconds(200);
         intake.stopIntake();
+    }
+
+    public void intakeLiftUp(){
+        intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
+    }
+
+    public Action intakeLiftUpAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                intakeLiftUp();
+                return false;
+            }
+        };
     }
 
     public Action intakeAtStackOnePixelAction(){
