@@ -65,26 +65,26 @@ public class MecanumDrive {
         // drive model parameters
         //TODO Step 5 Set value of inPerTick after running ForwardPushTest
         //TODO Step 14 Make value of inPerTick accurate after running LocalizationTest
-        public double inPerTick = 0.0005367477415473052; //0.0005351341305861622; //1, 0.02224460305 119.5/223308.5
+        public double inPerTick = 0.0005385390667918;//0.0005367477415473052; //1
 
         //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
         //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
         //TODO Step 14 Make value of lateralInPerTick accurate after running LocalizationTest
-        public double lateralInPerTick = 0.0003156705817550493; //0.0003166960081989177 ;//inPerTick, 0.01926449306 114.2/3314.25
+        public double lateralInPerTick = 0.00034798934739696324;//inPerTick; //0.0003156705817550493; //inPerTick
 
         //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
         //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
-        public double trackWidthTicks =  25989.030374812366;//26024.513046599797; //0, 1140.262593390616;
+        public double trackWidthTicks =  23527.662941018087*177/180;//25989.030374812366;//0;
 
         // feedforward parameters (in tick units)
         //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
         //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
-        public double kS = 2.217018252042081;//2.1342119725585516; //0, 0.8533708380733858
-        public double kV = 0.00007372693352992634;//0.00007805581945284488; //0, 0.004293990674579394
+        public double kS = 1.6866567792222291;//2.217018252042081;//0
+        public double kV = 0.00008916891028013672;//0.00007372693352992634;//0
         //TODO Step 12 Set value of kA after running ManualFeedforwardTuner.
         //   In this emperical process update value in increments of 0.0001 for drive encoders and 0.00001 for dead-wheel encoders
-        public double kA = 0.000027;//0.000019; //0, 0.0003
+        public double kA = 0.000025;//0.000027;//0
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;//73; //50
@@ -97,13 +97,13 @@ public class MecanumDrive {
 
         // path controller gains
         //TODO Step 13 Set value of Gains after running ManualFeedbackTuner
-        public double axialGain = 9.0;//12.0; //0.0; 3.0
-        public double lateralGain = 6.0;//12.0; //0.0; 3.0
-        public double headingGain = 12.0;//10.0; //20.0; //0.0; 3.0// shared with turn
+        public double axialGain = 9.0;//9.0;//0.0;
+        public double lateralGain = 8.0;//6.0;//0.0;
+        public double headingGain = 12.0;//12.0//0.0 shared with turn
 
-        public double axialVelGain = 0.0311031876027098649434;//0.030121281921630154; //generateSMARTDerivativeTerm(axialGain, false);//0.0
-        public double lateralVelGain = 0.025382117189185784;//0.030121281921630154; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
-        public double headingVelGain = 0.0359262730664;//0.010441577246610628; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
+        public double axialVelGain = 0.028195102337181;//0.0311031876027098649434; //generateSMARTDerivativeTerm(axialGain, false);//0.0
+        public double lateralVelGain = 0.028195102337181;//0.025382117189185784; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
+        public double headingVelGain = 0.028195102337181;//0.0359262730664; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
         //TODO End Step 13
     }
 

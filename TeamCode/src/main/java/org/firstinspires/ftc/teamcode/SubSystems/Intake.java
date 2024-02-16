@@ -197,6 +197,12 @@ public class Intake {
         }
     }
 
+    public void reverseIntakeLiftAfterYellowDrop(){
+        if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
+            reverseIntakeHoriz();
+        }
+    }
+
     public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
             /*if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
