@@ -24,13 +24,13 @@ public class OuttakeArm {
         PICKUP(0.97,0.03), //0.95,0.05
         READY_FOR_TRANSFER(0.78,0.22),//0.80, 0.20
         //DROP(0.21,0.79); //1,0
-        DROP_LOWEST(0.21,0.79),
-        DROP_LOW_LINE(0.21,0.79),
-        DROP_BELOW_MID(0.23,0.77),
-        DROP_LEVEL_MID(0.26,0.74),
-        DROP_BELOW_HIGH(0.28,0.72),
-        DROP_LEVEL_HIGH(0.33,0.67),
-        DROP_HIGHEST(0.37,0.63);
+        DROP_LOWEST(0.22,0.78),//0.20, 0.80
+        DROP_LOW_LINE(0.22,0.78),//0.22, 0.78
+        DROP_BELOW_MID(0.22,0.78),//0.23, 0.77
+        DROP_LEVEL_MID(0.22,0.78), //0.26, 0.74
+        DROP_BELOW_HIGH(0.26,0.74), //0.28, 0.72
+        DROP_LEVEL_HIGH(0.27,0.73), //0.33,0.67
+        DROP_HIGHEST(0.28,0.72); //0.37, 0.63
 
         private double leftArmPosition;
         private double rightArmPosition;
@@ -57,7 +57,7 @@ public class OuttakeArm {
         TRANSFER(0.025),//0.02
         PICKUP(0.045), //0.04
         READY_FOR_TRANSFER(0.0),//0.0
-        DROP(0.90); //0.94
+        DROP(0.90);
 
         private double wristPosition;
 

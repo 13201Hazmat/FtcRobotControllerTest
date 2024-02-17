@@ -33,6 +33,7 @@ public class Magazine {
         LOADED_TWO_PIXEL
     }
     public MAGAZINE_STATE magazineState = MAGAZINE_STATE.EMPTY;
+    public MAGAZINE_STATE magazinePreviousState = MAGAZINE_STATE.EMPTY;
 
     public double MAGAZINE_SENSE_DISTANCE = 9.0;
 
@@ -67,6 +68,7 @@ public class Magazine {
     public double magazineDistanceTop;
     public void senseMagazineState(){
         if (!magazineSensorActivated) {
+            magazinePreviousState = magazineState;
             magazineState = MAGAZINE_STATE.EMPTY;
             return;
         }
@@ -90,11 +92,14 @@ public class Magazine {
         }
 
         if (!magazinePixelBottomSensed) {
+            magazinePreviousState = magazineState;
             magazineState = MAGAZINE_STATE.EMPTY;
         } else { // magazinePixelBottomSensed == true
             if (!magazinePixelTopSensed) {
+                magazinePreviousState = magazineState;
                 magazineState = MAGAZINE_STATE.LOADED_ONE_PIXEL;
             } else { //magazinePixelTopSensed == true
+                magazinePreviousState = magazineState;
                 magazineState = MAGAZINE_STATE.LOADED_TWO_PIXEL;
             }
         }

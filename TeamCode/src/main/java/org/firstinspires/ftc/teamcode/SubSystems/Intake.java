@@ -21,8 +21,10 @@ public class Intake {
     public CRServo horizServoLeft, horizServoRight;
 
     public boolean stackIntakeActivated = false;
+    boolean reverseIntakeHorizFlag = false;
 
     public ElapsedTime horizIntakeTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    public ElapsedTime reverseHorizIntakeTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public enum HORIZ_SERVO_STATE{
         COLLECT,
         REVERSE,
@@ -150,11 +152,6 @@ public class Intake {
 
     public void startIntakeInward(){
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING){
-            /*
-            if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
-                moveIntakeHorizToCollect();
-            }
-             */
             runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.RUNNING;
             intakeMotorPrevState = intakeMotorState;
@@ -164,67 +161,33 @@ public class Intake {
 
     public void reverseIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            /*
-            if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-                moveIntakeHorizToReverse();
-            }
-             */
-            //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
             runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
             intakeMotorPrevState = intakeMotorState;
         }
     }
 
-    public void reverseIntakeTeleOp() {
-        if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            /*
-            if (intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-                moveIntakeHorizToReverse();
-            }
-             */
-            //moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_DROPPED);
-            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
-            intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
-            intakeMotorPrevState = intakeMotorState;
-        }
-    }
 
-    public void reverseIntakeForPurplePixelDrop() {
-        if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-            reverseIntakeHoriz();
-        }
-    }
-
-    public void reverseIntakeLiftAfterYellowDrop(){
-        if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            reverseIntakeHoriz();
-        }
-    }
 
     public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
-            /*if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED){
-                horizServoLeft.setPower(0.0);
-                horizServoRight.setPower(0.0);
-             */
-                runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
-                //horizServoState = HORIZ_SERVO_STATE.STOPPED;
-                intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
+             runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
+             intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
              intakeMotorPrevState = intakeMotorState;
-            /*} else {runIntakeMotor(DcMotorSimple.Direction.FORWARD, 0.0);
-                intakeMotorPrevState = intakeMotorState;
-                intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
-            }
-             */
         }
     }
 
-    public void stopHorizIntake(){
+    public void stopHorizIntakeInward(){
         horizServoLeft.setPower(0);
         horizServoRight.setPower(0);
         stackIntakeActivated = false;
+        horizServoState = HORIZ_SERVO_STATE.STOPPED;
+    }
+
+    public void stopHorizIntakeReverse(){
+        horizServoLeft.setPower(0);
+        horizServoRight.setPower(0);
+        reverseIntakeHorizFlag = false;
         horizServoState = HORIZ_SERVO_STATE.STOPPED;
     }
 
@@ -233,13 +196,7 @@ public class Intake {
         intakeMotor.setPower(intakePower);
     }
 
-    public void runHorizIntakeRotation(){
-        if(stackIntakeActivated){
-            if(horizIntakeTimer.time() > 1300){ //850
-                stopHorizIntake();
-            }
-        }
-    }
+
     public void startIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
             horizIntakeTimer.reset();
@@ -249,19 +206,37 @@ public class Intake {
             horizServoState = HORIZ_SERVO_STATE.COLLECT;
         }
     }
+    public void runHorizIntakeRotation(){
+        if(stackIntakeActivated){
+            if(horizIntakeTimer.time() > 1300){ //850
+                stopHorizIntakeInward();
+            }
+        }
+    }
+
     public void reverseIntakeHoriz(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
-            horizIntakeTimer.reset();
+            reverseHorizIntakeTimer.reset();
             horizServoLeft.setPower(-0.8);
             horizServoRight.setPower(1);
-            stackIntakeActivated = true;
+            reverseIntakeHorizFlag = true;
             horizServoState = HORIZ_SERVO_STATE.REVERSE;
         }
     }
+
+    public void runReverseIntakeHorizRotation(){
+        if(reverseIntakeHorizFlag){
+            if(reverseHorizIntakeTimer.time() > 500){ //850
+                stopHorizIntakeReverse();
+            }
+        }
+    }
+
     public INTAKE_MOTOR_STATE getIntakeState() {
         return intakeMotorState;
     }
 
+    /*
     public Action moveIntakeHorizToCollectAction(){
         return new Action(){
             @Override
@@ -310,7 +285,6 @@ public class Intake {
         };
     }
 
-
     public Action startIntakeInwardAction(){
         return new Action(){
             @Override
@@ -346,83 +320,7 @@ public class Intake {
             }
         };
     }
-
-    /*
-    public Action moveRollerHeightAboveStackAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightLevel5Action(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_5);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightLevel4Action(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_4);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightLevel3Action(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_3);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightLevel2Action(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_LIFTED_2);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightDroppedAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
-                return false;
-            }
-        };
-    }
-     */
-
-
-
+    */
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);

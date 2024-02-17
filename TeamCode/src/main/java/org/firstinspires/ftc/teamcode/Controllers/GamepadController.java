@@ -72,6 +72,7 @@ public class GamepadController {
     public Telemetry telemetry;
     LinearOpMode currentOpMode;
     public OuttakeController outtakeController;
+    public IntakeController intakeController;
 
 
     /**
@@ -104,6 +105,7 @@ public class GamepadController {
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
         outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, currentOpMode);
+        intakeController = new IntakeController(this.intake, currentOpMode);
     }
 
     /**
@@ -111,32 +113,19 @@ public class GamepadController {
      */
     public void runByGamepadControl(){
         runIntake();
-        //runMagazine();
         runOuttakeSlidesAndArm();
         runClimber();
         runLauncher();
-        runVisionSensor();
         runLights();
       }
 
-    public ElapsedTime intakeReverseTimer = new ElapsedTime(MILLISECONDS);
     public ElapsedTime magazineSecondPixelTimer = new ElapsedTime(MILLISECONDS);
-    public ElapsedTime horizIntakeCollectTimer = new ElapsedTime(MILLISECONDS);
-    //public ElapsedTime horizIntakeReverseTimer = new ElapsedTime(MILLISECONDS)
     public boolean magazineSecondPixelActivated = false;
+    public boolean magazineTwoPixelReverserActivated = false;
     public boolean intakeOnLiftStartFlag = false;
+    public boolean intakeReverserButtonHeld = false;
 
-    public boolean intakeReverseStarted = false;
-    public boolean intakeReverserEnabled = false;
     public void runIntake(){
-
-
-        if (gp1GetLeftBumperPress()) {
-            //intake.toggleStackIntake();
-            horizIntakeCollectTimer.reset();
-            intake.startIntakeHorizToCollect();
-        }
-        intake.runHorizIntakeRotation();
 
         if (!gp1GetStart()) {
             if (gp1GetDpad_downPress()) {
@@ -155,11 +144,31 @@ public class GamepadController {
             intakeOnLiftStartFlag = false;
         }
 
+        if (gp1GetLeftBumperPress() && intake.intakeRollerHeightState == Intake.INTAKE_ROLLER_HEIGHT.DROPPED) {
+            intake.startIntakeHorizToCollect();
+            intakeOnLiftStartFlag = true;
+        }
+        intake.runHorizIntakeRotation();
+
+        if (gp1GetTrianglePersistent()) {
+            intake.reverseIntake();
+            intakeReverserButtonHeld = true;
+        } else {
+            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING && intakeReverserButtonHeld) {
+                intake.stopIntake();
+                intakeReverserButtonHeld = false;
+            }
+        }
+
+        if(gp1GetSquarePress()){
+            intake.reverseIntakeHoriz();
+        }
+        intake.runReverseIntakeHorizRotation();
+
         magazine.senseMagazineState();
 
         if((magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL)
                 || (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY)){
-            magazineSecondPixelActivated = false;
             if (gp1GetCrossPress() || intakeOnLiftStartFlag) {//(gp1GetDpad_downPress()) {
                 if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {
                     if (intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.RUNNING) {
@@ -167,72 +176,30 @@ public class GamepadController {
                             outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP &&
                             outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.MIN_RETRACTED) {
                             intake.startIntakeInward();
-                            intakeReverserEnabled = true;
+                            intakeOnLiftStartFlag = false;
                         }
                     } else {
                         intake.stopIntake();
-                        intakeOnLiftStartFlag = false;
                     }
                 } else {
                     intake.stopIntake();
-                    intakeOnLiftStartFlag = false;
                 }
             }
         }
 
-        if (intakeReverserEnabled) {
-            if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
-                if (!magazineSecondPixelActivated) {
-                    magazineSecondPixelTimer.reset();
-                    intake.reverseIntake();
-                    magazineSecondPixelActivated = true;
-                } else {
-                    if (magazineSecondPixelTimer.time() > 1000) {
-                        intake.stopIntake();
-                        intakeOnLiftStartFlag = false;
-                        intakeReverserEnabled = false;
-                    }
-                }
-            }
+        if (magazine.magazinePreviousState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL &&
+                magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            intake.reverseIntake();
+            magazineSecondPixelTimer.reset();
+            magazineTwoPixelReverserActivated = true;
         }
 
-
-        /*
-        if (intakeReverseStarted && intakeReverseTimer.time() > 300) {
+        if (magazineTwoPixelReverserActivated && magazineSecondPixelTimer.time() > 500) {
             intake.stopIntake();
-            intakeReverseStarted = false;
+            magazineTwoPixelReverserActivated = false;
         }
-         */
-
-
-        if (gp1GetTrianglePersistent()) {
-                intake.reverseIntake();
-            } else {
-            if (intake.intakeMotorState == Intake.INTAKE_MOTOR_STATE.REVERSING && !intakeReverserEnabled) {
-                intake.stopIntake();
-                //intakeOnLiftStartFlag = false;
-            }
-
-        }
-        /*
-        if(gp1GetSquarePress()){
-
-        }
-         */
 
     }
-
-    /*public void runMagazine(){
-        //Magazine code
-        if (gp1GetLeftTriggerPersistent()) {
-            magazine.openMagazineDoor();
-        } else  {
-            magazine.closeMagazineDoor();
-        }
-
-        //TODO: ADD OVERRIDE FOR ANY LOCKS CREATED BY SENSORS
-
-    }*/
 
     public void runOuttakeSlidesAndArm(){
         switch (outtakeSlides.outtakeSlidesState) {
@@ -359,14 +326,24 @@ public class GamepadController {
                     break;
         }
 
-        if (gp2GetDpad_upPress()) {
-            outtakeArm.rotateWrist(1);
-            //outtakeArm.rotateArm(1);
+        if (!gp2GetStart()) {
+            if (gp2GetDpad_upPress()) {
+                outtakeArm.rotateWrist(1);
+            }
+        } else {
+            if (gp2GetDpad_upPress()) {
+                outtakeArm.rotateArm(1);
+            }
         }
 
-        if (gp2GetDpad_downPress()) {
-            outtakeArm.rotateWrist(-1);
-            //outtakeArm.rotateArm(-1);
+        if (!gp2GetStart()) {
+            if (gp2GetDpad_downPress()) {
+                outtakeArm.rotateWrist(-1);
+            }
+        } else {
+            if (gp2GetDpad_downPress()) {
+                outtakeArm.rotateArm(-1);
+            }
         }
 
         if(gp2GetLeftStickY()>0.15|| gp2GetLeftStickY()<-0.15) {
@@ -385,11 +362,9 @@ public class GamepadController {
             if(climber.climberMotorState != Climber.CLIMBER_MOTOR_STATE.CLIMBED) {
                 climber.moveClimberServoToUnlocked();
             }
-            //climber.moveClimberSlidesUp();
             climber.modifyClimberLengthContinuous(-0.6);
         } else {
             if (climber.climberActivated && !climber.climbingStarted){
-                //climber.holdClimberSlidesUp();
                 climber.modifyClimberLengthContinuous(0);
             }
         }
@@ -398,8 +373,6 @@ public class GamepadController {
             if (!gp2GetStart()) {
                 if (gp2GetLeftBumperPress()) {
                     climber.climbingStarted = true;
-                    //intake.moveIntakeLiftDown();
-                    //climber.stopClimberSlides();
                     climber.moveClimberUpInSteps(1.0);
                 }
             } else {
@@ -421,18 +394,7 @@ public class GamepadController {
 
     }
 
-    public void runVisionSensor(){
-
-        //visionSensor.senseBackdrop();
-    }
-
-
     public void runLights(){
-
-
-        //lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
-
-
         if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID ||
