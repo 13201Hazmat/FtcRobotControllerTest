@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 
 public class OuttakeArm {
     //Initialization of <outtake arm servo's>
@@ -16,14 +13,11 @@ public class OuttakeArm {
     public Servo outtakeArmLeft;
     public Servo outtakeArmRight;
 
-    public Servo outtakeAlignment;
     public enum OUTTAKE_ARM_STATE{
         ZERO(0.94,0.06),
-        //TRAVEL(0.76,0.24),
         TRANSFER(0.97,0.03), //0.95,0.05
         PICKUP(0.97,0.03), //0.95,0.05
         READY_FOR_TRANSFER(0.78,0.22),//0.80, 0.20
-        //DROP(0.21,0.79); //1,0
         DROP_LOWEST(0.22,0.78),//0.20, 0.80
         DROP_LOW_LINE(0.22,0.78),//0.22, 0.78
         DROP_BELOW_MID(0.22,0.78),//0.23, 0.77
@@ -53,11 +47,16 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        //TRAVEL(0.03), //0.48
         TRANSFER(0.025),//0.02
         PICKUP(0.045), //0.04
         READY_FOR_TRANSFER(0.0),//0.0
-        DROP(0.90);
+        DROP_LOWEST(0.90),
+        DROP_LOW_LINE(0.90),
+        DROP_BELOW_MID(0.90),
+        DROP_LEVEL_MID(0.90),
+        DROP_BELOW_HIGH(0.90),
+        DROP_LEVEL_HIGH(0.90),
+        DROP_HIGHEST(0.90);
 
         private double wristPosition;
 
@@ -86,22 +85,6 @@ public class OuttakeArm {
     }
     public OUTTAKE_GRIP_STATE outtakeGripState = OUTTAKE_GRIP_STATE.CLOSED;
 
-    public enum OUTTAKE_ALIGN_STATE{
-        UP(0.39),//0.44
-        DOWN(0.5);//0.25
-
-        private double alignPosition;
-
-        OUTTAKE_ALIGN_STATE(double alignPosition){
-            this.alignPosition = alignPosition;
-        }
-
-        public double getAlignPosition() {
-            return alignPosition;
-        }
-    }
-    public OUTTAKE_ALIGN_STATE outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
-
     public Telemetry telemetry;
     public OuttakeArm(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
@@ -111,26 +94,14 @@ public class OuttakeArm {
         outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
         outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
 
-        outtakeAlignment = hardwareMap.get(Servo.class, "outtake_align");
-
         initOuttakeArm();
     }
 
-
-
     //initialize outtakeArm
     public void initOuttakeArm() {
-        if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_CALIBRATE_OUTTAKE
-                /*|| GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS*/) {
-            moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-            moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-        } else {
-            moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-            moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-        }
+        moveArm(OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+        moveWrist(OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
         closeGrip();
-        backPlateAlignUp();
-
     }
 
     /**
@@ -156,34 +127,11 @@ public class OuttakeArm {
         }
     }
 
-    public void backPlateAlignUp(){
-        outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.UP.alignPosition);
-        outtakeAlignState = OUTTAKE_ALIGN_STATE.UP;
-    }
-
-
-    public void backPlateAlignDown(){
-        outtakeAlignment.setPosition(OUTTAKE_ALIGN_STATE.DOWN.alignPosition);
-        outtakeAlignState = OUTTAKE_ALIGN_STATE.DOWN;
-    }
-
     ElapsedTime pixelDropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
         while (pixelDropTimer.time() <100) { //70
-            //gamepadcontroller.runbyGamepadcontroller
-        };
-        closeGrip();
-        while (pixelDropTimer.time() <250) { //200
-            //gamepadcontroller.runbyGamepadcontroller
-        };
-    }
-
-    public void autoDropOnePixel(){
-        openGrip();
-        pixelDropTimer.reset();
-        while (pixelDropTimer.time() <100) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
@@ -208,7 +156,6 @@ public class OuttakeArm {
         moveWrist(OUTTAKE_WRIST_STATE.ZERO);
     }
 
-    public ElapsedTime wristTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public void moveArm(OUTTAKE_ARM_STATE toArmState) { //UPDATE FOR THIS YEAR!!
         outtakeArmLeft.setPosition(toArmState.leftArmPosition);
         outtakeArmRight.setPosition(toArmState.rightArmPosition);
@@ -241,10 +188,8 @@ public class OuttakeArm {
         return (outtakeWristState == toOuttakeWristState && isOuttakeWristInStateError <= 0.02);
     }
 
-
     public void printDebugMessages() {
         //******  debug ******
-        //telemetry.addData("xx", xx);
         telemetry.addLine("Outtake Arm");
         telemetry.addData("   State", outtakeArmState);
         telemetry.addData("   Left Servo position", outtakeArmLeft.getPosition());
@@ -255,8 +200,6 @@ public class OuttakeArm {
         telemetry.addLine("Outtake Grip");
         telemetry.addData("   State", outtakeWristState);
         telemetry.addData("   Grip Servo position", outtakeGripServo.getPosition());
-
-
     }
 
 }

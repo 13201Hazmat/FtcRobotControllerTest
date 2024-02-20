@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
 /**
@@ -28,7 +27,6 @@ public class TestClimber extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
-    public VisionAprilTag visionAprilTagFront;
     public Climber climber;
     public Lights lights;
 
@@ -125,11 +123,6 @@ public class TestClimber extends LinearOpMode {
         telemetry.update();
 
         */
-
-        /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
-        telemetry.addLine("Vision April Tag Front Initialized");
-        telemetry.update();
 
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);

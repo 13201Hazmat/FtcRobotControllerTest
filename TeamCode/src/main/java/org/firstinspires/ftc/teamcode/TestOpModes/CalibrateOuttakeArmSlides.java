@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
 /**
@@ -27,7 +26,6 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
-    public VisionAprilTag visionAprilTagFront;
     public OuttakeSlides outtakeSlides;
     public OuttakeArm outtakeArm;
     public Lights lights;
@@ -150,11 +148,6 @@ public class CalibrateOuttakeArmSlides extends LinearOpMode {
         driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0), telemetry);
         driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
         telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
-        telemetry.update();
-
-        /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
-        telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 
         /* Create Lights */

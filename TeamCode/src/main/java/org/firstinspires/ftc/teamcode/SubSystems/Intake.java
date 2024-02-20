@@ -55,22 +55,7 @@ public class Intake {
             return liftPosition;
         }
 
-        /*
-        public INTAKE_ROLLER_HEIGHT byIndex(int ord) {
-            if (ord <1) ord = 1;
-            if (ord >7) ord = 7;
-            for (INTAKE_ROLLER_HEIGHT a : INTAKE_ROLLER_HEIGHT.values()) {
-                if (a.index == ord) {
-                    return a;
-                }
-            }
-            return null;
-        }
-         */
-
     }
-
-
 
     public INTAKE_ROLLER_HEIGHT intakeRollerHeightState = INTAKE_ROLLER_HEIGHT.DROPPED;
 
@@ -89,9 +74,7 @@ public class Intake {
     public void initIntake(){
         intakeMotorState = INTAKE_MOTOR_STATE.STOPPED;
         intakeMotor.setPower(0);
-        //if (GameField.opModeRunning == GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS) {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.LIFTED);
-        //}
+        moveRollerHeight(INTAKE_ROLLER_HEIGHT.LIFTED);
     }
 
     public void moveRollerHeight(INTAKE_ROLLER_HEIGHT targetIntakeRollerHeight){
@@ -118,38 +101,6 @@ public class Intake {
         }
     }
 
-    /*
-    public void toggleRollerHeight(){
-        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK) {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_HEIGHT_ABOVE_STACK);
-        } else {
-            moveRollerHeight(INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED);
-        }
-    }
-
-    public void moveIntakeRollerOnePixelDown(){
-        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED) {
-            moveRollerHeight(intakeRollerHeightState.byIndex((intakeRollerHeightState.getIndex()-1)));
-        }
-    }
-
-    public void moveIntakeRollerOnePixelUp(){
-        if (intakeRollerHeightState != INTAKE_ROLLER_HEIGHT.INTAKE_ROLLER_DROPPED) {
-            moveRollerHeight(intakeRollerHeightState.byIndex((intakeRollerHeightState.getIndex()+1)));
-        }
-    }
-
-    public void moveIntakeRollerToLevel(int level){
-        if (level > 6) {
-            level = 6;
-        }
-        if (level < 1) {
-            level = 1;
-        }
-        moveRollerHeight(intakeRollerHeightState.byIndex(level));
-    }
-     */
-
     public void startIntakeInward(){
         if(intakeMotorState != INTAKE_MOTOR_STATE.RUNNING){
             runIntakeMotor(DcMotor.Direction.FORWARD, intakeMotorPower);
@@ -166,8 +117,6 @@ public class Intake {
             intakeMotorPrevState = intakeMotorState;
         }
     }
-
-
 
     public void stopIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.STOPPED) {
@@ -195,7 +144,6 @@ public class Intake {
         intakeMotor.setDirection(direction);
         intakeMotor.setPower(intakePower);
     }
-
 
     public void startIntakeHorizToCollect(){
         if(intakeRollerHeightState == INTAKE_ROLLER_HEIGHT.DROPPED) {
@@ -236,91 +184,6 @@ public class Intake {
         return intakeMotorState;
     }
 
-    /*
-    public Action moveIntakeHorizToCollectAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                startIntakeHorizToCollect();
-                return false;
-            }
-        };
-    }
-
-    public Action moveIntakeHorizToReverseAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                reverseIntakeHoriz();
-                return false;
-            }
-        };
-    }
-
-    public Action stopIntakeMotorAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                stopIntake();
-                return false;
-            }
-        };
-    }
-
-    public Action reverseIntakeAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                reverseIntake();
-                return false;
-            }
-        };
-    }
-
-    public Action startIntakeInwardAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                startIntakeInward();
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightLiftedAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.LIFTED);
-                return false;
-            }
-        };
-    }
-
-    public Action moveRollerHeightDroppedAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                moveRollerHeight(INTAKE_ROLLER_HEIGHT.DROPPED);
-                return false;
-            }
-        };
-    }
-    */
     public void printDebugMessages(){
         //******  debug ******
         //telemetry.addData("xx", xx);
@@ -328,8 +191,8 @@ public class Intake {
         telemetry.addData("    State", getIntakeState());
         telemetry.addData("    Roller Height State", intakeRollerHeightState);
         telemetry.addData("    Roller Servo Position", intakeLiftServo.getPosition());
-        telemetry.addData("Horizontal Servo 2:", horizServoLeft);
-        telemetry.addData("Horizontal Servo 2:", horizServoRight);
+        telemetry.addData("    Horizontal Servo 2:", horizServoLeft);
+        telemetry.addData("    Horizontal Servo 2:", horizServoRight);
         telemetry.addData("    Motor Power", intakeMotorPower);
         telemetry.addLine("=============");
     }

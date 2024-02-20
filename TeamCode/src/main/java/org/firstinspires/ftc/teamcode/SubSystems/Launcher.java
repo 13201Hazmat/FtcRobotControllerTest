@@ -53,7 +53,6 @@ public class Launcher {
 
     public void printDebugMessages(){
         //******  debug ******
-        //telemetry.addData("xx", xx);
         telemetry.addLine("Launcher");
         telemetry.addData("    Button State", launcherButtonState);
         telemetry.addData("    Servo state", launcherServoState);

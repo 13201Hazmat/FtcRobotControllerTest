@@ -79,7 +79,7 @@ public class IntakeController {
         intake.startIntakeInward();
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
-        intake.startIntakeHorizToCollect();
+        intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
         safeWaitMilliSeconds(2600);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
@@ -94,7 +94,7 @@ public class IntakeController {
         intake.startIntakeInward();
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
-        intake.startIntakeHorizToCollect();
+        intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
         safeWaitMilliSeconds(1300);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
@@ -152,7 +152,7 @@ public class IntakeController {
         }
     }
 
-    public void squishHorizPurplePixel() {
+    public void squishHorizPurplePixel() { //TODO : WHAT IS THIS?
         if(intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {
             //intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.DROPPED);
             intake.startIntakeHorizToCollect();

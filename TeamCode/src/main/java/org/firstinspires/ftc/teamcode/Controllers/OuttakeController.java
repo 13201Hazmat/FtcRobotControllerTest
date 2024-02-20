@@ -128,67 +128,47 @@ public class OuttakeController {
         };
     }
 
-    /*public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
-        outtakeArm.closeGrip();
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
-        safeWaitMilliSeconds(200);
-        switch (outtakeSlideStateDropLevel) {
-            case DROP_LOWEST:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
-                safeWaitMilliSeconds(100);
-                break;
-            case DROP_LOW_LINE:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE);
-                safeWaitMilliSeconds(100);
-                break;
-            case DROP_BELOW_MID:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID);
-                break;
-            case DROP_LEVEL_MID:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID);
-                break;
-            case DROP_BELOW_HIGH:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH);
-                break;
-            case DROP_LEVEL_HIGH:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH);
-                break;
-            case DROP_HIGHEST:
-                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST);
-                break;
-        }
-
-        outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);
-    }*/
-
     public void moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE outtakeSlideStateDropLevel){
         outtakeArm.closeGrip();
         outtakeSlides.moveOuttakeSlides(outtakeSlideStateDropLevel);
         safeWaitMilliSeconds(100);
-        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
-        safeWaitMilliSeconds(100);
+
         switch (outtakeSlideStateDropLevel) {
             case DROP_LOWEST:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOWEST);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
                 safeWaitMilliSeconds(100);
                 break;
             case DROP_LOW_LINE:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOW_LINE);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE);
                 safeWaitMilliSeconds(100);
                 break;
             case DROP_BELOW_MID:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_BELOW_MID);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID);
                 break;
             case DROP_LEVEL_MID:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LEVEL_MID);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID);
                 break;
             case DROP_BELOW_HIGH:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_BELOW_HIGH);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH);
                 break;
             case DROP_LEVEL_HIGH:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LEVEL_HIGH);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH);
                 break;
             case DROP_HIGHEST:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_HIGHEST);
+                safeWaitMilliSeconds(100);
                 outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST);
                 break;
         }

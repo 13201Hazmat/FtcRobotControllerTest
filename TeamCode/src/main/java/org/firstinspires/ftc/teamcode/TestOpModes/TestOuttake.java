@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
 /**
@@ -92,68 +91,64 @@ public class TestOuttake extends LinearOpMode {
                 }
 
                 //TODO : Move to transfer before rotating arm if starting in DROP_BELOW_LOW
-                if (gamepadController.gp2GetSquarePress()){
+                if (gamepadController.gp2GetSquarePress()) {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOWEST);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOW_LINE);
                     }
 
-                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
-                if (gamepadController.gp2GetTrianglePress()){
+                if (gamepadController.gp2GetTrianglePress()) {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_BELOW_MID);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_MID);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LEVEL_MID);
                     }
 
-                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
-                if (gamepadController.gp2GetCrossPress()){
+                if (gamepadController.gp2GetCrossPress()) {
                     outtakeArm.closeGrip();
                     if (outtakeSlides.outtakeSlidesState != OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH) {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_BELOW_HIGH);
                     } else {
                         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LEVEL_HIGH);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LEVEL_HIGH);
                     }
-
-                    outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
                 }
 
-                //if (!gamepadController.gp2GetStart()) {
-                    if (gamepadController.gp2GetCirclePress()) {
-                        if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
-                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
-                            while (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
-                                    outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)) {}
-                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
-                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
-                        } else {
-                            outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
-                            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
-                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-                        }
-                    }
-                /*} else {
-                    if (gamepadController.gp2GetButtonAPress()) {
-                        outtakeArm.openGrip();
+                if (gamepadController.gp2GetCirclePress()) {
+                    if (outtakeSlides.outtakeSlidesState == OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER) {
+                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
                         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
-                        outtakeSlides.manualResetOuttakeMotor();
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
+                        while (outtakeSlides.isOuttakeSlidesInState(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER) &&
+                                outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER)) {
+                            //TODO: BUG INTRODUCE TIME OUT
+                        }
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
+                    } else {
+                        outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
+                        outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
+                        outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
                     }
-                }*/
+                }
 
                 //Combo Transfer
                 if (gamepadController.gp2GetLeftBumperPress()) {
@@ -206,7 +201,7 @@ public class TestOuttake extends LinearOpMode {
                             break;
                         case MOVE_TO_DROP_BELOW_LOW:
                             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST);
-                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP);
+                            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOWEST);
                             outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST);
                             comboTransferActivated = false;
                             break;

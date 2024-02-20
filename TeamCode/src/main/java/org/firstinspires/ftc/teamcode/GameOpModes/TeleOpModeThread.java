@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
+import org.firstinspires.ftc.teamcode.TestOpModes.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 
 

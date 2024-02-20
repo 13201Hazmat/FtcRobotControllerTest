@@ -11,14 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Climber {
     //Initialization of intakemotor
     public DcMotorEx climberMotor = null;
-    //public CRServo climberLiftServo;
     public Servo climberServo;
-    //public Servo climberServo;
 
-
-    public double CLIMBER_SERVO_POWER = -1.0;
-    public double CLIMBER_SERVO_HOLD_POWER = -0.3;
-    //public boolean climberServoRunning = false;
     public boolean climberActivated = false;
     public boolean climbingStarted = false;
 
@@ -72,29 +66,6 @@ public class Climber {
         climberServoState = CLIMBER_SERVO_STATE.RELEASED;
     }
 
-    /*
-    public void moveClimberSlidesUp(){
-        climberLiftServo.setPower(CLIMBER_SERVO_POWER);
-        climberServoRunning = true;
-    }
-
-    public void holdClimberSlidesUp(){
-        climberLiftServo.setPower(CLIMBER_SERVO_HOLD_POWER);
-        climberServoRunning = true;
-    }
-
-    public void stopClimberSlides(){
-        climberLiftServo.setPower(0);
-        climberServoRunning = false;
-    }
-
-    public enum CLIMBER_SERVO_STATE{
-        LOW,
-        HIGH
-    }
-    public CLIMBER_SERVO_STATE ClimberServoState = CLIMBER_SERVO_STATE.LOW;
-
-     */
     public void initClimberServo(){
         climberServo.setPosition(CLIMBER_SERVO_STATE.LOCKED.getClimberServoPosition());
         climberServoState = CLIMBER_SERVO_STATE.LOCKED;

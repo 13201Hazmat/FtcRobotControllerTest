@@ -22,9 +22,6 @@ public class OuttakeSlides {
     public static final double OUTTAKE_MOTOR_ENCODER_TICKS = 384.5;
     public static final double ADJUST_RATIO = 1;
 
-    //public DigitalChannel outtakeTouch;  // Hardware Device Object
-
-
     //Outtake Motor states
     public enum OUTTAKE_SLIDE_STATE {
         MIN_RETRACTED (0), //Position
@@ -95,7 +92,6 @@ public class OuttakeSlides {
         } else {
             outtakeSlidesState = OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER;
         }
-        //manualResetOuttakeMotor();
     }
 
     //Turns on the brake for Outtake motor
@@ -215,7 +211,6 @@ public class OuttakeSlides {
         outtakeMotorRight.setPositionPIDFCoefficients(5.0); //5
         outtakeMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
         outtakeMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
-
     }
 
     //TODO : Add logic to use Voltage Sensor to measure motor stalling and reset.
@@ -250,7 +245,6 @@ public class OuttakeSlides {
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_BELOW_HIGH ||
                 outtakeSlidesState == OUTTAKE_SLIDE_STATE.DROP_HIGHEST) {
             isOuttakeSlidesInStateError = Math.abs(outtakeMotorLeft.getCurrentPosition() - toOuttakeSlideState.motorPosition);
-            //isOuttakeSlidesInStateError = Math.abs(outtakeMotorRight.getCurrentPosition() - toOuttakeSlideState.motorPosition);
             return (outtakeSlidesState == toOuttakeSlideState && isOuttakeSlidesInStateError <= 30);
         } else {
             return false;

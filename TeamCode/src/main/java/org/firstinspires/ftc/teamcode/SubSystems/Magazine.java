@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Magazine {
     public NormalizedColorSensor magazineSensorBottom;
     public NormalizedColorSensor magazineSensorTop;
-    public Servo magazineDoorServo;
     public boolean magazineSensorActivated = true;
 
     public enum MAGAZINE_DOOR_STATE {
@@ -47,23 +46,9 @@ public class Magazine {
     }
 
     public void initMagazine(){
-        //closeMagazineDoor();
         senseMagazineState();
     }
 
-    /*
-    //UPDATE FOR THIS YEAR!!
-    public void openMagazineDoor(){
-        magazineDoorServo.setPosition(MAGAZINE_DOOR_STATE.OPEN.magazinePosition);
-        magazineDoorState = MAGAZINE_DOOR_STATE.OPEN;
-    }
-
-    //UPDATE FOR THIS YEAR!!
-    public void closeMagazineDoor(){
-        magazineDoorServo.setPosition(MAGAZINE_DOOR_STATE.CLOSED.magazinePosition);
-        magazineDoorState = MAGAZINE_DOOR_STATE.CLOSED;
-    }
-     */
     public double magazineDistanceBottom;
     public double magazineDistanceTop;
     public void senseMagazineState(){
@@ -108,14 +93,11 @@ public class Magazine {
 
     public void printDebugMessages(){
         //******  debug ******
-        //telemetry.addData("xx", xx);
         telemetry.addLine("Magazine");
         telemetry.addData("    SensorActivated", magazineSensorActivated);
         telemetry.addData("    State", magazineState);
         telemetry.addData("    Bottom Distance Sensed", magazineDistanceBottom);
         telemetry.addData("    Top Distance Sensed", magazineDistanceTop);
-        //telemetry.addData("    Door State", magazineDoorState);
-        //telemetry.addData("    Door Servo Position", magazineDoorServo.getPosition());
         telemetry.addLine("=============");
     }
 

@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
-import org.firstinspires.ftc.teamcode.SubSystems.VisionAprilTag;
 
 
 /**
@@ -32,7 +31,6 @@ public class TestIntakeMagazine extends LinearOpMode {
 
     public TestGamepadController gamepadController;
     public DriveTrain driveTrain;
-    public VisionAprilTag visionAprilTagFront;
     public Intake intake;
     public Magazine magazine;
     public Lights lights;
@@ -184,11 +182,6 @@ public class TestIntakeMagazine extends LinearOpMode {
 
         magazine = new Magazine(hardwareMap, telemetry);
         telemetry.addLine("Magazine Initialized");
-        telemetry.update();
-
-        /* Create VisionAprilTag */
-        visionAprilTagFront = new VisionAprilTag(hardwareMap, telemetry, "Webcam 1");
-        telemetry.addLine("Vision April Tag Front Initialized");
         telemetry.update();
 
         /* Create Lights */
