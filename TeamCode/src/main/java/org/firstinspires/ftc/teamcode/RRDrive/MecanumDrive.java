@@ -38,9 +38,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.MecanumCommandMessage;
-import org.firstinspires.ftc.teamcode.RRDrive.messages.MecanumEncodersMessage;
+import org.firstinspires.ftc.teamcode.RRDrive.messages.MecanumLocalizerInputsMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.PoseMessage;
 
 import java.lang.Math;
@@ -51,63 +52,6 @@ import java.util.List;
 @Config
 public class MecanumDrive {
     public static class Params {
-        //CALIBERATION DONE ON 2/15 FOR GB HACKERZ - NOT WORKING WELL/
-        /*
-        //Step 2 : Update direction of IMU by updating orientation of Driver Hub below
-        // IMU orientation
-        // TODO: fill in these values based on
-        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-        public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.UP; // Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD as in robot
-        public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT; //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
-        //End Step 2
-
-        // drive model parameters
-        //TODO Step 5 Set value of inPerTick after running ForwardPushTest
-        //TODO Step 14 Make value of inPerTick accurate after running LocalizationTest
-        public double inPerTick = 0.0005385390667918;//0.0005367477415473052; //1
-
-        //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
-        //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
-        //TODO Step 14 Make value of lateralInPerTick accurate after running LocalizationTest
-        public double lateralInPerTick = 0.00034798934739696324;//inPerTick; //0.0003156705817550493; //inPerTick
-
-        //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
-        public double trackWidthTicks =  23527.662941018087*177/180;//25989.030374812366;//0;
-
-        // feedforward parameters (in tick units)
-        //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
-        //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
-        public double kS = 1.6866567792222291;//2.217018252042081;//0
-        public double kV = 0.00008916891028013672;//0.00007372693352992634;//0
-        //TODO Step 12 Set value of kA after running ManualFeedforwardTuner.
-        //   In this emperical process update value in increments of 0.0001 for drive encoders and 0.00001 for dead-wheel encoders
-        public double kA = 0.000025;//0.000027;//0
-
-        // path profile parameters (in inches)
-        public double maxWheelVel = 50;//73; //50
-        public double minProfileAccel = -30;//-50; //-30
-        public double maxProfileAccel = 50;//73; //50
-
-        // turn profile parameters (in radians)
-        public double maxAngVel = 5.235987755; //300 degrees //Math.PI; // shared with path 300
-        public double maxAngAccel = 5.235987755; //Math.PI;
-
-        // path controller gains
-        //TODO Step 13 Set value of Gains after running ManualFeedbackTuner
-        public double axialGain = 9.0;//9.0;//0.0;
-        public double lateralGain = 8.0;//6.0;//0.0;
-        public double headingGain = 12.0;//12.0//0.0 shared with turn
-
-        public double axialVelGain = 0.028195102337181;//0.0311031876027098649434; //generateSMARTDerivativeTerm(axialGain, false);//0.0
-        public double lateralVelGain = 0.028195102337181;//0.025382117189185784; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
-        public double headingVelGain = 0.028195102337181;//0.0359262730664; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
-        //TODO End Step 13
-        */
-
         //CALIBERATION FOR FROZEN FRENZY
         //Step 2 : Update direction of IMU by updating orientation of Driver Hub below
         // IMU orientation
@@ -200,6 +144,7 @@ public class MecanumDrive {
 
         private int lastLeftFrontPos, lastLeftBackPos, lastRightBackPos, lastRightFrontPos;
         private Rotation2d lastHeading;
+        private boolean initialized;
 
         public DriveLocalizer() {
             leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
@@ -214,12 +159,7 @@ public class MecanumDrive {
             rightBack.setDirection(DcMotorEx.Direction.REVERSE);
             rightFront.setDirection(DcMotorEx.Direction.REVERSE);
             //End Step 4.2
-            lastLeftFrontPos = leftFront.getPositionAndVelocity().position;
-            lastLeftBackPos = leftBack.getPositionAndVelocity().position;
-            lastRightBackPos = rightBack.getPositionAndVelocity().position;
-            lastRightFrontPos = rightFront.getPositionAndVelocity().position;
 
-            lastHeading = Rotation2d.exp(imu.get().getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         }
 
         @Override
@@ -229,10 +169,29 @@ public class MecanumDrive {
             PositionVelocityPair rightBackPosVel = rightBack.getPositionAndVelocity();
             PositionVelocityPair rightFrontPosVel = rightFront.getPositionAndVelocity();
 
-            FlightRecorder.write("MECANUM_ENCODERS", new MecanumEncodersMessage(
-                    leftFrontPosVel, leftBackPosVel, rightBackPosVel, rightFrontPosVel));
+            YawPitchRollAngles angles = imu.get().getRobotYawPitchRollAngles();
 
-            Rotation2d heading = Rotation2d.exp(imu.get().getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            FlightRecorder.write("MECANUM_LOCALIZER_INPUTS", new MecanumLocalizerInputsMessage(
+                    leftFrontPosVel, leftBackPosVel, rightBackPosVel, rightFrontPosVel, angles));
+
+            Rotation2d heading = Rotation2d.exp(angles.getYaw(AngleUnit.RADIANS));
+
+            if (!initialized) {
+                initialized = true;
+
+                lastLeftFrontPos = leftFrontPosVel.position;
+                lastLeftBackPos = leftBackPosVel.position;
+                lastRightBackPos = rightBackPosVel.position;
+                lastRightFrontPos = rightFrontPosVel.position;
+
+                lastHeading = heading;
+
+                return new Twist2dDual<>(
+                        Vector2dDual.constant(new Vector2d(0.0, 0.0), 2),
+                        DualNum.constant(0.0, 2)
+                );
+            }
+
             double headingDelta = heading.minus(lastHeading);
 
             Twist2dDual<Time> twist = kinematics.forward(new MecanumKinematics.WheelIncrements<>(

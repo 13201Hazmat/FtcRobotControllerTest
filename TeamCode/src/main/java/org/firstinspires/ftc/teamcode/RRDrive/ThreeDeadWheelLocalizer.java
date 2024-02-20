@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.Time;
 import com.acmerobotics.roadrunner.Twist2dDual;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.Vector2dDual;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.FlightRecorder;
@@ -11,18 +12,12 @@ import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.RRDrive.messages.ThreeDeadWheelInputsMessage;
 
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        //CALIBRATION DONE on 2/15 for GB HACKERZ - NOT WORKING WELL
-        /*public double par0YTicks = -11765.520028236566; //-11104.751832973534;//0.0; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = 11392.670992672724;//11609.987219893983;//1.0; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks =  -12259.934132171446;//-11075.135345140312;//0.0; // x position of the perpendicular encoder (in tick units)
-         */
-
         //CALIBRATION DONE FOR FROZEN FRENZY
         public double par0YTicks = -11104.751832973534;//0.0; // y position of the first parallel encoder (in tick units)
         public double par1YTicks = 11609.987219893983;//1.0; // y position of the second parallel encoder (in tick units)
@@ -36,6 +31,7 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
     public final double inPerTick;
 
     private int lastPar0Pos, lastPar1Pos, lastPerpPos;
+    private boolean initialized;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
         //TODO Step 3.1 : Update hardware configuration names for dead wheel encoders
@@ -49,10 +45,6 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         par0.setDirection(DcMotorEx.Direction.REVERSE);
         par1.setDirection(DcMotorEx.Direction.REVERSE);
 
-        lastPar0Pos = par0.getPositionAndVelocity().position;
-        lastPar1Pos = par1.getPositionAndVelocity().position;
-        lastPerpPos = perp.getPositionAndVelocity().position;
-
         this.inPerTick = inPerTick;
 
         FlightRecorder.write("THREE_DEAD_WHEEL_PARAMS", PARAMS);
@@ -62,6 +54,21 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         PositionVelocityPair par0PosVel = par0.getPositionAndVelocity();
         PositionVelocityPair par1PosVel = par1.getPositionAndVelocity();
         PositionVelocityPair perpPosVel = perp.getPositionAndVelocity();
+
+        FlightRecorder.write("THREE_DEAD_WHEEL_INPUTS", new ThreeDeadWheelInputsMessage(par0PosVel, par1PosVel, perpPosVel));
+
+        if (!initialized) {
+            initialized = true;
+
+            lastPar0Pos = par0PosVel.position;
+            lastPar1Pos = par1PosVel.position;
+            lastPerpPos = perpPosVel.position;
+
+            return new Twist2dDual<>(
+                    Vector2dDual.constant(new Vector2d(0.0, 0.0), 2),
+                    DualNum.constant(0.0, 2)
+            );
+        }
 
         int par0PosDelta = par0PosVel.position - lastPar0Pos;
         int par1PosDelta = par1PosVel.position - lastPar1Pos;

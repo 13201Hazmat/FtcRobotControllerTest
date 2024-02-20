@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.RRDrive;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -41,14 +40,13 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.RRDrive.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.PoseMessage;
 import org.firstinspires.ftc.teamcode.RRDrive.messages.TankCommandMessage;
-import org.firstinspires.ftc.teamcode.RRDrive.messages.TankEncodersMessage;
+import org.firstinspires.ftc.teamcode.RRDrive.messages.TankLocalizerInputsMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,6 +127,7 @@ public final class TankDrive {
         public final List<Encoder> leftEncs, rightEncs;
 
         private double lastLeftPos, lastRightPos;
+        private boolean initialized;
 
         public DriveLocalizer() {
             {
@@ -151,16 +150,6 @@ public final class TankDrive {
 
             // TODO: reverse encoder directions if needed
             //   leftEncs.get(0).setDirection(DcMotorSimple.Direction.REVERSE);
-
-            for (Encoder e : leftEncs) {
-                lastLeftPos += e.getPositionAndVelocity().position;
-            }
-            lastLeftPos /= leftEncs.size();
-
-            for (Encoder e : rightEncs) {
-                lastRightPos += e.getPositionAndVelocity().position;
-            }
-            lastRightPos /= rightEncs.size();
         }
 
         @Override
@@ -186,8 +175,20 @@ public final class TankDrive {
             meanRightPos /= rightEncs.size();
             meanRightVel /= rightEncs.size();
 
-            FlightRecorder.write("TANK_ENCODERS",
-                    new TankEncodersMessage(leftReadings, rightReadings));
+            FlightRecorder.write("TANK_LOCALIZER_INPUTS",
+                    new TankLocalizerInputsMessage(leftReadings, rightReadings));
+
+            if (!initialized) {
+                initialized = true;
+
+                lastLeftPos = meanLeftPos;
+                lastRightPos = meanRightPos;
+
+                return new Twist2dDual<>(
+                        Vector2dDual.constant(new Vector2d(0.0, 0.0), 2),
+                        DualNum.constant(0.0, 2)
+                );
+            }
 
             TankKinematics.WheelIncrements<Time> twist = new TankKinematics.WheelIncrements<>(
                     new DualNum<Time>(new double[] {
