@@ -110,14 +110,12 @@ public class VisionSensor {
     public boolean senseAprilTag(){
         backdropAprilTagDetected = true;
 
-        /*HuskyLens.Block[] blocks = huskyLens.blocks();
+        HuskyLens.Block[] blocks = huskyLens.blocks();
         detectedAprilTagCount = blocks.length;
         if (detectedAprilTagCount > 0)
             backdropAprilTagDetected = true;
 
-         */
 
-        /*
         backdropAprilTagDetected = false;
         for (int i = 0; i < detectedAprilTagCount; i++) {
             for (int j = 0; (j < backdropAprilTags.length & !backdropAprilTagDetected); j++) {
@@ -126,7 +124,7 @@ public class VisionSensor {
                     detectedAprilTag = backdropAprilTags[j];
                 }
             }
-        }*/
+        }
 
         return backdropAprilTagDetected;
     }
