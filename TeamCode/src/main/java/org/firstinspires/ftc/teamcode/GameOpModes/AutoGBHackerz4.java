@@ -210,19 +210,19 @@ public class AutoGBHackerz4 extends LinearOpMode {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(34, 15.7, Math.toRadians(-90)); //x22.2, 3.3, 25
                         dropPurplePixelPoseWall = new Pose2d(22.7, 3.0, Math.toRadians(25));
-                        dropYellowPixelPose = new Pose2d(23.5, 34, Math.toRadians(-90));//x16.7, y32.5
+                        dropYellowPixelPose = new Pose2d(23.5, 33.5, Math.toRadians(-90));//x16.7, y32.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(18.7,30, Math.toRadians(-90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(38.3, 9, Math.toRadians(-90)); //x28, y-1.6, 10.7
                         dropPurplePixelPoseWall = new Pose2d(28, -1.6, Math.toRadians(10.7));
-                        dropYellowPixelPose = new Pose2d(27.5, 34,  Math.toRadians(-90));//x25, y35
+                        dropYellowPixelPose = new Pose2d(27.5, 33.5,  Math.toRadians(-90));//x25, y35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25,30, Math.toRadians(-90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(27.8, -4.5, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
                         dropPurplePixelPoseWall = new Pose2d(21.5, -8, Math.toRadians(-50));
-                        dropYellowPixelPose = new Pose2d(35, 34, Math.toRadians(-90)); //y=33.5, x35
+                        dropYellowPixelPose = new Pose2d(35, 33.5, Math.toRadians(-90)); //y=33.5, x35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33.5,30, Math.toRadians(-90));
                         break;
                 }
@@ -231,10 +231,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
                 //stageDoorStackPose = new Pose2d(49, -60, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(47, -76, Math.toRadians(-90));//x51, y-73.8, -90
+                stageDoorStackPose = new Pose2d(55, -76, Math.toRadians(-90));//x51, y-73.8, -90
                 //stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
                 stageMidwayTrussPose = new Pose2d(50, -29, Math.toRadians(-90));//x53
-                stageMidwayBackDropPose = new Pose2d(47, 18, Math.toRadians(-90)); //x53
+                stageMidwayBackDropPose = new Pose2d(54, 18, Math.toRadians(-90)); //x53
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
@@ -254,21 +254,21 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(24.5, 1.6, Math.toRadians(90));//x20.5, y8,51
+                        dropPurplePixelPose = new Pose2d(25.5, 1.6, Math.toRadians(90));//x20.5, y8,51
                         dropPurplePixelPoseWall = new Pose2d(21.2, 9.5, Math.toRadians(49));
-                        dropYellowPixelPose = new Pose2d(33.8, -36, Math.toRadians(90)); //x=34.5,y=-35.5
+                        dropYellowPixelPose = new Pose2d(33.8, -35, Math.toRadians(90)); //x=34.5,y=-35.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33,-30, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(36, -13, Math.toRadians(90));//x27.6, y0, 13
                         dropPurplePixelPoseWall = new Pose2d(27.9, 2, Math.toRadians(18.5));
-                        dropYellowPixelPose = new Pose2d(28, -36,  Math.toRadians(90));//x28.6, y-35.5
+                        dropYellowPixelPose = new Pose2d(28, -35,  Math.toRadians(90));//x28.6, y-35.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(26,-30, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(35, -20, Math.toRadians(90));//x21, y-1.5, -24
                         dropPurplePixelPoseWall = new Pose2d(20.6, -2.8, Math.toRadians(-22));
-                        dropYellowPixelPose = new Pose2d(22, -36, Math.toRadians(90));//x18, y-35
+                        dropYellowPixelPose = new Pose2d(22, -35, Math.toRadians(90));//x18, y-35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(16.5,-30, Math.toRadians(90));
                         break;
                 }
@@ -276,10 +276,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 wallStackPose = new Pose2d(13, 69, Math.toRadians(90));//73
                 wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(45, 73.5, Math.toRadians(90));//x55.2, y72.2, 90
+                stageDoorStackPose = new Pose2d(45.5, 73.5, Math.toRadians(90));//x55.2, y72.2, 90
                 //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
                 stageMidwayTrussPose = new Pose2d(52,27.5,Math.toRadians(90));
-                stageMidwayBackDropPose = new Pose2d(47.5, -21, Math.toRadians(90));//x47
+                stageMidwayBackDropPose = new Pose2d(48, -21, Math.toRadians(90));//x47
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
@@ -290,7 +290,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                     beforeParkAfterDropStackPixelPose = new Pose2d(21,-32,Math.toRadians(90));
                 }
 
-                parkPoseWall = new Pose2d(2, -28, Math.toRadians(90));
+                parkPoseWall = new Pose2d(3, -28, Math.toRadians(90));
                 parkPoseStageDoor = new Pose2d(49, -28, Math.toRadians(90));
                 break;
 
@@ -299,8 +299,8 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(22.2, 8.8, Math.toRadians(47.8));//23.5, 9, 62
-                        dropPurplePixelPoseWall = new Pose2d(24.6, 0.1, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(28.5, 85.5, Math.toRadians(-90));//x18, y87
+                        dropPurplePixelPoseWall = new Pose2d(25, 1.5, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(27, 85.9, Math.toRadians(-90));//x18, y87
                         beforeParkAfterDropYellowPixelPose = new Pose2d(16.5,82, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(7.3,-4, Math.toRadians(34)); //x17, y-4,-90
                         //stageMidwayStackPose = new Pose2d(49.7, -7, Math.toRadians(-90)); //x43, y8
@@ -308,15 +308,15 @@ public class AutoGBHackerz4 extends LinearOpMode {
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(30.5, 5.4, Math.toRadians(19)); //x26.4, y7.8, 2
                         dropPurplePixelPoseWall = new Pose2d(23.7, -2, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(34.5, 85.5,  Math.toRadians(-90)); //x24.6, y88
+                        dropYellowPixelPose = new Pose2d(33, 85.5,  Math.toRadians(-90)); //x24.6, y88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(22.9,82, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(7.3,-4,Math.toRadians(18));//17, -4, -9
                         //stageMidwayStackPose = new Pose2d(51.8, -15, Math.toRadians(-90)); //x49, y9, -90
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(42.3, 1.4, Math.toRadians(-131.3)); //x25.5, y-2.5, -52.5
-                        dropPurplePixelPoseWall = new Pose2d(15,-6.6,Math.toRadians(0));//22.5, -1.8, -46
-                        dropYellowPixelPose = new Pose2d(41, 85.5, Math.toRadians(-90)); //x30.5, 88
+                        dropPurplePixelPoseWall = new Pose2d(13.5,-6.6,Math.toRadians(0));//22.5, -1.8, -46
+                        dropYellowPixelPose = new Pose2d(40, 85.5, Math.toRadians(-90)); //x30.5, 88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25.2,82, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(46,3.4,Math.toRadians(-90)); //x15, y5, -90degrees
                         //stageMidwayStackPose = new Pose2d(53, 7, Math.toRadians(-90)); //x44, y5, 0
@@ -348,8 +348,8 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(37, 0, Math.toRadians(126)); //x20.8, y3.3, 31.5
-                        dropPurplePixelPoseWall = new Pose2d(15.2, 7, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(40, -89, Math.toRadians(90));//x32, y-91
+                        dropPurplePixelPoseWall = new Pose2d(14.5, 9, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(40, -88.5, Math.toRadians(90));//x32, y-91
                         beforeParkAfterDropYellowPixelPose = new Pose2d(34,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(48,-4,Math.toRadians(89));
                         //stageMidwayStackPose = new Pose2d(43, 8, Math.toRadians(90));
@@ -357,7 +357,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(28.7, -4.3, Math.toRadians(-13.8)); //x28.1, y-4, -20
                         dropPurplePixelPoseWall = new Pose2d(23.5, 3.6, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(32.5, -89,  Math.toRadians(90)); //x28,y=-91
+                        dropYellowPixelPose = new Pose2d(30.5, -88.8,  Math.toRadians(90)); //x28,y=-91
                         beforeParkAfterDropYellowPixelPose = new Pose2d(30,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
@@ -365,7 +365,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(22.3, -7.5, Math.toRadians(-60.3)); //x25.1, y-5.3, -71
                         dropPurplePixelPoseWall = new Pose2d(26.6, -1.9, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(27, -89, Math.toRadians(90));//x23 y=-88
+                        dropYellowPixelPose = new Pose2d(26, -89, Math.toRadians(90));//x23 y=-88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
@@ -413,6 +413,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                 .build();
 
         trajDropPurplePixelToPark = drive.actionBuilder(dropPurplePixelPose)
+                .setReversed(true)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
@@ -536,6 +537,8 @@ public class AutoGBHackerz4 extends LinearOpMode {
                                 intakeController.dropLiftIntakeAfterYellowDropAction()
                         ),
                         outtakeController.dropOnePixelAction(),
+                        new SleepAction(0.1),
+                        outtakeController.dropOnePixelAction(),
                         new SleepAction(0.2),
                         trajDropYellowPixelToDropPurplePixel,
                         intakeController.squishPurplePixelInStartOfAutoForDropAction(),
@@ -641,6 +644,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                         intakeController.intakeLiftUpAction(),
                         trajStackToDropYellowPixel,
                          */
+                        new SleepAction(10),
                         trajDropPurplePixelTodropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
                         new SleepAction(0.1),
