@@ -27,12 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
+package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -43,11 +42,11 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
 import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
@@ -65,10 +64,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "HazmatAutonomous Mode AutoState1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-@Disabled
-
-public class AutoGBHackerz1 extends LinearOpMode {
+@Autonomous(name = "HazmatAuto State 1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+public class AutoState1 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -83,6 +80,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
     public VisionOpenCV visionOpenCV;
     public Lights lights;
     public OuttakeController outtakeController;
+    public IntakeController intakeController;
     public TelemetryPacket telemetryPacket = new TelemetryPacket();
 
     public MecanumDrive drive;
@@ -159,8 +157,6 @@ public class AutoGBHackerz1 extends LinearOpMode {
             //Turn Lights Green
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
 
-
-
             //Build parking trajectory based on last detected target by vision
             runAutonoumousMode();
         }
@@ -179,9 +175,6 @@ public class AutoGBHackerz1 extends LinearOpMode {
     Pose2d wallStackPose = new Pose2d(0, 0, 0);
     Pose2d wallMidwayStackPose = new Pose2d(0, 0, 0);
     Pose2d wallMidwayBackDropPose = new Pose2d(0, 0, 0);
-    Pose2d stackPose = new Pose2d(0, 0, 0);
-    Pose2d midwayStackPose = new Pose2d(0, 0, 0);
-    Pose2d midwayBackDropPose = new Pose2d(0, 0, 0);
     Pose2d dropYellowPixelPose= new Pose2d(0, 0, 0);
     Pose2d beforeParkAfterDropYellowPixelPose = new Pose2d(0,0,0);
     Pose2d dropStackPixelPose = new Pose2d(0, 0, 0);
@@ -190,10 +183,10 @@ public class AutoGBHackerz1 extends LinearOpMode {
     Pose2d parkPoseWall = new Pose2d(0, 0, 0);
     Pose2d parkPose = new Pose2d(0, 0, 0);
 
-
     Action trajInitToDropPurplePixel, trajDropPurplePixelTodropYellowPixel, trajDropYellowPixelToPark;
-    Action trajDropYellowPixelToStack, trajStackToDropStackPixel;
-    Action trajDropStackPixelToStack, trajDropStackPixelToPark;
+    Action trajInitToDropYellowPixel, trajDropYellowPixelToDropPurplePixel, trajDropPurplePixelToPark;
+    Action trajDropYellowPixelToStack;
+    Action trajStackToDropStackPixel, trajDropStackPixelToStack, trajDropStackPixelToPark;
 
     Action trajDropPurplePixelToStack, trajStackToDropYellowPixel;
 
@@ -204,47 +197,43 @@ public class AutoGBHackerz1 extends LinearOpMode {
 
         moveBeyondTrussPose = new Pose2d(9, 0, 0); //x15
 
-        outtakeArm.backPlateAlignDown();
-
         switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(22.2, 3.3, Math.toRadians(25)); //x23.4, 6, 32
+                        dropPurplePixelPose = new Pose2d(34, 15.7, Math.toRadians(-90)); //x22.2, 3.3, 25
                         dropPurplePixelPoseWall = new Pose2d(22.7, 3.0, Math.toRadians(25));
-                        dropYellowPixelPose = new Pose2d(21.2, 31.5, Math.toRadians(-90));//x16.7, y34.6
+                        dropYellowPixelPose = new Pose2d(23.5, 33.5, Math.toRadians(-90));//x16.7, y32.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(18.7,30, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(28, -1.6, Math.toRadians(10.7)); //x32, y1, -30
+                        dropPurplePixelPose = new Pose2d(38.3, 9, Math.toRadians(-90)); //x28, y-1.6, 10.7
                         dropPurplePixelPoseWall = new Pose2d(28, -1.6, Math.toRadians(10.7));
-                        dropYellowPixelPose = new Pose2d(29, 32.5,  Math.toRadians(-90));//x25, y35
+                        dropYellowPixelPose = new Pose2d(27.5, 33.5,  Math.toRadians(-90));//x25, y35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25,30, Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(21.5, -8, Math.toRadians(-50)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                        dropPurplePixelPose = new Pose2d(27.8, -4.5, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
                         dropPurplePixelPoseWall = new Pose2d(21.5, -8, Math.toRadians(-50));
-                        dropYellowPixelPose = new Pose2d(34.5, 32, Math.toRadians(-90)); //y=33.5, x35
+                        dropYellowPixelPose = new Pose2d(35, 33.5, Math.toRadians(-90)); //y=33.5, x35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33.5,30, Math.toRadians(-90));
                         break;
                 }
-                //afterPurplePixelPose = new Pose2d(8,-14,Math.toRadians(-30));
-                wallStackPose = new Pose2d(13, -60, Math.toRadians(-90));
+
+                wallStackPose = new Pose2d(13, -56, Math.toRadians(-90)); //-60
                 wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
-                //stageDoorStackPose = new Pose2d(49, -60, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(51, -73.8, Math.toRadians(-90));//x53, y-70.5, -90
-                //stageMidwayStackPose = new Pose2d(49, -56, Math.toRadians(-90));
-                stageMidwayTrussPose = new Pose2d(52.5, -29, Math.toRadians(-90));//x53
-                stageMidwayBackDropPose = new Pose2d(52.5, 24, Math.toRadians(-86)); //x53
+                stageDoorStackPose = new Pose2d(55, -76, Math.toRadians(-90));//x51, y-73.8, -90
+                stageMidwayTrussPose = new Pose2d(50, -29, Math.toRadians(-90));//x53
+                stageMidwayBackDropPose = new Pose2d(54, 18, Math.toRadians(-90)); //x53
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
-                    dropStackPixelPose = new Pose2d(18.7, 34.5, Math.toRadians(-90));//x20, y35.5
+                    dropStackPixelPose = new Pose2d(18.7, 32.5, Math.toRadians(-90));//x20, y35.5
                     beforeParkAfterDropStackPixelPose = new Pose2d(18.7, 30, Math.toRadians(-90));//x20, y35.5
                 } else {
-                    dropStackPixelPose = new Pose2d(28.5, 31.5, Math.toRadians(-90)); //y=32.5, x33.5
+                    dropStackPixelPose = new Pose2d(26, 32, Math.toRadians(-90)); //y=32.5, x33.5
                     beforeParkAfterDropStackPixelPose = new Pose2d(31.5, 30, Math.toRadians(-90)); //y=33.5, x35.5
                 }
 
@@ -257,43 +246,42 @@ public class AutoGBHackerz1 extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(20.6, 9.5, Math.toRadians(49));//x20.5, y8,51
+                        dropPurplePixelPose = new Pose2d(25.5, 1.6, Math.toRadians(90));//x20.5, y8,51
                         dropPurplePixelPoseWall = new Pose2d(21.2, 9.5, Math.toRadians(49));
-                        dropYellowPixelPose = new Pose2d(35, -33, Math.toRadians(90)); //x=34.5,y=-35.5
+                        dropYellowPixelPose = new Pose2d(33.8, -35, Math.toRadians(90)); //x=34.5,y=-35.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(33,-30, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(34, -9, Math.toRadians(79.4));//x27.6, y0, 13
+                        dropPurplePixelPose = new Pose2d(36, -13, Math.toRadians(90));//x27.6, y0, 13
                         dropPurplePixelPoseWall = new Pose2d(27.9, 2, Math.toRadians(18.5));
-                        dropYellowPixelPose = new Pose2d(26.3, -30.5,  Math.toRadians(90));//x28.6, y-35.5
+                        dropYellowPixelPose = new Pose2d(28, -35,  Math.toRadians(90));//x28.6, y-35.5
                         beforeParkAfterDropYellowPixelPose = new Pose2d(26,-30, Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(21.1, -2.8, Math.toRadians(-22));//x21, y-1.5, -24
+                        dropPurplePixelPose = new Pose2d(35, -20, Math.toRadians(90));//x21, y-1.5, -24
                         dropPurplePixelPoseWall = new Pose2d(20.6, -2.8, Math.toRadians(-22));
-                        dropYellowPixelPose = new Pose2d(21, -33.6, Math.toRadians(90));//x18, y-35
+                        dropYellowPixelPose = new Pose2d(22, -35, Math.toRadians(90));//x18, y-35
                         beforeParkAfterDropYellowPixelPose = new Pose2d(16.5,-30, Math.toRadians(90));
                         break;
                 }
                 afterPurplePixelPose = new Pose2d(8,14,Math.toRadians(30));
-                wallStackPose = new Pose2d(13, 73, Math.toRadians(90));
+                wallStackPose = new Pose2d(13, 69, Math.toRadians(90));//73
                 wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(46, 72.2, Math.toRadians(90));//x55.2, y72, 90
-                //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
-                stageMidwayTrussPose = new Pose2d(52,27.5,90);
-                stageMidwayBackDropPose = new Pose2d(51, -18, Math.toRadians(90));//x47
+                stageDoorStackPose = new Pose2d(45.5, 73.5, Math.toRadians(90));//x55.2, y72.2, 90
+                stageMidwayTrussPose = new Pose2d(52,27.5,Math.toRadians(90));
+                stageMidwayBackDropPose = new Pose2d(48, -21, Math.toRadians(90));//x47
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
                     dropStackPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                     beforeParkAfterDropStackPixelPose = new Pose2d(37,-32,Math.toRadians(90));
                 } else {
-                    dropStackPixelPose = new Pose2d(27.2, -33, Math.toRadians(90));//x20, -34.5
+                    dropStackPixelPose = new Pose2d(30, -36, Math.toRadians(90));//x20, -34.5
                     beforeParkAfterDropStackPixelPose = new Pose2d(21,-32,Math.toRadians(90));
                 }
 
-                parkPoseWall = new Pose2d(2, -28, Math.toRadians(90));
+                parkPoseWall = new Pose2d(3, -28, Math.toRadians(90));
                 parkPoseStageDoor = new Pose2d(49, -28, Math.toRadians(90));
                 break;
 
@@ -302,49 +290,44 @@ public class AutoGBHackerz1 extends LinearOpMode {
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(22.2, 8.8, Math.toRadians(47.8));//23.5, 9, 62
-                        dropPurplePixelPoseWall = new Pose2d(22.2, 8.8, Math.toRadians(47.8));
-                        dropYellowPixelPose = new Pose2d(18.2, 87.5, Math.toRadians(-90));//x18, y87
+                        dropPurplePixelPoseWall = new Pose2d(25, 1.5, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(27, 85.9, Math.toRadians(-90));//x18, y87
                         beforeParkAfterDropYellowPixelPose = new Pose2d(16.5,82, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(7.3,-4, Math.toRadians(34)); //x17, y-4,-90
-                        afterPurplePixelPoseWall = new Pose2d(7.3,-4, Math.toRadians(34)); //x17, y-4,-90
-                        //stageMidwayStackPose = new Pose2d(49.7, -7, Math.toRadians(-90)); //x43, y8
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(30.5, 5.4, Math.toRadians(19)); //x26.4, y7.8, 2
-                        dropPurplePixelPoseWall = new Pose2d(29, 5.4, Math.toRadians(19));
-                        dropYellowPixelPose = new Pose2d(24, 87.5,  Math.toRadians(-90)); //x24.6, y88
+                        dropPurplePixelPoseWall = new Pose2d(23.7, -2, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, 85.5,  Math.toRadians(-90)); //x24.6, y88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(22.9,82, Math.toRadians(-90));
-                        afterPurplePixelPose = new Pose2d(7.3,-4,Math.toRadians(18));//17, -4, -90
-                        afterPurplePixelPoseWall = new Pose2d(7.3,-4,Math.toRadians(18));//17, -4, -90
-                        //stageMidwayStackPose = new Pose2d(51.8, -15, Math.toRadians(-90)); //x49, y9, -90
+                        afterPurplePixelPose = new Pose2d(7.3,-4,Math.toRadians(18));//17, -4, -9
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(42.3, 1.4, Math.toRadians(-131.3)); //x25.5, y-2.5, -52.5
-                        dropPurplePixelPoseWall = new Pose2d(20.6,-1.7,Math.toRadians(-33));//22.5, -1.8, -46
-                        dropYellowPixelPose = new Pose2d(27.2, 87.5, Math.toRadians(-90)); //x30.5, 88
+                        dropPurplePixelPoseWall = new Pose2d(13.5,-6.6,Math.toRadians(0));//22.5, -1.8, -46
+                        dropYellowPixelPose = new Pose2d(40, 85.5, Math.toRadians(-90)); //x30.5, 88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25.2,82, Math.toRadians(-90));
                         afterPurplePixelPose = new Pose2d(46,3.4,Math.toRadians(-90)); //x15, y5, -90degrees
-                        afterPurplePixelPoseWall = new Pose2d(6.8,2,Math.toRadians(-31)); //x15, y5, -90degrees
-                        //stageMidwayStackPose = new Pose2d(53, 7, Math.toRadians(-90)); //x44, y5, 0
                         break;
                 }
-                wallStackPose = new Pose2d(27, -18, Math.toRadians(-90)); //x26,-18
+                afterPurplePixelPoseWall = new Pose2d(3.2,0,Math.toRadians(-90)); //x15, y5, -90degrees
+                wallStackPose = new Pose2d(27, -14, Math.toRadians(-90)); //x26,-18
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
-                wallMidwayBackDropPose = new Pose2d(2, 73, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(52, -19, Math.toRadians(-90));//x53, y-20.7
+                wallMidwayBackDropPose = new Pose2d(11.7, 72, Math.toRadians(-90));
+                stageDoorStackPose = new Pose2d(52, -15, Math.toRadians(-90));//x53, y-19
                 stageMidwayTrussPose = new Pose2d(54, 26.8, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(54, 71, Math.toRadians(-90)); //x52, y73
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
-                    dropStackPixelPose = new Pose2d(21, 88, Math.toRadians(-90));//x20, y35.5
+                    dropStackPixelPose = new Pose2d(35.5, 86.5,  Math.toRadians(-90));//x20, y35.5
                     beforeParkAfterDropStackPixelPose = new Pose2d(18.7, 30, Math.toRadians(-90));//x20, y35.5
                 } else {
                     dropStackPixelPose = new Pose2d(31.5, 34.5, Math.toRadians(-90)); //y=33.5, x35.5
                     beforeParkAfterDropStackPixelPose = new Pose2d(31.5, 30, Math.toRadians(-90)); //y=33.5, x35.5
                 }
 
-                parkPoseWall = new Pose2d(2, 80.8, Math.toRadians(-90));//x3, y80.8
+                parkPoseWall = new Pose2d(6.5, 82.8, Math.toRadians(-90));//x3, y80.8
                 parkPoseStageDoor = new Pose2d(46, 83.5, Math.toRadians(-90)); //x54.5, y77
                 break;
 
@@ -353,49 +336,44 @@ public class AutoGBHackerz1 extends LinearOpMode {
                 switch (visionOpenCV.identifiedSpikeMarkLocation) {
                     case LEFT:
                         dropPurplePixelPose = new Pose2d(37, 0, Math.toRadians(126)); //x20.8, y3.3, 31.5
-                        dropPurplePixelPoseWall = new Pose2d(21, 3, Math.toRadians(25));
-                        dropYellowPixelPose = new Pose2d(34, -88, Math.toRadians(90));//x32, y-91
+                        dropPurplePixelPoseWall = new Pose2d(14.5, 9, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(40, -88.5, Math.toRadians(90));//x32, y-91
                         beforeParkAfterDropYellowPixelPose = new Pose2d(34,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(48,-4,Math.toRadians(89));
-                        afterPurplePixelPoseWall = new Pose2d(5.8,0,Math.toRadians(-65));
-                        //stageMidwayStackPose = new Pose2d(43, 8, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(28.7, -4.3, Math.toRadians(-13.8)); //x28.1, y-4, -20
-                        dropPurplePixelPoseWall = new Pose2d(32.3, 7.5, Math.toRadians(-60.5));
-                        dropYellowPixelPose = new Pose2d(30, -87,  Math.toRadians(90)); //x28,y=-91
+                        dropPurplePixelPoseWall = new Pose2d(23.5, 3.6, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(30.5, -88.8,  Math.toRadians(90)); //x28,y=-91
                         beforeParkAfterDropYellowPixelPose = new Pose2d(30,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
-                        afterPurplePixelPoseWall = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
-                        //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                     case RIGHT:
                         dropPurplePixelPose = new Pose2d(22.3, -7.5, Math.toRadians(-60.3)); //x25.1, y-5.3, -71
-                        dropPurplePixelPoseWall = new Pose2d(22.3, -7.5, Math.toRadians(-60.3));
-                        dropYellowPixelPose = new Pose2d(25, -88, Math.toRadians(90));//x23 y=-88
+                        dropPurplePixelPoseWall = new Pose2d(26.6, -1.9, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(26, -89, Math.toRadians(90));//x23 y=-88
                         beforeParkAfterDropYellowPixelPose = new Pose2d(25,-85, Math.toRadians(90));
                         afterPurplePixelPose = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
-                        afterPurplePixelPoseWall = new Pose2d(18,4,Math.toRadians(-30));//x18,y4,-30
-                        //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                 }
-                wallStackPose = new Pose2d(24.6, 19.6, Math.toRadians(90)); //x22, x17, 90
+                afterPurplePixelPoseWall = new Pose2d(3.75,3.1,Math.toRadians(90));//x18,y4,-30
+                wallStackPose = new Pose2d(24.6, 15.5, Math.toRadians(90)); //x22, x19.6, 90
                 wallMidwayStackPose = new Pose2d(2, 0, Math.toRadians(90));//x2, y-5
-                wallMidwayBackDropPose = new Pose2d(2, -67, Math.toRadians(90));//x2, y-73
-                stageDoorStackPose = new Pose2d(49.2, 19.7, Math.toRadians(90));//x48.5, y20.5
+                wallMidwayBackDropPose = new Pose2d(10, -66, Math.toRadians(90));//x2, y-73
+                stageDoorStackPose = new Pose2d(49.2, 16, Math.toRadians(90));//x48.5, y19.7
                 stageMidwayTrussPose = new Pose2d(50.4,-20.6,90);//x48.5, y27.5, 90
                 stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
-                    dropStackPixelPose = new Pose2d(36, -89, Math.toRadians(90));
+                    dropStackPixelPose = new Pose2d(36.1, -88,  Math.toRadians(90));
                     beforeParkAfterDropStackPixelPose = new Pose2d(36,-85, Math.toRadians(90));
                 } else {
                     dropStackPixelPose = new Pose2d(26, -89, Math.toRadians(90));//x16,-89
                     beforeParkAfterDropStackPixelPose = new Pose2d(36,-85, Math.toRadians(90));
                 }
 
-                parkPoseWall = new Pose2d(0, -83, Math.toRadians(90)); //x-1, y-81
+                parkPoseWall = new Pose2d(4, -86, Math.toRadians(90)); //x-1, y-81
                 parkPoseStageDoor = new Pose2d(48.8, -83, Math.toRadians(90));//x46, y-79
                 break;
         }
@@ -411,10 +389,17 @@ public class AutoGBHackerz1 extends LinearOpMode {
 
 
         //For RED_RIGHT & BLUE_LEFT
-        trajDropPurplePixelTodropYellowPixel = drive.actionBuilder(dropPurplePixelPose)
+        trajInitToDropYellowPixel = drive.actionBuilder(initPose)
+                .splineToLinearHeading(dropYellowPixelPose,0)
+                .build();
+
+        trajDropYellowPixelToDropPurplePixel = drive.actionBuilder(dropYellowPixelPose)
+                .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
+                .build();
+
+        trajDropPurplePixelToPark = drive.actionBuilder(dropPurplePixelPose)
                 .setReversed(true)
-                .splineToLinearHeading(dropYellowPixelPose, 0)
-                //.splineTo(dropYellowPixelPose.position, dropYellowPixelPose.heading)
+                .splineToLinearHeading(parkPose, 0)
                 .build();
 
         //For RED_LEFT & BLUE_RIGHT
@@ -425,83 +410,69 @@ public class AutoGBHackerz1 extends LinearOpMode {
 
         if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
             trajInitToDropPurplePixel = drive.actionBuilder(drive.pose)
-                    //.splineTo(dropPurplePixelPose.position,dropPurplePixelPose.heading)
                     .splineToLinearHeading(dropPurplePixelPose,0)
                     .build();
-            //FOR BLUE_RIGHT & RED_LEFT
+            //FOR BLUE_RIGHT & RED_LEFT TODO: FIX BUG
             trajDropPurplePixelToStack = drive.actionBuilder(dropPurplePixelPose)
                     .strafeToLinearHeading(afterPurplePixelPose.position, afterPurplePixelPose.heading)
-                    //.strafeToLinearHeading(midwayStackPose.position, midwayStackPose.heading)
                     .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
                     .build();
             trajStackToDropYellowPixel = drive.actionBuilder(stageDoorStackPose)
                     .setReversed(true)
-                    .strafeTo(stageMidwayTrussPose.position)
                     .strafeTo(stageMidwayBackDropPose.position)
                     .splineToLinearHeading(dropYellowPixelPose, 0)
                     .build();
 
             //FOR BLUE_LEFT & RED_RIGHT
-            trajDropYellowPixelToStack = drive.actionBuilder(dropYellowPixelPose)
-                    .splineTo(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
-                    .strafeTo(stageMidwayTrussPose.position)
-                    //.splineTo(stageDoorStackPose.position, stageDoorStackPose.heading)
-                    //.splineToLinearHeading(stageMidwayBackDropPose, 0)
+            trajDropPurplePixelToStack = drive.actionBuilder(dropPurplePixelPose)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
                     .strafeTo(stageDoorStackPose.position)
-                    //.splineToLinearHeading(stageDoorStackPose, 0)
                     .build();
 
+
             trajStackToDropStackPixel = drive.actionBuilder(stageDoorStackPose)
-                    //.splineTo(stageMidwayBackDropPose.position, stageMidwayBackDropPose.heading)
-                    //.splineTo(dropStackPixelPose.position, dropStackPixelPose.heading)
-                    //.splineToLinearHeading(stageMidwayBackDropPose, 0)
-                    .strafeTo(stageMidwayTrussPose.position)
                     .strafeTo(stageMidwayBackDropPose.position)
                     .setReversed(true)
                     .splineToLinearHeading(dropStackPixelPose, 0)
                     .build();
 
             trajDropStackPixelToStack = drive.actionBuilder(dropStackPixelPose)
-                    //.splineTo(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading)
-                    //.splineTo(stageDoorStackPose.position, stageDoorStackPose.heading)
                     .splineToLinearHeading(stageMidwayBackDropPose,0)
                     .strafeTo(stageDoorStackPose.position)
-                    //.splineToLinearHeading(stageDoorStackPose, 0)
                     .build();
         } else {
             //FOR BLUE_RIGHT & RED_LEFT
             trajInitToDropPurplePixel = drive.actionBuilder(drive.pose)
-                    //.splineTo(dropPurplePixelPose.position,dropPurplePixelPose.heading)
                     .splineToLinearHeading(dropPurplePixelPoseWall,0)
                     .build();
             trajDropPurplePixelToStack = drive.actionBuilder(dropPurplePixelPoseWall)
                     .strafeToLinearHeading(afterPurplePixelPoseWall.position, afterPurplePixelPoseWall.heading)
-                    //.strafeToLinearHeading(midwayStackPose.position, midwayStackPose.heading)
-                    //.strafeToLinearHeading(wallStackPose.position, wallStackPose.heading)
                     .build();
             trajStackToDropYellowPixel = drive.actionBuilder(afterPurplePixelPoseWall)
                     .splineToLinearHeading(wallMidwayStackPose,0)
                     .strafeTo(wallMidwayBackDropPose.position)
                     .splineToLinearHeading(dropYellowPixelPose, 0)
                     .build();
+            trajDropPurplePixelTodropYellowPixel = drive.actionBuilder(dropPurplePixelPoseWall)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPose,0)
+                    .build();
 
             //FOR BLUE_LEFT & RED_RIGHT
             trajDropYellowPixelToStack = drive.actionBuilder(dropYellowPixelPose)
                     .splineToLinearHeading(wallMidwayBackDropPose, 0)
-                    //.splineToLinearHeading(wallMidwayStackPose,0)
                     .strafeTo(wallMidwayStackPose.position)
                     .splineToLinearHeading(wallStackPose, 0)
                     .build();
             trajStackToDropStackPixel = drive.actionBuilder(wallStackPose)
                     .setReversed(true)
                     .splineToLinearHeading(wallMidwayStackPose, 0)
-                    //.splineToLinearHeading(wallMidwayBackDropPose,0)
                     .strafeTo(wallMidwayStackPose.position)
                     .splineToLinearHeading(dropStackPixelPose, 0)
                     .build();
             trajDropStackPixelToStack = drive.actionBuilder(dropStackPixelPose)
                     .splineToLinearHeading(wallMidwayBackDropPose,0)
-                    //.splineToLinearHeading(wallMidwayStackPose,0)
                     .strafeTo(wallMidwayStackPose.position)
                     .splineToLinearHeading(wallStackPose, 0)
                     .build();
@@ -524,46 +495,66 @@ public class AutoGBHackerz1 extends LinearOpMode {
     public void actionForRedRightBlueLeft() {
         Actions.runBlocking(
                 new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        dropPurplePixelUsingIntakeAction(),
                         new ParallelAction(
-                                trajDropPurplePixelTodropYellowPixel,
+                                trajInitToDropYellowPixel,
                                 new SequentialAction(
                                         outtakeController.moveTransferToReadyForTransferAction(),
                                         new SleepAction(0.5),
                                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
-                                )
+                                ),
+                                intakeController.dropLiftIntakeAfterYellowDropAction()
                         ),
                         outtakeController.dropOnePixelAction(),
+                        new SleepAction(0.1),
+                        outtakeController.dropOnePixelAction(),
                         new SleepAction(0.2),
-                        outtakeController.dropOnePixelAction()
+                        trajDropYellowPixelToDropPurplePixel,
+                        intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                        intakeController.dropPurplePixelUsingIntakeAction()
                 )
         );
 
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     new ParallelAction(
-                            trajDropYellowPixelToPark,
+                            new SequentialAction(
+                                    new SleepAction(0.5),
+                                    intakeController.intakeLiftUpAction(),
+                                    trajDropPurplePixelToPark
+                                    ),
                             outtakeController.moveOuttakeToEndStateAction()
                     )
             );
         } else { //FULL AUTO
             Actions.runBlocking(
                     new SequentialAction(
-                            outtakeController.moveDropToReadyforTransferAction(),
-                            trajDropYellowPixelToStack,
-                            intakeAtStackAction(2),
-                            trajStackToDropStackPixel,
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            new SleepAction(0.5),
+                                            intakeController.intakeLiftUpAction()
+                                    ),
+                                    outtakeController.moveDropToReadyforTransferAction()
+                            ),
+                            new ParallelAction(
+                                    trajDropPurplePixelToStack,
+                                    new SequentialAction(
+                                            new SleepAction(1),
+                                            intakeController.dropLiftIntakeAfterYellowDropAction()
+                                    )
+                            ),
+                            intakeController.intakeAtStackTwoPixelsAction(),
+                            new SleepAction(1),
+                            new ParallelAction(
+                                    trajStackToDropStackPixel,
+                                    intakeController.intakeLiftUpAction()
+                            ),
                             outtakeController.moveReadyForTransferToTransferAction(),
                             new SleepAction(0.1),
                             outtakeController.moveTransferToPickupAction(),
                             new SleepAction(0.3),
                             outtakeController.moveTransferToReadyForTransferAction(),
                             outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.25),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.25),
+                            new SleepAction(0.75),
                             outtakeController.dropOnePixelAction(),
                             new SleepAction(0.25),
                             outtakeController.dropOnePixelAction()
@@ -578,7 +569,9 @@ public class AutoGBHackerz1 extends LinearOpMode {
                                                 outtakeController.moveDropToReadyforTransferAction(),
                                                 trajDropStackPixelToStack
                                         ),
-                                        intakeAtStackAction(2)
+                                        intakeController.intakeAtStackTwoPixelsAction(),
+                                        new SleepAction(1),
+                                        intakeController.intakeLiftUpAction()
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -605,29 +598,23 @@ public class AutoGBHackerz1 extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajInitToDropPurplePixel,
-                        dropPurplePixelUsingIntakeAction(),
-                        new ParallelAction(
-                                outtakeController.moveDropToReadyforTransferAction(),
-                                trajDropPurplePixelToStack
-                        ),
-                        intakeAtStackAction(1),
-                        new SleepAction(5),
-                        trajStackToDropYellowPixel,
+                        new SleepAction(0.3),
+                        intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                        intakeController.dropPurplePixelUsingIntakeAction(),
+                        //new ParallelAction(
+                        outtakeController.moveDropToReadyforTransferAction(),
+                        intakeController.intakeLiftUpAction(),
+                        new SleepAction(10),
+                        trajDropPurplePixelTodropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
                         new SleepAction(0.1),
                         outtakeController.moveTransferToPickupAction(),
                         new SleepAction(0.3),
                         outtakeController.moveTransferToReadyForTransferAction(),
                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                        new SleepAction(0.25),
+                        new SleepAction(0.75),
                         outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.25),
+                        new SleepAction(0.15),
                         outtakeController.dropOnePixelAction()
                 )
         );
@@ -647,7 +634,9 @@ public class AutoGBHackerz1 extends LinearOpMode {
                                             outtakeController.moveDropToReadyforTransferAction(),
                                             trajDropYellowPixelToStack
                                     ),
-                                    intakeAtStackAction(2)
+                                    intakeController.intakeAtStackTwoPixelsAction(),
+                                    new SleepAction(1),
+                                    intakeController.intakeLiftUpAction()
                             ),
                             new ParallelAction(
                                     trajStackToDropStackPixel,
@@ -670,7 +659,9 @@ public class AutoGBHackerz1 extends LinearOpMode {
                                                 outtakeController.moveDropToReadyforTransferAction(),
                                                 trajDropStackPixelToStack
                                         ),
-                                        intakeAtStackAction(2)
+                                        intakeController.intakeAtStackTwoPixelsAction(),
+                                        new SleepAction(1),
+                                        intakeController.intakeLiftUpAction()
                                 ),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
@@ -689,126 +680,6 @@ public class AutoGBHackerz1 extends LinearOpMode {
                     outtakeController.moveOuttakeToEndStateAction()
             );
         }
-    }
-
-    public void rotateDriveCorrectly(Pose2d currentPose){
-        double correctionAngle = Math.toDegrees(drive.pose.heading.log()) - Math.toDegrees(currentPose.heading.log());
-        Actions.runBlocking(
-                drive.actionBuilder(currentPose)
-                        .turn(Math.toRadians(correctionAngle))
-                        .build()
-        );
-    }
-
-    public void dropPurplePixelUsingIntake(){
-        //intake.reverseIntakeForPurplePixelDrop();
-        //intake.reverseIntake();
-        safeWaitMilliSeconds(300);//200
-        intake.stopIntake();
-    }
-
-    public Action dropPurplePixelUsingIntakeAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                dropPurplePixelUsingIntake();
-                return false;
-            }
-        };
-    }
-
-
-
-    public int stackCounter = 5;
-
-    public void intakeAtStack(int count){
-        /*
-        intake.moveIntakeRollerToLevel(stackCounter + 1);
-        intake.startIntakeInward();
-        safeWaitMilliSeconds(1200); //1000
-        intake.moveIntakeRollerToLevel(stackCounter--);
-        intake.moveIntakeRollerToLevel(stackCounter--);//new line
-        safeWaitMilliSeconds(1000);//400
-        if (count >= 2) {
-            intake.moveIntakeRollerToLevel(stackCounter--);
-            safeWaitMilliSeconds(400);
-        }
-        intake.reverseIntake();
-        safeWaitMilliSeconds(300);//400
-        intake.stopIntakeMotor();
-        intake.moveIntakeRollerToLevel(7);
-
-         */
-    }
-
-    public Action intakeAtStackAction(int count){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                intakeAtStack(count);
-                return false;
-            }
-        };
-    }
-
-    /*public Action outtakeTravelToReadyForTransfer(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                if (autoOption == AUTO_OPTION.FULL_AUTONOMOUS) {
-                    outtakeController.moveTravelToReadyForTransfer();
-                }
-                return true;
-            }
-        };
-    }
-
-     */
-
-    public Action outtakeReadyForTransferToTransfer(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                if (autoOption == AUTO_OPTION.FULL_AUTONOMOUS) {
-                    outtakeController.moveReadyForTransferToTransfer();
-                }
-                return false;
-            }
-        };
-    }
-
-    public void outtakeTransfertoDropTwoPixels() {
-        outtakeController.moveTransferToPickup();
-        safeWaitMilliSeconds(50);
-        outtakeController.movePickupToTransfer();
-        safeWaitMilliSeconds(50);
-        outtakeController.moveTransferToReadyForTransfer();
-        safeWaitMilliSeconds(500);
-        outtakeController.moveReadyForTransferToDropLevel(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE);
-        safeWaitMilliSeconds(800);
-        outtakeArm.autoDropOnePixel();
-        safeWaitMilliSeconds(600); //300
-        outtakeArm.autoDropOnePixel();
-        safeWaitMilliSeconds(500);
-    }
-    public Action outtakeTransfertoDropPixel(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                outtakeTransfertoDropTwoPixels();
-                return false;
-            }
-        };
     }
 
     //Method to select starting position using X, Y, A, B buttons on gamepad
@@ -858,7 +729,7 @@ public class AutoGBHackerz1 extends LinearOpMode {
                 telemetry.addLine("Select Auto Options");
                 telemetry.addData("    Drop Preload and Park       ", "(X / ▢)");
                 telemetry.addData("    Full autonomous (1 cycle)   ", "(Y / Δ)");
-                //telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
+                telemetry.addData("    Full autonomous (2 cycle)   ","(B / O)");
 
                 if (gamepadController.gp1GetSquarePress()) {
                     autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
@@ -869,11 +740,11 @@ public class AutoGBHackerz1 extends LinearOpMode {
                     pixelLoopCount = 1;
                     break;
                 }
-            /*if(gamepadController.gp1GetCirclePress()){
-                autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
-                pixelLoopCount = 2;
-                break;
-            }*/
+                if(gamepadController.gp1GetCirclePress()){
+                    autoOption = AUTO_OPTION.FULL_AUTONOMOUS;
+                    pixelLoopCount = 2;
+                    break;
+                }
                 telemetry.update();
             }
         }
@@ -970,6 +841,10 @@ public class AutoGBHackerz1 extends LinearOpMode {
         telemetry.addLine("Outtake Controller Initialized");
         telemetry.update();
 
+        intakeController = new IntakeController(this.intake, this);
+        telemetry.addLine("Intake Controller Initialized");
+        telemetry.update();
+
         /* Create Controllers */
         gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
                 outtakeSlides, outtakeArm, climber, launcher, visionSensor, lights, telemetry, this);
@@ -983,10 +858,8 @@ public class AutoGBHackerz1 extends LinearOpMode {
         /* Get last position after Autonomous mode ended from static class set in Autonomous */
         if ( GameField.poseSetInAutonomous) {
             driveTrain.pose = GameField.currentPose;
-            //driveTrain.getLocalizer().setPoseEstimate(GameField.currentPose);
         } else {
             driveTrain.pose = startPose;
-            //driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
         //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
@@ -1013,15 +886,10 @@ public class AutoGBHackerz1 extends LinearOpMode {
             telemetry.addLine("Running Hazmat Autonomous Mode");
             telemetry.addData("Game Timer : ", gameTimer.time());
             telemetry.addData("PoseEstimateString :", toStringPose2d(drive.pose));
-            //telemetry.addData("GameField.poseSetInAutonomous : ", GameField.poseSetInAutonomous);
-            //telemetry.addData("GameField.currentPose : ", GameField.currentPose);
-            //telemetry.addData("startPose : ", startPose);
 
             driveTrain.printDebugMessages();
             lights.printDebugMessages();
         }
         telemetry.update();
     }
-
-
 }   // end class
