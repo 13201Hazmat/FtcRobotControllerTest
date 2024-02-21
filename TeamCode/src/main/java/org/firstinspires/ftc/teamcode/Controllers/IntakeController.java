@@ -58,7 +58,7 @@ public class IntakeController {
     public void dropPurplePixelUsingIntake(){
         reverseIntakeForPurplePixelDrop();
         //intake.reverseIntake();
-        safeWaitMilliSeconds(500);//200
+        safeWaitMilliSeconds(200);//200
         intake.stopHorizIntakeReverse();
     }
 
@@ -83,7 +83,7 @@ public class IntakeController {
         safeWaitMilliSeconds(2600);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
-        safeWaitMilliSeconds(500);
+        safeWaitMilliSeconds(700);
         intake.stopHorizIntakeInward();
         safeWaitMilliSeconds(200);
         intake.stopIntake();

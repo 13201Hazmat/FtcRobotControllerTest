@@ -395,6 +395,7 @@ public class GamepadController {
     }
 
     public void runLights(){
+        /*
         if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID ||
@@ -403,27 +404,32 @@ public class GamepadController {
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST) {
             visionSensor.senseBackdrop();
-            if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.RED) {
-                lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
-            } else if (visionSensor.backdropDistanceState == VisionSensor.BACKDROP_DISTANCE_STATE.AMBER) {
-                lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_AMBER);
+            switch (visionSensor.backdropDistanceState) {
+                case RED:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_RED);
+                    break;
+                case AMBER:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.BACK_DROP_AMBER);
+                    break;
+                case NOT_SENSED:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+                    break;
             }
         } else {
-
-            if (magazine.magazineState == Magazine.MAGAZINE_STATE.EMPTY) {
-                lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+            switch(magazine.magazineState){
+                case EMPTY:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+                    break;
+                case LOADED_ONE_PIXEL:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
+                    break;
+                case LOADED_TWO_PIXEL:
+                    lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
+                    break;
             }
-
-            if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
-                lights.setPattern(Lights.REV_BLINKIN_PATTERN.TWO_IN_MAGAZINE);
-            }
-
-            if (magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_ONE_PIXEL) {
-                lights.setPattern(Lights.REV_BLINKIN_PATTERN.ONE_IN_MAGAZINE);
-            }
-
         }
 
+         */
     }
 
 

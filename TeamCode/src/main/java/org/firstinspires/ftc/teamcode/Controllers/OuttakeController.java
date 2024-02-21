@@ -70,7 +70,7 @@ public class OuttakeController {
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.READY_FOR_TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.READY_FOR_TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.READY_FOR_TRANSFER);
-        safeWaitMilliSeconds(500);//200
+        safeWaitMilliSeconds(200);//200
     }
 
     public Action moveTransferToReadyForTransferAction(){
@@ -113,7 +113,7 @@ public class OuttakeController {
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
-        safeWaitMilliSeconds(400);//200
+        safeWaitMilliSeconds(100);//400
     }
 
     public Action moveReadyForTransferToTransferAction(){
@@ -208,6 +208,7 @@ public class OuttakeController {
 
     public void dropOnePixel() {
         outtakeArm.dropOnePixel();
+        //safeWaitMilliSeconds(700);
     }
 
     public Action dropOnePixelAction(){

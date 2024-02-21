@@ -58,8 +58,8 @@ public class VisionSensor {
         backdropDistanceSensorLeft = hardwareMap.get(DistanceSensor.class, "back_distance_left");
         backdropDistanceSensorRight = hardwareMap.get(DistanceSensor.class, "back_distance_right");
 
-        huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        /*huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);*/
 
     }
 
@@ -69,18 +69,18 @@ public class VisionSensor {
         backdropDistanceRightDistance = backdropDistanceSensorRight.getDistance(DistanceUnit.MM);
 
         if (senseAprilTag()) {
-            if (backdropDistanceLeftDistance < DISTANCE_SENSOR_THRESHOLD_AMBER) {
-                backdropDistanceLeftState = BACKDROP_DISTANCE_SENSOR_STATE.AMBER;
-            } else if (backdropDistanceLeftDistance < DISTANCE_SENSOR_THRESHOLD_RED) {
+            if (backdropDistanceLeftDistance < DISTANCE_SENSOR_THRESHOLD_RED) {
                 backdropDistanceLeftState = BACKDROP_DISTANCE_SENSOR_STATE.RED;
+            } else if (backdropDistanceLeftDistance < DISTANCE_SENSOR_THRESHOLD_AMBER) {
+                backdropDistanceLeftState = BACKDROP_DISTANCE_SENSOR_STATE.AMBER;
             } else {
                 backdropDistanceLeftState = BACKDROP_DISTANCE_SENSOR_STATE.NOT_SENSED;
             }
 
-            if (backdropDistanceRightDistance < DISTANCE_SENSOR_THRESHOLD_AMBER) {
-                backdropDistanceRightState = BACKDROP_DISTANCE_SENSOR_STATE.AMBER;
-            } else if (backdropDistanceRightDistance < DISTANCE_SENSOR_THRESHOLD_RED) {
+            if (backdropDistanceRightDistance < DISTANCE_SENSOR_THRESHOLD_RED) {
                 backdropDistanceRightState = BACKDROP_DISTANCE_SENSOR_STATE.RED;
+            } else if (backdropDistanceRightDistance < DISTANCE_SENSOR_THRESHOLD_AMBER) {
+                backdropDistanceRightState = BACKDROP_DISTANCE_SENSOR_STATE.AMBER;
             } else {
                 backdropDistanceRightState = BACKDROP_DISTANCE_SENSOR_STATE.NOT_SENSED;
             }
@@ -110,13 +110,14 @@ public class VisionSensor {
     public boolean senseAprilTag(){
         backdropAprilTagDetected = true;
 
-        HuskyLens.Block[] blocks = huskyLens.blocks();
+        /*HuskyLens.Block[] blocks = huskyLens.blocks();
         detectedAprilTagCount = blocks.length;
-        if (detectedAprilTagCount > 0)
+        if (detectedAprilTagCount > 0) {
             backdropAprilTagDetected = true;
+            } else {
+            backdropAprilTagDetected = false;
+        }
 
-
-        backdropAprilTagDetected = false;
         for (int i = 0; i < detectedAprilTagCount; i++) {
             for (int j = 0; (j < backdropAprilTags.length & !backdropAprilTagDetected); j++) {
                 if (blocks[i].toString().equals(backdropAprilTags[j])) {
@@ -124,7 +125,7 @@ public class VisionSensor {
                     detectedAprilTag = backdropAprilTags[j];
                 }
             }
-        }
+        }*/
 
         return backdropAprilTagDetected;
     }
@@ -136,6 +137,7 @@ public class VisionSensor {
         telemetry.addData("    backdropDistanceState", backdropDistanceState);
         telemetry.addData("    backdrop Left Distance", backdropDistanceLeftDistance);
         telemetry.addData("    backdrop Right Distance", backdropDistanceRightDistance);
+        telemetry.addData("    backdropAprilTagDetected", backdropAprilTagDetected);
         telemetry.addData("    HuskyLens detected AprilTag Count", detectedAprilTagCount);
         //telemetry.addData("    HuskyLens detected AprilTag", detectedAprilTag.toString());
         telemetry.addLine("=============");
