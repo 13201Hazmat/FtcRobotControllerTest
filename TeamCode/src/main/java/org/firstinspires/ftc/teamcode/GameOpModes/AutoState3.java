@@ -520,7 +520,7 @@ public class AutoState3 extends LinearOpMode {
                         .splineToLinearHeading(dropPurplePixelPoseRight, 0)
                         .build();
 
-                //FOR BLUE_RIGHT & RED_LEFT TODO: FIX BUG
+                //FOR BLUE_RIGHT & RED_LEFT
                 trajDropPurplePixelToStackLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
                         .strafeToLinearHeading(afterPurplePixelPoseLeft.position, afterPurplePixelPoseLeft.heading)
                         .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
@@ -661,17 +661,13 @@ public class AutoState3 extends LinearOpMode {
                                 trajInitToDropYellowPixel,
                                 new SequentialAction(
                                         outtakeController.moveTransferToReadyForTransferAction(),
-                                        //new SleepAction(0.3),
-                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                                        intakeController.dropLiftIntakeAfterYellowDropAction()
+                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
                                 )
                         ),
-                        outtakeController.dropOnePixelAction(),
-                        //new SleepAction(0.1),
-                        /*
-                        outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.2),
-                         */
+                        new ParallelAction(
+                                intakeController.dropLiftIntakeAfterYellowDropAction(),
+                                outtakeController.dropOnePixelAction()
+                        ),
                         trajDropYellowPixelToDropPurplePixel,
                         intakeController.dropPurplePixelUsingIntakeAction()
                 )
@@ -680,11 +676,8 @@ public class AutoState3 extends LinearOpMode {
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     new ParallelAction(
-                            new SequentialAction(
-                                    //new SleepAction(0.2),
-                                    intakeController.intakeLiftUpAction(),
-                                    trajDropPurplePixelToPark
-                            ),
+                            intakeController.intakeLiftUpAction(),
+                            trajDropPurplePixelToPark,
                             outtakeController.moveOuttakeToEndStateAction()
                     )
             );
@@ -692,10 +685,7 @@ public class AutoState3 extends LinearOpMode {
             Actions.runBlocking(
                     new SequentialAction(
                             new ParallelAction(
-                                    new SequentialAction(
-                                            //new SleepAction(0.2),
-                                            intakeController.intakeLiftUpAction()
-                                    ),
+                                    intakeController.intakeLiftUpAction(),
                                     outtakeController.moveDropToReadyforTransferAction()
                             ),
                             new ParallelAction(
@@ -768,24 +758,26 @@ public class AutoState3 extends LinearOpMode {
     public void runActionForRedLeftBlueRight(){
         Actions.runBlocking(
                 new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        new SleepAction(0.3),
-                        intakeController.squishPurplePixelInStartOfAutoForDropAction(),//TODO: WHY HERE
+                        new ParallelAction(
+                            trajInitToDropPurplePixel,
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction()
+                        ),
                         intakeController.dropPurplePixelUsingIntakeAction(),
-                        //new ParallelAction(
-                        outtakeController.moveDropToReadyforTransferAction(),//TODO: WHY
-                        intakeController.intakeLiftUpAction(),
-                        new SleepAction(10),//TODO: WHY
-                        trajDropPurplePixelToDropYellowPixel, //TODO: SHOULD PICK ONE FROM STACK
+                        //TODO: PICK UP FROM STACK
+                        new ParallelAction(
+                            outtakeController.moveDropToReadyforTransferAction(),
+                            intakeController.intakeLiftUpAction(),
+                            trajDropPurplePixelToDropYellowPixel
+                        ),
                         outtakeController.moveReadyForTransferToTransferAction(),
-                        new SleepAction(0.1), //TODO: WHY
+                        //new SleepAction(0.1), //TODO: WHY
                         outtakeController.moveTransferToPickupAction(),
-                        new SleepAction(0.3), //TODO: WHY
+                        //new SleepAction(0.3), //TODO: WHY
                         outtakeController.moveTransferToReadyForTransferAction(),
                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                        new SleepAction(0.75), //TODO: WHY
+                        //new SleepAction(0.75), //TODO: WHY
                         outtakeController.dropOnePixelAction(),
-                        new SleepAction(0.15), //TODO: WHY
+                        //new SleepAction(0.15), //TODO: WHY
                         outtakeController.dropOnePixelAction()
                 )
         );
@@ -806,7 +798,7 @@ public class AutoState3 extends LinearOpMode {
                                             trajDropYellowPixelToStack
                                     ),
                                     intakeController.intakeAtStackTwoPixelsAction(),
-                                    new SleepAction(1), //TODO: WHY
+                                    //new SleepAction(1), //TODO: WHY
                                     intakeController.intakeLiftUpAction()
                             ),
                             new ParallelAction(
@@ -831,7 +823,7 @@ public class AutoState3 extends LinearOpMode {
                                                 trajDropStackPixelToStack
                                         ),
                                         intakeController.intakeAtStackTwoPixelsAction(),
-                                        new SleepAction(1), //TODO: WHY
+                                        //new SleepAction(1), //TODO: WHY
                                         intakeController.intakeLiftUpAction()
                                 ),
                                 new ParallelAction(
@@ -1012,7 +1004,7 @@ public class AutoState3 extends LinearOpMode {
         telemetry.addLine("Outtake Controller Initialized");
         telemetry.update();
 
-        intakeController = new IntakeController(this.intake, this);
+        intakeController = new IntakeController(this.intake, this.magazine,this);
         telemetry.addLine("Intake Controller Initialized");
         telemetry.update();
 

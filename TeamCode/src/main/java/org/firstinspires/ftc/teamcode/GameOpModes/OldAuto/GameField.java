@@ -37,7 +37,7 @@ public class GameField {
         MINIMUM,
         MAXIMUM
     }
-    public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.MAXIMUM;
+    public static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.NONE;
 
     public enum OP_MODE_RUNNING {
         HAZMAT_TELEOP,

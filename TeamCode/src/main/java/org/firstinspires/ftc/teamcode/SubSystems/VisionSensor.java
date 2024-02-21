@@ -47,8 +47,8 @@ public class VisionSensor {
     public String detectedAprilTag = "";
     public int detectedAprilTagCount = 0;
 
-    public double DISTANCE_SENSOR_THRESHOLD_AMBER = 150; //mm
-    public double DISTANCE_SENSOR_THRESHOLD_RED = 75; //mm
+    public double DISTANCE_SENSOR_THRESHOLD_AMBER = 60; //mm
+    public double DISTANCE_SENSOR_THRESHOLD_RED = 30; //mm
 
     public double backdropDistanceLeftDistance = 0;
     public double backdropDistanceRightDistance = 0;

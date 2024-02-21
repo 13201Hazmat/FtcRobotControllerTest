@@ -105,7 +105,7 @@ public class GamepadController {
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
         outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, currentOpMode);
-        intakeController = new IntakeController(this.intake, currentOpMode);
+        intakeController = new IntakeController(this.intake, this.magazine, currentOpMode);
     }
 
     /**
@@ -194,7 +194,7 @@ public class GamepadController {
             magazineTwoPixelReverserActivated = true;
         }
 
-        if (magazineTwoPixelReverserActivated && magazineSecondPixelTimer.time() > 500) {
+        if (magazineTwoPixelReverserActivated && magazineSecondPixelTimer.time() > 800) {
             intake.stopIntake();
             magazineTwoPixelReverserActivated = false;
         }
@@ -287,8 +287,8 @@ public class GamepadController {
                                     outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_MID) ||
                                     outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_HIGH) ||
                                     outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LEVEL_HIGH) ||
-                                    outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST)
-                                    ) {
+                                    outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.DROP_HIGHEST) ||
+                                    outtakeArm.isOuttakeArmInState(OuttakeArm.OUTTAKE_ARM_STATE.BOOSTED)) {
                                 outtakeArm.dropOnePixel();
                             }
                         }
@@ -346,6 +346,12 @@ public class GamepadController {
             }
         }
 
+        if (gp2GetDpad_leftPress()) {
+            outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.BOOSTED);
+            safeWaitMilliSeconds(100);
+            outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.BOOSTED);
+        }
+
         if(gp2GetLeftStickY()>0.15|| gp2GetLeftStickY()<-0.15) {
             outtakeSlides.modifyOuttakeSlidesLengthContinuous(gp2TurboMode(-gp2GetLeftStickY()));
         }
@@ -395,7 +401,7 @@ public class GamepadController {
     }
 
     public void runLights(){
-        /*
+
         if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_BELOW_MID ||
@@ -429,7 +435,7 @@ public class GamepadController {
             }
         }
 
-         */
+
     }
 
 

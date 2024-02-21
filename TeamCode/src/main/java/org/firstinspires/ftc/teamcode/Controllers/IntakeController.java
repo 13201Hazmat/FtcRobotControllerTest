@@ -9,14 +9,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 
 public class IntakeController {
     public Intake intake;
+    public Magazine magazine;
     LinearOpMode currentOpMode;
 
 
-    public IntakeController(Intake intake, LinearOpMode currentOpMode){
+    public IntakeController(Intake intake, Magazine magazine, LinearOpMode currentOpMode){
         this.intake = intake;
+        this.magazine = magazine;
         this.currentOpMode = currentOpMode;
     }
 
@@ -80,7 +83,8 @@ public class IntakeController {
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
-        safeWaitMilliSeconds(2600);
+        //magazine.senseMagazineState();
+        safeWaitMilliSeconds(1300);//2600
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
         safeWaitMilliSeconds(700);
@@ -95,7 +99,7 @@ public class IntakeController {
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
-        safeWaitMilliSeconds(1300);
+        safeWaitMilliSeconds(650);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
         safeWaitMilliSeconds(250);

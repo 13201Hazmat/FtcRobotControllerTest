@@ -841,7 +841,7 @@ public class AutoState1 extends LinearOpMode {
         telemetry.addLine("Outtake Controller Initialized");
         telemetry.update();
 
-        intakeController = new IntakeController(this.intake, this);
+        intakeController = new IntakeController(this.intake, this.magazine, this);
         telemetry.addLine("Intake Controller Initialized");
         telemetry.update();
 
