@@ -156,7 +156,7 @@ public class Intake {
     }
     public void runHorizIntakeRotation(){
         if(stackIntakeActivated){
-            if(horizIntakeTimer.time() > 850){ //1300
+            if(horizIntakeTimer.time() > 700){ //1300
                 stopHorizIntakeInward();
             }
         }

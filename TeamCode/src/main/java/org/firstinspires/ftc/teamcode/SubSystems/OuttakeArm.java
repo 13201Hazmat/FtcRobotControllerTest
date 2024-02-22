@@ -48,8 +48,8 @@ public class OuttakeArm {
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRANSFER(0.025),//0.02
-        PICKUP(0.045), //0.04
+        TRANSFER(0.023),//0.025
+        PICKUP(0.043), //0.045
         READY_FOR_TRANSFER(0.0),//0.0
         DROP_LOWEST(0.86),
         DROP_LOW_LINE(0.86),
@@ -133,7 +133,7 @@ public class OuttakeArm {
     public void dropOnePixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <100) { //70
+        while (pixelDropTimer.time() <100) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();

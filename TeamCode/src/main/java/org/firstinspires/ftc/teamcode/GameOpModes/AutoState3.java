@@ -235,25 +235,25 @@ public class AutoState3 extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(34, 15.7, Math.toRadians(-90)); //x22.2, 3.3, 25
                 dropPurplePixelPoseWallLeft = new Pose2d(22.7, 3.0, Math.toRadians(25));
-                dropYellowPixelPoseLeft = new Pose2d(23.5, 33.5, Math.toRadians(-90));//x16.7, y32.5
+                dropYellowPixelPoseLeft = new Pose2d(23.5, 32.7, Math.toRadians(-90));//x16.7, y32.5
                 beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(18.7, 30, Math.toRadians(-90));
 
                 dropPurplePixelPoseMiddle = new Pose2d(38.3, 9, Math.toRadians(-90)); //x28, y-1.6, 10.7
                 dropPurplePixelPoseWallMiddle = new Pose2d(28, -1.6, Math.toRadians(10.7));
-                dropYellowPixelPoseMiddle = new Pose2d(27.5, 33.5, Math.toRadians(-90));//x25, y35
+                dropYellowPixelPoseMiddle = new Pose2d(27.5, 32.7, Math.toRadians(-90));//x25, y35
                 beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(25, 30, Math.toRadians(-90));
 
                 dropPurplePixelPoseRight = new Pose2d(27.8, -4.5, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
                 dropPurplePixelPoseWallRight = new Pose2d(21.5, -8, Math.toRadians(-50));
-                dropYellowPixelPoseRight = new Pose2d(35, 33.5, Math.toRadians(-90)); //y=33.5, x35
+                dropYellowPixelPoseRight = new Pose2d(37.5, 32.7, Math.toRadians(-90)); //y=33.5, x35
                 beforeParkAfterDropYellowPixelPoseRight = new Pose2d(33.5, 30, Math.toRadians(-90));
 
                 wallStackPose = new Pose2d(13, -56, Math.toRadians(-90)); //-60
                 wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
                 wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(55, -76, Math.toRadians(-90));//x51, y-73.8, -90
+                stageDoorStackPose = new Pose2d(52.5, -76, Math.toRadians(-90));//x51, y-73.8, -90
                 stageMidwayTrussPose = new Pose2d(50, -29, Math.toRadians(-90));//x53
-                stageMidwayBackDropPose = new Pose2d(54, 18, Math.toRadians(-90)); //x53
+                stageMidwayBackDropPose = new Pose2d(55, 18, Math.toRadians(-90)); //x53
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
@@ -273,7 +273,7 @@ public class AutoState3 extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(25.5, 1.6, Math.toRadians(90));//x20.5, y8,51
                 dropPurplePixelPoseWallLeft = new Pose2d(21.2, 9.5, Math.toRadians(49));
-                dropYellowPixelPoseLeft = new Pose2d(33.8, -35, Math.toRadians(90)); //x=34.5,y=-35.5
+                dropYellowPixelPoseLeft = new Pose2d(34.5, -35, Math.toRadians(90)); //x=34.5,y=-35.5
                 beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(33, -30, Math.toRadians(90));
 
                 dropPurplePixelPoseMiddle = new Pose2d(36, -13, Math.toRadians(90));//x27.6, y0, 13
@@ -290,10 +290,10 @@ public class AutoState3 extends LinearOpMode {
                 wallStackPose = new Pose2d(13, 69, Math.toRadians(90));//73
                 wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
                 wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(44.9, 71.5, Math.toRadians(90));//x55.2, y72.2, 90
+                stageDoorStackPose = new Pose2d(48, 71.5, Math.toRadians(90));//x55.2, y72.2, 90
                 //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
-                stageMidwayTrussPose = new Pose2d(52,27.5,Math.toRadians(90));
-                stageMidwayBackDropPose = new Pose2d(53, -21, Math.toRadians(90));//x47
+                stageMidwayTrussPose = new Pose2d(49,27.5,Math.toRadians(90));
+                stageMidwayBackDropPose = new Pose2d(55, -21, Math.toRadians(90));//x47
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
@@ -301,11 +301,11 @@ public class AutoState3 extends LinearOpMode {
                     beforeParkAfterDropStackPixelPose = new Pose2d(37, -32, Math.toRadians(90));
                 } else {
                     dropStackPixelPose = new Pose2d(30, -35, Math.toRadians(90));//x20, -34.5
-                    beforeParkAfterDropStackPixelPose = new Pose2d(21, -32, Math.toRadians(90));
+                    beforeParkAfterDropStackPixelPose = new Pose2d(28, -30, Math.toRadians(90));
                 }
 
                 parkPoseWall = new Pose2d(3, -28, Math.toRadians(90));
-                parkPoseStageDoor = new Pose2d(49, -28, Math.toRadians(90));
+                parkPoseStageDoor = new Pose2d(52, -28, Math.toRadians(90));
                 break;
 
             case BLUE_RIGHT:
@@ -464,6 +464,11 @@ public class AutoState3 extends LinearOpMode {
                         .splineToLinearHeading(stageMidwayBackDropPose, 0)
                         .strafeTo(stageDoorStackPose.position)
                         .build();
+                //TODO: VERIFY
+                        trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
+                        .strafeToLinearHeading(beforeParkAfterDropStackPixelPose.position, beforeParkAfterDropStackPixelPose.heading)
+                        .strafeToLinearHeading(parkPose.position, parkPose.heading)
+                        .build();
             } else {
                 trajDropYellowPixelToStackLeft = drive.actionBuilder(dropYellowPixelPoseLeft)
                         .splineToLinearHeading(wallMidwayBackDropPose, 0)
@@ -603,13 +608,9 @@ public class AutoState3 extends LinearOpMode {
                         .strafeTo(wallMidwayBackDropPose.position)
                         .splineToLinearHeading(dropYellowPixelPoseRight, 0)
                         .build();
+
             }
 
-            //TODO: VERIFY
-            trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
-                    .strafeToLinearHeading(beforeParkAfterDropStackPixelPose.position, beforeParkAfterDropStackPixelPose.heading)
-                    .strafeToLinearHeading(parkPose.position, parkPose.heading)
-                    .build();
 
 
         }
@@ -666,6 +667,7 @@ public class AutoState3 extends LinearOpMode {
                         ),
                         new ParallelAction(
                                 intakeController.dropLiftIntakeAfterYellowDropAction(),
+                                new SleepAction(0.1),
                                 outtakeController.dropOnePixelAction()
                         ),
                         trajDropYellowPixelToDropPurplePixel,
@@ -718,7 +720,11 @@ public class AutoState3 extends LinearOpMode {
                             outtakeController.dropOnePixelAction(),
                             //new SleepAction(0.25),
                             outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.3)
+                            new SleepAction(0.3),
+                            new SequentialAction(
+
+                                    trajDropStackPixelToPark
+                            )
                     )
             );
 
