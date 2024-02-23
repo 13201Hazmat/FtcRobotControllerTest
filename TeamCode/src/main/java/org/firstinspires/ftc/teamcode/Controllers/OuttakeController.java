@@ -219,7 +219,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 outtakeArm.dropOnePixel();
-                safeWaitMilliSeconds(500);
+
                 return false;
             }
         };
