@@ -110,7 +110,7 @@ public class OuttakeController {
 
     public void moveReadyForTransferToTransfer(){
         outtakeArm.openGrip();
-        safeWaitMilliSeconds(150);
+        //safeWaitMilliSeconds(150);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
