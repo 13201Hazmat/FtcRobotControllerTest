@@ -17,7 +17,7 @@ public class OuttakeArm {
         ZERO(0.94,0.06),
         TRANSFER(0.97,0.03), //0.95,0.05
         PICKUP(0.97,0.03), //0.95,0.05
-        READY_FOR_TRANSFER(0.79,0.21),//0.80, 0.20
+        READY_FOR_TRANSFER(0.78,0.22),//0.79, 0.21
         DROP_LOWEST(0.22,0.78),//0.20, 0.80
         DROP_LOW_LINE(0.22,0.78),//0.22, 0.78
         DROP_BELOW_MID(0.22,0.78),//0.23, 0.77

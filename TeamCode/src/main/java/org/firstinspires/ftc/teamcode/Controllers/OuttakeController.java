@@ -25,11 +25,11 @@ public class OuttakeController {
 
     public void moveTransferToPickup(){
         outtakeArm.closeGrip();
-        safeWaitMilliSeconds(50);
+        safeWaitMilliSeconds(100);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.PICKUP);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.PICKUP);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.PICKUP);
-        safeWaitMilliSeconds(100);
+        safeWaitMilliSeconds(150);
     }
 
     public Action moveTransferToPickupAction(){
@@ -110,10 +110,11 @@ public class OuttakeController {
 
     public void moveReadyForTransferToTransfer(){
         outtakeArm.openGrip();
+        safeWaitMilliSeconds(150);
         outtakeSlides.moveOuttakeSlides(OuttakeSlides.OUTTAKE_SLIDE_STATE.TRANSFER);
         outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.TRANSFER);
         outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.TRANSFER);
-        safeWaitMilliSeconds(100);//400
+        safeWaitMilliSeconds(150);//400
     }
 
     public Action moveReadyForTransferToTransferAction(){
@@ -218,7 +219,7 @@ public class OuttakeController {
             @Override
             public boolean run(TelemetryPacket packet){
                 outtakeArm.dropOnePixel();
-                //safeWaitMilliSeconds(500);
+                safeWaitMilliSeconds(500);
                 return false;
             }
         };

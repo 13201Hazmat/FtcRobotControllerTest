@@ -84,12 +84,12 @@ public class IntakeController {
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
         //magazine.senseMagazineState();
-        safeWaitMilliSeconds(1300);//2600
+        safeWaitMilliSeconds(1500);//2600
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
-        safeWaitMilliSeconds(700);
+        safeWaitMilliSeconds(500); //700
         intake.stopHorizIntakeInward();
-        safeWaitMilliSeconds(200);
+        safeWaitMilliSeconds(100);
         intake.stopIntake();
     }
 
