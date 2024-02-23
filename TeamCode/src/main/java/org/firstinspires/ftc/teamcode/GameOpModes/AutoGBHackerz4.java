@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode.GameOpModes;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -322,10 +321,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(53, 7, Math.toRadians(-90)); //x44, y5, 0
                         break;
                 }
-                afterPurplePixelPoseWall = new Pose2d(3.2,0,Math.toRadians(-90)); //x15, y5, -90degrees
+                afterPurplePixelPoseWall = new Pose2d(3,0,Math.toRadians(-90)); //x15, y5, -90degrees
                 wallStackPose = new Pose2d(27, -14, Math.toRadians(-90)); //x26,-18
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
-                wallMidwayBackDropPose = new Pose2d(11.7, 72, Math.toRadians(-90));
+                wallMidwayBackDropPose = new Pose2d(3.5, 72, Math.toRadians(-90));
                 stageDoorStackPose = new Pose2d(52, -15, Math.toRadians(-90));//x53, y-19
                 stageMidwayTrussPose = new Pose2d(54, 26.8, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(54, 71, Math.toRadians(-90)); //x52, y73
@@ -371,10 +370,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                 }
-                afterPurplePixelPoseWall = new Pose2d(3.75,3.1,Math.toRadians(90));//x18,y4,-30
+                afterPurplePixelPoseWall = new Pose2d(3,3.1,Math.toRadians(90));//x18,y4,-30
                 wallStackPose = new Pose2d(24.6, 15.5, Math.toRadians(90)); //x22, x19.6, 90
                 wallMidwayStackPose = new Pose2d(2, 0, Math.toRadians(90));//x2, y-5
-                wallMidwayBackDropPose = new Pose2d(10, -66, Math.toRadians(90));//x2, y-73
+                wallMidwayBackDropPose = new Pose2d(3.5, -66, Math.toRadians(90));//x2, y-73
                 stageDoorStackPose = new Pose2d(49.2, 16, Math.toRadians(90));//x48.5, y19.7
                 stageMidwayTrussPose = new Pose2d(50.4,-20.6,90);//x48.5, y27.5, 90
                 stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
@@ -534,7 +533,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                                         new SleepAction(0.3),
                                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
                                 ),
-                                intakeController.dropLiftIntakeAfterYellowDropAction()
+                                intakeController.dropLiftIntake()
                         ),
                         outtakeController.dropOnePixelAction(),
                         new SleepAction(0.1),
@@ -573,7 +572,7 @@ public class AutoGBHackerz4 extends LinearOpMode {
                                     trajDropPurplePixelToStack,
                                     new SequentialAction(
                                             new SleepAction(0.3),
-                                            intakeController.dropLiftIntakeAfterYellowDropAction()
+                                            intakeController.dropLiftIntake()
                                     )
                             ),
                             intakeController.intakeAtStackTwoPixelsAction(),
@@ -638,22 +637,16 @@ public class AutoGBHackerz4 extends LinearOpMode {
     public void actionForRedLeftBlueRight(){
         Actions.runBlocking(
                 new SequentialAction(
-                        trajInitToDropPurplePixel,
-                        new SleepAction(0.3),
-                        intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                        new ParallelAction(
+                                trajInitToDropPurplePixel,
+                                intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                                intakeController.dropLiftIntake()
+                        ),
+                        new SleepAction(0.5),
                         intakeController.dropPurplePixelUsingIntakeAction(),
-                        //new ParallelAction(
                         outtakeController.moveDropToReadyforTransferAction(),
                         intakeController.intakeLiftUpAction(),
-                                //trajDropPurplePixelToStack
-                        //),
-                        /*
-                        intakeController.intakeAtStackOnePixelAction(),
-                        new SleepAction(1),
-                        intakeController.intakeLiftUpAction(),
-                        trajStackToDropYellowPixel,
-                         */
-                        new SleepAction(10),
+                        new SleepAction(8.5),
                         trajDropPurplePixelTodropYellowPixel,
                         outtakeController.moveReadyForTransferToTransferAction(),
                         new SleepAction(0.1),

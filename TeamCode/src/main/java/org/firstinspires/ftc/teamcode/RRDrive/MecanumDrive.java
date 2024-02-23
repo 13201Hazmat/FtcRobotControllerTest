@@ -94,7 +94,7 @@ public class MecanumDrive {
 
         // turn profile parameters (in radians)
         public double maxAngVel = 5.235987755; //300 degrees //Math.PI; // shared with path 300
-        public double maxAngAccel = 5.235987755; //Math.PI;
+        public double maxAngAccel = 5.235987755; //300 degrees //Math.PI;
 
         // path controller gains
         //TODO Step 13 Set value of Gains after running ManualFeedbackTuner//
@@ -102,10 +102,12 @@ public class MecanumDrive {
         public double lateralGain = 8.0;//0.0; 6.0 //new 9
         public double headingGain = 19.0;//0.0 shared with turn, 12.0, //new 18.0
 
+
         public double axialVelGain = 0.0311031876027098649434; //generateSMARTDerivativeTerm.(axialGain, false);//0.0
         public double lateralVelGain = 0.025382117189185784; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
         public double headingVelGain = 0.0359262730664; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
         //TODO End Step 13
+
     }
 
     public static Params PARAMS = new Params();
@@ -274,6 +276,10 @@ public class MecanumDrive {
         //Uncomment next line if using Three Dead Wheel Localizer and also check ThreeDeadWheelLocalizer.java for Step 3.1
         localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
         //End Step 3
+
+        PARAMS.axialVelGain = generateSMARTDerivativeTerm(PARAMS.axialGain, false);
+        PARAMS.lateralVelGain = generateSMARTDerivativeTerm(PARAMS.lateralGain, false);
+        PARAMS.headingVelGain = generateSMARTDerivativeTerm(PARAMS.headingGain, true);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
@@ -529,6 +535,29 @@ public class MecanumDrive {
                 defaultVelConstraint, defaultAccelConstraint,
                 0.25, 0.1
         );
+    }
+
+    //Hazmat added Generate damp function
+    public static double generateSMARTDerivativeTerm(double kP, boolean rotation) {
+
+        double kV = PARAMS.kV;
+        double kA = PARAMS.kA;
+
+
+        if (rotation) {
+            kV /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
+            kA /= PARAMS.trackWidthTicks * PARAMS.inPerTick;
+        }
+
+        // anything below this will result in a non minimum phase system.
+        // non-minimum phase means the system will hesitate, similar to that of a turning bicycle or a pitching aircraft.
+        // while it would technically be faster, I have not yet proved it's stability so I will leave it out for now.
+        double criticalKp = (kV * kV) / (4 * kA);
+        if (criticalKp >= kP) {
+            return 0;
+        }
+        // the critically damped PID derivative gain.
+        return 2 * Math.sqrt(kA * kP) - kV;
     }
 
 }

@@ -42,6 +42,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,6 +66,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
  * Hazmat Autonomous
  */
 @Autonomous(name = "HazmatAuto State 2", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
 public class AutoState2 extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -664,7 +666,7 @@ public class AutoState2 extends LinearOpMode {
                                         //new SleepAction(0.3),
                                         outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
                                 ),
-                                intakeController.dropLiftIntakeAfterYellowDropAction()
+                                intakeController.dropLiftIntake()
                         ),
                         outtakeController.dropOnePixelAction(),
                         //new SleepAction(0.1),
@@ -702,7 +704,7 @@ public class AutoState2 extends LinearOpMode {
                                     trajDropPurplePixelToStack,
                                    // new SequentialAction(
                                             new SleepAction(0.25),
-                                            intakeController.dropLiftIntakeAfterYellowDropAction()
+                                            intakeController.dropLiftIntake()
                                    // )
                             ),
                             intakeController.intakeAtStackTwoPixelsAction(),

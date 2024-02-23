@@ -28,7 +28,7 @@ public class IntakeController {
         intake.moveIntakeLiftDown();
     }
 
-    public Action dropLiftIntakeAfterYellowDropAction(){
+    public Action dropLiftIntake(){
         return new Action(){
             @Override
             public void preview(Canvas canvas){}

@@ -273,7 +273,7 @@ public class AutoState3 extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(25.5, 0.7, Math.toRadians(90));//x20.5, y8,51
                 dropPurplePixelPoseWallLeft = new Pose2d(21.2, 9.5, Math.toRadians(49));
-                dropYellowPixelPoseLeft = new Pose2d(32, -36.2, Math.toRadians(90)); //x=34.5,y=-35.5
+                dropYellowPixelPoseLeft = new Pose2d(33, -36.2, Math.toRadians(90)); //x=34.5,y=-35.5
                 beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(33, -30, Math.toRadians(90));
 
                 dropPurplePixelPoseMiddle = new Pose2d(35, -13, Math.toRadians(90));//x27.6, y0, 13
@@ -293,7 +293,7 @@ public class AutoState3 extends LinearOpMode {
                 stageDoorStackPose = new Pose2d(46.5, 70, Math.toRadians(90));//x55.2, y72.2, 90
                 //stageMidwayStackPose = new Pose2d(52, 56, Math.toRadians(90));//x47
                 stageMidwayTrussPose = new Pose2d(49,27.5,Math.toRadians(90));
-                stageMidwayBackDropPose = new Pose2d(47, -17, Math.toRadians(90));//x47
+                stageMidwayBackDropPose = new Pose2d(47, -17, Math.toRadians(95));//x47
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
                 if (pathwayOption == PATHWAY_OPTION.RIGGING_WALL) {
@@ -666,17 +666,13 @@ public class AutoState3 extends LinearOpMode {
                         new ParallelAction(
                                 intakeController.squishPurplePixelInStartOfAutoForDropAction(),
                                 trajInitToDropYellowPixel,
-                                new SequentialAction(
-                                        outtakeController.moveTransferToReadyForTransferAction(),
-                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
-                                )
+                                outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
                         ),
+                        outtakeController.dropOnePixelAction(),
                         new ParallelAction(
-                                intakeController.dropLiftIntakeAfterYellowDropAction(),
-                                new SleepAction(0.1),
-                                outtakeController.dropOnePixelAction()
+                                trajDropYellowPixelToDropPurplePixel,
+                                intakeController.dropLiftIntake()
                         ),
-                        trajDropYellowPixelToDropPurplePixel,
                         intakeController.dropPurplePixelUsingIntakeAction()
                 )
         );
@@ -699,35 +695,27 @@ public class AutoState3 extends LinearOpMode {
                             new ParallelAction(
                                     trajDropPurplePixelToStack,
                                     new SequentialAction(
-                                            new SleepAction(0.2),
-                                            intakeController.dropLiftIntakeAfterYellowDropAction()
+                                            new SleepAction(1.5),
+                                            intakeController.dropLiftIntake()
                                     )
                             ),
                             intakeController.intakeAtStackTwoPixelsAction(),
-                            //new SleepAction(0.1),
                             new ParallelAction(
                                     trajStackToDropStackPixel,
+                                    intakeController.intakeLiftUpAction(),
                                     new SequentialAction(
-                                            intakeController.intakeLiftUpAction(),
                                             outtakeController.moveReadyForTransferToTransferAction(),
-                                           // new SleepAction(0.1),
                                             outtakeController.moveTransferToPickupAction(),
-                                            //new SleepAction(0.2),
-                                            //outtakeController.moveTransferToReadyForTransferAction()
                                             outtakeController.movePickupToReadyForTransferAction()
+                                    ),
+                                    new ParallelAction(
+                                            new SleepAction(2.5),
+                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE)
                                     )
                             ),
-                            /*
-                            outtakeController.moveTransferToPickupAction(),
-                            new SleepAction(0.2),
-                            outtakeController.moveTransferToReadyForTransferAction(),
-                             */
                             new SequentialAction(
-                                    outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE),
-                                    new SleepAction(0.3),
                                     outtakeController.dropOnePixelAction(),
                                     new SleepAction(0.2),
-                                    //new SleepAction(0.25),
                                     outtakeController.dropOnePixelAction(),
                                     new SleepAction(0.1)
                             )
@@ -737,47 +725,33 @@ public class AutoState3 extends LinearOpMode {
             if(pixelLoopCount == 2) {
                 Actions.runBlocking(
                         new SequentialAction(
+                                outtakeController.moveDropToReadyforTransferAction(),
                                 new ParallelAction(
                                         trajDropStackPixelToStack,
-                                        outtakeController.moveDropToReadyforTransferAction()
-                                        ),
-
-                                //new SleepAction(0.2),
-                                intakeController.dropLiftIntakeAfterYellowDropAction(),
-
-                                new SleepAction(0.15),
-
-                                intakeController.intakeAtStackTwoPixelsAction(),
-                                new ParallelAction(
-                                        intakeController.intakeLiftUpAction(),
-                                        trajStackToDropStackPixel
+                                        new SequentialAction(
+                                                new SleepAction(1.5),
+                                                intakeController.dropLiftIntake()
+                                        )
                                 ),
-                                outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID),
-                                new SleepAction(0.2),
-                                outtakeController.dropOnePixelAction(),
-                                new SleepAction(0.1),
-                                outtakeController.dropOnePixelAction(),
-                                new SleepAction(0.2)
-                                /*
+                                intakeController.intakeAtStackTwoPixelsAction(),
                                 new ParallelAction(
                                         trajStackToDropStackPixel,
                                         new SequentialAction(
                                                 intakeController.intakeLiftUpAction(),
                                                 outtakeController.moveReadyForTransferToTransferAction(),
                                                 outtakeController.moveTransferToPickupAction(),
-                                                //new SleepAction(0.2),
-                                                //outtakeController.moveTransferToReadyForTransferAction()
                                                 outtakeController.movePickupToReadyForTransferAction()
                                         )
                                 ),
-                                outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID),
-                                new SleepAction(0.2),
-                                outtakeController.dropOnePixelAction(),
                                 new SleepAction(0.1),
-                                outtakeController.dropOnePixelAction(),
-                                new SleepAction(0.2)
-
-                                 */
+                                new SequentialAction(
+                                        outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE),
+                                        new SleepAction(0.3),
+                                        outtakeController.dropOnePixelAction(),
+                                        new SleepAction(0.2),
+                                        outtakeController.dropOnePixelAction(),
+                                        new SleepAction(0.1)
+                                )
                         )
                 );
             }
@@ -877,27 +851,27 @@ public class AutoState3 extends LinearOpMode {
 
             if(pixelLoopCount == 2) {
                 Actions.runBlocking(
-                        new SequentialAction(
-                                new SequentialAction(
-                                        new ParallelAction(
-                                                outtakeController.moveDropToReadyforTransferAction(),
-                                                trajDropStackPixelToStack
-                                        ),
-                                        intakeController.intakeAtStackTwoPixelsAction(),
-                                        //new SleepAction(1), //TODO: WHY
-                                        intakeController.intakeLiftUpAction()
-                                ),
-                                new ParallelAction(
-                                        trajStackToDropStackPixel,
-                                        new SequentialAction(
-                                                outtakeController.moveReadyForTransferToTransferAction(),
-                                                outtakeController.moveTransferToReadyForTransferAction()
-                                        )
-                                ),
-                                outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID),
-                                outtakeController.dropOnePixelAction(),
-                                outtakeController.dropOnePixelAction()
-                        )
+                    new SequentialAction(
+                            new SequentialAction(
+                                    new ParallelAction(
+                                            outtakeController.moveDropToReadyforTransferAction(),
+                                            trajDropStackPixelToStack
+                                    ),
+                                    intakeController.intakeAtStackTwoPixelsAction(),
+                                    //new SleepAction(1), //TODO: WHY
+                                    intakeController.intakeLiftUpAction()
+                            ),
+                            new ParallelAction(
+                                    trajStackToDropStackPixel,
+                                    new SequentialAction(
+                                            outtakeController.moveReadyForTransferToTransferAction(),
+                                            outtakeController.moveTransferToReadyForTransferAction()
+                                    )
+                            ),
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_BELOW_MID),
+                            outtakeController.dropOnePixelAction(),
+                            outtakeController.dropOnePixelAction()
+                    )
                 );
             }
             Actions.runBlocking(
