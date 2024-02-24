@@ -77,6 +77,27 @@ public class IntakeController {
         };
     }
 
+    public void dropPurplePixelUsingIntakeWithWait(double waitTimeSeconds){
+        safeWaitMilliSeconds(waitTimeSeconds*1000);
+        reverseIntakeForPurplePixelDrop();
+        //intake.reverseIntake();
+        safeWaitMilliSeconds(200);//200
+        intake.stopHorizIntakeReverse();
+    }
+
+    public Action dropPurplePixelUsingIntakeWithWaitAction(double waitTimeSeconds){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                dropPurplePixelUsingIntakeWithWait(waitTimeSeconds);
+                return false;
+            }
+        };
+    }
+
+
     public void intakeAtStackTwoPixels(){
         intake.moveIntakeLiftDown();
         intake.startIntakeInward();

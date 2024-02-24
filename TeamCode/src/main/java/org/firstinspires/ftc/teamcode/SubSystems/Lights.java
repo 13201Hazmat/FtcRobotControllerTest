@@ -31,7 +31,7 @@ public class Lights {
         DEMO(RevBlinkinLedDriver.BlinkinPattern.CP2_BREATH_SLOW),
         NONE(RevBlinkinLedDriver.BlinkinPattern.BLACK),
         BACK_DROP_RED(RevBlinkinLedDriver.BlinkinPattern.RED),
-        BACK_DROP_AMBER(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE),
+        BACK_DROP_AMBER(RevBlinkinLedDriver.BlinkinPattern.GREEN),
         ONE_IN_MAGAZINE(RevBlinkinLedDriver.BlinkinPattern.YELLOW),
         TWO_IN_MAGAZINE(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN),
         END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE),

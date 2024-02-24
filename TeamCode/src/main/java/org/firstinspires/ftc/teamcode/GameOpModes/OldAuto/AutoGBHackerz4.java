@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
@@ -321,10 +321,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(53, 7, Math.toRadians(-90)); //x44, y5, 0
                         break;
                 }
-                afterPurplePixelPoseWall = new Pose2d(3,0,Math.toRadians(-90)); //x15, y5, -90degrees
+                afterPurplePixelPoseWall = new Pose2d(3.5,0,Math.toRadians(-90)); //x15, y5, -90degrees
                 wallStackPose = new Pose2d(27, -14, Math.toRadians(-90)); //x26,-18
                 wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
-                wallMidwayBackDropPose = new Pose2d(3.5, 72, Math.toRadians(-90));
+                wallMidwayBackDropPose = new Pose2d(4, 72, Math.toRadians(-90));
                 stageDoorStackPose = new Pose2d(52, -15, Math.toRadians(-90));//x53, y-19
                 stageMidwayTrussPose = new Pose2d(54, 26.8, Math.toRadians(-90));
                 stageMidwayBackDropPose = new Pose2d(54, 71, Math.toRadians(-90)); //x52, y73
@@ -370,10 +370,10 @@ public class AutoGBHackerz4 extends LinearOpMode {
                         //stageMidwayStackPose = new Pose2d(49, 9, Math.toRadians(90));
                         break;
                 }
-                afterPurplePixelPoseWall = new Pose2d(3,3.1,Math.toRadians(90));//x18,y4,-30
+                afterPurplePixelPoseWall = new Pose2d(3.5,3.1,Math.toRadians(90));//x18,y4,-30
                 wallStackPose = new Pose2d(24.6, 15.5, Math.toRadians(90)); //x22, x19.6, 90
                 wallMidwayStackPose = new Pose2d(2, 0, Math.toRadians(90));//x2, y-5
-                wallMidwayBackDropPose = new Pose2d(3.5, -66, Math.toRadians(90));//x2, y-73
+                wallMidwayBackDropPose = new Pose2d(3.7, -66, Math.toRadians(90));//x2, y-73
                 stageDoorStackPose = new Pose2d(49.2, 16, Math.toRadians(90));//x48.5, y19.7
                 stageMidwayTrussPose = new Pose2d(50.4,-20.6,90);//x48.5, y27.5, 90
                 stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
