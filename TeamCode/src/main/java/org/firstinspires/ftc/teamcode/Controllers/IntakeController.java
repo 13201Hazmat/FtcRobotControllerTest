@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -114,13 +115,25 @@ public class IntakeController {
         intake.stopIntake();
     }
 
+    public Action intakeAtStackTwoPixelsAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                intakeAtStackTwoPixels();
+                return false;
+            }
+        };
+    }
+
     public void intakeAtStackOnePixel(){
         intake.moveIntakeLiftDown();
         intake.startIntakeInward();
         safeWaitMilliSeconds(150);
         //safeWaitMilliSeconds(150);
         intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
-        safeWaitMilliSeconds(650);
+        safeWaitMilliSeconds(1000);
         intake.reverseIntake();
         intake.reverseIntakeHoriz();
         safeWaitMilliSeconds(250);
@@ -128,6 +141,73 @@ public class IntakeController {
         safeWaitMilliSeconds(200);
         intake.stopIntake();
     }
+
+    public Action intakeAtStackOnePixelAction(){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                intakeAtStackOnePixel();
+                return false;
+            }
+        };
+    }
+
+    public void intakeAtStackUsingMagazineSensor( double magazineTimeOutSeconds){
+        ElapsedTime stackIntakeMagazineTimeOut = new ElapsedTime(SECONDS);
+        intake.moveIntakeLiftDown();
+        intake.startIntakeInward();
+        safeWaitMilliSeconds(150);
+        //safeWaitMilliSeconds(150);
+        intake.startIntakeHorizToCollect(); //TODO: RUN BASED ON MAGAZINE
+        stackIntakeMagazineTimeOut.reset();
+        while (stackIntakeMagazineTimeOut.time()<magazineTimeOutSeconds &&
+                magazine.magazineState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            magazine.senseMagazineState();
+        }
+        intake.reverseIntake();
+        intake.reverseIntakeHoriz();
+        safeWaitMilliSeconds(250);
+        intake.stopHorizIntakeInward();
+        safeWaitMilliSeconds(200);
+        intake.stopIntake();
+    }
+
+    public Action intakeAtStackUsingMagazineSensorAction(double magazineTimeOutSeconds){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+                intakeAtStackUsingMagazineSensor(magazineTimeOutSeconds);
+                return false;
+            }
+        };
+    }
+
+    public void intakeReverse( double timeSeconds){
+        ElapsedTime timer = new ElapsedTime(SECONDS);
+        intake.reverseIntake();
+        safeWaitMilliSeconds(timeSeconds*1000);
+        intake.stopHorizIntakeInward();
+        safeWaitMilliSeconds(200);
+        intake.stopIntake();
+    }
+
+    public Action intakeReverseAction(double timeSeconds){
+        return new Action(){
+            @Override
+            public void preview(Canvas canvas){}
+            @Override
+            public boolean run(TelemetryPacket packet){
+               intakeReverse(timeSeconds);
+                return false;
+            }
+        };
+    }
+
+
 
     public void intakeLiftUp(){
         intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
@@ -145,29 +225,6 @@ public class IntakeController {
         };
     }
 
-    public Action intakeAtStackOnePixelAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                intakeAtStackOnePixel();
-                return false;
-            }
-        };
-    }
-
-    public Action intakeAtStackTwoPixelsAction(){
-        return new Action(){
-            @Override
-            public void preview(Canvas canvas){}
-            @Override
-            public boolean run(TelemetryPacket packet){
-                intakeAtStackTwoPixels();
-                return false;
-            }
-        };
-    }
 
     public void reverseIntakeForPurplePixelDrop() {
         if(intake.intakeMotorState != Intake.INTAKE_MOTOR_STATE.REVERSING) {

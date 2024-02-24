@@ -63,28 +63,15 @@ public class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT; //Change to UP / DOWN / LEFT / RIGHT / FORWARD / BACKWARD
         //End Step 2
 
+        /*OLD TUNING
         // drive model parameters
-        //TODO Step 5 Set value of inPerTick after running ForwardPushTest
-        //TODO Step 14 Make value of inPerTick accurate after running LocalizationTest
         public double inPerTick = 0.0005367477415473052; //1
-
-        //TODO Step 6 (Only for DriveEncoder Localizer) Set value of lateralInPerTick after running LateralPushTest
-        //TODO Step 8 (Only for DeadWheel Localizer) Set value of lateralInPerTick after running LateralRampLogger
-        //TODO Step 14 Make value of lateralInPerTick accurate after running LocalizationTest
         public double lateralInPerTick = 0.0003156705817550493; //inPerTick
-
-        //TODO Step 10 (Only for DriveEncoder Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        //TODO Step 11 (Only for DeadWheel Localizer) Set value of trackWidthTicks after running AngularRampLogger
-        //      Go to Step 11.1 in Three or Two DeadWheelLocalizer and updated  values of par0YTicks, part1YTicks, perpXTicks
         public double trackWidthTicks =  25989.030374812366;//23527, 25989.030374812366;
 
         // feedforward parameters (in tick units)
-        //TODO Step 7 (Only for DeadWheel Localizer) Set value for kS and KV after running ForwardRampLogger
-        //TODO Step 9 (Only for DriveEncoder Localizer) Set value for kS and kV after running AngularRampLogger
         public double kS = 2.217018252042081;//0
         public double kV = 0.00007372693352992634;//0
-        //TODO Step 12 Set value of kA after running ManualFeedforwardTuner.
-        //   In this emperical process update value in increments of 0.0001 for drive encoders and 0.00001 for dead-wheel encoders
         public double kA = 0.000027;//0
 
         // path profile parameters (in inches)
@@ -97,7 +84,6 @@ public class MecanumDrive {
         public double maxAngAccel = 5.235987755; //300 degrees //Math.PI;
 
         // path controller gains
-        //TODO Step 13 Set value of Gains after running ManualFeedbackTuner//
         public double axialGain = 9.0;//0.0; 9.0 //new 12
         public double lateralGain = 8.0;//0.0; 6.0 //new 9
         public double headingGain = 19.0;//0.0 shared with turn, 12.0, //new 18.0
@@ -106,7 +92,36 @@ public class MecanumDrive {
         public double axialVelGain = 0.0311031876027098649434; //generateSMARTDerivativeTerm.(axialGain, false);//0.0
         public double lateralVelGain = 0.025382117189185784; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
         public double headingVelGain = 0.0359262730664; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
-        //TODO End Step 13
+        */
+
+        //NEW TUNING
+        // drive model parameters
+        public double inPerTick = 0.00053836221724814;//1; //223827
+        public double lateralInPerTick =  0.00032024825882889097; //0.0002907694083017339; //inPerTick;
+        public double trackWidthTicks =  25483.02991354662; //1;
+
+        // feedforward parameters (in tick units)
+        public double kS = 1.8060166782731075;//0;
+        public double kV = 0.00008029109327091949;//0;
+        public double kA = 0.000027;//0;
+
+        // path profile parameters (in inches)
+        public double maxWheelVel = 60;//50;//before: 50, new 60
+        public double minProfileAccel = -40;//-30;//-50; //-30
+        public double maxProfileAccel = 60;//50;//73; //50
+
+        // turn profile parameters (in radians)
+        public double maxAngVel = 5.235987755; //300 degrees //Math.PI; // shared with path 300
+        public double maxAngAccel = 5.235987755; //300 degrees //Math.PI;
+
+        // path controller gains
+        public double axialGain = 13.0;
+        public double lateralGain = 9.0;
+        public double headingGain = 8.0;
+
+        public double axialVelGain = 0; //generateSMARTDerivativeTerm.(axialGain, false);//0.0
+        public double lateralVelGain = 0; //0.027490041684727597; //generateSMARTDerivativeTerm(lateralGain, false); //0.0
+        public double headingVelGain = 0; //generateSMARTDerivativeTerm(headingGain, false); // shared with turn
 
     }
 

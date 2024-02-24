@@ -56,8 +56,8 @@ public class OuttakeArm {
         DROP_BELOW_MID(0.85),
         DROP_LEVEL_MID(0.85),
         DROP_BELOW_HIGH(0.85),
-        DROP_LEVEL_HIGH(0.85),
-        DROP_HIGHEST(0.85),
+        DROP_LEVEL_HIGH(0.84), //0.85
+        DROP_HIGHEST(0.84), //0.85
         BOOSTED(0.84);
 
         private double wristPosition;
@@ -134,6 +134,18 @@ public class OuttakeArm {
         openGrip();
         pixelDropTimer.reset();
         while (pixelDropTimer.time() <150) { //100
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        closeGrip();
+        while (pixelDropTimer.time() <250) { //200
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+    }
+
+    public void autoDropOnePixel(){
+        openGrip();
+        pixelDropTimer.reset();
+        while (pixelDropTimer.time() <300) { //100
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();

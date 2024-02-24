@@ -13,17 +13,6 @@ public class Magazine {
     public NormalizedColorSensor magazineSensorTop;
     public boolean magazineSensorActivated = true;
 
-    public enum MAGAZINE_DOOR_STATE {
-        CLOSED(1.0),
-        OPEN(0.0);
-
-        private double magazinePosition;
-
-        MAGAZINE_DOOR_STATE(double magazinePosition){ this.magazinePosition = magazinePosition; }
-        public double getMagazinePosition(){ return magazinePosition; }
-    }
-    public MAGAZINE_DOOR_STATE magazineDoorState = MAGAZINE_DOOR_STATE.CLOSED;
-
     public Telemetry telemetry;
 
     public enum MAGAZINE_STATE {

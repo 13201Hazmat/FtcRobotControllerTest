@@ -207,8 +207,8 @@ public class OuttakeController {
         };
     }
 
-    public void dropOnePixel() {
-        outtakeArm.dropOnePixel();
+    public void autoDropOnePixel() {
+        outtakeArm.autoDropOnePixel();
         //safeWaitMilliSeconds(700);
     }
 
@@ -218,8 +218,7 @@ public class OuttakeController {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                outtakeArm.dropOnePixel();
-
+                autoDropOnePixel();
                 return false;
             }
         };

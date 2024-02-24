@@ -18,10 +18,17 @@ import org.firstinspires.ftc.teamcode.RRDrive.messages.ThreeDeadWheelInputsMessa
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
+        /*
         //CALIBRATION DONE FOR FROZEN FRENZY
         public double par0YTicks = -11104.751832973534;//0.0; // y position of the first parallel encoder (in tick units)
         public double par1YTicks = 11609.987219893983;//1.0; // y position of the second parallel encoder (in tick units)
         public double perpXTicks = -11075.135345140312;//0.0; // x position of the perpendicular encoder (in tick units)
+         */
+
+        //NEW CALIBRATION
+        public double par0YTicks =  -12357.513773602073;//0.0; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = 11149.455761001085;//1.0; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks = -12182.365461080271;//0.0; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
