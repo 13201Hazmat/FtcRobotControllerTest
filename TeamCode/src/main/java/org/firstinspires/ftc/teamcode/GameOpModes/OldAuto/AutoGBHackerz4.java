@@ -42,6 +42,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,6 +66,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
  * Hazmat Autonomous
  */
 @Autonomous(name = "HazmatAutonomous Mode GBHACKERZ4", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
 public class AutoGBHackerz4 extends LinearOpMode {
 
     public GamepadController gamepadController;

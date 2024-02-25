@@ -142,7 +142,7 @@ public class OuttakeArm {
         };
     }
 
-    public void autoDropOnePixel(){
+    public void autoDropYellowPixel(){
         openGrip();
         pixelDropTimer.reset();
         while (pixelDropTimer.time() <300) { //100
@@ -150,6 +150,27 @@ public class OuttakeArm {
         };
         closeGrip();
         while (pixelDropTimer.time() <250) { //200
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+    }
+
+    public void autoDropTwoPixel(){
+        openGrip();
+        pixelDropTimer.reset();
+        while (pixelDropTimer.time() <150) { //100
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        closeGrip();
+        while (pixelDropTimer.time() <450) { //200
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        openGrip();
+        pixelDropTimer.reset();
+        while (pixelDropTimer.time() <150) { //100
+            //gamepadcontroller.runbyGamepadcontroller
+        };
+        closeGrip();
+        while (pixelDropTimer.time() <450) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
     }

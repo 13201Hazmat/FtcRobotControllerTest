@@ -166,12 +166,12 @@ public class IntakeController {
                 magazine.magazineState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
             magazine.senseMagazineState();
         }
-        intake.reverseIntake();
+        /*intake.reverseIntake();
         intake.reverseIntakeHoriz();
         safeWaitMilliSeconds(250);
         intake.stopHorizIntakeInward();
         safeWaitMilliSeconds(200);
-        intake.stopIntake();
+        intake.stopIntake();*/
     }
 
     public Action intakeAtStackUsingMagazineSensorAction(double magazineTimeOutSeconds){
@@ -201,7 +201,7 @@ public class IntakeController {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-               intakeReverse(timeSeconds);
+                intakeReverse(timeSeconds);
                 return false;
             }
         };
