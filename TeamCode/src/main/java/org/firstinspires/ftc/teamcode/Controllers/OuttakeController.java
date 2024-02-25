@@ -207,23 +207,13 @@ public class OuttakeController {
         };
     }
 
-    public void autoDropYellowPixel() {
-        outtakeArm.autoDropYellowPixel();
-        //safeWaitMilliSeconds(700);
-    }
-
-    public void autoDropTwoPixel() {
-        outtakeArm.autoDropTwoPixel();
-        //safeWaitMilliSeconds(700);
-    }
-
     public Action dropOnePixelAction(){
         return new Action(){
             @Override
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                autoDropYellowPixel();
+                outtakeArm.autoDropYellowPixel();
                 return false;
             }
         };
@@ -235,7 +225,7 @@ public class OuttakeController {
             public void preview(Canvas canvas){}
             @Override
             public boolean run(TelemetryPacket packet){
-                autoDropTwoPixel();
+                outtakeArm.autoDropTwoPixel();
                 return false;
             }
         };
