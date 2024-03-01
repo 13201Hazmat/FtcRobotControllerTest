@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
@@ -44,6 +44,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,6 +68,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
  * Hazmat Autonomous
  */
 @Autonomous(name = "RedRight_BlueLeft 3", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
 public class Auto_RedRight_BlueLeft3 extends LinearOpMode {
 
     public GamepadController gamepadController;
@@ -698,7 +700,7 @@ public class Auto_RedRight_BlueLeft3 extends LinearOpMode {
             telemetry.addLine("Select Auto Options");
             telemetry.addData("    Yellow, Purple and Park     ", "(X / ▢)");
             telemetry.addData("    1 cycle                     ", "(Y / Δ)");
-            telemetry.addData("    2 cycle (only Stage Door)   ", "(B / O)");
+            //telemetry.addData("    2 cycle (only Stage Door)   ", "(B / O)");
 
             if (gamepadController.gp1GetSquarePress()) {
                 autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
@@ -708,12 +710,12 @@ public class Auto_RedRight_BlueLeft3 extends LinearOpMode {
                 autoOption = AUTO_OPTION.ONE_CYCLE;
                 break;
             }
-            if (gamepadController.gp1GetCirclePress()) {
+            /*if (gamepadController.gp1GetCirclePress()) {
                 autoOption = AUTO_OPTION.TWO_CYCLE;
                 pathwayOption = PATHWAY_OPTION.STAGEDOOR;
                 parkingOption = PARKING_OPTION.STAGEDOOR;
                 break;
-            }
+            }*/
             telemetry.update();
         }
 
@@ -827,6 +829,7 @@ public class Auto_RedRight_BlueLeft3 extends LinearOpMode {
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
         telemetry.addLine("Lights Initialized");
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
         telemetry.update();
 
         outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, this);

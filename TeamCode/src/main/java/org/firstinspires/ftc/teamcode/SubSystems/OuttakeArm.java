@@ -17,7 +17,8 @@ public class OuttakeArm {
         ZERO(0.94,0.06),
         TRANSFER(0.97,0.03), //0.95,0.05
         PICKUP(0.97,0.03), //0.95,0.05
-        READY_FOR_TRANSFER(0.78,0.22),//0.79, 0.21
+        READY_FOR_TRANSFER(0.77,0.27),//0.76, 0.28
+        DROP_LOWEST_AUTO(0.22,0.78),
         DROP_LOWEST(0.22,0.78),//0.20, 0.80
         DROP_LOW_LINE(0.22,0.78),//0.22, 0.78
         DROP_BELOW_MID(0.22,0.78),//0.23, 0.77
@@ -41,24 +42,24 @@ public class OuttakeArm {
             return rightArmPosition;
         }
     }
-
     public OUTTAKE_ARM_STATE outtakeArmState = OUTTAKE_ARM_STATE.TRANSFER;
 
 
     //Hand - wrist, grip state declaration
     public enum OUTTAKE_WRIST_STATE {
         ZERO(0),
-        TRANSFER(0.023),//0.025
-        PICKUP(0.043), //0.045
-        READY_FOR_TRANSFER(0.0),//0.0
-        DROP_LOWEST(0.85), //0.86 for all drops
-        DROP_LOW_LINE(0.85),
-        DROP_BELOW_MID(0.85),
-        DROP_LEVEL_MID(0.85),
-        DROP_BELOW_HIGH(0.85),
-        DROP_LEVEL_HIGH(0.84), //0.85
-        DROP_HIGHEST(0.84), //0.85
-        BOOSTED(0.84);
+        TRANSFER(0.108),//0.023 //.028
+        PICKUP(0.123), //0.045 //.043
+        READY_FOR_TRANSFER(0.08),//0.0
+        DROP_LOWEST_AUTO(0.91),//0.92
+        DROP_LOWEST(0.93), //0.85 for all drops
+        DROP_LOW_LINE(0.93),
+        DROP_BELOW_MID(0.92),
+        DROP_LEVEL_MID(0.92),
+        DROP_BELOW_HIGH(0.93),//0.92
+        DROP_LEVEL_HIGH(0.93), //0.92
+        DROP_HIGHEST(0.93), //0.92
+        BOOSTED(0.92);
 
         private double wristPosition;
 
@@ -70,6 +71,8 @@ public class OuttakeArm {
         }
     }
     public OUTTAKE_WRIST_STATE outtakeWristState = OUTTAKE_WRIST_STATE.TRANSFER;
+
+    public double outtakeWristOffset = 0;
 
     //Initialization of GRIP_STATE
     public enum OUTTAKE_GRIP_STATE { //state of the Hand Grip
@@ -176,7 +179,7 @@ public class OuttakeArm {
     }
 
     public void moveWrist(OUTTAKE_WRIST_STATE toWristState){
-        outtakeWristServo.setPosition(toWristState.wristPosition);
+        outtakeWristServo.setPosition(toWristState.wristPosition + outtakeWristOffset);
         outtakeWristState = toWristState;
     }
 

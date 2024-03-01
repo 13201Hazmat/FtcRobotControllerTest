@@ -103,10 +103,10 @@ public class TestIntakeMagazine extends LinearOpMode {
 
                 if (!gamepadController.gp1GetStart()) {
                     if (gamepadController.gp1GetLeftBumperPress()) {
-                        intake.toggleStackIntake();
+                       // intake.toggleStackIntake();
                     }
                 } else {
-                    intake.moveRollerHeight(Intake.INTAKE_ROLLER_HEIGHT.LIFTED);
+                    intake.moveRollerHeight(Intake.STACK_INTAKE_LIFT_STATE.LIFTED);
                 }
 
                 if(gamepadController.gp1GetCrossPress()) {

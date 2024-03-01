@@ -144,11 +144,11 @@ public class GamepadController {
             intakeOnLiftStartFlag = false;
         }
 
-        if (gp1GetLeftBumperPress() && intake.intakeRollerHeightState == Intake.INTAKE_ROLLER_HEIGHT.DROPPED) {
-            intake.startIntakeHorizToCollect();
+        if (gp1GetLeftBumperPress() && intake.stackIntakeLiftState == Intake.STACK_INTAKE_LIFT_STATE.DROPPED) {
+            intake.startStackIntakeToCollect();
             intakeOnLiftStartFlag = true;
         }
-        intake.runHorizIntakeRotation();
+        intake.runStackIntakeOneRotation();
 
         if (gp1GetTrianglePersistent()) {
             intake.reverseIntake();
@@ -161,9 +161,9 @@ public class GamepadController {
         }
 
         if(gp1GetSquarePress()){
-            intake.reverseIntakeHoriz();
+            intake.reverseStackIntake();
         }
-        intake.runReverseIntakeHorizRotation();
+        intake.runReverseStackIntakeOneRotation();
 
         magazine.senseMagazineState();
 
@@ -346,6 +346,11 @@ public class GamepadController {
             }
         }
 
+        if (gp2GetStart() && gp2GetLeftTriggerPress()) {
+            outtakeArm.outtakeWristOffset = outtakeArm.outtakeWristServo.getPosition()
+                                - outtakeArm.outtakeWristState.getWristPosition();
+        }
+
         if (gp2GetDpad_leftPress()) {
             outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.BOOSTED);
             safeWaitMilliSeconds(100);
@@ -362,17 +367,34 @@ public class GamepadController {
     }
 
     public void runClimber(){
-        if (gp2GetRightTriggerPersistent()) {
+        /*if (gp2GetRightTriggerPersistent()) {
             intake.moveIntakeLiftClimber();
             climber.climberActivated = true;
             if(climber.climberMotorState != Climber.CLIMBER_MOTOR_STATE.CLIMBED) {
                 climber.moveClimberServoToUnlocked();
             }
-            climber.modifyClimberLengthContinuous(-0.6);
-        } else {
+            climber.modifyClimberLengthContinuous(-0.6); //TODO: WHAT IS THIS
+        } else { //TODO: WHAT IS THIS
             if (climber.climberActivated && !climber.climbingStarted){
                 climber.modifyClimberLengthContinuous(0);
             }
+        }*/
+
+        if (!gp2GetStart()) {
+            if (gp2GetRightTriggerPress()) {
+                intake.moveIntakeLiftClimbed();
+                climber.climberActivated = true;
+                if (climber.climberServoState != Climber.CLIMBER_SERVO_STATE.RELEASED) {
+                    climber.moveClimberServoToUnlocked();
+                }
+            }
+        } else {
+            if (gp2GetRightTriggerPress()) {
+                if (climber.climberServoState != Climber.CLIMBER_SERVO_STATE.LOCKED) {
+                    climber.initClimberServo();
+                }
+            }
+
         }
 
         if (climber.climberActivated) {
@@ -401,6 +423,9 @@ public class GamepadController {
     }
 
     public void runLights(){
+        if (gp2GetStart() && gp2GetDpad_rightPress()) {
+            visionSensor.senseBackDropActivated = !visionSensor.senseBackDropActivated;
+        }
 
         if (outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOWEST ||
                 outtakeArm.outtakeArmState == OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_LINE ||
@@ -434,8 +459,6 @@ public class GamepadController {
                     break;
             }
         }
-
-
     }
 
 

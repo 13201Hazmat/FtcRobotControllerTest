@@ -1,0 +1,1080 @@
+/* Copyright (c) 2019 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package org.firstinspires.ftc.teamcode.GameOpModes;
+
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
+import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
+import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.SubSystems.Climber;
+import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
+import org.firstinspires.ftc.teamcode.SubSystems.Launcher;
+import org.firstinspires.ftc.teamcode.SubSystems.Lights;
+import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
+import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionOpenCV;
+import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
+
+/**
+ * Hazmat Autonomous
+ */
+@Autonomous(name = "RedLeft_BlueRight Loop", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+public class Auto_RedLeft_BlueRight3_Loop extends LinearOpMode {
+
+    public GamepadController gamepadController;
+    public DriveTrain driveTrain;
+    public Intake intake;
+    public Magazine magazine;
+    public OuttakeSlides outtakeSlides;
+    public OuttakeArm outtakeArm;
+    public Climber climber;
+    public Launcher launcher;
+    public VisionSensor visionSensor;
+    //public VisionTfod visionTfodFront;
+    public VisionOpenCV visionOpenCV;
+    public Lights lights;
+    public OuttakeController outtakeController;
+    public IntakeController intakeController;
+    public TelemetryPacket telemetryPacket = new TelemetryPacket();
+
+    public MecanumDrive drive;
+
+    //Static Class for knowing system state
+
+    public enum AUTO_OPTION{
+        PURPLE_AND_PARK,
+        PURPLE_YELLOW_AND_PARK,
+        PRELOAD_STACK1_AND_PARK,
+        ONE_CYCLE
+    }
+    public static AUTO_OPTION autoOption;
+
+    public enum PATHWAY_OPTION{
+        RIGGING_WALL,
+        STAGEDOOR
+    }
+    public static PATHWAY_OPTION pathwayOption;
+
+    public enum PARKING_OPTION{
+        RIGGING_WALL,
+        STAGEDOOR
+    }
+    public static PARKING_OPTION parkingOption;
+
+    public enum DROP_STACK_PIXEL_OPTION{
+        BACK_STAGE,
+        BACK_DROP
+    }
+    public static DROP_STACK_PIXEL_OPTION dropStackPixelOption = DROP_STACK_PIXEL_OPTION.BACK_DROP;
+
+    public Pose2d startPose = GameField.ORIGINPOSE;
+
+    public ElapsedTime gameTimer = new ElapsedTime(MILLISECONDS);
+    public ElapsedTime startTimer = new ElapsedTime(MILLISECONDS);
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+        GameField.opModeRunning = GameField.OP_MODE_RUNNING.HAZMAT_AUTONOMOUS;
+
+        /* Set Initial State of any subsystem when OpMode is to be started*/
+        initSubsystems();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        //Key Pay inputs to selecting Starting Position of robot
+        selectStartingPosition();
+        telemetry.addData("Selected Starting Position", GameField.startPosition);
+
+        //Build trajectories
+        buildAutonoumousMode();
+
+        // Initiate Camera on Init.
+        //visionTfodFront.initTfod();
+        visionOpenCV.initOpenCV();
+
+        // Wait for the DS start button to be touched.
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch Play to start OpMode");
+        telemetry.update();
+        //waitForStart();
+
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEMO);
+
+        while (!isStopRequested() && !opModeIsActive()) {
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            telemetry.addData("Selected Pathway", pathwayOption);
+            telemetry.addData("Selected Parking", parkingOption);
+            telemetry.addData("Drop Stack Pixel Option", dropStackPixelOption);
+            //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
+            //visionTfodFront.runTfodTensorFlow();
+            visionOpenCV.runOpenCVObjectDetection();
+            telemetry.addData("Vision identified SpikeMark Location", visionOpenCV.identifiedSpikeMarkLocation);
+            telemetry.update();
+
+            //Build parking trajectory based on last detected target by vision
+            setTrajectoryBasedOnVision();
+        }
+
+        //Game Play Button  is pressed
+        if (opModeIsActive() && !isStopRequested()) {
+            gameTimer.reset();
+            startTimer.reset();
+            //Turn Lights Green
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
+
+            outtakeArm.openGrip();
+            runActionForRedLeftBlueRight();
+
+        }
+    }   // end runOpMode()
+
+    Pose2d initPose= new Pose2d(0, 0, 0);
+
+    Pose2d dropPurplePixelPoseLeft = new Pose2d(0, 0, 0);
+    Pose2d dropPurplePixelPoseMiddle = new Pose2d(0, 0, 0);
+    Pose2d dropPurplePixelPoseRight = new Pose2d(0, 0, 0);
+
+    Pose2d dropPurplePixelPoseWallLeft = new Pose2d(0,0,0);
+    Pose2d dropPurplePixelPoseWallMiddle = new Pose2d(0,0,0);
+    Pose2d dropPurplePixelPoseWallRight = new Pose2d(0,0,0);
+
+    Pose2d afterPurplePixelPose = new Pose2d(0, 0, 0); //TODO: FIX BUG
+    Pose2d afterPurplePixelPoseLeft = new Pose2d(0, 0, 0);
+    Pose2d afterPurplePixelPoseMiddle = new Pose2d(0, 0, 0);
+    Pose2d afterPurplePixelPoseRight = new Pose2d(0, 0, 0);
+
+    Pose2d afterPurplePixelPoseWall = new Pose2d(0, 0, 0);//TODO: CHECK
+
+    Pose2d stageDoorStackPose = new Pose2d(0, 0, 0);
+    Pose2d stageMidwayTrussPose = new Pose2d(0,0,0);
+    Pose2d stageMidwayBackDropPose = new Pose2d(0, 0, 0);
+    Pose2d wallStackPose = new Pose2d(0, 0, 0);
+    Pose2d wallMidwayStackPose = new Pose2d(0, 0, 0);
+    Pose2d wallMidwayBackDropPose = new Pose2d(0, 0, 0);
+
+    Pose2d dropYellowPixelPoseLeft= new Pose2d(0, 0, 0);
+    Pose2d dropYellowPixelPoseMiddle= new Pose2d(0, 0, 0);
+    Pose2d dropYellowPixelPoseRight= new Pose2d(0, 0, 0);
+
+    Pose2d beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(0,0,0);
+    Pose2d beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(0,0,0);
+    Pose2d beforeParkAfterDropYellowPixelPoseRight = new Pose2d(0,0,0);
+
+    Pose2d dropStackPixelPose = new Pose2d(0, 0, 0);
+    Pose2d beforeParkAfterDropStackPixelPose = new Pose2d(0,0,0);
+    Pose2d parkPoseStageDoor = new Pose2d(0, 0, 0);
+    Pose2d parkPoseWall = new Pose2d(0, 0, 0);
+    Pose2d parkPose = new Pose2d(0, 0, 0);
+
+
+    Action trajInitToDropPurplePixel, trajInitToDropPurplePixelLeft, trajInitToDropPurplePixelMiddle, trajInitToDropPurplePixelRight;
+    Action trajDropPurplePixelToDropYellowPixel, trajDropPurplePixelToDropYellowPixelLeft,
+            trajDropPurplePixelToDropYellowPixelMiddle, trajDropPurplePixelToDropYellowPixelRight ;
+    Action trajDropPurplePixelToPark, trajDropPurplePixelToParkLeft, trajDropPurplePixelToParkMiddle, trajDropPurplePixelToParkRight;
+    Action trajDropPurplePixelToAfterPurplePixel, trajDropPurplePixelToAfterPurplePixelLeft,
+            trajDropPurplePixelToAfterPurplePixelMiddle, trajDropPurplePixelToAfterPurplePixelRight;
+    Action trajAfterPurplePixelToStack, trajAfterPurplePixelToStackLeft, trajAfterPurplePixelToStackMiddle,trajAfterPurplePixelToStackRight;
+    Action trajStackToDropYellowPixel, trajStackToDropYellowPixelLeft, trajStackToDropYellowPixelMiddle, trajStackToDropYellowPixelRight;
+    Action trajStackToAfterPurplePixel, trajStackToAfterPurplePixelLeft, trajStackToAfterPurplePixelMiddle, trajStackToAfterPurplePixelRight;
+    Action trajAfterPurplePixelToDropYellowPixel, trajAfterPurplePixelToDropYellowPixelLeft,
+            trajAfterPurplePixelToDropYellowPixelMiddle, trajAfterPurplePixelToDropYellowPixelRight;
+    Action trajDropYellowPixelToPark, trajDropYellowPixelToParkLeft, trajDropYellowPixelToParkMiddle, trajDropYellowPixelToParkRight;
+    Action trajDropYellowPixelToStack, trajDropYellowPixelToStackLeft, trajDropYellowPixelToStackMiddle, trajDropYellowPixelToStackRight;
+    Action trajStackToDropStackPixel, trajDropStackPixelToPark;
+
+
+    public void buildAutonoumousMode() {
+        //Initialize Pose2d as desired
+        double waitSecondsBeforeDrop = 0;
+
+        switch (GameField.startPosition) {
+            case BLUE_RIGHT:
+                drive = new MecanumDrive(hardwareMap, initPose);
+
+                dropPurplePixelPoseLeft = new Pose2d(22.2, 8.8, Math.toRadians(47.8));//23.5, 9, 62
+                dropPurplePixelPoseWallLeft = new Pose2d(20, 3.5, Math.toRadians(60));
+                dropYellowPixelPoseLeft = new Pose2d(19.5, 88.5, Math.toRadians(-90));//x18, y87
+                beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(16.5, 82, Math.toRadians(-90));
+                afterPurplePixelPoseLeft = new Pose2d(7.3, -4, Math.toRadians(34)); //x17, y-4,-90
+
+                dropPurplePixelPoseMiddle = new Pose2d(31.5, 5.4, Math.toRadians(19)); //x26.4, y7.8, 2
+                dropPurplePixelPoseWallMiddle = new Pose2d(24, 0, Math.toRadians(0));
+                dropYellowPixelPoseMiddle = new Pose2d(28, 88, Math.toRadians(-90)); //x24.6, y88
+                beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(22.9, 82, Math.toRadians(-90));
+                afterPurplePixelPoseMiddle = new Pose2d(7.3, -4, Math.toRadians(18));//17, -4, -9
+
+                dropPurplePixelPoseRight = new Pose2d(42.3, 1.4, Math.toRadians(-131.3)); //x25.5, y-2.5, -52.5
+                dropPurplePixelPoseWallRight = new Pose2d(13.5, -6.6, Math.toRadians(0));//22.5, -1.8, -46
+                dropYellowPixelPoseRight = new Pose2d(34, 87.5, Math.toRadians(-90)); //x30.5, 88
+                beforeParkAfterDropYellowPixelPoseRight = new Pose2d(25.2, 82, Math.toRadians(-90));
+                afterPurplePixelPoseRight = new Pose2d(46, 3.4, Math.toRadians(-90)); //x15, y5, -90degrees
+
+                afterPurplePixelPoseWall = new Pose2d(3.2, 0, Math.toRadians(-90)); //x15, y5, -90degrees
+                wallStackPose = new Pose2d(20, -19, Math.toRadians(-60)); //x26,-18
+                wallMidwayStackPose = new Pose2d(2, 5, Math.toRadians(-90));
+                wallMidwayBackDropPose = new Pose2d(2, 72, Math.toRadians(-90));
+                stageDoorStackPose = new Pose2d(52, -15, Math.toRadians(-90));//x53, y-19
+                stageMidwayTrussPose = new Pose2d(54, 26.8, Math.toRadians(-90));
+                stageMidwayBackDropPose = new Pose2d(54, 71, Math.toRadians(-90)); //x52, y73
+                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+
+                parkPoseWall = new Pose2d(4, 85, Math.toRadians(-90));//x3, y80.8
+                parkPoseStageDoor = new Pose2d(46, 83.5, Math.toRadians(-90)); //x54.5, y77
+
+                if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+                    if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
+                        dropStackPixelPose = new Pose2d(31.5, 34.5, Math.toRadians(-90)); //y=33.5, x35.5
+                    } else {//BACK_STAGE
+                        dropStackPixelPose = parkPoseStageDoor;
+                    }
+                    beforeParkAfterDropStackPixelPose = new Pose2d(31.5, 30, Math.toRadians(-90)); //y=33.5, x35.5
+                } else { //WALL_RIGGING
+                    if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
+                        dropStackPixelPose = new Pose2d(35.5, 86.5, Math.toRadians(-90));//x20, y35.5
+                    } else {//BACK_STAGE
+                        dropStackPixelPose = parkPoseWall;
+
+                    }
+                    beforeParkAfterDropStackPixelPose = new Pose2d(18.7, 30, Math.toRadians(-90));//x20, y35.5
+                }
+
+                break;
+
+            case RED_LEFT:
+                drive = new MecanumDrive(hardwareMap, initPose);
+
+                dropPurplePixelPoseLeft = new Pose2d(38, 0, Math.toRadians(126)); //x20.8, y3.3, 31.5
+                dropPurplePixelPoseWallLeft = new Pose2d(14.5, 9, Math.toRadians(0));
+                dropYellowPixelPoseLeft = new Pose2d(36, -88.5, Math.toRadians(90));//x32, y-91
+                beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(34, -85, Math.toRadians(90));
+                afterPurplePixelPoseLeft = new Pose2d(48, -4, Math.toRadians(89));
+
+                dropPurplePixelPoseMiddle = new Pose2d(28.7, -2.3, Math.toRadians(-13.8)); //x28.1, y-4, -20
+                dropPurplePixelPoseWallMiddle = new Pose2d(24.2, 3, Math.toRadians(0));
+                dropYellowPixelPoseMiddle = new Pose2d(29, -88.5, Math.toRadians(90)); //x28,y=-91
+                beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(30, -85, Math.toRadians(90));
+                afterPurplePixelPoseMiddle = new Pose2d(18, 4, Math.toRadians(-30));//x18,y4,-30
+
+                dropPurplePixelPoseRight = new Pose2d(22, -6.5, Math.toRadians(-60.3)); //x25.1, y-5.3, -71
+                dropPurplePixelPoseWallRight = new Pose2d(24, -4.4, Math.toRadians(-60));
+                dropYellowPixelPoseRight = new Pose2d(20, -88.5, Math.toRadians(90));//x23 y=-88
+                beforeParkAfterDropYellowPixelPoseRight = new Pose2d(25, -85, Math.toRadians(90));
+                afterPurplePixelPoseRight = new Pose2d(18, 4, Math.toRadians(-30));//x18,y4,-30
+
+                afterPurplePixelPoseWall = new Pose2d(4, 3.1, Math.toRadians(92));//x18,y4,-30
+                wallStackPose = new Pose2d(19.8, 20, Math.toRadians(60)); //x19.8,19,60
+                wallMidwayStackPose = new Pose2d(4, 0, Math.toRadians(90));//x2, y-5
+                wallMidwayBackDropPose = new Pose2d(4, -66, Math.toRadians(90));//x2, y-73
+                stageDoorStackPose = new Pose2d(49.2, 16, Math.toRadians(90));//x48.5, y19.7
+                stageMidwayTrussPose = new Pose2d(50.4, -20.6, 90);//x48.5, y27.5, 90
+                stageMidwayBackDropPose = new Pose2d(50.4, -72, Math.toRadians(90));//x49
+                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+
+                parkPoseWall = new Pose2d(2, -86, Math.toRadians(90)); //x-1, y-81
+                parkPoseStageDoor = new Pose2d(48.8, -83, Math.toRadians(90));//x46, y-79
+
+                if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+                    if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
+                        dropStackPixelPose = new Pose2d(26, -89, Math.toRadians(90));//x16,-89
+                    } else {//BACK_STAGE
+                        dropStackPixelPose = parkPoseStageDoor;
+                    }
+                    beforeParkAfterDropStackPixelPose = new Pose2d(36, -85, Math.toRadians(90));
+                } else { //WALL_RIGGING
+                    if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
+                        dropStackPixelPose = new Pose2d(36.1, -88, Math.toRadians(90));
+                    } else {//BACK_STAGE
+                        dropStackPixelPose = parkPoseWall;
+
+                    }
+                    beforeParkAfterDropStackPixelPose = new Pose2d(36, -85, Math.toRadians(90));
+                }
+
+                break;
+        }
+
+
+        if (parkingOption == PARKING_OPTION.STAGEDOOR) {
+            parkPose =parkPoseStageDoor;
+        } else {
+            parkPose = parkPoseWall;
+        }
+
+        telemetry.addLine("+++++ After Pose Assignments ++++++");
+        telemetry.update();
+
+        //For RED_LEFT & BLUE_RIGHT
+        trajDropYellowPixelToParkLeft = drive.actionBuilder(dropYellowPixelPoseLeft)
+                //.strafeToLinearHeading(beforeParkAfterDropYellowPixelPoseLeft.position, beforeParkAfterDropYellowPixelPoseLeft.heading)
+                .strafeToLinearHeading(parkPose.position, parkPose.heading,
+                        new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                .build();
+        trajDropYellowPixelToParkMiddle = drive.actionBuilder(dropYellowPixelPoseMiddle)
+                //.strafeToLinearHeading(beforeParkAfterDropYellowPixelPoseMiddle.position, beforeParkAfterDropYellowPixelPoseMiddle.heading)
+                .strafeToLinearHeading(parkPose.position, parkPose.heading,
+                        new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                .build();
+        trajDropYellowPixelToParkRight = drive.actionBuilder(dropYellowPixelPoseRight)
+                //.strafeToLinearHeading(beforeParkAfterDropYellowPixelPoseRight.position, beforeParkAfterDropYellowPixelPoseRight.heading)
+                .strafeToLinearHeading(parkPose.position, parkPose.heading,
+                        new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                .build();
+
+        if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+            trajInitToDropPurplePixelLeft = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseLeft, 0)
+                    .build();
+            trajInitToDropPurplePixelMiddle = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseMiddle, 0)
+                    .build();
+            trajInitToDropPurplePixelRight = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseRight, 0)
+                    .build();
+
+            //FOR BLUE_RIGHT & RED_LEFT
+            trajDropPurplePixelToAfterPurplePixelLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
+                    .strafeToLinearHeading(afterPurplePixelPoseLeft.position, afterPurplePixelPoseLeft.heading)
+                    .build();
+            trajDropPurplePixelToAfterPurplePixelMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
+                    .strafeToLinearHeading(afterPurplePixelPoseMiddle.position, afterPurplePixelPoseMiddle.heading)
+                    .build();
+            trajDropPurplePixelToAfterPurplePixelRight = drive.actionBuilder(dropPurplePixelPoseRight)
+                    .strafeToLinearHeading(afterPurplePixelPoseRight.position, afterPurplePixelPoseRight.heading)
+                    .build();
+
+            trajAfterPurplePixelToStackLeft = drive.actionBuilder(afterPurplePixelPoseLeft)
+                    .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
+                    .build();
+            trajAfterPurplePixelToStackMiddle = drive.actionBuilder(afterPurplePixelPoseMiddle)
+                    .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
+                    .build();
+            trajAfterPurplePixelToStackRight = drive.actionBuilder(afterPurplePixelPoseRight)
+                    .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
+                    .build();
+
+            trajStackToAfterPurplePixelLeft =  drive.actionBuilder(stageDoorStackPose)
+                    .strafeToLinearHeading(afterPurplePixelPoseLeft.position, afterPurplePixelPoseLeft.heading)
+                    .build();
+            trajStackToAfterPurplePixelMiddle =  drive.actionBuilder(stageDoorStackPose)
+                    .strafeToLinearHeading(afterPurplePixelPoseMiddle.position, afterPurplePixelPoseMiddle.heading)
+                    .build();
+            trajStackToAfterPurplePixelRight =  drive.actionBuilder(stageDoorStackPose)
+                    .strafeToLinearHeading(afterPurplePixelPoseRight.position, afterPurplePixelPoseRight.heading)
+                    .build();
+
+            trajAfterPurplePixelToDropYellowPixelLeft = drive.actionBuilder(afterPurplePixelPoseLeft)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseLeft, 0,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .build();
+            trajAfterPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(afterPurplePixelPoseMiddle)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseMiddle, 0,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .build();
+            trajAfterPurplePixelToDropYellowPixelRight = drive.actionBuilder(afterPurplePixelPoseRight)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseRight, 0,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .build();
+
+            trajStackToDropYellowPixelLeft = drive.actionBuilder(stageDoorStackPose)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
+                    .build();
+            trajStackToDropYellowPixelMiddle = drive.actionBuilder(stageDoorStackPose)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
+                    .build();
+            trajStackToDropYellowPixelRight = drive.actionBuilder(stageDoorStackPose)
+                    .setReversed(true)
+                    .strafeToLinearHeading(stageMidwayBackDropPose.position,stageMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseRight, 0)
+                    .build();
+
+
+            trajDropPurplePixelToDropYellowPixelLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
+                    .splineToLinearHeading(afterPurplePixelPoseLeft, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
+                    .build();
+            trajDropPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
+                    .splineToLinearHeading(afterPurplePixelPoseMiddle, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
+                    .build();
+            trajDropPurplePixelToDropYellowPixelRight = drive.actionBuilder(dropPurplePixelPoseRight)
+                    .splineToLinearHeading(afterPurplePixelPoseRight, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseRight, 0)
+                    .build();
+
+            trajDropPurplePixelToParkLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
+                    .splineToLinearHeading(afterPurplePixelPoseLeft, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+            trajDropPurplePixelToParkMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
+                    .splineToLinearHeading(afterPurplePixelPoseMiddle, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+            trajDropPurplePixelToParkRight = drive.actionBuilder(dropPurplePixelPoseRight)
+                    .splineToLinearHeading(afterPurplePixelPoseRight, 0)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+
+            trajDropYellowPixelToStackLeft = drive.actionBuilder(dropYellowPixelPoseLeft)
+                    .splineToLinearHeading(stageMidwayBackDropPose, 0)
+                    .strafeTo(stageDoorStackPose.position)
+                    .build();
+            trajDropYellowPixelToStackMiddle = drive.actionBuilder(dropYellowPixelPoseMiddle)
+                    .splineToLinearHeading(stageMidwayBackDropPose, 0)
+                    .strafeTo(stageDoorStackPose.position)
+                    .build();
+            trajDropYellowPixelToStackRight = drive.actionBuilder(dropYellowPixelPoseRight)
+                    .splineToLinearHeading(stageMidwayBackDropPose, 0)
+                    .strafeTo(stageDoorStackPose.position)
+                    .build();
+
+            trajStackToDropStackPixel = drive.actionBuilder(stageDoorStackPose)
+                    .setReversed(true)
+                    .strafeTo(stageMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropStackPixelPose, 0)
+                    .build();
+
+            trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
+                    .strafeToLinearHeading(parkPoseStageDoor.position, parkPoseStageDoor.heading)
+                    .build();
+
+
+        } else {
+            //WALL_RIGGING
+            trajInitToDropPurplePixelLeft = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseWallLeft, 0)
+                    .build();
+            trajInitToDropPurplePixelMiddle = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseWallMiddle, 0)
+                    .build();
+            trajInitToDropPurplePixelRight = drive.actionBuilder(drive.pose)
+                    .splineToLinearHeading(dropPurplePixelPoseWallRight, 0)
+                    .build();
+
+            trajDropPurplePixelToAfterPurplePixelLeft = drive.actionBuilder(dropPurplePixelPoseWallLeft)
+                    .setReversed(true)
+                    .strafeToLinearHeading(afterPurplePixelPoseWall.position, afterPurplePixelPoseWall.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                    .build();
+            trajDropPurplePixelToAfterPurplePixelMiddle = drive.actionBuilder(dropPurplePixelPoseWallMiddle)
+                    .setReversed(true)
+                    .strafeToLinearHeading(afterPurplePixelPoseWall.position, afterPurplePixelPoseWall.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                    .build();
+            trajDropPurplePixelToAfterPurplePixelRight = drive.actionBuilder(dropPurplePixelPoseWallRight)
+                    .setReversed(true)
+                    .strafeToLinearHeading(afterPurplePixelPoseWall.position, afterPurplePixelPoseWall.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
+                    .build();
+
+            trajAfterPurplePixelToStack = drive.actionBuilder(afterPurplePixelPoseWall)
+                    .strafeToLinearHeading(wallStackPose.position, wallStackPose.heading,
+                    //.splineToLinearHeading(wallStackPose,0,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-15,15))
+                    .build();
+
+            trajStackToAfterPurplePixel = drive.actionBuilder(wallStackPose)
+                    .setReversed(true)
+                    //.strafeToLinearHeading(afterPurplePixelPoseWall.position, afterPurplePixelPoseWall.heading,
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-15,15))
+                    .build();
+
+            trajAfterPurplePixelToDropYellowPixelLeft = drive.actionBuilder(afterPurplePixelPoseWall)
+                    .setReversed(true)
+                    .strafeToLinearHeading(wallMidwayBackDropPose.position,wallMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
+                    .build();
+            trajAfterPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(afterPurplePixelPoseWall)
+                    .setReversed(true)
+                    .strafeToLinearHeading(wallMidwayBackDropPose.position,wallMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
+                    .build();
+            trajAfterPurplePixelToDropYellowPixelRight = drive.actionBuilder(afterPurplePixelPoseWall)
+                    .setReversed(true)
+                    .strafeToLinearHeading(wallMidwayBackDropPose.position,wallMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-20,20))
+                    .splineToLinearHeading(dropYellowPixelPoseRight, 0)
+                    .build();
+
+            trajDropPurplePixelToDropYellowPixelLeft = drive.actionBuilder(dropPurplePixelPoseWallLeft)
+                    .setReversed(true)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
+                    .build();
+            trajDropPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(dropPurplePixelPoseWallMiddle)
+                    .setReversed(true)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
+                    .build();
+            trajDropPurplePixelToDropYellowPixelRight = drive.actionBuilder(dropPurplePixelPoseWallRight)
+                    .setReversed(true)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(dropYellowPixelPoseRight, 0)
+                    .build();
+
+            trajDropPurplePixelToParkLeft = drive.actionBuilder(dropPurplePixelPoseWallLeft)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+            trajDropPurplePixelToParkMiddle = drive.actionBuilder(dropPurplePixelPoseWallMiddle)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+            trajDropPurplePixelToParkRight = drive.actionBuilder(dropPurplePixelPoseWallRight)
+                    .splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(parkPose, 0)
+                    .build();
+
+            trajDropYellowPixelToStackLeft = drive.actionBuilder(dropYellowPixelPoseLeft)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(wallMidwayStackPose, 0)
+                    .splineToLinearHeading(wallStackPose, 0)
+                    .build();
+            trajDropYellowPixelToStackMiddle = drive.actionBuilder(dropYellowPixelPoseMiddle)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(wallMidwayStackPose, 0)
+                    .splineToLinearHeading(wallStackPose, 0)
+                    .build();
+            trajDropYellowPixelToStackRight = drive.actionBuilder(dropYellowPixelPoseRight)
+                    .strafeTo(wallMidwayBackDropPose.position)
+                    .splineToLinearHeading(wallMidwayStackPose, 0)
+                    .splineToLinearHeading(wallStackPose, 0)
+                    .build();
+
+            trajStackToDropStackPixel = drive.actionBuilder(wallStackPose)
+                    //.splineToLinearHeading(afterPurplePixelPoseWall, 0)
+                    .setReversed(true)
+                    .splineToLinearHeading(wallMidwayStackPose, 0)
+                    .splineToLinearHeading(wallMidwayBackDropPose, 0)
+                    .strafeTo(dropStackPixelPose.position)
+                    .build();
+
+            trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
+                    .strafeToLinearHeading(parkPoseWall.position, parkPoseWall.heading,
+                            new TranslationalVelConstraint(30), new ProfileAccelConstraint(-20,20))
+                    .build();
+
+        }
+
+    }
+
+    public void setTrajectoryBasedOnVision() {
+        switch (visionOpenCV.identifiedSpikeMarkLocation) {
+            case LEFT:
+                trajDropPurplePixelToPark = trajDropPurplePixelToParkLeft;
+                trajInitToDropPurplePixel = trajInitToDropPurplePixelLeft;
+                trajDropPurplePixelToAfterPurplePixel = trajDropPurplePixelToAfterPurplePixelLeft;
+                if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+                    trajAfterPurplePixelToStack = trajAfterPurplePixelToStackLeft;
+                    trajStackToAfterPurplePixel = trajStackToAfterPurplePixelLeft;
+                }
+                trajAfterPurplePixelToDropYellowPixel = trajAfterPurplePixelToDropYellowPixelLeft;
+                trajDropPurplePixelToDropYellowPixel = trajDropPurplePixelToDropYellowPixelLeft;
+                trajDropYellowPixelToStack = trajDropYellowPixelToStackLeft;
+                trajStackToDropYellowPixel = trajStackToDropYellowPixelLeft;
+                trajDropYellowPixelToPark = trajDropYellowPixelToParkLeft;
+                break;
+            case MIDDLE:
+                trajDropPurplePixelToPark = trajDropPurplePixelToParkMiddle;
+                trajInitToDropPurplePixel = trajInitToDropPurplePixelMiddle;
+                trajDropPurplePixelToAfterPurplePixel = trajDropPurplePixelToAfterPurplePixelMiddle;
+                if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+                    trajAfterPurplePixelToStack = trajAfterPurplePixelToStackMiddle;
+                    trajStackToAfterPurplePixel = trajStackToAfterPurplePixelMiddle;
+                }
+                trajAfterPurplePixelToDropYellowPixel = trajAfterPurplePixelToDropYellowPixelMiddle;
+                trajDropPurplePixelToDropYellowPixel = trajDropPurplePixelToDropYellowPixelMiddle;
+                trajDropYellowPixelToStack = trajDropYellowPixelToStackMiddle;
+                trajStackToDropYellowPixel = trajStackToDropYellowPixelMiddle;
+                trajDropYellowPixelToPark = trajDropYellowPixelToParkMiddle;
+                break;
+            case RIGHT:
+                trajDropPurplePixelToPark = trajDropPurplePixelToParkRight;
+                trajInitToDropPurplePixel = trajInitToDropPurplePixelRight;
+                trajDropPurplePixelToAfterPurplePixel = trajDropPurplePixelToAfterPurplePixelRight;
+                if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+                    trajAfterPurplePixelToStack = trajAfterPurplePixelToStackRight;
+                    trajStackToAfterPurplePixel = trajStackToAfterPurplePixelRight;
+                }
+                trajAfterPurplePixelToDropYellowPixel = trajAfterPurplePixelToDropYellowPixelRight;
+                trajDropPurplePixelToDropYellowPixel = trajDropPurplePixelToDropYellowPixelRight;
+                trajDropYellowPixelToStack = trajDropYellowPixelToStackRight;
+                trajStackToDropYellowPixel = trajStackToDropYellowPixelRight;
+                trajDropYellowPixelToPark = trajDropYellowPixelToParkRight;
+                break;
+        }
+    }
+
+    public void runActionForRedLeftBlueRight() {
+        if (autoOption == AUTO_OPTION.PURPLE_AND_PARK) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            intakeController.dropLiftIntake(),
+                            new SleepAction(0.5),
+                            trajInitToDropPurplePixel,
+                            intakeController.dropPurplePixelUsingIntakeAction(),
+                            new SleepAction(0.5),
+                            intakeController.intakeLiftUpAction(),
+                            new SleepAction(0.5),
+                            trajDropPurplePixelToPark,
+                            outtakeController.moveOuttakeToEndStateAction()
+                    )
+            );
+        }
+
+        if (autoOption == AUTO_OPTION.PURPLE_YELLOW_AND_PARK) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            intakeController.dropLiftIntake(),
+                            new SleepAction(0.5),
+                            trajInitToDropPurplePixel,
+                            intakeController.dropPurplePixelUsingIntakeAction(),
+                            new SleepAction(0.5),
+                            intakeController.intakeLiftUpAction(),
+                            new SleepAction(0.5),
+                            //trajDropPurplePixelToDropYellowPixel,
+                            trajDropPurplePixelToAfterPurplePixel,
+                            trajAfterPurplePixelToDropYellowPixel,
+                            outtakeController.moveReadyForTransferToTransferAction(),
+                            outtakeController.moveTransferToPickupAction(),
+                            outtakeController.movePickupToReadyForTransferAction(),
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
+                            new SleepAction(0.4),
+                            outtakeController.dropOnePixelAction(),
+                            new SleepAction(0.4),
+                            outtakeController.dropOnePixelAction(),
+                            new SleepAction(0.4),
+                            outtakeController.moveOuttakeToEndStateAction(),
+                            trajDropYellowPixelToPark
+                    )
+            );
+        }
+
+        if (autoOption == AUTO_OPTION.PRELOAD_STACK1_AND_PARK) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            intakeController.dropLiftIntake(),
+                            trajInitToDropPurplePixel,
+                            intakeController.dropPurplePixelUsingIntakeAction(),
+                            new SleepAction(0.3),
+                            intakeController.intakeLiftUpAction(),
+                            new SleepAction(0.3),
+                            trajDropPurplePixelToAfterPurplePixel,
+                            intakeController.dropLiftIntake(),
+                            trajAfterPurplePixelToStack,
+                            //intakeController.intakeAtStackOnePixelAction(),
+                            intakeController.intakeAtStackUsingMagazineSensorAction(1),
+                            //TODO: CHANGE ACTION TO Rotate once each of Horizontal intake, rather than continuous rotation.
+                            // Intake should be running more, less revolutions of horizontal intake.
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            trajStackToAfterPurplePixel,
+                                            trajAfterPurplePixelToDropYellowPixel
+                                    ),
+                                    intakeController.intakeReverseAction(0.7),
+                                    intakeController.intakeLiftUpAction(),
+                                    new SequentialAction(
+                                            new SleepAction(1.5),
+                                            outtakeController.moveReadyForTransferToTransferAction(),
+                                            outtakeController.moveTransferToPickupAction(),
+                                            outtakeController.movePickupToReadyForTransferAction()
+                                    )
+                            ),
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
+                            new SleepAction(0.7),
+                            outtakeController.dropTwoPixelAction(),
+                            new SleepAction(0.1),
+                            //Go to Park
+                            new ParallelAction(
+                                    intakeController.intakeLiftUpAction(),
+                                    trajDropYellowPixelToPark,
+                                    outtakeController.moveOuttakeToEndStateAction()
+                            )
+                    )
+            );
+        }
+
+        if (autoOption == AUTO_OPTION.ONE_CYCLE) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            intakeController.dropLiftIntake(),
+                            trajInitToDropPurplePixel,
+                            intakeController.dropPurplePixelUsingIntakeAction(),
+                            new SleepAction(0.3),
+                            intakeController.intakeLiftUpAction(),
+                            new SleepAction(0.3),
+                            new ParallelAction(
+                                    trajDropPurplePixelToAfterPurplePixel,
+                                    intakeController.dropLiftIntake()
+                            ),
+                            trajAfterPurplePixelToStack,
+                            //intakeController.intakeAtStackOnePixelAction(),
+                            intakeController.intakeAtStackUsingMagazineSensorAction(2),
+                            new SleepAction(0.2),
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            trajStackToAfterPurplePixel,
+                                            trajAfterPurplePixelToDropYellowPixel
+                                    ),
+                                    intakeController.intakeReverseAction(1),
+                                    intakeController.intakeLiftUpAction(),
+                                    new SequentialAction(
+                                            new SleepAction(1.5),
+                                            outtakeController.moveReadyForTransferToTransferAction(),
+                                            outtakeController.moveTransferToPickupAction(),
+                                            outtakeController.movePickupToReadyForTransferAction()
+                                    )
+                            ),
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
+                            new SleepAction(0.7),
+                            /*outtakeController.dropOnePixelAction(),
+                            new SleepAction(0.2),
+                            outtakeController.dropOnePixelAction(),
+                            new SleepAction(0.1),*/
+                            outtakeController.dropTwoPixelAction(),
+                            new SleepAction(0.2),
+                            //LOOP 1
+                            new ParallelAction(
+                                    trajDropYellowPixelToStack,
+                                    outtakeController.moveDropToReadyforTransferAction(),
+                                    new SequentialAction(
+                                            new SleepAction(4),
+                                            intakeController.dropLiftIntake()
+                                    )
+                            ),
+                            intakeController.intakeAtStackTwoPixelsAction(),
+                            new ParallelAction(
+                                    trajStackToDropStackPixel,
+                                    intakeController.intakeLiftUpAction(),
+                                    new SequentialAction(
+                                            new SleepAction(0.5),
+                                            outtakeController.moveReadyForTransferToTransferAction(),
+                                            outtakeController.moveTransferToPickupAction(),
+                                            outtakeController.movePickupToReadyForTransferAction(),
+                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
+                                    )
+                            ),
+                            outtakeController.dropTwoPixelAction(),
+
+                            //Go to Park
+                            new ParallelAction(
+                                    intakeController.intakeLiftUpAction(),
+                                    trajDropStackPixelToPark,
+                                    outtakeController.moveOuttakeToEndStateAction()
+                            )
+                    )
+            );
+        }
+    }
+
+    //Method to select starting position using X, Y, A, B buttons on gamepad
+    public void selectStartingPosition() {
+        //telemetry.setAutoClear(true);
+        telemetry.clearAll();
+        //******select start pose*****
+        while (!isStopRequested()) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode:");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstation) on gamepad 1:", "");
+            telemetry.addData("    Red Left    ", "(B / O)");
+            telemetry.addData("    Blue Right ", "(Y / Δ)");
+            if (gamepadController.gp1GetCirclePress()) {
+                GameField.startPosition = GameField.START_POSITION.RED_LEFT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
+                break;
+            }
+            if (gamepadController.gp1GetTrianglePress()) {
+                GameField.startPosition = GameField.START_POSITION.BLUE_RIGHT;
+                GameField.playingAlliance = GameField.PLAYING_ALLIANCE.BLUE_ALLIANCE;
+                break;
+            }
+
+            telemetry.update();
+        }
+
+        autoOption = AUTO_OPTION.ONE_CYCLE;
+        /*
+        while (!isStopRequested()) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addLine("Select Auto Options");
+            telemetry.addData("    Purple and Park                 ", "(B / O)");
+            telemetry.addData("    Purple, Yellow and Park         ", "(A / X)");
+            telemetry.addData("    Purple, Stack1, Yellow and Park ", "(X / ▢)");
+            telemetry.addData("    1 cycle                         ", "(Y / Δ)");
+
+            if (gamepadController.gp1GetCirclePress()) {
+                autoOption = AUTO_OPTION.PURPLE_AND_PARK;
+                break;
+            }
+
+            if (gamepadController.gp1GetCrossPress()) {
+                autoOption = AUTO_OPTION.PURPLE_YELLOW_AND_PARK;
+                break;
+            }
+
+            if (gamepadController.gp1GetSquarePress()) {
+                autoOption = AUTO_OPTION.PRELOAD_STACK1_AND_PARK;
+                break;
+            }
+            if (gamepadController.gp1GetTrianglePress()) {
+                autoOption = AUTO_OPTION.ONE_CYCLE;
+                break;
+            }
+            telemetry.update();
+        }
+
+         */
+
+        while (!isStopRequested()) {
+            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+            telemetry.addData("---------------------------------------", "");
+            telemetry.addData("Selected Starting Position", GameField.startPosition);
+            telemetry.addData("Selected Auto Option", autoOption);
+            telemetry.addLine("Select Pathway and Parking option");
+            telemetry.addData("    Wall Rigging ", "Y / Δ");
+            telemetry.addData("    Stage Door", "B / O ");
+            if (gamepadController.gp1GetButtonYPress()) {
+                pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
+                parkingOption = PARKING_OPTION.RIGGING_WALL;
+                break;
+            }
+            if (gamepadController.gp1GetButtonBPress()) {
+                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
+                parkingOption = PARKING_OPTION.STAGEDOOR;
+                break;
+            }
+            telemetry.update();
+        }
+
+        if (autoOption != AUTO_OPTION.PURPLE_AND_PARK &&
+                autoOption != AUTO_OPTION.PURPLE_YELLOW_AND_PARK) {
+            while (!isStopRequested()) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", GameField.startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addData("Selected Pathway and Parking option", pathwayOption);
+                telemetry.addLine("Drop Stack pixels on");
+                telemetry.addData("    Back Drop ", "Y / Δ");
+                telemetry.addData("    Back Stage", "B / O ");
+                if (gamepadController.gp1GetButtonYPress()) {
+                    dropStackPixelOption = DROP_STACK_PIXEL_OPTION.BACK_DROP;
+                    break;
+                }
+                if (gamepadController.gp1GetButtonBPress()) {
+                    dropStackPixelOption = DROP_STACK_PIXEL_OPTION.BACK_STAGE;
+                    break;
+                }
+                telemetry.update();
+            }
+        }
+
+        telemetry.clearAll();
+    }
+
+    //method to wait safely with stop button working if needed. Use this instead of sleep
+    public void safeWaitMilliSeconds(double time) {
+        ElapsedTime timer = new ElapsedTime(MILLISECONDS);
+        timer.reset();
+        while (!isStopRequested() && timer.time() < time) {
+        }
+    }
+
+    public void initSubsystems(){
+
+        //telemetry.setAutoClear(false);
+
+        //Init Pressed
+        telemetry.addLine("Robot Init Pressed");
+        telemetry.addLine("==================");
+        telemetry.update();
+
+        /* Create Subsystem Objects*/
+        driveTrain = new DriveTrain(hardwareMap, new Pose2d(0,0,0), telemetry);
+        driveTrain.driveType = DriveTrain.DriveType.ROBOT_CENTRIC;
+        telemetry.addData("DriveTrain Initialized with Pose:",driveTrain.toStringPose2d(driveTrain.pose));
+        telemetry.update();
+
+        intake = new Intake(hardwareMap, telemetry);
+        telemetry.addLine("Intake Initialized");
+        telemetry.update();
+
+        magazine = new Magazine(hardwareMap, telemetry);
+        telemetry.addLine("Magazine Initialized");
+        telemetry.update();
+
+        outtakeArm = new OuttakeArm(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeArm Initialized");
+        telemetry.update();
+
+        outtakeSlides = new OuttakeSlides(hardwareMap, telemetry);
+        telemetry.addLine("OuttakeSlides Initialized");
+        telemetry.update();
+
+        climber = new Climber(hardwareMap, telemetry);
+        telemetry.addLine("Climber Initialized");
+        telemetry.update();
+
+        launcher = new Launcher(hardwareMap, telemetry);
+        telemetry.addLine("Launcher Initialized");
+        telemetry.update();
+
+        /* Create VisionSensor */
+        visionSensor = new VisionSensor(hardwareMap, telemetry);
+        telemetry.addLine("Vision Sensor Initialized");
+        telemetry.update();
+
+        /* Create Vision */
+        //visionTfodFront = new VisionTfod(hardwareMap, telemetry, "Webcam 1");
+        //telemetry.addLine("VisionTfod Initialized");
+        visionOpenCV = new VisionOpenCV(hardwareMap, telemetry, "Webcam 1");
+        telemetry.addLine("VisionOpenCV Initialized");
+        telemetry.update();
+
+        /* Create Lights */
+        lights = new Lights(hardwareMap, telemetry);
+        telemetry.addLine("Lights Initialized");
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
+        telemetry.update();
+
+        outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, this);
+        telemetry.addLine("Outtake Controller Initialized");
+        telemetry.update();
+
+        intakeController = new IntakeController(this.intake, this.magazine,this);
+        telemetry.addLine("Intake Controller Initialized");
+        telemetry.update();
+
+        /* Create Controllers */
+        gamepadController = new GamepadController(gamepad1, gamepad2, intake, magazine,
+                outtakeSlides, outtakeArm, climber, launcher, visionSensor, lights, telemetry, this);
+        telemetry.addLine("Gamepad Initialized");
+        telemetry.update();
+
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
+        /* Get last position after Autonomous mode ended from static class set in Autonomous */
+        if ( GameField.poseSetInAutonomous) {
+            driveTrain.pose = GameField.currentPose;
+        } else {
+            driveTrain.pose = startPose;
+        }
+
+        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+
+        telemetry.addLine("+++++++++++++++++++++++");
+        telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
+        telemetry.update();
+    }
+
+    public String toStringPose2d(Pose2d pose){
+        return String.format("(%.3f, %.3f, %.3f)", pose.position.x, pose.position.y, Math.toDegrees(pose.heading.log()));
+    }
+    /**
+     * Method to add debug messages. Update as telemetry.addData.
+     * Use public attributes or methods if needs to be called here.
+     */
+    public void printDebugMessages(){
+        //telemetry.setAutoClear(true);
+        telemetry.addData("DEBUG_LEVEL is : ", GameField.debugLevel);
+        telemetry.addData("Robot ready to start","");
+
+        if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
+            telemetry.addLine("Running Hazmat Autonomous Mode");
+            telemetry.addData("Game Timer : ", gameTimer.time());
+            telemetry.addData("PoseEstimateString :", toStringPose2d(drive.pose));
+
+            driveTrain.printDebugMessages();
+            lights.printDebugMessages();
+        }
+        telemetry.update();
+    }
+}   // end class

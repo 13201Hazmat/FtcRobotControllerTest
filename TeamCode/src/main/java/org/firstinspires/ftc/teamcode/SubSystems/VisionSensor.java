@@ -19,6 +19,7 @@ public class VisionSensor {
     public HuskyLens huskyLens;
     public final int READ_PERIOD = 1;
 
+    public boolean senseBackDropActivated = true;
     public enum BACKDROP_DISTANCE_STATE {
         NOT_SENSED,
         AMBER,
@@ -65,6 +66,11 @@ public class VisionSensor {
 
 
     public void senseBackdrop(){
+
+        if (!senseBackDropActivated) {
+            backdropDistanceState = BACKDROP_DISTANCE_STATE.NOT_SENSED;
+        }
+
         backdropDistanceLeftDistance = backdropDistanceSensorLeft.getDistance(DistanceUnit.MM);
         backdropDistanceRightDistance = backdropDistanceSensorRight.getDistance(DistanceUnit.MM);
 
