@@ -34,7 +34,7 @@ public class Lights {
         BACK_DROP_AMBER(RevBlinkinLedDriver.BlinkinPattern.GREEN),
         ONE_IN_MAGAZINE(RevBlinkinLedDriver.BlinkinPattern.YELLOW),
         TWO_IN_MAGAZINE(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN),
-        END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE),
+        //END_GAME(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE),
         DEFAULT(RevBlinkinLedDriver.BlinkinPattern.GOLD);
 
         private RevBlinkinLedDriver.BlinkinPattern blinkinPattern;

@@ -189,6 +189,8 @@ public class GamepadController {
 
         if (magazine.magazinePreviousState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL &&
                 magazine.magazineState == Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
+            //intake.reverseStackIntake();
+            intake.reverseStackIntakeTele();
             intake.reverseIntake();
             magazineSecondPixelTimer.reset();
             magazineTwoPixelReverserActivated = true;
@@ -196,6 +198,8 @@ public class GamepadController {
 
         if (magazineTwoPixelReverserActivated && magazineSecondPixelTimer.time() > 800) {
             intake.stopIntake();
+            intake.stopStackIntakeTele();
+            //intake.stopStackIntake();
             magazineTwoPixelReverserActivated = false;
         }
 

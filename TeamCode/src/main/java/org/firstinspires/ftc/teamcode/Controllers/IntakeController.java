@@ -181,7 +181,7 @@ public class IntakeController {
         while (stackIntakeMagazineTimeOut.time() < magazineTimeOutSeconds &&
                 magazine.magazineState != Magazine.MAGAZINE_STATE.LOADED_TWO_PIXEL) {
             intake.runStackIntakeOneRotationAuto();
-            safeWaitMilliSeconds(290);//400
+            safeWaitMilliSeconds(300);//400
             magazine.senseMagazineState();
         }
     }

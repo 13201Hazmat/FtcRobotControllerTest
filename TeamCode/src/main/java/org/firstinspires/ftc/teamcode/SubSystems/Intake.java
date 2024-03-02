@@ -57,6 +57,7 @@ public class Intake {
     public STACK_INTAKE_LIFT_STATE stackIntakeLiftState = STACK_INTAKE_LIFT_STATE.DROPPED;
 
     public double intakeMotorPower = 0.64;//0.70
+    public double reverseMotorPower = 0.75;
 
     public Telemetry telemetry;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -101,7 +102,7 @@ public class Intake {
 
     public void reverseIntake() {
         if(intakeMotorState != INTAKE_MOTOR_STATE.REVERSING) {
-            runIntakeMotor(DcMotor.Direction.REVERSE, intakeMotorPower);
+            runIntakeMotor(DcMotor.Direction.REVERSE, reverseMotorPower);
             intakeMotorState = INTAKE_MOTOR_STATE.REVERSING;
             intakeMotorPrevState = intakeMotorState;
         }
@@ -129,6 +130,7 @@ public class Intake {
             stackIntakeServoState = STACK_INTAKE_SERVO_STATE.COLLECT;
         }
     }
+
     public void runStackIntakeOneRotation(){
         if(stackIntakeActivated){
             if (stackIntakeTimer.time()>700){ //1300
@@ -139,7 +141,7 @@ public class Intake {
     public void runStackIntakeOneRotationAuto(){
         startStackIntakeToCollect();
         if(stackIntakeActivated){
-            while (stackIntakeTimer.time()<550){ //700
+            while (stackIntakeTimer.time()<750){ //550
             }
             stopStackIntake();
         }
@@ -151,6 +153,16 @@ public class Intake {
             stackIntakeServoLeft.setPower(-0.8);
             stakeIntakeServoRight.setPower(1);
             reverseStackIntakeFlag = true;
+            stackIntakeServoState = STACK_INTAKE_SERVO_STATE.REVERSE;
+        }
+    }
+
+    public void reverseStackIntakeTele(){
+        if(stackIntakeLiftState == STACK_INTAKE_LIFT_STATE.DROPPED) {
+            //reverseStackIntakeTimer.reset();
+            stackIntakeServoLeft.setPower(-0.8);
+            stakeIntakeServoRight.setPower(1);
+           // reverseStackIntakeFlag = true;
             stackIntakeServoState = STACK_INTAKE_SERVO_STATE.REVERSE;
         }
     }
@@ -179,6 +191,13 @@ public class Intake {
         stackIntakeServoState = STACK_INTAKE_SERVO_STATE.STOPPED;
     }
 
+    public void stopStackIntakeTele(){
+        stackIntakeServoLeft.setPower(0);
+        stakeIntakeServoRight.setPower(0);
+        //stackIntakeActivated = false;
+        stackIntakeServoState = STACK_INTAKE_SERVO_STATE.STOPPED;
+    }
+
     public INTAKE_MOTOR_STATE getIntakeState() {
         return intakeMotorState;
     }
@@ -193,6 +212,7 @@ public class Intake {
         telemetry.addData("    Stack Intake Lift Position", stackIntakeLiftServo.getPosition());
         telemetry.addData("    Stack Intake Servo Left:", stackIntakeServoLeft);
         telemetry.addData("    Stack Intake Servo Right:", stakeIntakeServoRight);
+        telemetry.addData("Stack Servo State: ", stackIntakeServoState);
         telemetry.addLine("=============");
     }
 
