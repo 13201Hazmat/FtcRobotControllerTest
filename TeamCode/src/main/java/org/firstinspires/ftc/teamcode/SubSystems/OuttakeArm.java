@@ -20,6 +20,7 @@ public class OuttakeArm {
         READY_FOR_TRANSFER(0.77,0.27),//0.76, 0.28
         DROP_LOWEST_AUTO(0.22,0.78),
         DROP_LOWEST(0.22,0.78),//0.20, 0.80
+        DROP_LOW_WHITE_AUTO(0.22, 0.78),
         DROP_LOW_LINE(0.22,0.78),//0.22, 0.78
         DROP_BELOW_MID(0.22,0.78),//0.23, 0.77
         DROP_LEVEL_MID(0.22,0.78), //0.26, 0.74
@@ -51,8 +52,9 @@ public class OuttakeArm {
         TRANSFER(0.108),//0.023 //.028
         PICKUP(0.123), //0.045 //.043
         READY_FOR_TRANSFER(0.08),//0.0
-        DROP_LOWEST_AUTO(0.91),//0.92
+        DROP_LOWEST_AUTO(0.90),//0.92
         DROP_LOWEST(0.93), //0.85 for all drops
+        DROP_LOW_WHITE_AUTO(0.93),
         DROP_LOW_LINE(0.93),
         DROP_BELOW_MID(0.92),
         DROP_LEVEL_MID(0.92),
@@ -160,20 +162,20 @@ public class OuttakeArm {
     public void autoDropTwoPixel(){
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <200) { //100
+        while (pixelDropTimer.time() <150) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
-        while (pixelDropTimer.time() <450) { //200
+        while (pixelDropTimer.time() <400) { //450
             //gamepadcontroller.runbyGamepadcontroller
         };
         openGrip();
         pixelDropTimer.reset();
-        while (pixelDropTimer.time() <200) { //100
+        while (pixelDropTimer.time() <150) { //200
             //gamepadcontroller.runbyGamepadcontroller
         };
         closeGrip();
-        while (pixelDropTimer.time() <450) { //200
+        while (pixelDropTimer.time() <400) { //450
             //gamepadcontroller.runbyGamepadcontroller
         };
     }

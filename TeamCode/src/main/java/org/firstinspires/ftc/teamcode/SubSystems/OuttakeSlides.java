@@ -31,6 +31,7 @@ public class OuttakeSlides {
         //TRAVEL(0),
         DROP_LOWEST_AUTO(450),
         DROP_LOWEST(700), //570//88
+        DROP_LOW_WHITE_AUTO(700),
         DROP_LOW_LINE(950), //830//190
         DROP_BELOW_MID(1168),//1168//292
         DROP_LEVEL_MID(1475),//1475//394

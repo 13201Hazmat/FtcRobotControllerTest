@@ -135,6 +135,11 @@ public class OuttakeController {
         safeWaitMilliSeconds(100);
 
         switch (outtakeSlideStateDropLevel) {
+            case DROP_LOW_WHITE_AUTO:
+                outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOW_WHITE_AUTO);
+                safeWaitMilliSeconds(100);
+                outtakeArm.moveArm(OuttakeArm.OUTTAKE_ARM_STATE.DROP_LOW_WHITE_AUTO);
+                safeWaitMilliSeconds(100);
             case DROP_LOWEST_AUTO:
                 outtakeArm.moveWrist(OuttakeArm.OUTTAKE_WRIST_STATE.DROP_LOWEST_AUTO);
                 safeWaitMilliSeconds(100);
