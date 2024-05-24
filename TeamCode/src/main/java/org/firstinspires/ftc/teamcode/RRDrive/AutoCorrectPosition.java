@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.RRDrive;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.GameOpModes.OldAuto.GameField;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 
 public class AutoCorrectPosition extends Thread{

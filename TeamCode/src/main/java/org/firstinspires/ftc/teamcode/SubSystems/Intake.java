@@ -125,7 +125,7 @@ public class Intake {
         if(stackIntakeLiftState == STACK_INTAKE_LIFT_STATE.DROPPED) {
             stackIntakeTimer.reset();
             stackIntakeServoLeft.setPower(1);
-            stakeIntakeServoRight.setPower(-0.8);
+            stakeIntakeServoRight.setPower(-0.8);//0.8
             stackIntakeActivated = true;
             stackIntakeServoState = STACK_INTAKE_SERVO_STATE.COLLECT;
         }
@@ -141,7 +141,7 @@ public class Intake {
     public void runStackIntakeOneRotationAuto(){
         startStackIntakeToCollect();
         if(stackIntakeActivated){
-            while (stackIntakeTimer.time()<750){ //550
+            while (stackIntakeTimer.time()<550){ //550
             }
             stopStackIntake();
         }
@@ -150,7 +150,7 @@ public class Intake {
     public void reverseStackIntake(){
         if(stackIntakeLiftState == STACK_INTAKE_LIFT_STATE.DROPPED) {
             reverseStackIntakeTimer.reset();
-            stackIntakeServoLeft.setPower(-0.8);
+            stackIntakeServoLeft.setPower(-0.8);//0.8
             stakeIntakeServoRight.setPower(1);
             reverseStackIntakeFlag = true;
             stackIntakeServoState = STACK_INTAKE_SERVO_STATE.REVERSE;

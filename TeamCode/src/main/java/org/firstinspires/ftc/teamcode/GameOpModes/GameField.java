@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
+package org.firstinspires.ftc.teamcode.GameOpModes;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
