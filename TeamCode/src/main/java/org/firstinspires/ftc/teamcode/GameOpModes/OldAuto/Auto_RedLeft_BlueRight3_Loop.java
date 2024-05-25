@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
@@ -44,12 +44,14 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -65,6 +67,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
+@Disabled
 @Autonomous(name = "RedLeft_BlueRight Loop", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
 public class Auto_RedLeft_BlueRight3_Loop extends LinearOpMode {
 
@@ -684,97 +687,6 @@ public class Auto_RedLeft_BlueRight3_Loop extends LinearOpMode {
     }
 
     public void runActionForRedLeftBlueRight() {
-        if (autoOption == AUTO_OPTION.PURPLE_AND_PARK) {
-            Actions.runBlocking(
-                    new SequentialAction(
-                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
-                            intakeController.dropLiftIntake(),
-                            new SleepAction(0.5),
-                            trajInitToDropPurplePixel,
-                            intakeController.dropPurplePixelUsingIntakeAction(),
-                            new SleepAction(0.5),
-                            intakeController.intakeLiftUpAction(),
-                            new SleepAction(0.5),
-                            trajDropPurplePixelToPark,
-                            outtakeController.moveOuttakeToEndStateAction()
-                    )
-            );
-        }
-
-        if (autoOption == AUTO_OPTION.PURPLE_YELLOW_AND_PARK) {
-            Actions.runBlocking(
-                    new SequentialAction(
-                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
-                            intakeController.dropLiftIntake(),
-                            new SleepAction(0.5),
-                            trajInitToDropPurplePixel,
-                            intakeController.dropPurplePixelUsingIntakeAction(),
-                            new SleepAction(0.5),
-                            intakeController.intakeLiftUpAction(),
-                            new SleepAction(0.5),
-                            //trajDropPurplePixelToDropYellowPixel,
-                            trajDropPurplePixelToAfterPurplePixel,
-                            trajAfterPurplePixelToDropYellowPixel,
-                            outtakeController.moveReadyForTransferToTransferAction(),
-                            outtakeController.moveTransferToPickupAction(),
-                            outtakeController.movePickupToReadyForTransferAction(),
-                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                            new SleepAction(0.4),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.4),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.4),
-                            outtakeController.moveOuttakeToEndStateAction(),
-                            trajDropYellowPixelToPark
-                    )
-            );
-        }
-
-        if (autoOption == AUTO_OPTION.PRELOAD_STACK1_AND_PARK) {
-            Actions.runBlocking(
-                    new SequentialAction(
-                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
-                            intakeController.dropLiftIntake(),
-                            trajInitToDropPurplePixel,
-                            intakeController.dropPurplePixelUsingIntakeAction(),
-                            new SleepAction(0.3),
-                            intakeController.intakeLiftUpAction(),
-                            new SleepAction(0.3),
-                            trajDropPurplePixelToAfterPurplePixel,
-                            intakeController.dropLiftIntake(),
-                            trajAfterPurplePixelToStack,
-                            //intakeController.intakeAtStackOnePixelAction(),
-                            intakeController.intakeAtStackUsingMagazineSensorAction(1),
-                            //TODO: CHANGE ACTION TO Rotate once each of Horizontal intake, rather than continuous rotation.
-                            // Intake should be running more, less revolutions of horizontal intake.
-                            new ParallelAction(
-                                    new SequentialAction(
-                                            trajStackToAfterPurplePixel,
-                                            trajAfterPurplePixelToDropYellowPixel
-                                    ),
-                                    intakeController.intakeReverseAction(0.7),
-                                    intakeController.intakeLiftUpAction(),
-                                    new SequentialAction(
-                                            new SleepAction(1.5),
-                                            outtakeController.moveReadyForTransferToTransferAction(),
-                                            outtakeController.moveTransferToPickupAction(),
-                                            outtakeController.movePickupToReadyForTransferAction()
-                                    )
-                            ),
-                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
-                            new SleepAction(0.7),
-                            outtakeController.dropTwoPixelAction(),
-                            new SleepAction(0.1),
-                            //Go to Park
-                            new ParallelAction(
-                                    intakeController.intakeLiftUpAction(),
-                                    trajDropYellowPixelToPark,
-                                    outtakeController.moveOuttakeToEndStateAction()
-                            )
-                    )
-            );
-        }
-
         if (autoOption == AUTO_OPTION.ONE_CYCLE) {
             Actions.runBlocking(
                     new SequentialAction(
@@ -809,10 +721,6 @@ public class Auto_RedLeft_BlueRight3_Loop extends LinearOpMode {
                             ),
                             outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
                             new SleepAction(0.7),
-                            /*outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.2),
-                            outtakeController.dropOnePixelAction(),
-                            new SleepAction(0.1),*/
                             outtakeController.dropTwoPixelAction(),
                             new SleepAction(0.2),
                             //LOOP 1
@@ -875,39 +783,6 @@ public class Auto_RedLeft_BlueRight3_Loop extends LinearOpMode {
         }
 
         autoOption = AUTO_OPTION.ONE_CYCLE;
-        /*
-        while (!isStopRequested()) {
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------", "");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addLine("Select Auto Options");
-            telemetry.addData("    Purple and Park                 ", "(B / O)");
-            telemetry.addData("    Purple, Yellow and Park         ", "(A / X)");
-            telemetry.addData("    Purple, Stack1, Yellow and Park ", "(X / ▢)");
-            telemetry.addData("    1 cycle                         ", "(Y / Δ)");
-
-            if (gamepadController.gp1GetCirclePress()) {
-                autoOption = AUTO_OPTION.PURPLE_AND_PARK;
-                break;
-            }
-
-            if (gamepadController.gp1GetCrossPress()) {
-                autoOption = AUTO_OPTION.PURPLE_YELLOW_AND_PARK;
-                break;
-            }
-
-            if (gamepadController.gp1GetSquarePress()) {
-                autoOption = AUTO_OPTION.PRELOAD_STACK1_AND_PARK;
-                break;
-            }
-            if (gamepadController.gp1GetTrianglePress()) {
-                autoOption = AUTO_OPTION.ONE_CYCLE;
-                break;
-            }
-            telemetry.update();
-        }
-
-         */
 
         while (!isStopRequested()) {
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");

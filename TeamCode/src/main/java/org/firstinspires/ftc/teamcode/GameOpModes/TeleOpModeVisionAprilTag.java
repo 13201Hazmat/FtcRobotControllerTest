@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.ParkingArm;
 import org.firstinspires.ftc.teamcode.TestOpModes.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 
@@ -42,6 +43,7 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public ParkingArm parkingArm;
     public VisionSensor visionSensor;
     public VisionAprilTag visionAprilTagBack;
     public Lights lights;
@@ -143,6 +145,10 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
         launcher = new Launcher(hardwareMap, telemetry);
         telemetry.addLine("Launcher Initialized");
+        telemetry.update();
+
+        parkingArm = new ParkingArm(hardwareMap, telemetry);
+        telemetry.addLine("ParkingArm Initialized");
         telemetry.update();
 
         /* Create VisionAprilTag */

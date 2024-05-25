@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
@@ -44,12 +44,14 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -65,8 +67,10 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "RedRight_BlueLeft Loop", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
+@Disabled
+@Autonomous(name = "RedRight_BlueLeft 4 Opt 1", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+
+public class Auto_RedRight_BlueLeft4Opt1 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -128,7 +132,13 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         //Key Pay inputs to selecting Starting Position of robot
-        selectStartingPosition();
+        //selectStartingPosition();
+        GameField.startPosition = GameField.START_POSITION.RED_RIGHT;
+        GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;
+        autoOption = AUTO_OPTION.ONE_CYCLE;
+        pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
+        parkingOption = PARKING_OPTION.RIGGING_WALL;
+        dropStackPixelOption = DROP_STACK_PIXEL_OPTION.BACK_DROP;
         telemetry.addData("Selected Starting Position", GameField.startPosition);
 
         //Build trajectories
@@ -167,14 +177,14 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
             gameTimer.reset();
             startTimer.reset();
             //Turn Lights Green
-            lights.setPattern(Lights.REV_BLINKIN_PATTERN.DEFAULT);
+            lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
             runActionForRedRightBlueLeft();
         }
     }   // end runOpMode()
 
     Pose2d initPose= new Pose2d(0, 0, 0);
-    Pose2d moveBeyondTrussPose = new Pose2d(2, 0, 0);
+    Pose2d moveBeyondTrussPose = new Pose2d(6.5, 0, 0);
 
     Pose2d dropPurplePixelPoseLeft = new Pose2d(0, 0, 0);
     Pose2d dropPurplePixelPoseMiddle = new Pose2d(0, 0, 0);
@@ -222,6 +232,7 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
     Action trajDropYellowPixelToDropPurplePixelToStack, trajDropYellowPixelToDropPurplePixelToStackLeft,
             trajDropYellowPixelToDropPurplePixelToStackMiddle, trajDropYellowPixelToDropPurplePixelToStackRight;
     Action trajStackToDropStackPixel, trajDropStackPixelToStack, trajStackToDropStackPixelLoop2, trajDropStackPixelToPark;
+    Action trajStackToMidwayPose, trajMidwayPoseToDropStackPixel;
 
     public void buildAutonoumousMode() {
         //Initialize Pose2d as desired
@@ -230,43 +241,43 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
         switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                dropPurplePixelPoseLeft = new Pose2d(34, 15.7, Math.toRadians(-90)); //x22.2, 3.3, 25
-                dropYellowPixelPoseLeft = new Pose2d(23.5, 32.7, Math.toRadians(-90));//x16.7, y32.5
-                beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(18.7, 30, Math.toRadians(-90));
-                stageMidwayBackDropPoseLeft = new Pose2d(54, 15.7, Math.toRadians(-90)); //x53
+                dropPurplePixelPoseLeft = new Pose2d(34, 21, Math.toRadians(-90)); //x22.2, 3.3, 25
+                dropYellowPixelPoseLeft = new Pose2d(17.5, 35.4, Math.toRadians(-90));//x16.7, y32.5
+                beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(18.7, 30, Math.toRadians(-84));
+                stageMidwayBackDropPoseLeft = new Pose2d(59, 15.7, Math.toRadians(-84)); //x53
 
-                dropPurplePixelPoseMiddle = new Pose2d(38.3, 9, Math.toRadians(-90)); //x28, y-1.6, 10.7
-                dropYellowPixelPoseMiddle = new Pose2d(27.5, 32.7, Math.toRadians(-90));//x25, y35
-                beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(25, 30, Math.toRadians(-90));
-                stageMidwayBackDropPoseMiddle = new Pose2d(54, 9, Math.toRadians(-90)); //x53
+                dropPurplePixelPoseMiddle = new Pose2d(40, 12, Math.toRadians(-88)); //x28, y-1.6, 10.7
+                dropYellowPixelPoseMiddle = new Pose2d(24, 35.4, Math.toRadians(-90));//x25, y35
+                beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(25, 30, Math.toRadians(-84));
+                stageMidwayBackDropPoseMiddle = new Pose2d(59, 9, Math.toRadians(-84)); //x53
 
-                dropPurplePixelPoseRight = new Pose2d(27.8, -4.5, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
-                dropYellowPixelPoseRight = new Pose2d(37.5, 32.7, Math.toRadians(-90)); //y=33.5, x35
-                beforeParkAfterDropYellowPixelPoseRight = new Pose2d(33.5, 30, Math.toRadians(-90));
-                stageMidwayBackDropPoseRight = new Pose2d(54, -4.5, Math.toRadians(-90)); //x53
+                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-88)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                dropYellowPixelPoseRight = new Pose2d(31, 35.4, Math.toRadians(-88)); //y=33.5, x35
+                beforeParkAfterDropYellowPixelPoseRight = new Pose2d(33.5, 30, Math.toRadians(-84));
+                stageMidwayBackDropPoseRight = new Pose2d(59, 1.5, Math.toRadians(-87)); //x53
 
-                wallStackPose = new Pose2d(13, -56, Math.toRadians(-90)); //-60
-                wallMidwayStackPose = new Pose2d(2, -52, Math.toRadians(-90));
-                wallMidwayBackDropPose = new Pose2d(2, 18, Math.toRadians(-90));
-                stageDoorStackPose = new Pose2d(51.3, -76, Math.toRadians(-90));//x51, y-73.8, -90
+                wallStackPose = new Pose2d(31,-72.5, Math.toRadians(-59)); //-60
+                wallMidwayStackPose = new Pose2d(6, -52, Math.toRadians(-85));
+                wallMidwayBackDropPose = new Pose2d(5, 18, Math.toRadians(-85));
+                stageDoorStackPose = new Pose2d(68, -66.5, Math.toRadians(-85));//x51, y-73.8, -90
                 //stageMidwayTrussPose = new Pose2d(50, -29, Math.toRadians(-90));//x53
-                stageMidwayStackBackDropPose = new Pose2d(54, 18, Math.toRadians(-90)); //x53
+                stageMidwayStackBackDropPose = new Pose2d(50, 18, Math.toRadians(-87)); //x53 -86
 
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
-                parkPoseWall = new Pose2d(2.5, 27, Math.toRadians(-90)); //x2, x26
-                parkPoseStageDoor = new Pose2d(48, 32, Math.toRadians(-90)); //x50, y30
+                parkPoseWall = new Pose2d(2.5, 34, Math.toRadians(-90)); //x2, x26
+                parkPoseStageDoor = new Pose2d(48, 32, Math.toRadians(-84)); //x50, y30
 
                 if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
                     if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
-                        dropStackPixelPose = new Pose2d(26, 32, Math.toRadians(-90)); //y=32.5, x33.5
+                        dropStackPixelPose = new Pose2d(20, 31.5, Math.toRadians(-86)); //y=32.5, x33.5
                     } else {//BACK_STAGE
                         dropStackPixelPose = parkPoseStageDoor;
                     }
                     //beforeParkAfterDropStackPixelPose = new Pose2d(31.5, 30, Math.toRadians(-90)); //y=33.5, x35.5
                 } else { //WALL_RIGGING
                     if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
-                        dropStackPixelPose = new Pose2d(18.7, 32.5, Math.toRadians(-90));//x20, y35.5
+                        dropStackPixelPose = new Pose2d(25, 33.5, Math.toRadians(-90));//x20, y35.5
                     } else {//BACK_STAGE
                         dropStackPixelPose = parkPoseWall;
 
@@ -278,44 +289,44 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
 
             case RED_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                dropPurplePixelPoseLeft = new Pose2d(27, 1.5, Math.toRadians(90));//x20.5, y8,51
-                dropYellowPixelPoseLeft = new Pose2d(32.5, -34.5, Math.toRadians(90)); //x=31.5,y=-32
+                dropPurplePixelPoseLeft = new Pose2d(28.5, 1.5, Math.toRadians(90));//x20.5, y8,51
+                dropYellowPixelPoseLeft = new Pose2d(33, -36, Math.toRadians(88)); //x=31.5,y=-32
                 beforeParkAfterDropYellowPixelPoseLeft = new Pose2d(33, -30, Math.toRadians(90));
-                stageMidwayBackDropPoseLeft = new Pose2d(52, 1.5, Math.toRadians(90));//x52//x47, 0.7, 90
+                stageMidwayBackDropPoseLeft = new Pose2d(56.5, 1.5, Math.toRadians(85));//x52//x47, 0.7, 90
 
-                dropPurplePixelPoseMiddle = new Pose2d(36, -13, Math.toRadians(90));//x27.6, y0, 13
-                dropYellowPixelPoseMiddle = new Pose2d(27, -34.5, Math.toRadians(90));//x27, y-32
+                dropPurplePixelPoseMiddle = new Pose2d(39, -13, Math.toRadians(90));//x27.6, y0, 13
+                dropYellowPixelPoseMiddle = new Pose2d(26, -35.8, Math.toRadians(90));//x27, y-32
                 beforeParkAfterDropYellowPixelPoseMiddle = new Pose2d(26, -30, Math.toRadians(90));
-                stageMidwayBackDropPoseMiddle = new Pose2d(52, -15, Math.toRadians(90));//x52//x47, -17, 90
+                stageMidwayBackDropPoseMiddle = new Pose2d(56.5, -15, Math.toRadians(85));//x52//x47, -17, 90
 
-                dropPurplePixelPoseRight = new Pose2d(26.8, -20, Math.toRadians(90));//x26.8, y-21.6
-                dropYellowPixelPoseRight = new Pose2d(18.5, -34.5, Math.toRadians(90));//x18, y-32
+                dropPurplePixelPoseRight = new Pose2d(27.5, -20, Math.toRadians(90));//x26.8, y-21.6
+                dropYellowPixelPoseRight = new Pose2d(20, -35.8, Math.toRadians(90));//x18, y-32
                 beforeParkAfterDropYellowPixelPoseRight = new Pose2d(16.5, -30, Math.toRadians(90));
-                stageMidwayBackDropPoseRight = new Pose2d(52, -20, Math.toRadians(90));//x52//x47, -17, 90
+                stageMidwayBackDropPoseRight = new Pose2d(56.5, -20, Math.toRadians(85));//x52//x47, -17, 90
 
                 afterPurplePixelPose = new Pose2d(8, 14, Math.toRadians(30));
-                wallStackPose = new Pose2d(13, 69, Math.toRadians(90));//73
-                wallMidwayStackPose = new Pose2d(2, 52, Math.toRadians(90));
-                wallMidwayBackDropPose = new Pose2d(2, -18, Math.toRadians(90));
-                stageDoorStackPose = new Pose2d(48, 71, Math.toRadians(90));//x45//x55.2, y72.2, 90
-                stageMidwayStackBackDropPose = new Pose2d(52, -23, Math.toRadians(90));//x52//x47
+                wallStackPose = new Pose2d(24.3, 74, Math.toRadians(59));//73
+                wallMidwayStackPose = new Pose2d(6.7, 52, Math.toRadians(87));
+                wallMidwayBackDropPose = new Pose2d(6, -10, Math.toRadians(87));
+                stageDoorStackPose = new Pose2d(55.5, 69.7, Math.toRadians(86));//x45//x55.2, y72.2, 90
+                stageMidwayStackBackDropPose = new Pose2d(56, -23, Math.toRadians(86));//x52//x47
                 //stageMidwayTrussPose = new Pose2d(49, 27.5, Math.toRadians(90));
 
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
-                parkPoseWall = new Pose2d(-0.8, -34, Math.toRadians(90));
-                parkPoseStageDoor = new Pose2d(56, -34, Math.toRadians(90));//x56,-38
+                parkPoseWall = new Pose2d(26, -34, Math.toRadians(90));
+                parkPoseStageDoor = new Pose2d(56, -36, Math.toRadians(90));//x56,-38
 
                 if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
                     if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
-                        dropStackPixelPose = new Pose2d(27, -34, Math.toRadians(90));//x20, -34.5
+                        dropStackPixelPose = new Pose2d(30, -35.2, Math.toRadians(90));//x20, -34.5
                     } else {//BACK_STAGE
                         dropStackPixelPose = parkPoseStageDoor;
                     }
                     beforeParkAfterDropStackPixelPose = new Pose2d(30, -30, Math.toRadians(90));
                 } else { //WALL_RIGGING
                     if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
-                        dropStackPixelPose = new Pose2d(27, -34, Math.toRadians(90));
+                        dropStackPixelPose = new Pose2d(30, -33.5, Math.toRadians(90));
                     } else {//BACK_STAGE
                         dropStackPixelPose = parkPoseWall;
                     }
@@ -337,21 +348,23 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
 
         trajInitToDropYellowPixelLeft = drive.actionBuilder(initPose)
                 .strafeTo(moveBeyondTrussPose.position)
-                .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
+                .splineToLinearHeading(dropYellowPixelPoseLeft, 0, new TranslationalVelConstraint(25.0),
+                    new ProfileAccelConstraint(-20.0, 20.0))
                 .build();
         trajInitToDropYellowPixelMiddle = drive.actionBuilder(initPose)
                 .strafeTo(moveBeyondTrussPose.position)
-                .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
+                .splineToLinearHeading(dropYellowPixelPoseMiddle, 0, new TranslationalVelConstraint(30.0),
+                        new ProfileAccelConstraint(-25.0, 20.0))
                 .build();
         trajInitToDropYellowPixelRight = drive.actionBuilder(initPose)
                 .strafeTo(moveBeyondTrussPose.position)
-                .splineToLinearHeading(dropYellowPixelPoseRight, 0)
+                .splineToLinearHeading(dropYellowPixelPoseRight, 0, new TranslationalVelConstraint(24.0),
+                        new ProfileAccelConstraint(-19.0, 19.0))
                 .build();
 
         //FOR ONE_LOOP
         trajDropYellowPixelToDropPurplePixelLeft = drive.actionBuilder(dropYellowPixelPoseLeft)
                 .strafeToLinearHeading(dropPurplePixelPoseLeft.position, dropPurplePixelPoseLeft.heading)
-
                 .build();
         trajDropYellowPixelToDropPurplePixelMiddle = drive.actionBuilder(dropYellowPixelPoseMiddle)
                 .strafeToLinearHeading(dropPurplePixelPoseMiddle.position, dropPurplePixelPoseMiddle.heading)
@@ -375,23 +388,27 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
 
         if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
             trajDropPurplePixelToStackLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
-                    .strafeToLinearHeading(stageMidwayBackDropPoseLeft.position, stageMidwayBackDropPoseLeft.heading)
+                    .strafeToLinearHeading(stageMidwayBackDropPoseLeft.position, stageMidwayBackDropPoseLeft.heading,
+                            new TranslationalVelConstraint(20), new ProfileAccelConstraint(-15,15))
                     .strafeTo(stageDoorStackPose.position)
                     .build();
             trajDropPurplePixelToStackMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
-                    .strafeToLinearHeading(stageMidwayBackDropPoseMiddle.position, stageMidwayBackDropPoseMiddle.heading)
+                    .strafeToLinearHeading(stageMidwayBackDropPoseMiddle.position, stageMidwayBackDropPoseMiddle.heading,
+                            new TranslationalVelConstraint(20), new ProfileAccelConstraint(-15,15))
                     .strafeTo(stageDoorStackPose.position)
                     .build();
             trajDropPurplePixelToStackRight = drive.actionBuilder(dropPurplePixelPoseRight)
-                    .strafeToLinearHeading(stageMidwayBackDropPoseRight.position, stageMidwayBackDropPoseRight.heading)
-                    .strafeToLinearHeading(stageDoorStackPose.position, stageDoorStackPose.heading)
+                    .strafeToLinearHeading(stageMidwayBackDropPoseRight.position, stageMidwayBackDropPoseRight.heading,
+                            new TranslationalVelConstraint(20), new ProfileAccelConstraint(-15,15))
+                    .strafeTo(stageDoorStackPose.position)
                     .build();
 
             trajStackToDropStackPixel = drive.actionBuilder(stageDoorStackPose)
-                    .strafeToLinearHeading(stageMidwayStackBackDropPose.position,stageMidwayStackBackDropPose.heading,
-                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-25,25))
                     .setReversed(true)
-                    .splineToLinearHeading(dropStackPixelPose, 0)
+                    .strafeToLinearHeading(stageMidwayStackBackDropPose.position,stageMidwayStackBackDropPose.heading/*,
+                            new TranslationalVelConstraint(40), new ProfileAccelConstraint(-30,30)*/)
+                    .splineToLinearHeading(dropStackPixelPose, 0, new TranslationalVelConstraint(40),
+                            new ProfileAccelConstraint(-30,30))
                             //new TranslationalVelConstraint(40), new ProfileAccelConstraint(-10,10))
                     .build();
 
@@ -414,30 +431,47 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
         } else {
             trajDropPurplePixelToStackLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
                     .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading)
-                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading)
+                    .strafeTo(wallMidwayStackPose.position)
                     .strafeToLinearHeading(wallStackPose.position, wallStackPose.heading)
                     .build();
             trajDropPurplePixelToStackMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
                     .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading)
-                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading)
+                    .strafeTo(wallMidwayStackPose.position)
                     .strafeToLinearHeading(wallStackPose.position, wallStackPose.heading)
                     .build();
             trajDropPurplePixelToStackRight = drive.actionBuilder(dropPurplePixelPoseRight)
                     .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading)
-                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading)
+                    .strafeTo(wallMidwayStackPose.position)
                     .strafeToLinearHeading(wallStackPose.position, wallStackPose.heading)
                     .build();
 
+
             trajStackToDropStackPixel = drive.actionBuilder(wallStackPose)
                     .setReversed(true)
-                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading)
-                    .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading)
+                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading,
+                            new TranslationalVelConstraint(20), new ProfileAccelConstraint(-27,27))
+                    .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(32), new ProfileAccelConstraint(-27,27))
                     .splineToLinearHeading(dropStackPixelPose, 0)
                     .build();
 
+            trajStackToMidwayPose = drive.actionBuilder(wallStackPose)
+                    .setReversed(true)
+                    .strafeToLinearHeading(wallMidwayStackPose.position,wallMidwayStackPose.heading,
+                            new TranslationalVelConstraint(35), new ProfileAccelConstraint(-30,30))
+                    .strafeToLinearHeading(wallMidwayBackDropPose.position, wallMidwayBackDropPose.heading,
+                            new TranslationalVelConstraint(35), new ProfileAccelConstraint(-30,30))
+                    .build();
+
+            trajMidwayPoseToDropStackPixel = drive.actionBuilder(wallMidwayBackDropPose)
+                    .setReversed(true)
+                    .splineToLinearHeading(dropStackPixelPose, 0)
+                    .build();
+
+
             trajDropStackPixelToPark = drive.actionBuilder(dropStackPixelPose)
-                    .strafeTo(beforeParkAfterDropStackPixelPose.position)
-                    .strafeTo(parkPoseWall.position)
+                    //.strafeTo(beforeParkAfterDropStackPixelPose.position)
+                    .strafeToLinearHeading(parkPoseWall.position, parkPoseWall.heading,new TranslationalVelConstraint(20.0))
                     //.splineToLinearHeading(parkPoseStageDoor, 0)
                     .build();
 
@@ -479,16 +513,18 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
                                     intakeController.squishPurplePixelInStartOfAutoForDropAction(),
                                     trajInitToDropYellowPixel,
                                     new SequentialAction(
-                                            new SleepAction(0.5),
-                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
+                                            new SleepAction(0.9),
+                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
                                     )
                             ),
-                            new SleepAction(0.7),
-                            outtakeController.dropOnePixelAction(),
-                            intakeController.dropLiftIntake(),
+                            new SleepAction(0.5),
+                            new ParallelAction(
+                                    outtakeController.dropOnePixelAction(),
+                                    intakeController.dropLiftIntake()
+                            ),
                             trajDropYellowPixelToDropPurplePixel,
                             intakeController.dropPurplePixelUsingIntakeAction(),
-                            new SleepAction(1), //ADD FOR SYNCHRONIZING TIME
+                            new SleepAction(0.5), //ADD FOR SYNCHRONIZING TIME
                             //Go to Park
                             new ParallelAction(
                                     intakeController.intakeLiftUpAction(),
@@ -506,16 +542,18 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
                                     intakeController.squishPurplePixelInStartOfAutoForDropAction(),
                                     trajInitToDropYellowPixel,
                                     new SequentialAction(
-                                            new SleepAction(0.5),
-                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
+                                            new SleepAction(0.9),
+                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
                                     )
                             ),
                             new SleepAction(0.7),
-                            outtakeController.dropOnePixelAction(),
-                            intakeController.dropLiftIntake(),
+                            new ParallelAction(
+                                    outtakeController.dropOnePixelAction(),
+                                    intakeController.dropLiftIntake()
+                            ),
                             trajDropYellowPixelToDropPurplePixel,
                             intakeController.dropPurplePixelUsingIntakeAction(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             //LOOP 1
                             new ParallelAction(
                                     intakeController.intakeLiftUpAction(),
@@ -529,21 +567,24 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
                                     )
                             ),
                             //intakeController.intakeAtStackTwoPixelsAction(),
-                            intakeController.intakeAtStackUsingMagazineSensorAction(2),
+                            intakeController.intakeAtStackUsingMagazineSensorAction(1.35),//1.5
                             new ParallelAction(
-                                    trajStackToDropStackPixel,
-                                    intakeController.intakeReverseAction(1),
-                                    intakeController.intakeLiftUpAction(),
-                                    new SequentialAction(
-                                            new SleepAction(0.5),
-                                            outtakeController.moveReadyForTransferToTransferAction(),
-                                            new SleepAction(0.2),
-                                            outtakeController.moveTransferToPickupAction(),
-                                            new SleepAction(0.2),
-                                            outtakeController.movePickupToReadyForTransferAction()
-                                    )
+                                    intakeController.reverseStackIntakeOneRotationAction(),
+                                    intakeController.intakeReverseAction(1.4)
                             ),
-                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
+                            intakeController.intakeLiftUpAction(),
+                            trajStackToMidwayPose,
+                            new SequentialAction(
+                                    new SleepAction(0.5),
+                                    outtakeController.moveReadyForTransferToTransferAction(),
+                                    new SleepAction(0.2),
+                                    outtakeController.moveTransferToPickupAction(),
+                                    new SleepAction(0.2),
+                                    outtakeController.movePickupToReadyForTransferAction()
+                            ),
+                            trajMidwayPoseToDropStackPixel,
+                            //trajStackToDropStackPixel,
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_WHITE_AUTO),
                             new SleepAction(0.7),
                             /*outtakeController.dropOnePixelAction(),
                             new SleepAction(0.4),
@@ -568,7 +609,7 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
                                     trajInitToDropYellowPixel,
                                     new SequentialAction(
                                             new SleepAction(0.5),
-                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST)
+                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
                                     ),
                                     intakeController.dropLiftIntake()
                             ),
@@ -690,17 +731,14 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
             telemetry.update();
         }
 
-        autoOption = AUTO_OPTION.TWO_CYCLE;
-        pathwayOption = PATHWAY_OPTION.STAGEDOOR;
-        parkingOption = PARKING_OPTION.STAGEDOOR;
-        /*while (!isStopRequested()) {
+        while (!isStopRequested()) {
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");
             telemetry.addData("---------------------------------------", "");
             telemetry.addData("Selected Starting Position", GameField.startPosition);
             telemetry.addLine("Select Auto Options");
             telemetry.addData("    Yellow, Purple and Park     ", "(X / ▢)");
             telemetry.addData("    1 cycle                     ", "(Y / Δ)");
-            telemetry.addData("    2 cycle (only Stage Door)   ", "(B / O)");
+            //telemetry.addData("    2 cycle (only Stage Door)   ", "(B / O)");
 
             if (gamepadController.gp1GetSquarePress()) {
                 autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
@@ -710,16 +748,14 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
                 autoOption = AUTO_OPTION.ONE_CYCLE;
                 break;
             }
-            if (gamepadController.gp1GetCirclePress()) {
+            /*if (gamepadController.gp1GetCirclePress()) {
                 autoOption = AUTO_OPTION.TWO_CYCLE;
                 pathwayOption = PATHWAY_OPTION.STAGEDOOR;
                 parkingOption = PARKING_OPTION.STAGEDOOR;
                 break;
-            }
+            }*/
             telemetry.update();
         }
-
-         */
 
         if (autoOption != AUTO_OPTION.TWO_CYCLE) {
             while (!isStopRequested()) {
@@ -830,8 +866,8 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
 
         /* Create Lights */
         lights = new Lights(hardwareMap, telemetry);
-        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
         telemetry.addLine("Lights Initialized");
+        lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
         telemetry.update();
 
         outtakeController = new OuttakeController(this.outtakeSlides, this.outtakeArm, this);
@@ -860,7 +896,7 @@ public class Auto_RedRight_BlueLeft3_Loop extends LinearOpMode {
         }
 
         //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-        GameField.debugLevel = GameField.DEBUG_LEVEL.MAXIMUM;
+        GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
 
         telemetry.addLine("+++++++++++++++++++++++");
         telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
