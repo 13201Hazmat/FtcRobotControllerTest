@@ -172,7 +172,6 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
 
     Pose2d afterPurplePixelPose1 = new Pose2d(0, 0, 0); //TODO: FIX BUG
     Pose2d afterPurplePixelPose2 = new Pose2d(0, 0, 0); //TODO: FIX BUG
-    Pose2d afterPurplePixelPose3 = new Pose2d(0, 0, 0); //TODO: FIX BUG
 
     Pose2d dropYellowPixelPoseLeft= new Pose2d(0, 0, 0);
     Pose2d dropYellowPixelPoseMiddle= new Pose2d(0, 0, 0);
@@ -213,7 +212,6 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
 
                 afterPurplePixelPose1 = new Pose2d(33, 21, Math.toRadians(-88));;
                 afterPurplePixelPose2 = new Pose2d(5, 21, Math.toRadians(-88));;
-                afterPurplePixelPose3 =  new Pose2d(5, 26+44, Math.toRadians(-90));;
 
                 afterYellowPixelPose = new Pose2d(24, 20+44, Math.toRadians(-90));
 
@@ -225,27 +223,25 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
 
             case RED_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                dropPurplePixelPoseLeft = new Pose2d(28.5, 1.5, Math.toRadians(90));//x20.5, y8,51
-                dropYellowPixelPoseLeft = new Pose2d(33, -35.8-44, Math.toRadians(88)); //x=31.5,y=-32
+                dropPurplePixelPoseLeft = new Pose2d(26.5, 1, Math.toRadians(90));//x20.5, y8,51
+                dropYellowPixelPoseLeft = new Pose2d(31, -84, Math.toRadians(88)); //x=31.5,y=-32
 
-                dropPurplePixelPoseMiddle = new Pose2d(24, 0, Math.toRadians(0));//x27.6, y0, 13
-                dropYellowPixelPoseMiddle = new Pose2d(26, -35.8-44, Math.toRadians(90));//x27, y-32
 
-                dropPurplePixelPoseRight = new Pose2d(27.5, -20, Math.toRadians(90));//x26.8, y-21.6
-                dropYellowPixelPoseRight = new Pose2d(20, -35.8-44, Math.toRadians(90));//x18, y-32
+                dropPurplePixelPoseMiddle = new Pose2d(24, -3.5, Math.toRadians(0));//x27.6, y0, 13
+                dropYellowPixelPoseMiddle = new Pose2d(24.5, -84, Math.toRadians(90));//x27, y-32
 
-                afterPurplePixelPose1 = new Pose2d(29, -20, Math.toRadians(90));;
-                afterPurplePixelPose2 = new Pose2d(29, -20, Math.toRadians(90));
-                afterPurplePixelPose3 = new Pose2d(29, -26-44, Math.toRadians(90));;
+                dropPurplePixelPoseRight = new Pose2d(27, -23, Math.toRadians(90));//x26.8, y-21.6
+                dropYellowPixelPoseRight = new Pose2d(20, -84, Math.toRadians(90));//x18, y-32
 
-                afterYellowPixelPose = new Pose2d(26, -20-44, Math.toRadians(90));;
+                afterPurplePixelPose1 = new Pose2d(5, -21, Math.toRadians(90));;
+                afterPurplePixelPose2 = new Pose2d(5, -61, Math.toRadians(90));
 
-                parkPoseCornerWallRigging = new Pose2d(2.5, -40-44, Math.toRadians(90));
-                parkPoseFrontOfWallRigging =  new Pose2d(2.5, -20-44, Math.toRadians(90));;
-                parkPoseFrontOfBackDrop = new Pose2d(24, -25.4-44, Math.toRadians(90));
+                afterYellowPixelPose = new Pose2d(5, -45, Math.toRadians(90));;
 
+                parkPoseCornerWallRigging = new Pose2d(0, -94, Math.toRadians(90));
+                parkPoseFrontOfWallRigging =  new Pose2d(4, -62, Math.toRadians(90));;
+                parkPoseFrontOfBackDrop = new Pose2d(21, -68, Math.toRadians(90));
                 break;
-
         }
 
         switch (parkingOption) {
@@ -270,7 +266,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                 .build();
         trajInitToDropPurplePixelMiddle = drive.actionBuilder(initPose)
                 .strafeTo(moveBeyondTrussPose.position)
-                .splineToLinearHeading(dropPurplePixelPoseMiddle, 0, new TranslationalVelConstraint(30.0),
+                .splineToLinearHeading(dropPurplePixelPoseMiddle, 0, new TranslationalVelConstraint(24.0),
                         new ProfileAccelConstraint(-20.0, 20.0))
                 .build();
         trajInitToDropPurplePixelRight = drive.actionBuilder(initPose)
@@ -293,22 +289,19 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                 .strafeToLinearHeading(afterPurplePixelPose1.position, afterPurplePixelPose1.heading)
                 .build();
 
-        trajAfterPurplePixelToDropYellowPixelLeft = drive.actionBuilder(dropPurplePixelPoseLeft)
-                .setReversed(true)
+        trajAfterPurplePixelToDropYellowPixelLeft = drive.actionBuilder(afterPurplePixelPose1)
                 .strafeToLinearHeading(afterPurplePixelPose2.position, afterPurplePixelPose2.heading)
-                .strafeToLinearHeading(afterPurplePixelPose3.position, afterPurplePixelPose3.heading)
+                .setReversed(true)
                 .splineToLinearHeading(dropYellowPixelPoseLeft, 0)
                 .build();
-        trajAfterPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(dropPurplePixelPoseMiddle)
-                .setReversed(true)
+        trajAfterPurplePixelToDropYellowPixelMiddle = drive.actionBuilder(afterPurplePixelPose1)
                 .strafeToLinearHeading(afterPurplePixelPose2.position, afterPurplePixelPose2.heading)
-                .strafeToLinearHeading(afterPurplePixelPose3.position, afterPurplePixelPose3.heading)
+                .setReversed(true)
                 .splineToLinearHeading(dropYellowPixelPoseMiddle, 0)
                 .build();
-        trajAfterPurplePixelToDropYellowPixelRight = drive.actionBuilder(dropPurplePixelPoseRight)
-                .setReversed(true)
+        trajAfterPurplePixelToDropYellowPixelRight = drive.actionBuilder(afterPurplePixelPose1)
                 .strafeToLinearHeading(afterPurplePixelPose2.position, afterPurplePixelPose2.heading)
-                .strafeToLinearHeading(afterPurplePixelPose3.position, afterPurplePixelPose3.heading)
+                .setReversed(true)
                 .splineToLinearHeading(dropYellowPixelPoseRight, 0)
                 .build();
 
@@ -337,6 +330,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                 trajAfterPurplePixelToDropYellowPixel = trajAfterPurplePixelToDropYellowPixelLeft;
                 trajDropYellowPixelToAfterYellowPixel = trajDropYellowPixelToAfterYellowPixelLeft;
                 break;
+
             case MIDDLE:
                 trajInitToDropPurplePixel = trajInitToDropPurplePixelMiddle;
                 trajDropPurplePixelToAfterPurplePixel = trajDropPurplePixelToAfterPurplePixelMiddle;
@@ -363,26 +357,22 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                             new SleepAction(0.5), //ADD FOR SYNCHRONIZING TIME
                             new ParallelAction(
                                     intakeController.intakeLiftUpAction(),
-                                    trajDropPurplePixelToAfterPurplePixel,
-                                    outtakeController.moveOuttakeToEndStateAction()
+                                    trajDropPurplePixelToAfterPurplePixel
                             ),
                             new SleepAction(afterPurplePixelWait),
-                            new ParallelAction(
-                                    intakeController.squishPurplePixelInStartOfAutoForDropAction(),
-                                    trajAfterPurplePixelToDropYellowPixel,
-                                    new SequentialAction(
-                                            new SleepAction(0.9),
-                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
-                                    )
-                            ),
+                            trajAfterPurplePixelToDropYellowPixel,
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO),
                             new SleepAction(0.5),
                             outtakeController.dropOnePixelAction(),
-                            trajDropYellowPixelToAfterYellowPixel,
+                            new SleepAction(2),
+                            new ParallelAction(
+                                    trajDropYellowPixelToAfterYellowPixel,
+                                    outtakeController.moveOuttakeToEndStateAction()
+                            ),
                             new SleepAction(afterYellowPixelWait),
                             //Go to Park
                             new ParallelAction(
                                     trajAfterYellowPixelToPark,
-                                    outtakeController.moveOuttakeToEndStateAction(),
                                     parkingArm.extendParkingArmAction()
                             )
                     )
@@ -401,8 +391,8 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             telemetry.addLine("Initializing Hazmat Autonomous Mode:");
             telemetry.addData("---------------------------------------","");
             telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstation) on gamepad 1:","");
-            telemetry.addData("    Red Right  ", "(A / X)");
-            telemetry.addData("    Blue Left   ", "(X / ▢)");
+            telemetry.addData("    Red Middle  ", "(A / X)");
+            telemetry.addData("    Blue Middle ", "(X / ▢)");
             if(gamepadController.gp1GetCrossPress()){
                 GameField.startPosition = GameField.START_POSITION.RED_RIGHT;
                 GameField.playingAlliance = GameField.PLAYING_ALLIANCE.RED_ALLIANCE;

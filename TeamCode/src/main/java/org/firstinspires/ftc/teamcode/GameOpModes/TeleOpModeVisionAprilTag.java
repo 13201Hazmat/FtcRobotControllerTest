@@ -98,6 +98,8 @@ public class TeleOpModeVisionAprilTag extends LinearOpMode {
 
             while (opModeIsActive()) {
                 gamepadController.runByGamepadControl();
+                printDebugMessages();
+                telemetry.update();
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();

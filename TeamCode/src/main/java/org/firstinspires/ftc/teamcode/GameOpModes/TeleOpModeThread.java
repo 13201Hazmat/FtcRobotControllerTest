@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.Lights;
 import org.firstinspires.ftc.teamcode.SubSystems.Magazine;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.SubSystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.SubSystems.ParkingArm;
 import org.firstinspires.ftc.teamcode.TestOpModes.VisionAprilTag;
 import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 
@@ -40,6 +41,7 @@ public class TeleOpModeThread extends LinearOpMode {
     public OuttakeArm outtakeArm;
     public Climber climber;
     public Launcher launcher;
+    public ParkingArm parkingArm;
     public VisionSensor visionSensor;
     public VisionAprilTag visionAprilTagBack;
     public Lights lights;
@@ -89,10 +91,9 @@ public class TeleOpModeThread extends LinearOpMode {
                 //lights.setPattern(Lights.REV_BLINKIN_PATTERN.D);
 
 
-                if (gameTimer.time() > 85000 && gameTimer.time() < 90000) {
+                /*if (gameTimer.time() > 85000 && gameTimer.time() < 90000) {
                     //lights.setPattern(Lights.REV_BLINKIN_PATTERN.END_GAME);
-                }
-
+                }*/
 
                 if (GameField.debugLevel != GameField.DEBUG_LEVEL.NONE) {
                     printDebugMessages();
@@ -143,6 +144,10 @@ public class TeleOpModeThread extends LinearOpMode {
         telemetry.addLine("Launcher Initialized");
         telemetry.update();
 
+        parkingArm = new ParkingArm(hardwareMap, telemetry);
+        telemetry.addLine("ParkingArm Initialized");
+        telemetry.update();
+
         /* Create VisionAprilTag */
         //visionAprilTagBack = new VisionAprilTag(hardwareMap, telemetry, "Webcam 2");
         //telemetry.addLine("Vision April Tag Front Initialized");
@@ -181,9 +186,6 @@ public class TeleOpModeThread extends LinearOpMode {
             //driveTrain.getLocalizer().setPoseEstimate(startPose);
         }
 
-        //GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-        GameField.debugLevel = GameField.DEBUG_LEVEL.NONE;
-
         telemetry.addLine("+++++++++++++++++++++++");
         telemetry.addLine("Init Completed, All systems Go! Let countdown begin. Waiting for Start");
         telemetry.update();
@@ -209,6 +211,7 @@ public class TeleOpModeThread extends LinearOpMode {
             outtakeArm.printDebugMessages();
             climber.printDebugMessages();
             launcher.printDebugMessages();
+            parkingArm.printDebugMessages();
             visionSensor.printDebugMessages();
             //visionAprilTagBack.printdebugMessages();
             lights.printDebugMessages();
