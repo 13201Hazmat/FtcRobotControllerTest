@@ -202,22 +202,22 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(34, 21, Math.toRadians(-90)); //x22.2, 3.3, 25
-                dropYellowPixelPoseLeft = new Pose2d(17.5, 35.4+44, Math.toRadians(-90));//x16.7, y32.5
+                dropYellowPixelPoseLeft = new Pose2d(17.5, 82, Math.toRadians(-90));//x16.7, y32.5
 
                 dropPurplePixelPoseMiddle = new Pose2d(24, 0, Math.toRadians(0)); //x28, y-1.6, 10.7
-                dropYellowPixelPoseMiddle = new Pose2d(24, 35.4+44, Math.toRadians(-90));//x25, y35
+                dropYellowPixelPoseMiddle = new Pose2d(24, 82, Math.toRadians(-90));//x25, y35
 
-                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-88)); //22.7,-6.7,-60//x24.5, y-9, -36.7
-                dropYellowPixelPoseRight = new Pose2d(31, 35.4+44, Math.toRadians(-88)); //y=33.5, x35
+                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                dropYellowPixelPoseRight = new Pose2d(31, 82, Math.toRadians(-90)); //y=33.5, x35
 
-                afterPurplePixelPose1 = new Pose2d(33, 21, Math.toRadians(-88));;
-                afterPurplePixelPose2 = new Pose2d(5, 21, Math.toRadians(-88));;
+                afterPurplePixelPose1 = new Pose2d(5, 21, Math.toRadians(-90));;
+                afterPurplePixelPose2 = new Pose2d(5, 61, Math.toRadians(-90));;
 
-                afterYellowPixelPose = new Pose2d(24, 20+44, Math.toRadians(-90));
+                afterYellowPixelPose = new Pose2d(5, 60, Math.toRadians(-90));
 
-                parkPoseCornerWallRigging = new Pose2d(2.5, 40+44, Math.toRadians(-90)); //x2, x26
-                parkPoseFrontOfWallRigging =  new Pose2d(2.5, 26+44, Math.toRadians(-90));;
-                parkPoseFrontOfBackDrop = new Pose2d(24, 25.4+44, Math.toRadians(-90)); //x50, y30
+                parkPoseCornerWallRigging = new Pose2d(0, 90, Math.toRadians(-90)); //x2, x26
+                parkPoseFrontOfWallRigging =  new Pose2d(2, 62, Math.toRadians(-90));;
+                parkPoseFrontOfBackDrop = new Pose2d(24, 68, Math.toRadians(-90)); //x50, y30
 
                 break;
 
@@ -225,7 +225,6 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(26.5, 1, Math.toRadians(90));//x20.5, y8,51
                 dropYellowPixelPoseLeft = new Pose2d(31, -84, Math.toRadians(88)); //x=31.5,y=-32
-
 
                 dropPurplePixelPoseMiddle = new Pose2d(24, -3.5, Math.toRadians(0));//x27.6, y0, 13
                 dropYellowPixelPoseMiddle = new Pose2d(24.5, -84, Math.toRadians(90));//x27, y-32

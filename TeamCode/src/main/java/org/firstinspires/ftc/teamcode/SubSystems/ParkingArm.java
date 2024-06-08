@@ -13,8 +13,8 @@ public class ParkingArm {
     public boolean deploy = false;
 
     public enum PARKING_ARM_SERVO_STATE {
-        PARKING_ARM_RETRACTED(0.26), //TODO : Update Value
-        PARKING_ARM_EXTENDED(0.5); //TODO : Update Value
+        PARKING_ARM_RETRACTED(0.97), //TODO : Update Value
+        PARKING_ARM_EXTENDED(0.37); //TODO : Update Value
 
         private double parkingArmPosition;
 
@@ -42,6 +42,7 @@ public class ParkingArm {
         if (deploy) {
             parkingArmServo.setPosition(PARKING_ARM_SERVO_STATE.PARKING_ARM_EXTENDED.getParkingArmPosition());
             parkingArmServoState = PARKING_ARM_SERVO_STATE.PARKING_ARM_EXTENDED;
+            deploy = false;
         }
     }
 

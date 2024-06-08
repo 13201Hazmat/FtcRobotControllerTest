@@ -20,7 +20,7 @@ EH Servo 5:        outtakeGripServo = hardwareMap.get(Servo.class, "outtake_grip
 
 EH Servo 0:        outtakeArmLeft = hardwareMap.get(Servo.class, "outtake_arm_left");
 EH Servo 2:        outtakeArmRight = hardwareMap.get(Servo.class, "outtake_arm_right");
-RC Servo 3:        outtakeAlign =  hardwareMap.get(Servo.class, "outtake_align");
+RC Servo 3:        parkingArmServo = hardwareMap.get(Servo.class, "parking_arm_servo");
 
 RC Motor 1:        outtakeMotorLeft = hardwareMap.get(DcMotorEx.class, "outtake_slides_left");
 EH Motor 1:        outtakeMotorRight = hardwareMap.get(DcMotorEx.class, "outtake_slides_right");

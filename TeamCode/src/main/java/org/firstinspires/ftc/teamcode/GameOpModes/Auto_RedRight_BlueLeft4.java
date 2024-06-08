@@ -165,7 +165,7 @@ public class Auto_RedRight_BlueLeft4 extends LinearOpMode {
     }   // end runOpMode()
 
     Pose2d initPose= new Pose2d(0, 0, 0);
-    Pose2d moveBeyondTrussPose = new Pose2d(6.5, 0, 0);
+    Pose2d moveBeyondTrussPose = new Pose2d(0, 0, 0);
 
     Pose2d dropPurplePixelPoseLeft = new Pose2d(0, 0, 0);
     Pose2d dropPurplePixelPoseMiddle = new Pose2d(0, 0, 0);
@@ -190,30 +190,28 @@ public class Auto_RedRight_BlueLeft4 extends LinearOpMode {
     public void buildAutonoumousMode() {
         //Initialize Pose2d as desired
         double waitSecondsBeforeDrop = 0;
-
+        moveBeyondTrussPose = new Pose2d(6.5, 0, 0);
         switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                dropPurplePixelPoseLeft = new Pose2d(34, 21, Math.toRadians(-90)); //x22.2, 3.3, 25
-                dropYellowPixelPoseLeft = new Pose2d(17.5, 35.4, Math.toRadians(-90));//x16.7, y32.5
+                dropPurplePixelPoseLeft = new Pose2d(28, 21, Math.toRadians(-90)); //x22.2, 3.3, 25
+                dropYellowPixelPoseLeft = new Pose2d(17.5, 33, Math.toRadians(-90));//x16.7, y32.5
 
-                dropPurplePixelPoseMiddle = new Pose2d(40, 12, Math.toRadians(-88)); //x28, y-1.6, 10.7
-                dropYellowPixelPoseMiddle = new Pose2d(24, 35.4, Math.toRadians(-90));//x25, y35
+                dropPurplePixelPoseMiddle = new Pose2d(39, 12, Math.toRadians(-90)); //x28, y-1.6, 10.7
+                dropYellowPixelPoseMiddle = new Pose2d(24, 33, Math.toRadians(-90));//x25, y35
 
-                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-88)); //22.7,-6.7,-60//x24.5, y-9, -36.7
-                dropYellowPixelPoseRight = new Pose2d(31, 35.4, Math.toRadians(-88)); //y=33.5, x35
+                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                dropYellowPixelPoseRight = new Pose2d(31, 33, Math.toRadians(-90)); //y=33.5, x35
 
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-
-                parkPoseCornerWallRigging = new Pose2d(0, 40, Math.toRadians(-90)); //x2, x26
-                parkPoseFrontOfWallRigging =  new Pose2d(0, 36, Math.toRadians(-90));;
-                parkPoseFrontOfBackDrop = new Pose2d(24, 25.4, Math.toRadians(-90)); //x50, y30
+                parkPoseCornerWallRigging = new Pose2d(0, 38, Math.toRadians(-90)); //x2, x26
+                parkPoseFrontOfWallRigging =  new Pose2d(0, 22, Math.toRadians(-90));
+                parkPoseFrontOfBackDrop = new Pose2d(24, 22, Math.toRadians(-90)); //x50, y30
                 break;
 
             case RED_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(28.5, 1.5, Math.toRadians(90));//x20.5, y8,51
-                dropYellowPixelPoseLeft = new Pose2d(33, -35.8, Math.toRadians(88)); //x=31.5,y=-32
+                dropYellowPixelPoseLeft = new Pose2d(33, -35.8, Math.toRadians(90)); //x=31.5,y=-32
 
                 dropPurplePixelPoseMiddle = new Pose2d(39, -13, Math.toRadians(90));//x27.6, y0, 13
                 dropYellowPixelPoseMiddle = new Pose2d(26, -35.8, Math.toRadians(90));//x27, y-32
@@ -221,7 +219,7 @@ public class Auto_RedRight_BlueLeft4 extends LinearOpMode {
                 dropPurplePixelPoseRight = new Pose2d(27.5, -20, Math.toRadians(90));//x26.8, y-21.6
                 dropYellowPixelPoseRight = new Pose2d(20, -35.8, Math.toRadians(90));//x18, y-32
 
-                parkPoseCornerWallRigging = new Pose2d(0, -46, Math.toRadians(90));
+                parkPoseCornerWallRigging = new Pose2d(0, -49, Math.toRadians(90));
                 parkPoseFrontOfWallRigging =  new Pose2d(0, -22, Math.toRadians(90));;
                 parkPoseFrontOfBackDrop = new Pose2d(24, -22, Math.toRadians(90));
                 break;
@@ -333,13 +331,11 @@ public class Auto_RedRight_BlueLeft4 extends LinearOpMode {
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     new SequentialAction(
-                            new ParallelAction(
-                                    intakeController.squishPurplePixelInStartOfAutoForDropAction(),
-                                    trajInitToDropYellowPixel,
-                                    new SequentialAction(
-                                            new SleepAction(0.9),
-                                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
-                                    )
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            trajInitToDropYellowPixel,
+                            new SequentialAction(
+                                    new SleepAction(0.9),
+                                    outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO)
                             ),
                             new SleepAction(0.5),
                             new ParallelAction(

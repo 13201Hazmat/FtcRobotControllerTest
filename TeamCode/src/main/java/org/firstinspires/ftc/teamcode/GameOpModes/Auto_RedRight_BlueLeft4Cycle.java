@@ -44,6 +44,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,7 +68,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
  * Hazmat Autonomous
  */
 @Autonomous(name = "RedRight_BlueLeft 4 Cycle", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-
+@Disabled
 public class Auto_RedRight_BlueLeft4Cycle extends LinearOpMode {
 
     public GamepadController gamepadController;

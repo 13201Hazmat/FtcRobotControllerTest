@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "climber servo  Calib", group = "Testing")
+@TeleOp(name = "parking_arm_servo servo  Calib", group = "Testing")
 public class ServoCalibration extends LinearOpMode{
     Servo masterServo;
     //double servoSetPosition;
     double servoCurrentPosition;
 
     public void runOpMode() throws InterruptedException {
-        masterServo = hardwareMap.get(Servo.class, "climber_servo");
+        masterServo = hardwareMap.get(Servo.class, "parking_arm_servo");
         waitForStart();
         while (opModeIsActive()) {
             servoCurrentPosition = masterServo.getPosition();
