@@ -15,8 +15,10 @@ public class GameField {
     //Define and declare Robot Starting Locations
     public enum START_POSITION{
         BLUE_LEFT,
+        BLUE_MIDDLE,
         BLUE_RIGHT,
         RED_LEFT,
+        RED_MIDDLE,
         RED_RIGHT
     }
     public static START_POSITION startPosition;

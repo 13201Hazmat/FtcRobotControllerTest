@@ -194,16 +194,16 @@ public class Auto_RedRight_BlueLeft4 extends LinearOpMode {
         switch (GameField.startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
-                dropPurplePixelPoseLeft = new Pose2d(28, 21, Math.toRadians(-90)); //x22.2, 3.3, 25
-                dropYellowPixelPoseLeft = new Pose2d(17.5, 33, Math.toRadians(-90));//x16.7, y32.5
+                dropPurplePixelPoseLeft = new Pose2d(28, 18, Math.toRadians(-90)); //x28,21,
+                dropYellowPixelPoseLeft = new Pose2d(20, 34, Math.toRadians(-90));//x16.7, y32.5
 
                 dropPurplePixelPoseMiddle = new Pose2d(39, 12, Math.toRadians(-90)); //x28, y-1.6, 10.7
-                dropYellowPixelPoseMiddle = new Pose2d(24, 33, Math.toRadians(-90));//x25, y35
+                dropYellowPixelPoseMiddle = new Pose2d(27, 34, Math.toRadians(-90));//x25, y35
 
-                dropPurplePixelPoseRight = new Pose2d(32, -2, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
-                dropYellowPixelPoseRight = new Pose2d(31, 33, Math.toRadians(-90)); //y=33.5, x35
+                dropPurplePixelPoseRight = new Pose2d(28, -2, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
+                dropYellowPixelPoseRight = new Pose2d(33, 34, Math.toRadians(-90)); //y=33.5, x35
 
-                parkPoseCornerWallRigging = new Pose2d(0, 38, Math.toRadians(-90)); //x2, x26
+                parkPoseCornerWallRigging = new Pose2d(0, 45, Math.toRadians(-90)); //x2, x26
                 parkPoseFrontOfWallRigging =  new Pose2d(0, 22, Math.toRadians(-90));
                 parkPoseFrontOfBackDrop = new Pose2d(24, 22, Math.toRadians(-90)); //x50, y30
                 break;

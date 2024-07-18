@@ -624,7 +624,7 @@ public class Auto_RedLeft_BlueRight4 extends LinearOpMode {
                             outtakeController.moveReadyForTransferToTransferAction(),
                             outtakeController.moveTransferToPickupAction(),
                             outtakeController.movePickupToReadyForTransferAction(),
-                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST),
+                            outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOW_LINE),
                             new SleepAction(0.7),
                             outtakeController.dropTwoPixelAction(),
                             new SleepAction(0.1),
