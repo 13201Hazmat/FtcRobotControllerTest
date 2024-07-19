@@ -223,6 +223,7 @@ public class IntakeController {
 
 
     public void intakeLiftUp(){
+        intake.moveIntakeLiftUp();
         intake.moveRollerHeight(Intake.STACK_INTAKE_LIFT_STATE.LIFTED);
     }
 

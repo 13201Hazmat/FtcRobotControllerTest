@@ -99,7 +99,8 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
     public enum PARKING_OPTION{
         CORNER_WALL_RIGGING,
         FRONT_OF_WALL_RIGGING,
-        FRONT_OF_BACKDROP
+        FRONT_OF_BACKDROP,
+        FRONT_OF_MIDDLETILE
     }
     public static PARKING_OPTION parkingOption;
 
@@ -159,7 +160,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             //Turn Lights Green
             lights.setPattern(Lights.REV_BLINKIN_PATTERN.NONE);
 
-            runActionForRedRightBlueLeft();
+            runActionForRedBlueMiddle();
         }
     }   // end runOpMode()
 
@@ -179,10 +180,13 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
     Pose2d dropYellowPixelPoseRight= new Pose2d(0, 0, 0);
 
     Pose2d afterYellowPixelPose = new Pose2d(0, 0, 0); //TODO: FIX BUG
+    Pose2d afterYellowPixelPoseWallRigging = new Pose2d(0, 0, 0); //TODO: FIX BUG
+    Pose2d afterYellowPixelPoseMiddleTile = new Pose2d(0, 0, 0); //TODO: FIX BUG
 
     Pose2d parkPoseCornerWallRigging = new Pose2d(0, 0, 0);
     Pose2d parkPoseFrontOfWallRigging = new Pose2d(0, 0, 0);
     Pose2d parkPoseFrontOfBackDrop = new Pose2d(0, 0, 0);
+    Pose2d parkPoseMiddleTile = new Pose2d(0, 0, 0);
     Pose2d parkPose = new Pose2d(0, 0, 0);
 
     Action trajInitToDropPurplePixel, trajInitToDropPurplePixelLeft, trajInitToDropPurplePixelMiddle,trajInitToDropPurplePixelRight;
@@ -203,10 +207,10 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             case BLUE_MIDDLE:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(30, 19, Math.toRadians(-90)); //x22.2, 3.3, 25
-                dropYellowPixelPoseLeft = new Pose2d(20, 82, Math.toRadians(-90));//x16.7, y32.5
+                dropYellowPixelPoseLeft = new Pose2d(20, 83, Math.toRadians(-90));//x16.7, y32.5
 
                 dropPurplePixelPoseMiddle = new Pose2d(25, 0, Math.toRadians(0)); //x28, y-1.6, 10.7
-                dropYellowPixelPoseMiddle = new Pose2d(27, 82, Math.toRadians(-90));//x25, y35
+                dropYellowPixelPoseMiddle = new Pose2d(27, 82.5, Math.toRadians(-90));//x25, y35
 
                 dropPurplePixelPoseRight = new Pose2d(28, -3, Math.toRadians(-90)); //22.7,-6.7,-60//x24.5, y-9, -36.7
                 dropYellowPixelPoseRight = new Pose2d(33, 82, Math.toRadians(-90)); //y=33.5, x35
@@ -215,47 +219,56 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                 afterPurplePixelPose2 = new Pose2d(5, 65, Math.toRadians(-90));;
                 afterPurplePixelPose3 = new Pose2d(27, 70, Math.toRadians(-90));;
 
-
-                afterYellowPixelPose = new Pose2d(5, 60, Math.toRadians(-90));
+                afterYellowPixelPoseWallRigging = new Pose2d(5, 60, Math.toRadians(-90));
+                afterYellowPixelPoseMiddleTile = new Pose2d(27, 75, Math.toRadians(-90));
 
                 parkPoseCornerWallRigging = new Pose2d(0, 92, Math.toRadians(-90)); //x2, x26
                 parkPoseFrontOfWallRigging =  new Pose2d(2, 67, Math.toRadians(-90));;
                 parkPoseFrontOfBackDrop = new Pose2d(24, 63, Math.toRadians(-90)); //x50, y30
-
+                parkPoseMiddleTile = new Pose2d(48, 75, Math.toRadians(-90)); //x50, y30
                 break;
 
             case RED_MIDDLE:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 dropPurplePixelPoseLeft = new Pose2d(26.5, 4, Math.toRadians(90));//x20.5, y8,51
-                dropYellowPixelPoseLeft = new Pose2d(35, -83, Math.toRadians(88)); //x=31.5,y=-32
+                dropYellowPixelPoseLeft = new Pose2d(34, -82, Math.toRadians(88)); //x=31.5,y=-32
 
                 dropPurplePixelPoseMiddle = new Pose2d(26, -2, Math.toRadians(0));//x27.6, y0, 13
-                dropYellowPixelPoseMiddle = new Pose2d(27, -83, Math.toRadians(90));//x27, y-32
+                dropYellowPixelPoseMiddle = new Pose2d(27, -82, Math.toRadians(90));//x27, y-32
 
                 dropPurplePixelPoseRight = new Pose2d(27, -20, Math.toRadians(90));//x26.8, y-21.6
-                dropYellowPixelPoseRight = new Pose2d(20, -83, Math.toRadians(90));//x18, y-32
+                dropYellowPixelPoseRight = new Pose2d(20, -82, Math.toRadians(90));//x18, y-32
 
                 afterPurplePixelPose1 = new Pose2d(5, -21, Math.toRadians(90));;
                 afterPurplePixelPose2 = new Pose2d(5, -65, Math.toRadians(90));
                 afterPurplePixelPose3 = new Pose2d(27, -70, Math.toRadians(90));;
 
-                afterYellowPixelPose = new Pose2d(5, -60, Math.toRadians(90));;
+                afterYellowPixelPoseMiddleTile = new Pose2d(27, -75, Math.toRadians(90));
+                afterYellowPixelPoseWallRigging = new Pose2d(5, -60, Math.toRadians(90));
 
                 parkPoseCornerWallRigging = new Pose2d(0, -92, Math.toRadians(90));
                 parkPoseFrontOfWallRigging =  new Pose2d(4, -67, Math.toRadians(90));;
                 parkPoseFrontOfBackDrop = new Pose2d(21, -63, Math.toRadians(90));
+                parkPoseMiddleTile = new Pose2d(48, -79, Math.toRadians(90));
                 break;
         }
 
         switch (parkingOption) {
             case CORNER_WALL_RIGGING:
+                afterYellowPixelPose = afterYellowPixelPoseWallRigging;
                 parkPose = parkPoseCornerWallRigging;
                 break;
             case FRONT_OF_WALL_RIGGING:
+                afterYellowPixelPose = afterYellowPixelPoseWallRigging;
                 parkPose = parkPoseFrontOfWallRigging;
                 break;
             case FRONT_OF_BACKDROP:
+                afterYellowPixelPose = afterYellowPixelPoseMiddleTile;
                 parkPose = parkPoseFrontOfBackDrop;
+                break;
+            case FRONT_OF_MIDDLETILE:
+                afterYellowPixelPose = afterYellowPixelPoseMiddleTile;
+                parkPose = parkPoseMiddleTile;
                 break;
         }
 
@@ -352,7 +365,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
         }
     }
 
-    public void runActionForRedRightBlueLeft() {
+    public void runActionForRedBlueMiddle() {
         if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
             Actions.runBlocking(
                     new SequentialAction(
@@ -361,20 +374,18 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                             trajInitToDropPurplePixel,
                             intakeController.dropPurplePixelUsingIntakeAction(),
                             new SleepAction(0.5), //ADD FOR SYNCHRONIZING TIME
-                            new ParallelAction(
-                                    intakeController.intakeLiftUpAction(),
-                                    trajDropPurplePixelToAfterPurplePixel
-                            ),
+                            intakeController.intakeLiftUpAction(),
+
+                            new SleepAction(1.5),
                             new SleepAction(afterPurplePixelWait),
+                            trajDropPurplePixelToAfterPurplePixel,
                             trajAfterPurplePixelToDropYellowPixel,
                             outtakeController.moveReadyForTransferToDropAction(OuttakeSlides.OUTTAKE_SLIDE_STATE.DROP_LOWEST_AUTO),
                             new SleepAction(0.5),
                             outtakeController.dropOnePixelAction(),
                             new SleepAction(2),
-                            new ParallelAction(
-                                    trajDropYellowPixelToAfterYellowPixel,
-                                    outtakeController.moveOuttakeToEndStateAction()
-                            ),
+                            trajDropYellowPixelToAfterYellowPixel,
+                            outtakeController.moveOuttakeToEndStateAction(),
                             new SleepAction(afterYellowPixelWait),
                             //Go to Park
                             new ParallelAction(
@@ -470,7 +481,9 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             telemetry.addLine("Select Parking option");
             telemetry.addData("    Corner Wall Rigging ", "Y / Δ");
             telemetry.addData("    Front of Wall Rigging","(X / ▢)");
-            telemetry.addData("    Front of Middle tile   ", "B / O ");
+            telemetry.addData("    Front of Backdrop tile   ", "B / O ");
+            telemetry.addData("    Front of Middle tile   ", "(A / X) ");
+
             if (gamepadController.gp1GetTrianglePress()) {
                 parkingOption = PARKING_OPTION.CORNER_WALL_RIGGING;
                 break;
@@ -483,6 +496,10 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             if (gamepadController.gp1GetCirclePress()) {
                 parkingOption = PARKING_OPTION.FRONT_OF_BACKDROP;
                 parkingArm.deploy = true;
+                break;
+            }
+            if (gamepadController.gp1GetCrossPress()) {
+                parkingOption = PARKING_OPTION.FRONT_OF_MIDDLETILE;
                 break;
             }
             telemetry.update();
