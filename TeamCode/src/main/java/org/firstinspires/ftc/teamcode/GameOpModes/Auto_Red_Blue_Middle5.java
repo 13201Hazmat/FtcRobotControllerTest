@@ -66,9 +66,9 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "Red_Blue_Middle", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Autonomous(name = "Red_Blue_Middle 5", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
 
-public class Auto_Red_Blue_Middle extends LinearOpMode {
+public class Auto_Red_Blue_Middle5 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -92,9 +92,10 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
     //Static Class for knowing system state
 
     public enum AUTO_OPTION{
-        PRELOAD_AND_PARK,
+        PURPLE_YELLOW_PARK,
+        PURPLE_STOP
     }
-    public static AUTO_OPTION autoOption;
+    public static AUTO_OPTION autoOption = AUTO_OPTION.PURPLE_YELLOW_PARK;
 
     public enum PARKING_OPTION{
         CORNER_WALL_RIGGING,
@@ -102,7 +103,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
         FRONT_OF_BACKDROP,
         FRONT_OF_MIDDLETILE
     }
-    public static PARKING_OPTION parkingOption;
+    public static PARKING_OPTION parkingOption = PARKING_OPTION.CORNER_WALL_RIGGING;
 
     public Pose2d startPose = GameField.ORIGINPOSE;
 
@@ -366,7 +367,7 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
     }
 
     public void runActionForRedBlueMiddle() {
-        if (autoOption == AUTO_OPTION.PRELOAD_AND_PARK) {
+        if (autoOption == AUTO_OPTION.PURPLE_YELLOW_PARK) {
             Actions.runBlocking(
                     new SequentialAction(
                             intakeController.squishPurplePixelInStartOfAutoForDropAction(),
@@ -392,6 +393,17 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
                                     trajAfterYellowPixelToPark,
                                     parkingArm.extendParkingArmAction()
                             )
+                    )
+            );
+        } else { // PURPLE_STOP
+            Actions.runBlocking(
+                    new SequentialAction(
+                            intakeController.squishPurplePixelInStartOfAutoForDropAction(),
+                            intakeController.dropLiftIntake(),
+                            trajInitToDropPurplePixel,
+                            intakeController.dropPurplePixelUsingIntakeAction(),
+                            new SleepAction(0.5), //ADD FOR SYNCHRONIZING TIME
+                            intakeController.intakeLiftUpAction()
                     )
             );
         }
@@ -424,85 +436,105 @@ public class Auto_Red_Blue_Middle extends LinearOpMode {
             telemetry.update();
         }
 
-        autoOption = AUTO_OPTION.PRELOAD_AND_PARK;
-
         while (!isStopRequested()) {
             telemetry.addLine("Initializing Hazmat Autonomous Mode ");
             telemetry.addData("---------------------------------------", "");
             telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addData("Selected Auto Option", autoOption);
-            telemetry.addLine("Input After Drop Purple Pixel Wait");
-            telemetry.addLine("(Use dpad_up to increase, and dpad_down to decrease)");
-            telemetry.addLine("(Press B / O  to finalize");
-            telemetry.addData("    After Drop Purple Pixel Wait ", afterPurplePixelWait);
-            if (gamepadController.gp1GetDpad_upPress()) {
-                afterPurplePixelWait++;
-            }
-            if (gamepadController.gp1GetDpad_downPress()) {
-                if (afterPurplePixelWait != 0) afterPurplePixelWait--;
-            }
+            telemetry.addLine("Select Auto Options");
+            telemetry.addData("    Purple and Stop               ", "(B / O)");
+            telemetry.addData("    Purple, Yellow, Park ", "(X / ▢)");
+
             if (gamepadController.gp1GetCirclePress()) {
+                autoOption = AUTO_OPTION.PURPLE_STOP;
                 break;
             }
-            telemetry.update();
-        }
 
-        while (!isStopRequested()) {
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------", "");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addData("Selected Auto Option", autoOption);
-            telemetry.addData("Selected After Drop Purple Pixel Wait", afterPurplePixelWait);
-            telemetry.addLine("Input After Drop Yellow Pixel Wait");
-            telemetry.addLine("(Use dpad_up to increase, and dpad_down to decrease)");
-            telemetry.addLine("(Press B / O  to finalize");
-            telemetry.addData("    After Drop Yellow Pixel Wait ", afterYellowPixelWait);
-            if (gamepadController.gp1GetDpad_upPress()) {
-                afterYellowPixelWait++;
-            }
-            if (gamepadController.gp1GetDpad_downPress()) {
-                if (afterYellowPixelWait != 0) afterYellowPixelWait--;
-            }
-            if (gamepadController.gp1GetCirclePress()) {
-                break;
-            }
-            telemetry.update();
-        }
-
-
-
-        while (!isStopRequested()) {
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------", "");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addData("Selected Auto Option", autoOption);
-            telemetry.addData("Selected After Drop Purple Pixel Wait", afterPurplePixelWait);
-            telemetry.addData("Selected After Drop Yellow Pixel Wait", afterYellowPixelWait);
-            telemetry.addLine("Select Parking option");
-            telemetry.addData("    Corner Wall Rigging ", "Y / Δ");
-            telemetry.addData("    Front of Wall Rigging","(X / ▢)");
-            telemetry.addData("    Front of Backdrop tile   ", "B / O ");
-            telemetry.addData("    Front of Middle tile   ", "(A / X) ");
-
-            if (gamepadController.gp1GetTrianglePress()) {
-                parkingOption = PARKING_OPTION.CORNER_WALL_RIGGING;
-                break;
-            }
             if (gamepadController.gp1GetSquarePress()) {
-                parkingOption = PARKING_OPTION.FRONT_OF_WALL_RIGGING;
-                parkingArm.deploy = true;
+                autoOption = AUTO_OPTION.PURPLE_YELLOW_PARK;
                 break;
             }
-            if (gamepadController.gp1GetCirclePress()) {
-                parkingOption = PARKING_OPTION.FRONT_OF_BACKDROP;
-                parkingArm.deploy = true;
-                break;
-            }
-            if (gamepadController.gp1GetCrossPress()) {
-                parkingOption = PARKING_OPTION.FRONT_OF_MIDDLETILE;
-                break;
-            }
+
             telemetry.update();
+        }
+
+        if (autoOption == AUTO_OPTION.PURPLE_YELLOW_PARK) {
+            while (!isStopRequested()) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", GameField.startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addLine("Input After Drop Purple Pixel Wait");
+                telemetry.addLine("(Use dpad_up to increase, and dpad_down to decrease)");
+                telemetry.addLine("(Press B / O  to finalize");
+                telemetry.addData("    After Drop Purple Pixel Wait ", afterPurplePixelWait);
+                if (gamepadController.gp1GetDpad_upPress()) {
+                    afterPurplePixelWait++;
+                }
+                if (gamepadController.gp1GetDpad_downPress()) {
+                    if (afterPurplePixelWait != 0) afterPurplePixelWait--;
+                }
+                if (gamepadController.gp1GetCirclePress()) {
+                    break;
+                }
+                telemetry.update();
+            }
+
+            while (!isStopRequested()) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", GameField.startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addData("Selected After Drop Purple Pixel Wait", afterPurplePixelWait);
+                telemetry.addLine("Input After Drop Yellow Pixel Wait");
+                telemetry.addLine("(Use dpad_up to increase, and dpad_down to decrease)");
+                telemetry.addLine("(Press B / O  to finalize");
+                telemetry.addData("    After Drop Yellow Pixel Wait ", afterYellowPixelWait);
+                if (gamepadController.gp1GetDpad_upPress()) {
+                    afterYellowPixelWait++;
+                }
+                if (gamepadController.gp1GetDpad_downPress()) {
+                    if (afterYellowPixelWait != 0) afterYellowPixelWait--;
+                }
+                if (gamepadController.gp1GetCirclePress()) {
+                    break;
+                }
+                telemetry.update();
+            }
+
+
+            while (!isStopRequested()) {
+                telemetry.addLine("Initializing Hazmat Autonomous Mode ");
+                telemetry.addData("---------------------------------------", "");
+                telemetry.addData("Selected Starting Position", GameField.startPosition);
+                telemetry.addData("Selected Auto Option", autoOption);
+                telemetry.addData("Selected After Drop Purple Pixel Wait", afterPurplePixelWait);
+                telemetry.addData("Selected After Drop Yellow Pixel Wait", afterYellowPixelWait);
+                telemetry.addLine("Select Parking option");
+                telemetry.addData("    Corner Wall Rigging ", "Y / Δ");
+                telemetry.addData("    Front of Wall Rigging", "(X / ▢)");
+                telemetry.addData("    Front of Backdrop tile   ", "B / O ");
+                telemetry.addData("    Front of Middle tile   ", "(A / X) ");
+
+                if (gamepadController.gp1GetTrianglePress()) {
+                    parkingOption = PARKING_OPTION.CORNER_WALL_RIGGING;
+                    break;
+                }
+                if (gamepadController.gp1GetSquarePress()) {
+                    parkingOption = PARKING_OPTION.FRONT_OF_WALL_RIGGING;
+                    parkingArm.deploy = true;
+                    break;
+                }
+                if (gamepadController.gp1GetCirclePress()) {
+                    parkingOption = PARKING_OPTION.FRONT_OF_BACKDROP;
+                    parkingArm.deploy = true;
+                    break;
+                }
+                if (gamepadController.gp1GetCrossPress()) {
+                    parkingOption = PARKING_OPTION.FRONT_OF_MIDDLETILE;
+                    break;
+                }
+                telemetry.update();
+            }
         }
         telemetry.clearAll();
     }

@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.GameOpModes;
+package org.firstinspires.ftc.teamcode.GameOpModes.OldAuto;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
@@ -43,12 +43,14 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.GamepadController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.OuttakeController;
+import org.firstinspires.ftc.teamcode.GameOpModes.GameField;
 import org.firstinspires.ftc.teamcode.RRDrive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.SubSystems.Climber;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
@@ -65,8 +67,9 @@ import org.firstinspires.ftc.teamcode.SubSystems.VisionSensor;
 /**
  * Hazmat Autonomous
  */
-@Autonomous(name = "RedLeft_BlueRight 4 Updated", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
-public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
+@Autonomous(name = "RedLeft_BlueRight 4", group = "00-Autonomous", preselectTeleOp = "Hazmat TeleOp Thread")
+@Disabled
+public class Auto_RedLeft_BlueRight4 extends LinearOpMode {
 
     public GamepadController gamepadController;
     public DriveTrain driveTrain;
@@ -104,8 +107,8 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
     public enum PARKING_OPTION{
         WALL_RIGGING,
         WALL_RIGGING_FRONT,
-        MIDDLETILE,
-        BACKDROP
+        STAGEDOOR,
+        STAGEDOOR_FRONT
     }
     public static PARKING_OPTION parkingOption;
 
@@ -212,8 +215,8 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
     Pose2d dropStackPixelPose = new Pose2d(0, 0, 0);
     Pose2d dropStackPixelPoseBackDrop = new Pose2d(0, 0, 0);
 
-    Pose2d parkPoseMiddleTile = new Pose2d(0, 0, 0);
-    Pose2d parkPoseBackDrop = new Pose2d(0, 0, 0);
+    Pose2d parkPoseStageDoor = new Pose2d(0, 0, 0);
+    Pose2d parkPoseStageDoorFront = new Pose2d(0, 0, 0);
     Pose2d parkPoseWall = new Pose2d(0, 0, 0);
     Pose2d parkPoseWallFront = new Pose2d(0, 0, 0);
     Pose2d parkPose = new Pose2d(0, 0, 0);
@@ -275,9 +278,9 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
                 beforeParkWallAfterDropYellowPixelPose = new Pose2d(2,115,-90);
                 parkPoseWall = new Pose2d(2, 141, Math.toRadians(-90)); //x-1, y-81
                 parkPoseWallFront = new Pose2d(2, 120, Math.toRadians(-90));
-                beforeParkMiddleAfterDropYellowPixelPose = new Pose2d(20,129,-90);
-                parkPoseMiddleTile = new Pose2d(46, 131, Math.toRadians(-90));//x46, y-79
-                parkPoseBackDrop = new Pose2d(20, 132, Math.toRadians(-90));
+                beforeParkMiddleAfterDropYellowPixelPose = new Pose2d(42,115,-90);
+                parkPoseStageDoor = new Pose2d(46, 131, Math.toRadians(-90));//x46, y-79
+                parkPoseStageDoorFront = new Pose2d(46, 120, Math.toRadians(-45));
 
                 if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
                     dropStackPixelPoseBackDrop = new Pose2d(26, 131, Math.toRadians(-90)); //y=33.5, x35.5
@@ -316,12 +319,12 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
                 stageMidwayBackDropPose = new Pose2d(50.4, -122, Math.toRadians(90));//x49
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
 
-                beforeParkWallAfterDropYellowPixelPose = new Pose2d(4, -115, Math.toRadians(90));
+                beforeParkMiddleAfterDropYellowPixelPose = new Pose2d(4, -115, Math.toRadians(90));
                 parkPoseWall = new Pose2d(4, -141, Math.toRadians(90)); //x-1, y-81
                 parkPoseWallFront = new Pose2d(4, -120, Math.toRadians(90));
-                beforeParkMiddleAfterDropYellowPixelPose = new Pose2d(32, -129, Math.toRadians(90));
-                parkPoseMiddleTile = new Pose2d(46, -131, Math.toRadians(90));//x46, y-79
-                parkPoseBackDrop = new Pose2d(32, -132, Math.toRadians(90));
+                beforeParkWallAfterDropYellowPixelPose = new Pose2d(42, -115, Math.toRadians(90));
+                parkPoseStageDoor = new Pose2d(42, -131, Math.toRadians(90));//x46, y-79
+                parkPoseStageDoorFront = new Pose2d(42, -120, Math.toRadians(90));
 
                 if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
                     dropStackPixelPoseBackDrop = new Pose2d(26, -131, Math.toRadians(90));//x16,-89
@@ -332,23 +335,22 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
                 break;
         }
 
-        switch (parkingOption) {
-            case MIDDLETILE:
-                beforeParkAfterDropYellowPixelPose = beforeParkMiddleAfterDropYellowPixelPose;
-                parkPose = parkPoseMiddleTile;
-                break;
-            case BACKDROP:
-                beforeParkAfterDropYellowPixelPose = beforeParkMiddleAfterDropYellowPixelPose;
-                parkPose = parkPoseBackDrop;
-                break;
-            case WALL_RIGGING:
-                beforeParkAfterDropYellowPixelPose = beforeParkWallAfterDropYellowPixelPose;
+        if (pathwayOption == PATHWAY_OPTION.STAGEDOOR) {
+            beforeParkAfterDropYellowPixelPose = beforeParkMiddleAfterDropYellowPixelPose;
+            if (parkingOption == PARKING_OPTION.STAGEDOOR) {
+                parkPose = parkPoseStageDoor;
+            } else if (parkingOption == PARKING_OPTION.STAGEDOOR_FRONT) {
+                parkPose = parkPoseStageDoorFront;
+                parkingArm.deploy = true;
+            }
+        } else { //WALL_RIGGING
+            beforeParkAfterDropYellowPixelPose = beforeParkWallAfterDropYellowPixelPose;
+            if (parkingOption == PARKING_OPTION.WALL_RIGGING) {
                 parkPose = parkPoseWall;
-                break;
-            case WALL_RIGGING_FRONT:
-                beforeParkAfterDropYellowPixelPose = beforeParkWallAfterDropYellowPixelPose;
+            } else if (parkingOption == PARKING_OPTION.WALL_RIGGING_FRONT) {
                 parkPose = parkPoseWallFront;
                 parkingArm.deploy = true;
+            }
         }
 
         if (dropStackPixelOption == DROP_STACK_PIXEL_OPTION.BACK_DROP) {
@@ -632,6 +634,7 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
                             new SleepAction(0.7),
                             outtakeController.dropTwoPixelAction(),
                             new SleepAction(0.1),
+                            intakeController.intakeLiftUpAction(),
                             outtakeController.moveOuttakeToEndStateAction(),
                             trajDropYellowPixelToPark,
                             parkingArm.extendParkingArmAction()
@@ -713,52 +716,33 @@ public class Auto_RedLeft_BlueRight4Updated extends LinearOpMode {
             telemetry.addData("---------------------------------------", "");
             telemetry.addData("Selected Starting Position", GameField.startPosition);
             telemetry.addData("Selected Auto Option", autoOption);
-            telemetry.addLine("Select Pathway option");
-            telemetry.addData("    Wall Rigging", "Y / Δ");
-            telemetry.addData("    Stage Door", "B / O ");
+            telemetry.addLine("Select Pathway and Parking option");
+            telemetry.addData("    Wall Rigging, Corner parking", "Y / Δ");
+            telemetry.addData("    Wall Rigging, Front of Corner parking", "X / ▢");
+            telemetry.addData("    Stage Door. Middle parking", "B / O ");
+            telemetry.addData("    Stage Door. Front of Middle parking", "A / X ");
 
             if (gamepadController.gp1GetTrianglePress()) {
                 pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
-                break;
-            }
-
-            if (gamepadController.gp1GetCirclePress()) {
-                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
-                break;
-            }
-            telemetry.update();
-        }
-
-
-        while (!isStopRequested()) {
-            telemetry.addLine("Initializing Hazmat Autonomous Mode ");
-            telemetry.addData("---------------------------------------", "");
-            telemetry.addData("Selected Starting Position", GameField.startPosition);
-            telemetry.addData("Selected Auto Option", autoOption);
-            telemetry.addData("Selected Pathway Option", pathwayOption);
-            telemetry.addLine("Select Parking option");
-            telemetry.addData("    Corner parking", "Y / Δ");
-            telemetry.addData("    Front of Corner parking", "X / ▢");
-            telemetry.addData("    Backdrop parking", "B / O ");
-            telemetry.addData("    Middle Tile parking", "A / X ");
-
-            if (gamepadController.gp1GetTrianglePress()) {
                 parkingOption = PARKING_OPTION.WALL_RIGGING;
                 break;
             }
 
             if (gamepadController.gp1GetSquarePress()) {
+                pathwayOption = PATHWAY_OPTION.RIGGING_WALL;
                 parkingOption = PARKING_OPTION.WALL_RIGGING_FRONT;
                 break;
             }
 
             if (gamepadController.gp1GetCirclePress()) {
-                parkingOption = PARKING_OPTION.BACKDROP;
+                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
+                parkingOption = PARKING_OPTION.STAGEDOOR;
                 break;
             }
 
             if (gamepadController.gp1GetCrossPress()) {
-                parkingOption = PARKING_OPTION.MIDDLETILE;
+                pathwayOption = PATHWAY_OPTION.STAGEDOOR;
+                parkingOption = PARKING_OPTION.STAGEDOOR_FRONT;
                 break;
             }
             telemetry.update();
